@@ -1,0 +1,78 @@
+{
+  "project_info": {
+    "project_number": "322915959213",
+    "project_id": "quiz-flutter-new",
+    "storage_bucket": "quiz-flutter-new.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322915959213:android:c68427bed7bf53f542e124",
+        "android_client_info": {
+          "package_name": "com.wrteam.flutterquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "322915959213-arod7ptpsdt8b8encohtlipoat224s3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wrteam.flutterquiz",
+            "certificate_hash": "c63fa09535ee639c1b4d0c0308b346262584c1cc"
+          }
+        },
+        {
+          "client_id": "322915959213-k43rsms1k08iug0621n6rbbdshhtcvfh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wrteam.flutterquiz",
+            "certificate_hash": "b2f3f061bec29abd62c1fa6c0f3519075403547e"
+          }
+        },
+        {
+          "client_id": "322915959213-nlssjla4mdv6clp5sgmmut4bonilcvk5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wrteam.flutterquiz",
+            "certificate_hash": "06920698abee7207d73d949630756cb786354dd5"
+          }
+        },
+        {
+          "client_id": "322915959213-qup5hd5ja3eejqrp9pn1bkqahd3j56p3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wrteam.flutterquiz",
+            "certificate_hash": "b4483bf455ad0953f9234abdca8171e87f4dbee1"
+          }
+        },
+        {
+          "client_id": "322915959213-d59srtk19gfj4cepvlf2lcpbo45a00et.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoko_Qt9xCmn34habaYi9Qwl9KcwBwcdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "322915959213-d59srtk19gfj4cepvlf2lcpbo45a00et.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "322915959213-dh9pngcbov233e8hok2b4i142nem7vs4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wrteam.flutterquiz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
