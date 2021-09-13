@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/notificatiion/cubit/notificationCubit.dart';
-import 'package:flutterquiz/features/notificatiion/notificationRepository.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customListTile.dart';
@@ -19,7 +18,7 @@ class NotificationScreen extends StatefulWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
         builder: (_) => BlocProvider<NotificationCubit>(
-              create: (_) => NotificationCubit(NotificationRepository()),
+              create: (_) => NotificationCubit(),
               child: NotificationScreen(),
             ));
   }
@@ -29,17 +28,17 @@ class _NotificationScreen extends State<NotificationScreen> {
   ScrollController controller = ScrollController();
   @override
   void initState() {
-  //  controller.addListener(scrollListener);
-    Future.delayed(Duration.zero, () {context.read<NotificationCubit>().getNotification();});
+    controller.addListener(scrollListener);
+    Future.delayed(Duration.zero, () {context.read<NotificationCubit>().fetchNotification("20");});
     super.initState();
   }
-  /*scrollListener() {
+  scrollListener() {
     if (controller.position.maxScrollExtent == controller.offset) {
       if (context.read<NotificationCubit>().hasMoreData()) {
         context.read<NotificationCubit>().fetchMoreNotificationData("20");
       }
     }
-  }*/
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,33 +69,33 @@ class _NotificationScreen extends State<NotificationScreen> {
                       showErrorImage: true,
                       errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)),
                       onTapRetry: () {
-                        context.read<NotificationCubit>().getNotification();
+                        context.read<NotificationCubit>().fetchMoreNotificationData("20");
                       },
                     );
                   }
                   final notificationList = (state as NotificationSuccess).notificationList;
-                 // final hasMore = state.hasMore;
+                  final hasMore = state.hasMore;
                   return ListView.builder(
                     controller: controller,
                       itemCount: notificationList.length,
                       padding: EdgeInsets.only(top: 25.0, left: MediaQuery.of(context).size.width * (0.075), right: MediaQuery.of(context).size.width * (0.075), bottom: 100),
                       itemBuilder: (context, index) {
-                        return /*hasMore && index == (notificationList.length - 1)
+                        return hasMore && index == (notificationList.length - 1)
                             ? Center(
                             child: CircularProgressContainer(
                               useWhiteLoader: false,
                             ))
-                            :*/GestureDetector(
+                            :GestureDetector(
                           onTap: (){
-                            notificationList[index].type=="category"?
-                            Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone,"type":notificationList[index].type,"typeId":notificationList[index].typeId}): null;
+                            notificationList[index]["type"]=="category"?
+                            Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone,"type":notificationList[index]["type"],"typeId":notificationList[index]["type_id"]}): null;
                             },
                           child: CustomListTile(
                             trailingButtonOnTap:null,
-                            title: notificationList[index].title,
-                            subtitle: notificationList[index].message,
-                            leadingChild: notificationList[index].image!.isNotEmpty?CachedNetworkImage(
-                              imageUrl: notificationList[index].image!,
+                            title: notificationList[index]["title"],
+                            subtitle: notificationList[index]["message"],
+                            leadingChild: notificationList[index]["image"]!.isNotEmpty?CachedNetworkImage(
+                              imageUrl: notificationList[index]["image"]!,
                             ):Container(),
                             opacity: 1,
                           ),
