@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/opponentMessageCubit.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
@@ -96,7 +95,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     //delete battle room
     if (state == AppLifecycleState.paused) {
       //delete all messages entered by current user
-      deleteMessages(context.read<BattleRoomCubit>());
+      //deleteMessages(context.read<BattleRoomCubit>());
       //delete battle room
       context.read<BattleRoomCubit>().deleteBattleRoom();
     }
@@ -446,6 +445,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                 battleRoomListener(context, state, battleRoomCubit);
               },
             ),
+            /*
             BlocListener<OpponentMessageCubit, OpponentMessageState>(
               bloc: context.read<OpponentMessageCubit>(),
               listener: (context, state) {},
@@ -454,6 +454,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
               bloc: context.read<MessageCubit>(),
               listener: (context, state) {},
             ),
+            */
           ],
           child: Stack(
             clipBehavior: Clip.none,
