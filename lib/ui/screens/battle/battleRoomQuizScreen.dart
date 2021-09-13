@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
@@ -13,6 +15,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
@@ -30,8 +33,7 @@ class BattleRoomQuizScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(providers: [
               BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
-              //BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
-              //BlocProvider<OpponentMessageCubit>(create: (context) => OpponentMessageCubit(BattleRoomRepository())),
+              BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
             ], child: BattleRoomQuizScreen()));
   }
 
@@ -56,6 +58,10 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   late Animation<double> questionScaleDownAnimation;
   //to slude the question content from right to left
   late Animation<double> questionContentAnimation;
+
+  late AnimationController messageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 350), reverseDuration: Duration(milliseconds: 300));
+  late Animation<double> messageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: messageAnimationController, curve: Curves.easeOutBack));
+
   late int currentQuestionIndex = 0;
 
   //if user left the by pressing home button or lock screen
@@ -70,7 +76,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   @override
   void initState() {
     initializeAnimation();
-    //initOpponentMessageListener();
+    initMessageListener();
     questionContentAnimationController.forward();
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
@@ -93,7 +99,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     //delete battle room
     if (state == AppLifecycleState.paused) {
       //delete all messages entered by current user
-      //deleteMessages(context.read<BattleRoomCubit>());
+      deleteMessages(context.read<BattleRoomCubit>());
       //delete battle room
       context.read<BattleRoomCubit>().deleteBattleRoom();
     }
@@ -108,11 +114,11 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     }
   }
 
-  void initOpponentMessageListener() {
+  void initMessageListener() {
     //to set listener for opponent message
     Future.delayed(Duration.zero, () {
       BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
-      String currentUserId = context.read<UserDetailsCubit>().getUserId();
+      context.read<MessageCubit>().subscribeToMessages(battleRoomCubit.getRoomId());
     });
   }
 
@@ -190,8 +196,14 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     });
   }
 
+  void deleteMessages(BattleRoomCubit battleRoomCubit) {
+    //to delete messages by given user
+    context.read<MessageCubit>().deleteMessages(battleRoomCubit.getRoomId(), context.read<UserDetailsCubit>().getUserId());
+  }
+
   //for changing ui and other trigger other actions based on realtime changes that occured in game
   void battleRoomListener(BuildContext context, BattleRoomState state, BattleRoomCubit battleRoomCubit) {
+    /*
     if (state is BattleRoomUserFound) {
       UserBattleRoomDetails opponentUserDetails = battleRoomCubit.getOpponentUserDetails(context.read<UserDetailsCubit>().getUserId());
       UserBattleRoomDetails currentUserDetails = battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
@@ -254,6 +266,19 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         }
       }
     }
+    */
+  }
+
+  Widget _buildCurrentUserMessageContainer() {
+    return PositionedDirectional(
+      child: ScaleTransition(
+        scale: messageAnimation,
+        child: MessageContainer(),
+        alignment: Alignment(0.5, 1.0), //-0.5 left side nad 0.5 is right side,
+      ),
+      start: 10,
+      bottom: bottomPadding + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
+    );
   }
 
   Widget _buildCurrentUserDetailsContainer() {
@@ -394,9 +419,22 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     );
   }
 
-  void deleteMessages(BattleRoomCubit battleRoomCubit) {
-    //to delete messages by given user
-    //context.read<MessageCubit>().deleteMessages(battleRoomCubit.getRoomId(), context.read<UserDetailsCubit>().getUserId());
+  Widget _buildMessageButton() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: IconButton(
+        onPressed: () {
+          context.read<MessageCubit>().addMessage(
+                message: "Hello Sir!",
+                by: context.read<UserDetailsCubit>().getUserId(),
+                roomId: context.read<BattleRoomCubit>().getRoomId(),
+                isTextMessage: true,
+              );
+        },
+        icon: Icon(CupertinoIcons.chat_bubble_2),
+        color: Theme.of(context).primaryColor,
+      ),
+    );
   }
 
   @override
@@ -439,16 +477,17 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                 battleRoomListener(context, state, battleRoomCubit);
               },
             ),
-            /*
-            BlocListener<OpponentMessageCubit, OpponentMessageState>(
-              bloc: context.read<OpponentMessageCubit>(),
-              listener: (context, state) {},
-            ),
             BlocListener<MessageCubit, MessageState>(
               bloc: context.read<MessageCubit>(),
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state is MessageFetchedSuccess) {
+                  messageAnimationController.forward(from: 0.0);
+                  state.messages.forEach((element) {
+                    print("Id of message is ${element.messageId}");
+                  });
+                }
+              },
             ),
-            */
           ],
           child: Stack(
             clipBehavior: Clip.none,
@@ -482,7 +521,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                 ),
               ),
               _buildCurrentUserDetailsContainer(),
+              _buildCurrentUserMessageContainer(),
               _buildOpponentUserDetailsContainer(),
+              _buildMessageButton(),
               _buildYouWonGameDailog(battleRoomCubit),
               _buildCurrentUserLeftTheGame(),
             ],

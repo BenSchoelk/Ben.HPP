@@ -31,12 +31,12 @@ class Message {
   static Message fromJson(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = Map.from(documentSnapshot.data() as Map);
     return Message(
-      by: json['by'],
-      isTextMessage: json['isTextMessage'],
-      message: json['message'],
+      by: json['by'] ?? "",
+      isTextMessage: json['isTextMessage'] ?? false,
+      message: json['message'] ?? "",
       messageId: documentSnapshot.id,
-      roomId: json['roomId'],
-      timestamp: json['timestamp'],
+      roomId: json['roomId'] ?? "",
+      timestamp: json['timestamp'] ?? Timestamp.now(),
     );
   }
 
