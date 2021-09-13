@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
@@ -121,6 +122,11 @@ class UiUtils {
       earnedCoins = 0;
     }
     return earnedCoins;
+  }
+
+  static void vibrate() {
+    HapticFeedback.heavyImpact();
+    HapticFeedback.vibrate();
   }
 
   static int determineBattleCorrectAnswerPoints(double animationControllerValue) {

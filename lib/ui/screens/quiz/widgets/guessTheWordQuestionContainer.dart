@@ -1,7 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
@@ -106,9 +105,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
 
   void playVibrate() async {
     if (context.read<SettingsCubit>().getSettings().vibration) {
-      if (await Vibrate.canVibrate) {
-        Vibrate.vibrate();
-      }
+      UiUtils.vibrate();
     }
   }
 

@@ -1,11 +1,12 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterquiz/features/quiz/models/answerOption.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/settings/settingsCubit.dart';
 // Import package
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class OptionContainer extends StatefulWidget {
   final Function hasSubmittedAnswerForCurrentQuestion;
@@ -73,9 +74,7 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
 
   void playVibrate() async {
     if (context.read<SettingsCubit>().getSettings().vibration) {
-      if (await Vibrate.canVibrate) {
-        Vibrate.vibrate();
-      }
+      UiUtils.vibrate();
     }
   }
 

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/appSettingsCubit.dart';
 import 'package:flutterquiz/features/systemConfig/systemConfigRepository.dart';
@@ -105,14 +104,16 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                 );
               }
               return Padding(
-                padding: EdgeInsets.only(
-                  top: (MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage)) + 15.0,
-                ),
-                child: WebviewScaffold(
-                  url: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),)
-                 // javascriptMode: JavascriptMode.unrestricted,
-                 // initialUrl: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),
-                );
+                  padding: EdgeInsets.only(
+                    top: (MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage)) + 15.0,
+                  ),
+                  child: WebView(
+                    javascriptMode: JavascriptMode.unrestricted,
+                    initialUrl: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),
+                  )
+                  //
+                  // initialUrl: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),
+                  );
             },
           )
         ],
