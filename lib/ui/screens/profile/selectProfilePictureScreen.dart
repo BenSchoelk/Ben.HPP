@@ -148,7 +148,7 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
       alignment: Alignment.center,
       child: Text(AppLocalization.of(context)!.getTranslatedValues("selectProfilePhotoLbl")!,
           style: TextStyle(
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
             fontSize: 22.5,
             fontWeight: FontWeight.bold,
           )),
@@ -334,11 +334,11 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
       child: TextField(
         controller: textEditingController,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           hintText: AppLocalization.of(context)!.getTranslatedValues("enterNameLbl")!,
           border: InputBorder.none,
-          hintStyle: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -376,7 +376,7 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
                 color: iHaveInviteCode ? Theme.of(context).primaryColor : Colors.transparent,
                 border: Border.all(
                   width: 1.5,
-                  color: iHaveInviteCode ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+                  color: iHaveInviteCode ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ),
@@ -387,7 +387,7 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
           Text(
             AppLocalization.of(context)!.getTranslatedValues(iHaveInviteCodeKey)!,
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           )
         ],
@@ -411,11 +411,11 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
             child: TextField(
               controller: inviteTextEditingController,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 hintText: AppLocalization.of(context)!.getTranslatedValues(enterReferralCodeLbl)!,
                 border: InputBorder.none,
-                hintStyle: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+                hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
               ),
             ),
           )
@@ -486,7 +486,7 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
                       child: Text(
                         AppLocalization.of(context)!.getTranslatedValues("orLbl")!,
                         style: TextStyle(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.bold,
                           fontSize: 25.0,
                         ),

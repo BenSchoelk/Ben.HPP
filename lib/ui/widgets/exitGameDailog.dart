@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
+
 class ExitGameDailog extends StatelessWidget {
   final Function? onTapYes;
   const ExitGameDailog({Key? key, this.onTapYes}) : super(key: key);
@@ -11,17 +12,18 @@ class ExitGameDailog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: AlertDialog(backgroundColor:Theme.of(context).backgroundColor,
+      child: AlertDialog(
+        backgroundColor: Theme.of(context).backgroundColor,
         content: Text(
           AppLocalization.of(context)!.getTranslatedValues("quizExitLbl")!,
-          style: TextStyle(color:Theme.of(context).accentColor),
+          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
         ),
         actions: [
           CupertinoButton(
               child: Text(
                 AppLocalization.of(context)!.getTranslatedValues("yesBtn")!,
                 style: TextStyle(
-                  color:primaryColor,
+                  color: primaryColor,
                 ),
               ),
               onPressed: () {
@@ -34,9 +36,9 @@ class ExitGameDailog extends StatelessWidget {
                 }
               }),
           CupertinoButton(
-              child: Text( AppLocalization.of(context)!.getTranslatedValues("noBtn")!,
+              child: Text(AppLocalization.of(context)!.getTranslatedValues("noBtn")!,
                   style: TextStyle(
-                    color:Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
                   )),
               onPressed: () {
                 Navigator.of(context).pop();

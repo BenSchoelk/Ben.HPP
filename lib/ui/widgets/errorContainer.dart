@@ -53,7 +53,7 @@ class ErrorContainer extends StatelessWidget {
             radius: 5,
             showBorder: false,
             height: 40,
-            titleColor: Theme.of(context).accentColor,
+            titleColor: Theme.of(context).colorScheme.secondary,
             elevation: 5.0,
             onTap: onTapRetry,
           )

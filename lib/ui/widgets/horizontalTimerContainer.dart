@@ -18,7 +18,7 @@ class HorizontalTimerContainer extends StatelessWidget {
           animation: timerAnimationController,
           builder: (context, child) {
             return Container(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               height: 10.0,
               width: MediaQuery.of(context).size.width * timerAnimationController.value,
             );

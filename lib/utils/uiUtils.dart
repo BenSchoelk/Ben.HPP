@@ -181,7 +181,7 @@ class UiUtils {
           return Colors.greenAccent;
         }
         //color will not change for other options
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       } else {
         //option id is same as given answer then change color to red
         if (question.submittedAnswerId == optionId) {
@@ -192,10 +192,10 @@ class UiUtils {
           return Colors.greenAccent;
         }
         //do not change color
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       }
     }
-    return Theme.of(context).accentColor;
+    return Theme.of(context).colorScheme.secondary;
   }
 
   //will be in use while playing  quiz screen

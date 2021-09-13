@@ -79,7 +79,7 @@ class JoinRoomDialog extends StatelessWidget {
                       },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(MediaQuery.of(context).size.width * .4, MediaQuery.of(context).size.height * .07),
-                  onPrimary: Theme.of(context).accentColor,
+                  onPrimary: Theme.of(context).colorScheme.secondary,
                   primary: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),

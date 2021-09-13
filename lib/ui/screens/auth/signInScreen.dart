@@ -112,7 +112,7 @@ class SignInScreenState extends State<SignInScreen> {
       controller: edtEmail,
       keyboardType: TextInputType.emailAddress,
       validator: (val) => Validators.validateEmail(val!, AppLocalization.of(context)!.getTranslatedValues('emailRequiredMsg')!, AppLocalization.of(context)!.getTranslatedValues('VALID_EMAIL')),
-      style: TextStyle(color: Theme.of(context).accentColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       decoration: InputDecoration(
         fillColor: Theme.of(context).backgroundColor,
         filled: true,
@@ -138,7 +138,7 @@ class SignInScreenState extends State<SignInScreen> {
   Widget showPwd() {
     return TextFormField(
       controller: edtPwd,
-      style: TextStyle(color: Theme.of(context).accentColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       obscureText: _obscureText,
       obscuringCharacter: "*",
       validator: (val) => val!.isEmpty ? '${AppLocalization.of(context)!.getTranslatedValues('pwdLengthMsg')}' : null,
@@ -163,7 +163,7 @@ class SignInScreenState extends State<SignInScreen> {
         suffixIcon: GestureDetector(
           child: Icon(
             _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () {
             setState(() {
@@ -232,13 +232,13 @@ class SignInScreenState extends State<SignInScreen> {
         keyboardType: TextInputType.emailAddress,
         validator: (val) => Validators.validateEmail(val!, AppLocalization.of(context)!.getTranslatedValues('emailRequiredMsg')!, AppLocalization.of(context)!.getTranslatedValues('validEmail')),
         onSaved: (value) => edtEmailReset.text = value!.trim(),
-        style: TextStyle(color: Theme.of(context).accentColor),
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
         decoration: InputDecoration(
           fillColor: Theme.of(context).backgroundColor,
           filled: true,
           border: InputBorder.none,
           hintText: AppLocalization.of(context)!.getTranslatedValues('enterEmailLbl')!,
-          hintStyle: TextStyle(color: Theme.of(context).accentColor.withOpacity(0.5)),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
           contentPadding: EdgeInsets.all(15),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -447,7 +447,7 @@ class SignInScreenState extends State<SignInScreen> {
           Text(
             AppLocalization.of(context)!.getTranslatedValues('noAccountLbl')!,
             style: TextStyle(
-              color: Theme.of(context).accentColor.withOpacity(0.4),
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
             ),
           ),
           SizedBox(width: 4),

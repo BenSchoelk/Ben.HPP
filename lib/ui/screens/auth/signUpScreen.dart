@@ -107,7 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       controller: edtEmail,
       keyboardType: TextInputType.emailAddress,
       validator: (val) => Validators.validateEmail(val!, AppLocalization.of(context)!.getTranslatedValues('emailRequiredMsg')!, AppLocalization.of(context)!.getTranslatedValues('VALID_EMAIL')),
-      style: TextStyle(color: Theme.of(context).accentColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       decoration: InputDecoration(
         fillColor: Theme.of(context).backgroundColor,
         filled: true,
@@ -133,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget showPassword() {
     return TextFormField(
       controller: edtPwd,
-      style: TextStyle(color: Theme.of(context).accentColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       obscureText: _obscureText,
       obscuringCharacter: "*",
       validator: (val) => val!.isEmpty ? '${AppLocalization.of(context)!.getTranslatedValues('pwdLengthMsg')}' : null,
@@ -158,7 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         suffixIcon: GestureDetector(
           child: Icon(
             _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () {
             setState(() {
@@ -173,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget showCnfPassword() {
     return TextFormField(
       controller: edtCPwd,
-      style: TextStyle(color: Theme.of(context).accentColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       obscureText: _obscureTextCn,
       obscuringCharacter: "*",
       validator: (val) => val != edtPwd.text ? '${AppLocalization.of(context)!.getTranslatedValues('cnPwdNotMatchMsg')}' : null,
@@ -198,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         suffixIcon: GestureDetector(
           child: Icon(
             _obscureTextCn ? Icons.visibility : Icons.visibility_off,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () {
             setState(() {
@@ -218,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           AppLocalization.of(context)!.getTranslatedValues('alreadyAccountLbl')!,
           style: TextStyle(
             fontSize: 12,
-            color: Theme.of(context).accentColor.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
           ),
         ),
         SizedBox(width: 2),
@@ -256,14 +256,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   });
                 } else if (state is SignUpFailure) {
                   //show error message
-                 UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, false);
+                  UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, false);
                 }
               },
               builder: (context, state) {
                 return CupertinoButton(
                   child: state is SignUpProgress
                       ? Center(
-                          child: CircularProgressContainer(heightAndWidth: 40,
+                          child: CircularProgressContainer(
+                          heightAndWidth: 40,
                           useWhiteLoader: true,
                         ))
                       : Text(
@@ -286,6 +287,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
   resetForm() {
     setState(() {
       isLoading = false;

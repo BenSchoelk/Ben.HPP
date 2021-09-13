@@ -52,7 +52,7 @@ class BookmarkScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * (0.9),
                   child: Text(
                     AppLocalization.of(context)!.getTranslatedValues("yourAnsLbl")! + ":" + " ${context.read<BookmarkCubit>().getSubmittedAnswerForQuestion(question.id)}",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0, color: Theme.of(context).accentColor),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0, color: Theme.of(context).colorScheme.secondary),
                   ),
                 ),
                 SizedBox(
@@ -63,7 +63,7 @@ class BookmarkScreen extends StatelessWidget {
                   child: Text(
                     AppLocalization.of(context)!.getTranslatedValues("correctAndLbl")! + ":" + " $correctAnswer",
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0, color: Theme.of(context).accentColor),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0, color: Theme.of(context).colorScheme.secondary),
                   ),
                 ),
                 SizedBox(

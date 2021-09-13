@@ -162,7 +162,7 @@ class _CreateRoomDialogState extends State<CreateRoomDialog> {
                       },
                 style: ElevatedButton.styleFrom(
                   fixedSize: Size(constraints.maxWidth * (0.5), constraints.maxHeight * (0.15)),
-                  onPrimary: Theme.of(context).accentColor,
+                  onPrimary: Theme.of(context).colorScheme.secondary,
                   primary: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),

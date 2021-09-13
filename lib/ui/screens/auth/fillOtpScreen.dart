@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -19,6 +19,7 @@ import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+
 class FillOtpScreen extends StatefulWidget {
   final String? mobileNumber, countryCode, name;
 
@@ -26,6 +27,7 @@ class FillOtpScreen extends StatefulWidget {
   @override
   _FillOtpScreen createState() => _FillOtpScreen();
 }
+
 class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   String mobile = "", _verificationId = "", otp = "", signature = "";
@@ -59,6 +61,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
       },
     );
   }
+
   bool otpMobile(String value) {
     if (value.trim().isEmpty) {
       setState(() {
@@ -90,7 +93,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
   void initState() {
     super.initState();
     getSingature();
-   _onVerifyCode();
+    _onVerifyCode();
     startTimer();
     Future.delayed(Duration(seconds: 60)).then((_) {
       _isClickable = true;
@@ -188,7 +191,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
     String code = otp.trim();
     if (code.length == 6) {
       setState(() {
-      isloading = true;
+        isloading = true;
       });
       AuthCredential _authCredential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: code);
       _firebaseAuth.signInWithCredential(_authCredential).then((UserCredential value) async {
@@ -210,7 +213,6 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
               });
             }
           });
-
         } else {
           print("in else...........................................");
           context.read<UserDetailsCubit>().fetchUserDetails(uid);
@@ -248,10 +250,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
                       ],
                     ),
                   ],
-                )
-            )
-        )
-    );
+                ))));
   }
 
   Widget showForm() {
@@ -332,30 +331,28 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
 
   Widget showPin() {
     return Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: MediaQuery.of(context).size.width * .05,
-        end: MediaQuery.of(context).size.width * .05,
-      ),
-      child:PinFieldAutoFill(
-          controller: otpController,
-          codeLength: 6,
-          decoration: BoxLooseDecoration(
-              errorText: isErrorOtp ?AppLocalization.of(context)!.getTranslatedValues(enterOtp) : null,
-              strokeColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
-              bgColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
-              gapSpace: 5,
-              textStyle: Theme.of(context).textTheme.headline4!.merge(TextStyle(color: Theme.of(context).accentColor, fontSize: 14))),
-          currentCode: otp,
-          onCodeChanged: (String? code) {
-            isErrorOtp = otpController.text.isEmpty;
-            otp = code!;
-            isloading=false;
-          },
-          onCodeSubmitted: (String code) {
-            otp = code;
-          }
-          )
-    );
+        padding: EdgeInsetsDirectional.only(
+          start: MediaQuery.of(context).size.width * .05,
+          end: MediaQuery.of(context).size.width * .05,
+        ),
+        child: PinFieldAutoFill(
+            controller: otpController,
+            codeLength: 6,
+            decoration: BoxLooseDecoration(
+                errorText: isErrorOtp ? AppLocalization.of(context)!.getTranslatedValues(enterOtp) : null,
+                strokeColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
+                bgColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
+                gapSpace: 5,
+                textStyle: Theme.of(context).textTheme.headline4!.merge(TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14))),
+            currentCode: otp,
+            onCodeChanged: (String? code) {
+              isErrorOtp = otpController.text.isEmpty;
+              otp = code!;
+              isloading = false;
+            },
+            onCodeSubmitted: (String code) {
+              otp = code;
+            }));
   }
 
   Widget showVerify() {
@@ -383,8 +380,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
                     _onFormSubmitted();
                   }
                 },
-              )
-    );
+              ));
   }
 
   Widget resendText() {
@@ -400,7 +396,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
               ? CupertinoButton(
                   onPressed: () async {
                     setState(() {
-                      isloading=false;
+                      isloading = false;
                     });
                     await buttonController.reverse();
                     checkNetworkOtpResend();
@@ -410,7 +406,8 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
                     AppLocalization.of(context)!.getTranslatedValues("resendBtn")!,
                     style: TextStyle(fontSize: 10, color: Theme.of(context).primaryColor, decoration: TextDecoration.underline, fontWeight: FontWeight.normal),
                   ),
-                ) : Container(),
+                )
+              : Container(),
         ],
       ),
     );

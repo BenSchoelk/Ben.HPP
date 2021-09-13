@@ -55,7 +55,7 @@ class CustomListTile extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * (0.535),
                   child: Text(
                     "$title",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0, color: Theme.of(context).accentColor),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0, color: Theme.of(context).colorScheme.secondary),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -81,7 +81,7 @@ class CustomListTile extends StatelessWidget {
                     onTap: trailingButtonOnTap as void Function()?,
                     child: Icon(
                       Icons.close,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   )
                 : Container(),

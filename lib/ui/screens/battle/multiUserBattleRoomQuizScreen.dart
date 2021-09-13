@@ -268,11 +268,11 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
               child: AlertDialog(
                 title: Text(
                   AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!,
-                  style: TextStyle(color: Theme.of(context).accentColor),
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
                 content: Text(
                   AppLocalization.of(context)!.getTranslatedValues('everyOneLeftLbl')!,
-                  style: TextStyle(color: Theme.of(context).accentColor),
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
                 actions: [
                   TextButton(
@@ -313,7 +313,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         child: AlertDialog(
           content: Text(
             AppLocalization.of(context)!.getTranslatedValues("youLeftLbl")!,
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
           actions: [
             TextButton(
@@ -382,7 +382,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
               ),
               Container(
                 child: CustomPaint(
-                  painter: ArcCustomPainter(sweepAngle: sweepAngle, color: Theme.of(context).accentColor, radiusPercentage: 0.5, strokeWidth: 3.0),
+                  painter: ArcCustomPainter(sweepAngle: sweepAngle, color: Theme.of(context).colorScheme.secondary, radiusPercentage: 0.5, strokeWidth: 3.0),
                 ),
                 height: MediaQuery.of(context).size.width * (0.14),
                 width: MediaQuery.of(context).size.width * (0.14),

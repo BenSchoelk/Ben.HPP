@@ -189,7 +189,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-        color: attempted ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+        color: attempted ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
         height: 30.0,
         width: 30.0,
         child: Text(
@@ -224,7 +224,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                       Navigator.of(context).pop();
                     },
                     icon: Icon(Icons.close),
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 Wrap(
@@ -274,12 +274,12 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                       ),
                       Text(
                         AppLocalization.of(context)!.getTranslatedValues("attemptedLbl")!,
-                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).accentColor),
+                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).colorScheme.secondary),
                       ),
                       Spacer(),
                       CircleAvatar(
                         radius: 15,
-                        backgroundColor: Theme.of(context).accentColor,
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
                         child: Center(
                           child: Icon(
                             Icons.check,
@@ -293,7 +293,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                       ),
                       Text(
                         AppLocalization.of(context)!.getTranslatedValues("unAttemptedLbl")!,
-                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).accentColor),
+                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).colorScheme.secondary),
                       ),
                     ],
                   ),
@@ -330,7 +330,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                       },
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       )),
                 ),
                 Spacer(),
@@ -340,7 +340,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                     openBottomSheet(state.questions);
                   },
                   child: CircleAvatar(
-                    backgroundColor: Theme.of(context).accentColor,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
                     radius: 20,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -361,7 +361,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                       },
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       )),
                 ),
               ],

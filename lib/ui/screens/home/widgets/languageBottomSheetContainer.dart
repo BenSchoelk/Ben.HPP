@@ -21,7 +21,7 @@ class LanguageDailogContainer extends StatelessWidget {
                 return Container(
                   margin: EdgeInsets.symmetric(vertical: 10.0),
                   decoration: BoxDecoration(
-                    color: state.language.languageCode == language.languageCode ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+                    color: state.language.languageCode == language.languageCode ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ListTile(

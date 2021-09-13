@@ -308,8 +308,8 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
                                     .map((e) => _buildSelectTimeAndQuestionContainer(
                                           forSelectQuestion: true,
                                           value: e,
-                                          borderColor: selectedNumberOfQuestions == e ? Theme.of(context).accentColor : Colors.grey.shade400,
-                                          backgroundColor: selectedNumberOfQuestions == e ? Theme.of(context).accentColor : Colors.grey.shade100,
+                                          borderColor: selectedNumberOfQuestions == e ? Theme.of(context).colorScheme.secondary : Colors.grey.shade400,
+                                          backgroundColor: selectedNumberOfQuestions == e ? Theme.of(context).colorScheme.secondary : Colors.grey.shade100,
                                           textColor: selectedNumberOfQuestions == e ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
                                         ))
                                     .toList(),
@@ -345,9 +345,9 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
                                     .map((e) => _buildSelectTimeAndQuestionContainer(
                                         forSelectQuestion: false,
                                         value: e,
-                                        backgroundColor: selectedMinutes == e ? Theme.of(context).accentColor : Colors.grey.shade100,
+                                        backgroundColor: selectedMinutes == e ? Theme.of(context).colorScheme.secondary : Colors.grey.shade100,
                                         textColor: selectedMinutes == e ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
-                                        borderColor: selectedMinutes == e ? Theme.of(context).accentColor : Colors.grey.shade400))
+                                        borderColor: selectedMinutes == e ? Theme.of(context).colorScheme.secondary : Colors.grey.shade400))
                                     .toList(),
                               ),
                             ),

@@ -65,7 +65,7 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
                 bottom: TabBar(
                     labelPadding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .03),
                     labelColor: Theme.of(context).primaryColor,
-                    unselectedLabelColor: Theme.of(context).accentColor.withOpacity(0.7),
+                    unselectedLabelColor: Theme.of(context).colorScheme.secondary.withOpacity(0.7),
                     labelStyle: Theme.of(context).textTheme.subtitle1,
                     indicatorColor: Theme.of(context).primaryColor,
                     indicatorSize: TabBarIndicatorSize.tab,
@@ -227,10 +227,10 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
                     ),
                   );
                 },
-                  fit: BoxFit.cover,
+                fit: BoxFit.cover,
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * .15,
-                imageUrl:  data.contestDetails[index].image.toString(),
+                imageUrl: data.contestDetails[index].image.toString(),
               ),
             )),
         Divider(

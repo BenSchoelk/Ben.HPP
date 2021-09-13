@@ -130,7 +130,7 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
               indicatorWeight: 0,
               indicatorPadding: EdgeInsets.all(10),
               labelColor: backgroundColor,
-              unselectedLabelColor: Theme.of(context).accentColor,
+              unselectedLabelColor: Theme.of(context).colorScheme.secondary,
               labelStyle: Theme.of(context).textTheme.subtitle1,
               indicator: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Theme.of(context).primaryColor),
               tabs: [
@@ -551,7 +551,7 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
 
   Widget myRank(String rank, String profile, String score) {
     return Container(
-      decoration: BoxDecoration(color: accentColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: ListTile(
           title: Text(
             "My Rank",

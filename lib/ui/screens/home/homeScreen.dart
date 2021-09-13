@@ -239,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * (0.085) + statusBarPadding),
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
-              //gradient: UiUtils.buildLinerGradient([Theme.of(context).primaryColor, Theme.of(context).accentColor], Alignment.topCenter, Alignment.bottomCenter),
+              //gradient: UiUtils.buildLinerGradient([Theme.of(context).primaryColor, Theme.of(context).colorScheme.secondary], Alignment.topCenter, Alignment.bottomCenter),
               boxShadow: [
                 UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
               ],
@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
 
-              //gradient: UiUtils.buildLinerGradient([Theme.of(context).accentColor, Theme.of(context).primaryColor], Alignment.centerLeft, Alignment.centerRight),
+              //gradient: UiUtils.buildLinerGradient([Theme.of(context).colorScheme.secondary, Theme.of(context).primaryColor], Alignment.centerLeft, Alignment.centerRight),
 
               boxShadow: [UiUtils.buildBoxShadow(offset: Offset(5.0, 5.0), blurRadius: 10.0)],
               borderRadius: BorderRadius.circular(20.0),

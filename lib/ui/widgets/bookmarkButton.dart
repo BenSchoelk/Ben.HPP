@@ -61,12 +61,12 @@ class BookmarkButton extends StatelessWidget {
               icon: bookmarkCubit.hasQuestionBookmarked(question.id)
                   ? Icon(
                       CupertinoIcons.bookmark_fill,
-                      color: bookmarkFillColor ?? Theme.of(context).accentColor,
+                      color: bookmarkFillColor ?? Theme.of(context).colorScheme.secondary,
                       size: 20,
                     )
                   : Icon(
                       CupertinoIcons.bookmark,
-                      color: bookmarkButtonColor ?? Theme.of(context).accentColor,
+                      color: bookmarkButtonColor ?? Theme.of(context).colorScheme.secondary,
                       size: 20,
                     ),
             );

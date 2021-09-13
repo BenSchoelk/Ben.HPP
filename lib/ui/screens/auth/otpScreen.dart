@@ -157,7 +157,7 @@ class _OtpScreen extends State<OtpScreen> {
           iserrorNumber = phoneController.text.length < 10 || phoneController.text.length > 14;
         },
         style: TextStyle(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         decoration: InputDecoration(
           fillColor: Theme.of(context).backgroundColor,
@@ -170,8 +170,8 @@ class _OtpScreen extends State<OtpScreen> {
                   showDropDownButton: true,
                   searchDecoration: InputDecoration(
                     hintText: AppLocalization.of(context)!.getTranslatedValues("countryLbl"),
-                    hintStyle: TextStyle(color: Theme.of(context).accentColor),
-                    fillColor: Theme.of(context).accentColor,
+                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                    fillColor: Theme.of(context).colorScheme.secondary,
                   ),
                   showOnlyCountryWhenClosed: false,
                   hideMainText: true,
@@ -179,7 +179,7 @@ class _OtpScreen extends State<OtpScreen> {
                   flagWidth: 25,
                   dialogSize: Size(MediaQuery.of(context).size.width * .8, MediaQuery.of(context).size.height * .8),
                   // alignLeft: true,
-                  textStyle: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+                  textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
                   onChanged: (CountryCode countryCode) {
                     countrycode = countryCode.toString().replaceFirst("+", "");
                     countryName = countryCode.name;
@@ -189,10 +189,10 @@ class _OtpScreen extends State<OtpScreen> {
                   })),
           errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
           hintText: "+91 999-999-999",
-          hintStyle: TextStyle(color: Theme.of(context).accentColor.withOpacity(0.6)),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
           labelStyle: TextStyle(
             fontWeight: FontWeight.w600,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           contentPadding: EdgeInsets.all(15),
           focusedBorder: OutlineInputBorder(
@@ -223,7 +223,11 @@ class _OtpScreen extends State<OtpScreen> {
           if (phoneController.text.isEmpty || phoneController.text.length < 10 || phoneController.text.length > 14) {
             validateMobile(phoneController.text);
           } else {
-            Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (context, anim1, anim2) => FillOtpScreen(mobileNumber: phoneController.text, countryCode: countrycode, name: ""),));
+            Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, anim1, anim2) => FillOtpScreen(mobileNumber: phoneController.text, countryCode: countrycode, name: ""),
+                ));
           }
         },
       ),

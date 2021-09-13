@@ -53,7 +53,7 @@ class ReferAndEarnScreen extends StatelessWidget {
                             AppLocalization.of(context)!.getTranslatedValues("referFrdLbl")!,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         ),

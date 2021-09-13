@@ -304,14 +304,14 @@ class _SubcategoryContainerState extends State<SubcategoryContainer> with Single
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     height: 1.0,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     fontSize: 22.0,
                   ),
                 ),
                 Text(
                   "Questions : ${widget.subcategory.noOfQue!}",
                   style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     fontSize: 18.0,
                   ),
                 ),

@@ -125,7 +125,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           return Colors.green;
         }
         //color will not change for other options
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       } else {
         //option id is same as given answer then change color to red
         if (question.submittedAnswerId == optionId) {
@@ -136,14 +136,14 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           return Colors.green;
         }
         //do not change color
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       }
     } else {
       // if answer not given then only show correct answer
       if (question.correctAnswerOptionId == optionId) {
         return Colors.green;
       }
-      return Theme.of(context).accentColor;
+      return Theme.of(context).colorScheme.secondary;
     }
   }
 
@@ -156,7 +156,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           return Theme.of(context).primaryColor;
         }
         //color will not change for other options
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       } else {
         //option id is same as given answer then change color to red
         if (question.submittedAnswerId == optionId) {
@@ -167,14 +167,14 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           return Theme.of(context).primaryColor;
         }
         //do not change color
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       }
     } else {
       // if answer not given then only show correct answer
       if (question.correctAnswerOptionId == optionId) {
         return Theme.of(context).primaryColor;
       }
-      return Theme.of(context).accentColor;
+      return Theme.of(context).colorScheme.secondary;
     }
   }
 
@@ -255,7 +255,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
             padding: const EdgeInsetsDirectional.only(start: 0.0),
             child: Text(
               AppLocalization.of(context)!.getTranslatedValues("yourAnsLbl")! + " : " + "${UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer)}",
-              style: TextStyle(fontSize: 18.0, color: UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer) == guessTheWordQuestion.answer ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+              style: TextStyle(fontSize: 18.0, color: UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer) == guessTheWordQuestion.answer ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
             ),
           ),
           UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer) == guessTheWordQuestion.answer
@@ -273,7 +273,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
   }
 
   Widget _buildNotes(String notes) {
-    print("question for notes..........................................."+notes);
+    print("question for notes..........................................." + notes);
     return notes.isEmpty
         ? Container()
         : Container(
@@ -532,13 +532,13 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                   child: TextField(
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     controller: textEditingController,
                     decoration: InputDecoration(
                       hintText: AppLocalization.of(context)!.getTranslatedValues(enterReasonKey)!,
                       hintStyle: TextStyle(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                       border: InputBorder.none,
                     ),
@@ -559,7 +559,7 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                           child: Text(
                             errorMessage,
                             style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         ),

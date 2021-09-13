@@ -339,13 +339,13 @@ class _ResultScreenState extends State<ResultScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(UiUtils.getImagePath(icon), color: Theme.of(context).accentColor),
+          SvgPicture.asset(UiUtils.getImagePath(icon), color: Theme.of(context).colorScheme.secondary),
           SizedBox(
             width: 5,
           ),
           Text(
             title,
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
         ],
       ),
@@ -468,7 +468,7 @@ class _ResultScreenState extends State<ResultScreen> {
             return Transform.translate(
               offset: Offset(0.0, 15.0), //
               child: RadialPercentageResultContainer(
-                circleColor: Theme.of(context).accentColor,
+                circleColor: Theme.of(context).colorScheme.secondary,
                 arcColor: Theme.of(context).backgroundColor,
                 arcStrokeWidth: 10.0,
                 circleStrokeWidth: 10.0,

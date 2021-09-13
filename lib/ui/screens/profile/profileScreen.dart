@@ -122,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                 content: Text(
                   AppLocalization.of(context)!.getTranslatedValues("logoutDialogLbl")!,
                   style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 actions: [

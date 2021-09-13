@@ -10,7 +10,7 @@ class TermsAndCondition extends StatelessWidget {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Text(
         AppLocalization.of(context)!.getTranslatedValues('termAgreement')!,
-        style: TextStyle(fontSize: 12, color: Theme.of(context).accentColor.withOpacity(0.8), fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.secondary.withOpacity(0.8), fontWeight: FontWeight.bold),
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +26,7 @@ class TermsAndCondition extends StatelessWidget {
           SizedBox(
             width: 5.0,
           ),
-          Text(AppLocalization.of(context)!.getTranslatedValues('andLbl')!, style: Theme.of(context).textTheme.caption!.copyWith(color: Theme.of(context).accentColor.withOpacity(0.8), fontWeight: FontWeight.bold)),
+          Text(AppLocalization.of(context)!.getTranslatedValues('andLbl')!, style: Theme.of(context).textTheme.caption!.copyWith(color: Theme.of(context).colorScheme.secondary.withOpacity(0.8), fontWeight: FontWeight.bold)),
           SizedBox(
             width: 5.0,
           ),

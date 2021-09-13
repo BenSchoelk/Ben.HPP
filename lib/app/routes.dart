@@ -30,7 +30,6 @@ import 'package:flutterquiz/ui/screens/quiz/selfChallengeScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/subCategoryAndLevelScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/quizScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/resultScreen.dart';
-import 'package:flutterquiz/ui/screens/quiz/selectRoomScreen.dart';
 
 import 'package:flutterquiz/ui/screens/referAndEarnScreen.dart';
 import 'package:flutterquiz/ui/screens/rewardsScreen.dart';
@@ -110,8 +109,6 @@ class Routes {
         return CupertinoPageRoute(builder: (_) => ReferAndEarnScreen());
       case result:
         return ResultScreen.route(routeSettings);
-      case selectRoom:
-        return CupertinoPageRoute(builder: (_) => SelectRoomScreen());
       case profile:
         return ProfileScreen.route(routeSettings);
       case reviewAnswers:

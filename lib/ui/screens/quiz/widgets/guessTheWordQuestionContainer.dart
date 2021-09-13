@@ -125,7 +125,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
           return Container(
             clipBehavior: Clip.hardEdge,
             alignment: Alignment.bottomCenter,
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(width: border, color: currentSelectedIndex == answerBoxIndex ? Theme.of(context).primaryColor : Theme.of(context).accentColor))),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(width: border, color: currentSelectedIndex == answerBoxIndex ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary))),
             margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
             height: optionBoxContainerHeight,
             width: 35.0,
@@ -154,7 +154,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
                       return Container(
                         height: 2.0,
                         width: 35.0 * (1.0 - topContainerAnimations[answerBoxIndex].value),
-                        color: currentSelectedIndex == answerBoxIndex ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+                        color: currentSelectedIndex == answerBoxIndex ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
                       );
                     },
                   ),
@@ -164,7 +164,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
 
                     submittedAnswer[answerBoxIndex] == -1 ? "" : widget.questions[widget.currentQuestionIndex].options[submittedAnswer[answerBoxIndex]],
                     //
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: currentSelectedIndex == answerBoxIndex ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: currentSelectedIndex == answerBoxIndex ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
                   ),
                 ],
               ),
@@ -267,7 +267,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
       mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
-          backgroundColor: correctAnswer ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+          backgroundColor: correctAnswer ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
           radius: 20,
           child: Center(
             child: Icon(correctAnswer ? Icons.check : Icons.close, color: Theme.of(context).backgroundColor),
@@ -280,7 +280,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
           UiUtils.buildGuessTheWordQuestionAnswer(getSubmittedAnswer()),
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: correctAnswer ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+            color: correctAnswer ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
             fontSize: 20.0,
             letterSpacing: 1.0,
           ),
@@ -312,13 +312,13 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
                       alignment: Alignment.center,
                       child: Text(
                         "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                       ),
                     ),
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: IconButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         icon: Icon(Icons.settings),
                         onPressed: () {
                           showDialog(context: context, builder: (context) => SettingsDialogContainer());
@@ -333,7 +333,7 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
                 alignment: Alignment.center,
                 child: Text(
                   "${question.question}",
-                  style: TextStyle(height: 1.125, fontSize: textSize, color: Theme.of(context).accentColor),
+                  style: TextStyle(height: 1.125, fontSize: textSize, color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
               SizedBox(

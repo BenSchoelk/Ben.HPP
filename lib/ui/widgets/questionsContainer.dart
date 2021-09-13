@@ -174,7 +174,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     return Container(
       child: Text(
         AppLocalization.of(context)!.getTranslatedValues("levelLbl")! + " : ${widget.level}",
-        style: TextStyle(color: Theme.of(context).accentColor),
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       ),
     );
   }
@@ -208,7 +208,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
         padding: EdgeInsetsDirectional.only(start: widget.lifeLines.isEmpty ? 0 : MediaQuery.of(context).size.width * (0.175)),
         child: Text(
           "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
-          style: TextStyle(color: Theme.of(context).accentColor),
+          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
         ),
       ),
     );
@@ -244,7 +244,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                       child: Padding(
                         padding: EdgeInsetsDirectional.only(end: widget.bookmarkButton.toString() == "Container" ? 0.0 : 30.0),
                         child: IconButton(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           icon: Icon(Icons.settings),
                           onPressed: () {
                             settingDialog();
@@ -263,7 +263,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                 alignment: Alignment.center,
                 child: Text(
                   "${question.question}",
-                  style: TextStyle(height: 1.125, color: Theme.of(context).accentColor, fontSize: textSize),
+                  style: TextStyle(height: 1.125, color: Theme.of(context).colorScheme.secondary, fontSize: textSize),
                 ),
               ),
               question.imageUrl != null && question.imageUrl!.isNotEmpty

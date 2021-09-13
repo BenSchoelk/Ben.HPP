@@ -91,12 +91,12 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
 
   Color _buildOptionBackgroundColor() {
     if (widget.showAnswerCorrectness) {
-      return Theme.of(context).accentColor;
+      return Theme.of(context).colorScheme.secondary;
     }
     if (widget.hasSubmittedAnswerForCurrentQuestion() && widget.submittedAnswerId == widget.answerOption.id) {
       return Theme.of(context).primaryColor;
     }
-    return Theme.of(context).accentColor;
+    return Theme.of(context).colorScheme.secondary;
   }
 
   Widget _buildOptionDetails(double optionWidth) {
@@ -209,7 +209,7 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
                 ),
                 Text(
                   "${widget.audiencePollPercentage}%",
-                  style: TextStyle(color: Theme.of(context).accentColor, fontSize: 16.0),
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 16.0),
                 ),
               ],
             )

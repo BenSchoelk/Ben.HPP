@@ -40,7 +40,7 @@ class UserDetailsWithTimerContainer extends StatelessWidget {
         children: [
           Text(
             "$name",
-            style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+            style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.secondary),
             textAlign: isCurrentUser ? TextAlign.left : TextAlign.right,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -48,11 +48,11 @@ class UserDetailsWithTimerContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: isCurrentUser ? MainAxisAlignment.start : MainAxisAlignment.end,
             children: [
-              Text("Points", style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor)),
+              Text("Points", style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.secondary)),
               SizedBox(
                 width: 5.0,
               ),
-              Text(": $points", style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor))
+              Text(": $points", style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.secondary))
             ],
           ),
         ],

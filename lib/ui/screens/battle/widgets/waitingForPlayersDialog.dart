@@ -22,7 +22,7 @@ class WaitingForPlayesDialog extends StatelessWidget {
       children: [
         Container(
           width: constraints.maxWidth * (0.285),
-          decoration: BoxDecoration(border: Border.all(color: Theme.of(context).accentColor)),
+          decoration: BoxDecoration(border: Border.all(color: Theme.of(context).colorScheme.secondary)),
           height: constraints.maxHeight * (0.165),
           padding: EdgeInsets.symmetric(
             horizontal: 2.5,
@@ -77,7 +77,7 @@ class WaitingForPlayesDialog extends StatelessWidget {
             child: AlertDialog(
               content: Text(
                 AppLocalization.of(context)!.getTranslatedValues('roomDeletedOwnerLbl')!,
-                style: TextStyle(color: Theme.of(context).accentColor),
+                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
               actions: [
                 TextButton(
@@ -208,12 +208,12 @@ class WaitingForPlayesDialog extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + ": ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
-                                textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w300, fontSize: 19.0, color: Theme.of(context).accentColor)),
+                                textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w300, fontSize: 19.0, color: Theme.of(context).colorScheme.secondary)),
                             Spacer(),
                             GestureDetector(
                               child: Icon(
                                 Icons.share,
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                               onTap: () {
                                 try {
@@ -235,12 +235,12 @@ class WaitingForPlayesDialog extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14.0,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                           )),
                     ],
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).accentColor),
+                    border: Border.all(color: Theme.of(context).colorScheme.secondary),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                 ),

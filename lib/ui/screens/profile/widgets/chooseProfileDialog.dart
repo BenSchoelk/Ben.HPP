@@ -66,7 +66,7 @@ class _ChooseProfileDialog extends State<ChooseProfileDialog> {
                     ),
                     label: Text(
                       AppLocalization.of(context)!.getTranslatedValues("photoLibraryLbl")!,
-                      style: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
                     ),
                     onPressed: () {
                       _getFromGallery(context);
@@ -79,7 +79,7 @@ class _ChooseProfileDialog extends State<ChooseProfileDialog> {
                   ),
                   label: Text(
                     AppLocalization.of(context)!.getTranslatedValues("cameraLbl")!,
-                    style: TextStyle(color: Theme.of(context).accentColor, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
                     _getFromCamera(context);

@@ -6,22 +6,20 @@ enum AppTheme { Light, Dark }
 
 final appThemeData = {
   AppTheme.Light: ThemeData(
-    shadowColor: primaryColor.withOpacity(0.25),
-    brightness: Brightness.light,
-    primaryColor: primaryColor,
-    scaffoldBackgroundColor: pageBackgroundColor,
-    backgroundColor: backgroundColor,
-    canvasColor: canvasColor,
-    accentColor: accentColor,
-  ),
+      shadowColor: primaryColor.withOpacity(0.25),
+      brightness: Brightness.light,
+      primaryColor: primaryColor,
+      scaffoldBackgroundColor: pageBackgroundColor,
+      backgroundColor: backgroundColor,
+      canvasColor: canvasColor,
+      colorScheme: ThemeData().colorScheme.copyWith(
+            secondary: secondaryColor,
+          )),
   AppTheme.Dark: ThemeData(
     shadowColor: primaryColor.withOpacity(0.25),
     brightness: Brightness.dark,
     primaryColor: primaryColor,
-    scaffoldBackgroundColor:accentColor,
     backgroundColor: backgroundColor,
-    canvasColor: accentColor,
-    accentColor: accentColor,
   ),
 };
 /*

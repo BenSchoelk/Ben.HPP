@@ -47,14 +47,14 @@ class _EditProfileFieldDialogState extends State<EditProfileFieldDialog> {
           child: AlertDialog(
             title: Text(
               "${widget.fieldTitle}",
-              style: TextStyle(color: Theme.of(context).accentColor),
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
             content: TextField(
               decoration: InputDecoration(),
               keyboardType: widget.numericKeyboardEnable ? TextInputType.number : TextInputType.text,
               controller: textEditingController,
-              cursorColor: Theme.of(context).accentColor,
-              style: TextStyle(color: Theme.of(context).accentColor),
+              cursorColor: Theme.of(context).colorScheme.secondary,
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
             actions: [
               TextButton(

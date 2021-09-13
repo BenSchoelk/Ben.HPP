@@ -328,13 +328,13 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                       title: Text(
                         AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!,
                         style: TextStyle(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                       content: Text(
                         AppLocalization.of(context)!.getTranslatedValues('opponentLeftLbl')!,
                         style: TextStyle(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                       actions: [
@@ -367,7 +367,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                 content: Text(
                   AppLocalization.of(context)!.getTranslatedValues('youLeftLbl')!,
                   style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 actions: [

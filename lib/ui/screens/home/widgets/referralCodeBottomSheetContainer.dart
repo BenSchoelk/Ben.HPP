@@ -105,13 +105,13 @@ class _ReferralCodeBottomSheetContainerState extends State<ReferralCodeBottomShe
                   child: TextField(
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     controller: textEditingController,
                     decoration: InputDecoration(
                       hintText: AppLocalization.of(context)!.getTranslatedValues('enterReferralCodeLbl')!,
                       hintStyle: TextStyle(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                       border: InputBorder.none,
                     ),
@@ -132,7 +132,7 @@ class _ReferralCodeBottomSheetContainerState extends State<ReferralCodeBottomShe
                           child: Text(
                             errorMessage,
                             style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         ),

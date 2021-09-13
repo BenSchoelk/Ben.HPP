@@ -9,7 +9,7 @@ class ErrorMessageDialog extends StatelessWidget {
     return AlertDialog(
       content: Text(
         errorMessage!,
-        style: TextStyle(color: Theme.of(context).accentColor),
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       ),
     );
   }

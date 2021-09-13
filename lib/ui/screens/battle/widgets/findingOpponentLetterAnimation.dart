@@ -23,7 +23,7 @@ class _FindOpponentLetterAnimationState extends State<FindOpponentLetterAnimatio
           height: MediaQuery.of(context).size.height * (0.15),
         ),
         Container(
-          decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).accentColor),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).colorScheme.secondary),
           height: MediaQuery.of(context).size.height * (0.14),
           child: Center(
             child: AnimatedBuilder(
