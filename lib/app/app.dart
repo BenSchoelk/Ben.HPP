@@ -31,6 +31,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+
 Future<Widget> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
@@ -53,12 +54,14 @@ Future<Widget> initializeApp() async {
 
   return MyApp();
 }
+
 class GlobalScrollBehavior extends ScrollBehavior {
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
     return BouncingScrollPhysics();
   }
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 

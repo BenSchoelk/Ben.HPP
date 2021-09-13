@@ -31,8 +31,6 @@ class BattleRoomQuizScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(providers: [
               BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
-              //BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
-              //BlocProvider<OpponentMessageCubit>(create: (context) => OpponentMessageCubit(BattleRoomRepository())),
             ], child: BattleRoomQuizScreen()));
   }
 
@@ -71,7 +69,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   @override
   void initState() {
     initializeAnimation();
-    //initOpponentMessageListener();
     questionContentAnimationController.forward();
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
@@ -93,8 +90,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     super.didChangeAppLifecycleState(state);
     //delete battle room
     if (state == AppLifecycleState.paused) {
-      //delete all messages entered by current user
-      //deleteMessages(context.read<BattleRoomCubit>());
       //delete battle room
       context.read<BattleRoomCubit>().deleteBattleRoom();
     }
@@ -107,18 +102,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       timerAnimationController.stop();
       opponentUserTimerAnimationController.stop();
     }
-  }
-
-  void initOpponentMessageListener() {
-    //to set listener for opponent message
-    Future.delayed(Duration.zero, () {
-      BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
-      String currentUserId = context.read<UserDetailsCubit>().getUserId();
-      context.read<OpponentMessageCubit>().initOpponentMessagesListener(
-            battleRoomCubit.getRoomId(),
-            battleRoomCubit.getOpponentUserDetails(currentUserId).uid,
-          );
-    });
   }
 
   //
@@ -444,16 +427,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                 battleRoomListener(context, state, battleRoomCubit);
               },
             ),
-            /*
-            BlocListener<OpponentMessageCubit, OpponentMessageState>(
-              bloc: context.read<OpponentMessageCubit>(),
-              listener: (context, state) {},
-            ),
-            BlocListener<MessageCubit, MessageState>(
-              bloc: context.read<MessageCubit>(),
-              listener: (context, state) {},
-            ),
-            */
           ],
           child: Stack(
             clipBehavior: Clip.none,
