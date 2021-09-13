@@ -20,20 +20,18 @@ class NotificationHandler {
     showNotification(message);
     // Or do other work.
   }
-
   initializeFcmNotification(BuildContext context) async {
+    print("in notification handler.............................................");
     try {
-
+      print("in try........................................");
       this.context = context;
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-
       var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
       var initializationSettingsIOS = new IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
       var initializationSettings = new InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
       flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
-
-
-    } on Exception catch (_) {
+    } on Exception catch (e) {
+      print("////////////////////////////////////////////////////////////$e");
 
     }
   }
@@ -52,9 +50,11 @@ class NotificationHandler {
       if (message.containsKey('data')) {
         var datamain = message['data'];
         image = datamain["image"];
+        print("1..............................................."+datamain.toString());
       } else {
         if (message.containsKey('image'))
           image = message["image"];
+        print("2..............................................."+image.toString());
       }
 
       String payload = "";
@@ -72,6 +72,8 @@ class NotificationHandler {
         var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
         var platformChannelSpecifics = new NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
         await flutterLocalNotificationsPlugin.show(0, '$title', '$body', platformChannelSpecifics, payload: payload);
+      print("3.........................................");
+
       }else{
          var bigPicturePath = await _downloadAndSaveImage(Uri.parse(image), 'bigPicture');
         var bigPictureStyleInformation = BigPictureStyleInformation(
@@ -89,8 +91,11 @@ class NotificationHandler {
             styleInformation: bigPictureStyleInformation);
         var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
         await flutterLocalNotificationsPlugin.show(0, '$title', '$body', platformChannelSpecifics);
+         print("4.........................................");
       }
-    } on Exception catch (_) {
+    } on Exception catch (e) {
+      print("5.........................................");
+      print(e.toString());
 
     }
   }
@@ -111,6 +116,7 @@ class NotificationHandler {
   }
 
   Future<void> onDidReceiveLocalNotification(int ?id, String ?title, String ?body, String ?payload) async {
+    print("onDidReceiveLocalNotification.............................");
     // display a dialog with the notification details, tap ok to go to another page
   }
 

@@ -5,7 +5,10 @@
    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-   
+    <!-- Add below permission inside 'manifest' tag -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Add below permission inside 'application' tag -->
+
    <application
         android:label="Elite Quiz"
         android:icon="@mipmap/ic_launcher"
@@ -66,5 +69,11 @@
                <data android:scheme="@string/fb_login_protocol_scheme" />
            </intent-filter>
        </activity>
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+           <intent-filter>
+               <action android:name="android.intent.action.BOOT_COMPLETED"/>
+               <action android:name="android.intent.action.com.wrteam.flutterquiz"/>
+           </intent-filter>
+       </receiver>
     </application>
 </manifest>

@@ -21,7 +21,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  admob_flutter: 2.0.0-nullsafety.1
+  google_mobile_ads: ^0.13.4
   assets_audio_player: ^3.0.3+6
   cached_network_image: ^3.0.0
   cloud_firestore: ^2.2.2
@@ -67,6 +67,7 @@ dependencies:
   flutter_exif_rotation: ^0.4.1
 
   webview_flutter: ^2.0.13
+
 
 dev_dependencies:
   flutter_test:

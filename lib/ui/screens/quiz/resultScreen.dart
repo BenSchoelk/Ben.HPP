@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +15,7 @@ import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:flutterquiz/app/routes.dart';
@@ -106,8 +105,8 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
-  AdmobBannerSize? bannerSize;
-  late AdmobInterstitial interstitialAd;
+ /* AdmobBannerSize? bannerSize;
+  late AdmobInterstitial interstitialAd;*/
 
   void decideWinnerForBattle() {
     if (widget.numberOfPlayer == 2) {
@@ -172,7 +171,7 @@ class _ResultScreenState extends State<ResultScreen> {
       updateResultDetails();
       setContestLeaderboard();
     }
-    bannerSize = AdmobBannerSize.BANNER;
+    /*bannerSize = AdmobBannerSize.BANNER;
     interstitialAd = AdmobInterstitial(
       adUnitId: getRewardBasedVideoAdUnitId()!,
       listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
@@ -181,9 +180,48 @@ class _ResultScreenState extends State<ResultScreen> {
         }
       },
     );
-    interstitialAd.load();
+    interstitialAd.load();*/
+    _createInterstitialAd();
   }
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: getRewardBasedVideoAdUnitId()!,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            interstitialAd = ad;
+            print('$ad loaded');
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error.');
+            _createInterstitialAd();
 
+          },
+        ));
+  }
+  InterstitialAd? interstitialAd;
+  void _showInterstitialAd() {
+    if (interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded');
+      return;
+    }
+    interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+    );
+    interstitialAd!.show();
+    interstitialAd = null;
+  }
   void setContestLeaderboard() {
     if (widget.quizType == QuizTypes.contest) {
       context.read<SetContestLeaderboardCubit>().setContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), questionAttended: attemptedQuestion(), correctAns: correctAnswer(), contestId: widget.contestId, score: widget.myPoints);
@@ -905,7 +943,8 @@ class _ResultScreenState extends State<ResultScreen> {
             height: betweenButoonSpace,
           ),
           _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
-            interstitialAd.show();
+            //interstitialAd.show();
+            _showInterstitialAd();
             Navigator.of(context).popUntil((route) => route.isFirst);
           }, context),
         ],
@@ -932,7 +971,9 @@ class _ResultScreenState extends State<ResultScreen> {
           height: betweenButoonSpace,
         ),
         _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
-          interstitialAd.show();
+          //interstitialAd.show();
+          _showInterstitialAd();
+
           Navigator.of(context).popUntil((route) => route.isFirst);
         }, context),
       ],
@@ -943,7 +984,8 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () {
-          interstitialAd.show();
+          _showInterstitialAd();
+          //interstitialAd.show();
           Navigator.pop(context);
           return Future.value(false);
         },

@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late FirebaseMessaging messaging;
   @override
   void initState() {
-    //initFirebaseMessaging();
+   // initFirebaseMessaging();
     super.initState();
   }
 
@@ -497,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 )),
             SizedBox(
               width: 12.5,
-            ),*/
+            ),
             
             Container(
               width: 45,
@@ -521,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             SizedBox(
               width: 12.5,
             ),
-
+               */
             Container(
               width: 45,
               height: 40,

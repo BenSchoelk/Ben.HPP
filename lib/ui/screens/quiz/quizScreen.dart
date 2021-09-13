@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +29,7 @@ import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 enum LifelineStatus { unused, using, used }
 
@@ -121,8 +121,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
-  AdmobBannerSize? bannerSize;
-  late AdmobInterstitial interstitialAd;
   _getQuestions() {
     Future.delayed(
       Duration.zero,
@@ -149,7 +147,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     return null;
   }
-
+  InterstitialAd? interstitialAd;
   @override
   void initState() {
     super.initState();
@@ -157,22 +155,49 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _getQuestions();
-    bannerSize = AdmobBannerSize.BANNER;
-    interstitialAd = AdmobInterstitial(
-      adUnitId: getRewardBasedVideoAdUnitId()!,
-      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-        if (event == AdmobAdEvent.closed) {
-          timerAnimationController.forward(from: timerAnimationController.value);
-          interstitialAd.load();
-        }
-      },
-    );
-    interstitialAd.load();
-  }
+    _createInterstitialAd();
+    //bannerSize = AdmobBannerSize.BANNER;
 
+  }
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: getRewardBasedVideoAdUnitId()!,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            setState(() {
+              interstitialAd=ad;
+            });
+            print('$ad loaded');
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print(error);
+            },
+        ));
+  }
+  void _showInterstitialAd() {
+    if (interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded...................................');
+      return;
+    }
+    interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad){},
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent');
+        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
+        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
+        timerAnimationController.forward(from: timerAnimationController.value);
+        _createInterstitialAd();
+
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        },
+    );
+    interstitialAd!.show();
+  }
   void initializeAnimation() {
     questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-
     questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 525));
     questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionAnimationController, curve: Curves.easeInOut));
     questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
@@ -186,7 +211,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
-    interstitialAd.dispose();
+    interstitialAd!.dispose();
     super.dispose();
   }
 
@@ -341,11 +366,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           CupertinoButton(
             onPressed: () async {
               timerAnimationController.stop();
-              interstitialAd.show();
+              _showInterstitialAd();
+              //interstitialAd.show();
               //user see full ads coins increment  6
-              setState(() {
+             /* setState(() {
                 context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: 6);
-              });
+              });*/
               Navigator.pop(context);
             },
             child: Text(
