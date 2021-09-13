@@ -243,8 +243,8 @@ class BattleRoomRepository {
   }
 
   //All the message related code start from here
-  Stream<Message> subscribeToOpponentMessages({required String roomId, required String by}) {
-    return _battleRoomRemoteDataSource.subscribeToOpponentMessages(roomId: roomId, by: by).map((event) {
+  Stream<Message> subscribeToMessages({required String roomId}) {
+    return _battleRoomRemoteDataSource.subscribeToMessages(roomId: roomId).map((event) {
       if (event.docs.isEmpty) {
         return Message.buildEmptyMessage();
       } else {

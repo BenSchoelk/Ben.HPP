@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/opponentMessageCubit.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
@@ -114,10 +113,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     Future.delayed(Duration.zero, () {
       BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
       String currentUserId = context.read<UserDetailsCubit>().getUserId();
-      context.read<OpponentMessageCubit>().initOpponentMessagesListener(
-            battleRoomCubit.getRoomId(),
-            battleRoomCubit.getOpponentUserDetails(currentUserId).uid,
-          );
     });
   }
 
