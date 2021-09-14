@@ -88,7 +88,7 @@ class MessageCustomPainter extends CustomPainter {
     //to add how long triangle will go down
     path.lineTo(size.width * (triangleIsLeft ? 0.2 : 0.8), size.height * (1.3));
     //
-    path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.95), size.height);
+    path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.85), size.height);
     //
     path.lineTo(size.width * (0.1), size.height);
     //add curve
