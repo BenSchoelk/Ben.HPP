@@ -8,7 +8,6 @@ import 'package:flutterquiz/utils/apiUtils.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
-import '../NotificationModel.dart';
 import '../notificationException.dart';
 
 @immutable
@@ -38,7 +37,9 @@ class NotificationCubit extends Cubit<NotificationState> {
   }) async {
     try {
       //body of post request
-      final body = {accessValueKey: accessValue ,limitKey: limit,
+      final body = {
+        accessValueKey: accessValue,
+        limitKey: limit,
         offsetKey: offset ?? "",
       };
       if (offset == null) {
@@ -83,21 +84,20 @@ class NotificationCubit extends Cubit<NotificationState> {
       emit(NotificationFailure(defaultErrorMessageCode));
     });
   }
+
   void fetchMoreNotificationData(String limit) {
-    _fetchData(limit: limit,
-        offset: (state as NotificationSuccess).notificationList.length
-            .toString()).then((value) {
+    _fetchData(limit: limit, offset: (state as NotificationSuccess).notificationList.length.toString()).then((value) {
       //
       final oldState = (state as NotificationSuccess);
       final usersDetails = value['data'] as List;
       final updatedUserDetails = List.from(oldState.notificationList);
       updatedUserDetails.addAll(usersDetails);
-      emit(NotificationSuccess(updatedUserDetails, oldState.totalData,
-          oldState.totalData > updatedUserDetails.length));
+      emit(NotificationSuccess(updatedUserDetails, oldState.totalData, oldState.totalData > updatedUserDetails.length));
     }).catchError((e) {
       emit(NotificationFailure(defaultErrorMessageCode));
     });
   }
+
   bool hasMoreData() {
     if (state is NotificationSuccess) {
       return (state as NotificationSuccess).hasMore;
