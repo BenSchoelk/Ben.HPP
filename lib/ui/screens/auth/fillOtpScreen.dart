@@ -183,6 +183,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
         });
       }
     };
+
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout = (String verificationId) {
       _verificationId = verificationId;
       if (mounted) {

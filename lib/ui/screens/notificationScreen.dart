@@ -101,7 +101,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                           ),
                         );
                       });
-                }),
+                }
+                ),
           )
         ]),
       ],

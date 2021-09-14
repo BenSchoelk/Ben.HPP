@@ -498,7 +498,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             SizedBox(
               width: 12.5,
             ),
-            
+             */
             Container(
               width: 45,
               height: 40,
@@ -521,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             SizedBox(
               width: 12.5,
             ),
-               */
+
             Container(
               width: 45,
               height: 40,

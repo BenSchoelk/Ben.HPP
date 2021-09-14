@@ -13,6 +13,7 @@ class NotificationRepository {
     return _notificationRepository;
   }
 
+
   NotificationRepository._internal();
 
   Future<List<NotificationModel>> getNotification() async {
