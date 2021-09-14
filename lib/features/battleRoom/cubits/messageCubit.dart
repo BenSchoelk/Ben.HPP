@@ -57,6 +57,14 @@ class MessageCubit extends Cubit<MessageState> {
     _battleRoomRepository.deleteMessagesByUserId(roomId, by);
   }
 
+  Message getUserLatestMessage(String userId) {
+    if (state is MessageFetchedSuccess) {
+      final messages = (state as MessageFetchedSuccess).messages;
+      return messages.lastWhere((element) => element.by == userId, orElse: () => Message.buildEmptyMessage());
+    }
+    return Message.buildEmptyMessage();
+  }
+
   @override
   Future<void> close() async {
     streamSubscription.cancel();

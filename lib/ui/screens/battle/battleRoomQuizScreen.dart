@@ -59,8 +59,11 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   //to slude the question content from right to left
   late Animation<double> questionContentAnimation;
 
-  late AnimationController messageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 350), reverseDuration: Duration(milliseconds: 300));
+  late AnimationController messageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300), reverseDuration: Duration(milliseconds: 300));
   late Animation<double> messageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: messageAnimationController, curve: Curves.easeOutBack));
+
+  late AnimationController opponentMessageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300), reverseDuration: Duration(milliseconds: 300));
+  late Animation<double> opponentMessageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: opponentMessageAnimationController, curve: Curves.easeOutBack));
 
   late int currentQuestionIndex = 0;
 
@@ -72,6 +75,14 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   bool isSettingDialogOpen = false;
 
   final double bottomPadding = 15;
+
+  //current user message timer
+  Timer? currentUserMessageDisappearTimer;
+  int currentUserMessageDisappearTimeInSeconds = 4;
+
+  //opponent user message timer
+  Timer? opponentUserMessageDisappearTimer;
+  int opponentUserMessageDisappearTimeInSeconds = 4;
 
   @override
   void initState() {
@@ -89,6 +100,10 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     opponentUserTimerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
+    messageAnimationController.dispose();
+    opponentMessageAnimationController.dispose();
+    currentUserMessageDisappearTimer?.cancel();
+    opponentUserMessageDisappearTimer?.cancel();
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
@@ -203,7 +218,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   //for changing ui and other trigger other actions based on realtime changes that occured in game
   void battleRoomListener(BuildContext context, BattleRoomState state, BattleRoomCubit battleRoomCubit) {
-    /*
     if (state is BattleRoomUserFound) {
       UserBattleRoomDetails opponentUserDetails = battleRoomCubit.getOpponentUserDetails(context.read<UserDetailsCubit>().getUserId());
       UserBattleRoomDetails currentUserDetails = battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
@@ -266,17 +280,104 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         }
       }
     }
-    */
+  }
+
+  void setCurrentUserMessageDisappearTimer() {
+    if (currentUserMessageDisappearTimeInSeconds != 4) {
+      currentUserMessageDisappearTimeInSeconds = 4;
+    }
+
+    currentUserMessageDisappearTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (currentUserMessageDisappearTimeInSeconds == 0) {
+        //
+        timer.cancel();
+        messageAnimationController.reverse();
+      } else {
+        print("$currentUserMessageDisappearTimeInSeconds");
+        currentUserMessageDisappearTimeInSeconds--;
+      }
+    });
+  }
+
+  void setOpponentUserMessageDisappearTimer() {
+    if (opponentUserMessageDisappearTimeInSeconds != 4) {
+      opponentUserMessageDisappearTimeInSeconds = 4;
+    }
+
+    opponentUserMessageDisappearTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (opponentUserMessageDisappearTimeInSeconds == 0) {
+        //
+        timer.cancel();
+        opponentMessageAnimationController.reverse();
+      } else {
+        print("Opponent $opponentUserMessageDisappearTimeInSeconds");
+        opponentUserMessageDisappearTimeInSeconds--;
+      }
+    });
+  }
+
+  void messagesListener(MessageState state) async {
+    if (state is MessageFetchedSuccess) {
+      if (state.messages.isNotEmpty) {
+        if (state.messages.last.by == context.read<UserDetailsCubit>().getUserId()) {
+          //current user message
+          //
+          //means timer is running
+          if (currentUserMessageDisappearTimeInSeconds > 0 && currentUserMessageDisappearTimeInSeconds < 4) {
+            print(currentUserMessageDisappearTimeInSeconds);
+            currentUserMessageDisappearTimer?.cancel();
+            await messageAnimationController.reverse();
+            await Future.delayed(Duration(milliseconds: 100));
+            messageAnimationController.forward();
+            setCurrentUserMessageDisappearTimer();
+          } else {
+            messageAnimationController.forward();
+            setCurrentUserMessageDisappearTimer();
+          }
+        } else {
+          //opponent message
+          //
+          //means timer is running
+          if (opponentUserMessageDisappearTimeInSeconds > 0 && opponentUserMessageDisappearTimeInSeconds < 4) {
+            print(opponentUserMessageDisappearTimeInSeconds);
+            opponentUserMessageDisappearTimer?.cancel();
+            await opponentMessageAnimationController.reverse();
+            await Future.delayed(Duration(milliseconds: 100));
+            opponentMessageAnimationController.forward();
+            setOpponentUserMessageDisappearTimer();
+          } else {
+            opponentMessageAnimationController.forward();
+            setOpponentUserMessageDisappearTimer();
+          }
+        }
+      }
+    }
   }
 
   Widget _buildCurrentUserMessageContainer() {
     return PositionedDirectional(
       child: ScaleTransition(
         scale: messageAnimation,
-        child: MessageContainer(),
-        alignment: Alignment(0.5, 1.0), //-0.5 left side nad 0.5 is right side,
+        child: MessageContainer(
+          isCurrentUser: true,
+        ),
+        alignment: Alignment(-0.5, 1.0), //-0.5 left side nad 0.5 is right side,
       ),
       start: 10,
+      bottom: (bottomPadding * 2) + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
+    );
+  }
+
+  Widget _buildOpponentUserMessageContainer() {
+    return PositionedDirectional(
+      child: ScaleTransition(
+        scale: opponentMessageAnimation,
+        child: MessageContainer(
+          isCurrentUser: false,
+        ),
+        alignment: Alignment(0.5, 1.0), //-0.5 left side nad 0.5 is right side,
+      ),
+      end: 10,
       bottom: (bottomPadding * 2) + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
     );
   }
@@ -379,6 +480,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   //if currentUser has left the game
   Widget _buildCurrentUserLeftTheGame() {
+    //TODO: if opponent already left the game then handle this case
     return showYouLeftQuiz
         ? Container(
             color: Theme.of(context).backgroundColor.withOpacity(0.12),
@@ -480,12 +582,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             BlocListener<MessageCubit, MessageState>(
               bloc: context.read<MessageCubit>(),
               listener: (context, state) {
-                if (state is MessageFetchedSuccess) {
-                  messageAnimationController.forward(from: 0.0);
-                  state.messages.forEach((element) {
-                    print("Id of message is ${element.messageId}");
-                  });
-                }
+                //this listener will be call everytime when new message will add
+                messagesListener(state);
               },
             ),
           ],
@@ -523,6 +621,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
               _buildCurrentUserDetailsContainer(),
               _buildCurrentUserMessageContainer(),
               _buildOpponentUserDetailsContainer(),
+              _buildOpponentUserMessageContainer(),
               _buildMessageButton(),
               _buildYouWonGameDailog(battleRoomCubit),
               _buildCurrentUserLeftTheGame(),
