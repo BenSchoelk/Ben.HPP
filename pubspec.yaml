@@ -61,8 +61,9 @@ dependencies:
   share_plus: ^2.1.4
   shared_preferences: ^2.0.6
   sign_in_with_apple: ^3.0.0
-  sms_autofill: ^2.0.1
-
+  #sms_autofill: ^2.0.1
+  otp_autofill: ^1.1.0
+  pin_code_fields: ^7.3.0
   flutter_local_notifications: ^8.1.1+2
   flutter_exif_rotation: ^0.4.1
 
