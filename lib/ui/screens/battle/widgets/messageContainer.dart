@@ -10,7 +10,7 @@ class MessageContainer extends StatelessWidget {
     return CustomPaint(
       painter: MessageCustomPainter(
         triangleIsLeft: true,
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -34,8 +34,8 @@ class MessageContainer extends StatelessWidget {
             );
           },
         ),
-        height: 30,
-        width: MediaQuery.of(context).size.width * (0.45),
+        height: 35,
+        width: MediaQuery.of(context).size.width * (0.4),
       ),
     );
   }
@@ -63,10 +63,11 @@ class MessageCustomPainter extends CustomPainter {
     //add curve
     path.quadraticBezierTo(size.width, size.height, size.width * (0.9), size.height);
     //add triangle here
-    path.lineTo(size.width * (triangleIsLeft ? 0.35 : 0.65), size.height);
+    path.lineTo(size.width * (triangleIsLeft ? 0.25 : 0.75), size.height);
     //to add how long triangle will go down
-    path.lineTo(size.width * (triangleIsLeft ? 0.25 : 0.75), size.height * (1.3)); //75,25
-    path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.85), size.height); //85,15
+    path.lineTo(size.width * (triangleIsLeft ? 0.2 : 0.8), size.height * (1.3));
+    //
+    path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.95), size.height);
     //
     path.lineTo(size.width * (0.1), size.height);
     //add curve

@@ -9,7 +9,10 @@ class TempScreen extends StatelessWidget {
       body: Stack(
         children: [
           PositionedDirectional(
-            child: Container(),
+            child: Container(
+              height: 30,
+              width: MediaQuery.of(context).size.width * (0.45),
+            ),
           )
         ],
       ),
