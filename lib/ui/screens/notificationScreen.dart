@@ -23,7 +23,6 @@ class NotificationScreen extends StatefulWidget {
             ));
   }
 }
-
 class _NotificationScreen extends State<NotificationScreen> {
   ScrollController controller = ScrollController();
   @override
@@ -49,7 +48,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           Align(
             alignment: Alignment.topCenter,
             child: RoundedAppbar(
-              title: "Notification",
+              title: AppLocalization.of(context)!.getTranslatedValues("notificationLbl")!,
             ),
           ),
           Container(

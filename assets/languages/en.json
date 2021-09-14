@@ -291,7 +291,8 @@
     "createRoom" : "Create Room",
     "joinRoom" : "Join Room",
     "accountDeactivated" : "Your account has been deactivated by the admin",
-    "currentlyNotAvailable" : "Currently not available"
+    "currentlyNotAvailable" : "Currently not available",
+    "notificationLbl": "Notification"
     
 }
 
