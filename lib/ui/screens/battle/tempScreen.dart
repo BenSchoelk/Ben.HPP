@@ -7,14 +7,7 @@ class TempScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: [
-          PositionedDirectional(
-            child: Container(
-              height: 30,
-              width: MediaQuery.of(context).size.width * (0.45),
-            ),
-          )
-        ],
+        children: [],
       ),
     );
   }

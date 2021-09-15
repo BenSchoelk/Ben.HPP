@@ -60,7 +60,7 @@ final String resetTime = "resetTime";
 //firestore collection names
 final String battleRoomCollection = "testBattleRoom"; //battleRoom;
 final String multiUserBattleRoomCollection = "testMultiUserBattleRoom"; //multiUserBattleRoom ;
-final String messagesCollection = "testMessages"; //"messagesCollection";
+final String messagesCollection = "testMessages"; //"messages";
 
 //api end points
 final String addUserUrl = "${baseUrl}user_signup";
