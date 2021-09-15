@@ -135,7 +135,7 @@ class _ResultScreenState extends State<ResultScreen> {
       if (widget.battleRoom!.user1!.points == widget.battleRoom!.user2!.points) {
         _isWinner = true;
         _winnerId = "";
-        //updateCoinsForBattleWinner(battleWinnerCoins ~/ 2);
+        updateCoinsForBattleWinner(battleWinnerCoins ~/ 2);
       } else {
         if (widget.battleRoom!.user1!.points > widget.battleRoom!.user2!.points) {
           winnerId = widget.battleRoom!.user1!.uid;
@@ -145,7 +145,7 @@ class _ResultScreenState extends State<ResultScreen> {
         Future.delayed(Duration.zero, () {
           if (context.read<UserDetailsCubit>().getUserId() == winnerId) {
             _isWinner = true;
-            //updateCoinsForBattleWinner(battleWinnerCoins);
+            updateCoinsForBattleWinner(battleWinnerCoins);
           } else {
             _isWinner = false;
           }
