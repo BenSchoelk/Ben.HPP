@@ -220,8 +220,8 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
         if (value.additionalUserInfo!.isNewUser) {
           context.read<AuthCubit>().authRepository.addUserData(firebaseId: uid, type: "mobile", name: name, profile: profile, mobile: widget.countryCode! + widget.mobileNumber!, email: email, friendCode: "", referCode: "").then((value) {
             if (mounted) {
-              Navigator.pop(context);
               context.read<UserDetailsCubit>().fetchUserDetails(uid);
+              Navigator.pop(context);
               Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
               setState(() {
                 isloading = false;
@@ -229,8 +229,8 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
             }
           });
         } else {
-          Navigator.pop(context);
           context.read<UserDetailsCubit>().fetchUserDetails(uid);
+          Navigator.pop(context);
           Navigator.of(context).pushReplacementNamed(Routes.home, arguments: false);
         }
         if (value.user != null) {
@@ -349,22 +349,22 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
           start: MediaQuery.of(context).size.width * .05,
           end: MediaQuery.of(context).size.width * .05,
         ),
-        child:PinCodeTextField(
+        child:PinCodeTextField(keyboardType: TextInputType.number,
           appContext: context,
           length: 6,
           obscureText: false,
           animationType: AnimationType.fade,validator: (val)=>isErrorOtp ? AppLocalization.of(context)!.getTranslatedValues(enterOtp) : null,
-          pinTheme: PinTheme(
+          pinTheme: PinTheme(selectedFillColor:Theme.of(context).colorScheme.secondary,
             inactiveColor: Theme.of(context).backgroundColor,
             activeColor:  Theme.of(context).backgroundColor,
             inactiveFillColor:  Theme.of(context).backgroundColor,
-            selectedColor:Theme.of(context).colorScheme.secondary,
+            selectedColor:Theme.of(context).colorScheme.secondary.withOpacity(0.5),
             shape: PinCodeFieldShape.box,
             borderRadius: BorderRadius.circular(5),
             fieldHeight: 50,
             fieldWidth: 40,
             activeFillColor: Theme.of(context).backgroundColor,
-          ),
+          ),cursorColor:Theme.of(context).backgroundColor,
           animationDuration: Duration(milliseconds: 300),
           //backgroundColor:  Theme.of(context).backgroundColor,
           enableActiveFill: true,

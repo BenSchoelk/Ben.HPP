@@ -20,6 +20,7 @@ import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
@@ -111,6 +112,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   int currentQuestionIndex = 0;
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
+  bool checkError=false;
 
   late Map<String, LifelineStatus> lifelines = {
     fiftyFifty: LifelineStatus.unused,
@@ -533,6 +535,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     );
                   }
                   if (state is QuestionsFetchFailure) {
+                      checkError=true;
                     return Center(
                       child: ErrorContainer(
                         errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),

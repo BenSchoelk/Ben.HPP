@@ -275,12 +275,11 @@ class BattleRoomRemoteDataSource {
 
   //All the message related code start from here
 
-  //subscribe to opponent's messages room
-  Stream<QuerySnapshot> subscribeToOpponentMessages({required String roomId, required String by}) {
+  //subscribe to messages in room
+  Stream<QuerySnapshot> subscribeToMessages({required String roomId}) {
     return _firebaseFirestore
         .collection(messagesCollection)
         .where("roomId", isEqualTo: roomId)
-        .where("by", isEqualTo: by)
         .orderBy(
           "timestamp",
           descending: true,

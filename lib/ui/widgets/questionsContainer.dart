@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/ui/screens/quiz/quizScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/optionContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionBackgroundCard.dart';
 import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
@@ -233,6 +236,10 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
+                    Platform.isIOS?Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: CustomBackButton(iconColor:Theme.of(context).colorScheme.secondary),
+                    ):Container(),
                     Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: _buildLevelContainer(),

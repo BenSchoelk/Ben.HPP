@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:flutterquiz/features/auth/authRepository.dart';
 import 'package:flutterquiz/features/auth/cubits/signInCubit.dart';
 import 'package:flutterquiz/ui/screens/auth/fillOtpScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/widgets/termsAndCondition.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:lottie/lottie.dart';
 
@@ -83,7 +86,7 @@ class _OtpScreen extends State<OtpScreen> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * .07,
               ),
-              otpLabel(),
+              Platform.isIOS?otpLabelIos():otpLabel(),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .03,
               ),
@@ -106,7 +109,21 @@ class _OtpScreen extends State<OtpScreen> {
     );
   }
 
-  Widget otpLabel() {
+  Widget otpLabelIos() {
+    return Row(
+      children: [
+        Expanded(flex:1,child: CustomBackButton(iconColor: Theme.of(context).primaryColor,)),
+        Expanded(flex:10,
+          child: Text(
+            AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget otpLabel(){
     return Text(
       AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,
       textAlign: TextAlign.center,

@@ -12,17 +12,18 @@ class AdMobBanner extends StatefulWidget {
 
 class _AdMobBanner extends State<AdMobBanner> {
   @override
-  void initState(){
+  void initState() {
     _createAnchoredBanner();
     super.initState();
   }
+
   @override
   void dispose() {
-    // TODO: Dispose a BannerAd object
     _anchoredBanner?.dispose();
 
     super.dispose();
   }
+
   String getBannerAdUnitId() {
     if (Platform.isIOS && !kIsWeb) {
       return bannerIosId;
@@ -31,9 +32,10 @@ class _AdMobBanner extends State<AdMobBanner> {
     }
     return "";
   }
+
   BannerAd? _anchoredBanner;
   Future<void> _createAnchoredBanner() async {
-  /*  final AnchoredAdaptiveBannerAdSize? size =
+    /*  final AnchoredAdaptiveBannerAdSize? size =
     await AdSize.getAnchoredAdaptiveBannerAdSize(
       Orientation.portrait,500,
     );
@@ -42,34 +44,36 @@ class _AdMobBanner extends State<AdMobBanner> {
       print('Unable to get height of anchored banner.');
       return;
     }*/
-  final BannerAd banner = BannerAd(
-    request: AdRequest(),
-    adUnitId: getBannerAdUnitId(),
-    listener: BannerAdListener(
-      onAdLoaded: (Ad ad) {
-        print('$BannerAd loaded');
-        setState(() {
-          _anchoredBanner = ad as BannerAd;
-        });
-      },
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        print('$BannerAd failedToLoad: $error');
-      },
-      onAdOpened: (Ad ad) => print('$BannerAd onAdOpened'),
-      onAdClosed: (Ad ad) => print('$BannerAd onAdClosed'),
-    ), size: AdSize.banner,
-  );
-  return banner.load();
-}
+    final BannerAd banner = BannerAd(
+      request: AdRequest(),
+      adUnitId: getBannerAdUnitId(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded');
+          setState(() {
+            _anchoredBanner = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+        },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed'),
+      ),
+      size: AdSize.banner,
+    );
+    return banner.load();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _anchoredBanner != null?
-            Container(
-              width: _anchoredBanner!.size.width.toDouble(),
-              height: _anchoredBanner!.size.height.toDouble(),
-              child: AdWidget(ad: _anchoredBanner!),
-            ):Container();
-
+    return _anchoredBanner != null
+        ? Container(
+            width: _anchoredBanner!.size.width.toDouble(),
+            height: _anchoredBanner!.size.height.toDouble(),
+            child: AdWidget(ad: _anchoredBanner!),
+          )
+        : Container();
 
     /*AdmobBanner(
       adUnitId: getBannerAdUnitId(),
