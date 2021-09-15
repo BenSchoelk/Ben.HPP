@@ -161,3 +161,7 @@ final String videoIosId = 'ca-app-pub-3940256099942544/1712485313';
 // AdMob Id for banner show
 final String bannerAndroidId = 'ca-app-pub-3940256099942544/6300978111';
 final String bannerIosId = 'ca-app-pub-3940256099942544/2934735716';
+
+//constants for badges and rewards
+final int guessTheWordQuestionMinimumTimeForBadge = 25;
+final int funNLearnQuestionMinimumTimeForBadge = 8;

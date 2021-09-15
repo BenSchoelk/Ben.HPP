@@ -51,7 +51,28 @@ class ResultScreen extends StatefulWidget {
   //it will be in use if quizType is quizZone
   final int? unlockedLevel;
 
-  ResultScreen({Key? key, this.numberOfPlayer, this.myPoints, this.battleRoom, this.questions, this.unlockedLevel, this.quizType, this.subcategoryMaxLevel, this.contestId, this.comprehensionId, this.guessTheWordQuestions}) : super(key: key);
+  //Time taken to complete the quiz in seconds
+  final double? timeTakenToCompleteQuiz;
+
+  //has used any lifeline - it will be in use to check badge earned or not for
+  //quizZone quiz type
+  final bool? hasUsedAnyLifeline;
+
+  ResultScreen(
+      {Key? key,
+      this.timeTakenToCompleteQuiz,
+      this.hasUsedAnyLifeline,
+      this.numberOfPlayer,
+      this.myPoints,
+      this.battleRoom,
+      this.questions,
+      this.unlockedLevel,
+      this.quizType,
+      this.subcategoryMaxLevel,
+      this.contestId,
+      this.comprehensionId,
+      this.guessTheWordQuestions})
+      : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
@@ -91,6 +112,8 @@ class ResultScreen extends StatefulWidget {
                   subcategoryMaxLevel: arguments['subcategoryMaxLevel'],
                   unlockedLevel: arguments['unlockedLevel'],
                   guessTheWordQuestions: arguments['guessTheWordQuestions'], //
+                  hasUsedAnyLifeline: arguments['hasUsedAnyLifeline'],
+                  timeTakenToCompleteQuiz: arguments['timeTakenToCompleteQuiz'],
                   contestId: arguments["contestId"]),
             ));
   }
@@ -105,8 +128,6 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
- /* AdmobBannerSize? bannerSize;
-  late AdmobInterstitial interstitialAd;*/
 
   void decideWinnerForBattle() {
     if (widget.numberOfPlayer == 2) {
@@ -167,22 +188,54 @@ class _ResultScreenState extends State<ResultScreen> {
       } else {
         _isWinner = false;
       }
+      earnBadges();
       earnCoinsBasedOnWinPercentage();
       updateResultDetails();
       setContestLeaderboard();
     }
-    /*bannerSize = AdmobBannerSize.BANNER;
-    interstitialAd = AdmobInterstitial(
-      adUnitId: getRewardBasedVideoAdUnitId()!,
-      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-        if (event == AdmobAdEvent.closed) {
-          interstitialAd.load();
-        }
-      },
-    );
-    interstitialAd.load();*/
     _createInterstitialAd();
   }
+
+  void earnBadges() {
+    if (widget.quizType == QuizTypes.battle) {
+      //
+      int badgeEarnPoints = (correctAnswerPointsForBattle + 10) * totalQuestions();
+      print("Points in battle ${widget.myPoints}");
+      if (widget.myPoints! == badgeEarnPoints) {
+        print("Will earn badge related to battle");
+      }
+    } else if (widget.quizType == QuizTypes.funAndLearn) {
+      print(correctAnswer());
+      print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+      int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
+      //
+      if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+        print("Will earn badge related to funNLearn");
+      } else {
+        print("Will not earn badge related to funNLearn");
+      }
+    } else if (widget.quizType == QuizTypes.quizZone) {
+      print(correctAnswer());
+      print("Has used any lifeline ${widget.hasUsedAnyLifeline!}");
+      //
+      if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
+        print("Will earn badge related to quizZone");
+      } else {
+        print("Will not earn badge related to quizZone");
+      }
+    } else if (widget.quizType == QuizTypes.guessTheWord) {
+      print(correctAnswer());
+      print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+      //if user has solved the quiz with in badgeEarnTime then they can earn badge
+      int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
+      if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+        print("Will earn badge related to guessTheWord");
+      } else {
+        print("Will not earn badge related to guessTheWord");
+      }
+    }
+  }
+
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: getRewardBasedVideoAdUnitId()!,
@@ -195,10 +248,10 @@ class _ResultScreenState extends State<ResultScreen> {
           onAdFailedToLoad: (LoadAdError error) {
             print('InterstitialAd failed to load: $error.');
             _createInterstitialAd();
-
           },
         ));
   }
+
   InterstitialAd? interstitialAd;
   void _showInterstitialAd() {
     if (interstitialAd == null) {
@@ -206,8 +259,7 @@ class _ResultScreenState extends State<ResultScreen> {
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent'),
+      onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent'),
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdDismissedFullScreenContent');
         ad.dispose();
@@ -222,6 +274,7 @@ class _ResultScreenState extends State<ResultScreen> {
     interstitialAd!.show();
     interstitialAd = null;
   }
+
   void setContestLeaderboard() {
     if (widget.quizType == QuizTypes.contest) {
       context.read<SetContestLeaderboardCubit>().setContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), questionAttended: attemptedQuestion(), correctAns: correctAnswer(), contestId: widget.contestId, score: widget.myPoints);
@@ -233,7 +286,7 @@ class _ResultScreenState extends State<ResultScreen> {
     Future.delayed(Duration.zero, () {
       //we need to update score and coins only for some type of quiz
       if (widget.quizType == QuizTypes.quizZone || widget.quizType == QuizTypes.dailyQuiz || widget.quizType == QuizTypes.guessTheWord || widget.quizType == QuizTypes.trueAndFalse || widget.quizType == QuizTypes.funAndLearn) {
-/*
+        /*
         //update statistic for given user
         context.read<UpdateStatisticCubit>().updateStatistic(
           answeredQuestion: attemptedQuestion(),
@@ -242,6 +295,7 @@ class _ResultScreenState extends State<ResultScreen> {
           userId: context.read<UserDetailsCubit>().getUserId(),
           winPercentage: winPercentage(),
         );*/
+
         //if percentage is more than 30 then update socre and coins
         if (_isWinner) {
           //update score and coins for user

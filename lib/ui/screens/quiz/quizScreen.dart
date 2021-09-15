@@ -112,6 +112,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
 
+  late double totalSecondsToCompleteQuiz = 0;
+
   late Map<String, LifelineStatus> lifelines = {
     fiftyFifty: LifelineStatus.unused,
     audiencePoll: LifelineStatus.unused,
@@ -147,6 +149,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     return null;
   }
+
   InterstitialAd? interstitialAd;
   @override
   void initState() {
@@ -157,8 +160,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     _getQuestions();
     _createInterstitialAd();
     //bannerSize = AdmobBannerSize.BANNER;
-
   }
+
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: getRewardBasedVideoAdUnitId()!,
@@ -166,36 +169,37 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             setState(() {
-              interstitialAd=ad;
+              interstitialAd = ad;
             });
             print('$ad loaded');
           },
           onAdFailedToLoad: (LoadAdError error) {
             print(error);
-            },
+          },
         ));
   }
+
   void _showInterstitialAd() {
     if (interstitialAd == null) {
       print('Warning: attempt to show interstitial before loaded...................................');
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad){},
+      onAdShowedFullScreenContent: (InterstitialAd ad) {},
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdDismissedFullScreenContent');
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
         timerAnimationController.forward(from: timerAnimationController.value);
         _createInterstitialAd();
-
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         print('$ad onAdFailedToShowFullScreenContent: $error');
-        },
+      },
     );
     interstitialAd!.show();
   }
+
   void initializeAnimation() {
     questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 525));
@@ -234,7 +238,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       "subcategoryMaxLevel": widget.subcategoryMaxLevel,
       "unlockedLevel": widget.unlockedLevel,
       "contestId": widget.contestId,
-      "comprehensionId": widget.comprehensionId
+      "comprehensionId": widget.comprehensionId,
+      "timeTakenToCompleteQuiz": totalSecondsToCompleteQuiz,
+      "hasUsedAnyLifeline": checkHasUsedAnyLifeline(),
     });
   }
 
@@ -257,6 +263,20 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     if (lifelines[skip] == LifelineStatus.using) {
       lifelines[skip] = LifelineStatus.used;
     }
+  }
+
+  bool checkHasUsedAnyLifeline() {
+    bool hasUsedAnyLifeline = false;
+
+    for (var lifelineStatus in lifelines.values) {
+      if (lifelineStatus == LifelineStatus.used) {
+        hasUsedAnyLifeline = true;
+        break;
+      }
+    }
+    //
+    print("Has used any lifeline : $hasUsedAnyLifeline");
+    return hasUsedAnyLifeline;
   }
 
   //change to next Question
@@ -288,9 +308,16 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return {};
   }
 
+  void updateTotalSecondsToCompleteQuiz() {
+    totalSecondsToCompleteQuiz = totalSecondsToCompleteQuiz + UiUtils.timeTakenToSubmitAnswer(animationControllerValue: timerAnimationController.value, quizType: widget.quizType);
+    print("Time to complete quiz: $totalSecondsToCompleteQuiz");
+  }
+
   //update answer locally and on cloud
   void submitAnswer(String submittedAnswer) async {
     timerAnimationController.stop();
+    updateTotalSecondsToCompleteQuiz();
+
     if (!ques[currentQuestionIndex].attempted) {
       context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(ques[currentQuestionIndex].id, submittedAnswer);
 
@@ -369,7 +396,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               _showInterstitialAd();
               //interstitialAd.show();
               //user see full ads coins increment  6
-             /* setState(() {
+              /* setState(() {
                 context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: 6);
               });*/
               Navigator.pop(context);
