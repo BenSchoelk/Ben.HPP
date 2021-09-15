@@ -5,5 +5,6 @@
 //
 const Map<String, int> inAppPurchaseProducts = {
   //Consumable product's productId : coins you want to assign
-  "android.test.purchased": 500,
+  "5_consumable_coins": 5,
+  "10_consumablr_coins": 10
 };

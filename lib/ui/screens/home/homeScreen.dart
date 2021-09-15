@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late FirebaseMessaging messaging;
   @override
   void initState() {
-   // initFirebaseMessaging();
+    // initFirebaseMessaging();
     super.initState();
   }
 
@@ -256,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.selfChallenge);
+        Navigator.of(context).pushNamed(Routes.coinStore);
       },
       child: Align(
         alignment: Alignment.topCenter,
