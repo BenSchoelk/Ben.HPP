@@ -147,6 +147,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     return null;
   }
+
   InterstitialAd? interstitialAd;
   @override
   void initState() {
@@ -157,8 +158,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     _getQuestions();
     _createInterstitialAd();
     //bannerSize = AdmobBannerSize.BANNER;
-
   }
+
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: getRewardBasedVideoAdUnitId()!,
@@ -166,36 +167,37 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             setState(() {
-              interstitialAd=ad;
+              interstitialAd = ad;
             });
             print('$ad loaded');
           },
           onAdFailedToLoad: (LoadAdError error) {
             print(error);
-            },
+          },
         ));
   }
+
   void _showInterstitialAd() {
     if (interstitialAd == null) {
       print('Warning: attempt to show interstitial before loaded...................................');
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad){},
+      onAdShowedFullScreenContent: (InterstitialAd ad) {},
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdDismissedFullScreenContent');
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
         timerAnimationController.forward(from: timerAnimationController.value);
         _createInterstitialAd();
-
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         print('$ad onAdFailedToShowFullScreenContent: $error');
-        },
+      },
     );
     interstitialAd!.show();
   }
+
   void initializeAnimation() {
     questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 525));
@@ -369,7 +371,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               _showInterstitialAd();
               //interstitialAd.show();
               //user see full ads coins increment  6
-             /* setState(() {
+              /* setState(() {
                 context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: 6);
               });*/
               Navigator.pop(context);

@@ -15,6 +15,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/battle/tempScreen.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomOptionDialog.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/languageBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late FirebaseMessaging messaging;
   @override
   void initState() {
-   // initFirebaseMessaging();
+    // initFirebaseMessaging();
     super.initState();
   }
 
@@ -256,7 +257,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.selfChallenge);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => TempScreen()));
+        //Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
         alignment: Alignment.topCenter,

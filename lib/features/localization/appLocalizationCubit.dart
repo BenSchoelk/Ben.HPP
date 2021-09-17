@@ -16,6 +16,7 @@ class AppLocalizationCubit extends Cubit<AppLocalizationState> {
 
   void changeLanguage(Locale language) {
     settingsLocalDataSource.setLanguageCode(language.languageCode);
+
     emit(AppLocalizationState(language));
   }
 }

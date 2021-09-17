@@ -88,6 +88,7 @@ class UiUtils {
     final currentLanguage = context.read<AppLocalizationCubit>().state.language;
     if (context.read<SystemConfigCubit>().getLanguageMode() == "1") {
       final supporatedLanguage = context.read<SystemConfigCubit>().getSupportedLanguages();
+
       return supporatedLanguage[supporatedLanguage.indexWhere((element) => element.languageCode == currentLanguage.languageCode)].id;
     }
     return defaultQuestionLanguageId;
