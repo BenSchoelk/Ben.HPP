@@ -456,7 +456,7 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
                 );
               }
               if (state is UserDetailsFetchFailure) {
-                return ErrorContainer(
+                return ErrorContainer(showBackButton: true,
                   errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                   onTapRetry: () {
                     context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());

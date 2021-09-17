@@ -237,7 +237,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
                           }
                           if (state is QuestionsFetchFailure) {
                             return Center(
-                              child: ErrorContainer(
+                              child: ErrorContainer(showBackButton: true,
                                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                                 onTapRetry: () {
                                   _getQuestions();

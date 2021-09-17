@@ -236,10 +236,10 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Platform.isIOS?Align(
+                   /* Platform.isIOS?*/Align(
                       alignment: AlignmentDirectional.topStart,
                       child: CustomBackButton(iconColor:Theme.of(context).colorScheme.secondary),
-                    ):Container(),
+                    )/*:Container()*/,
                     Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: _buildLevelContainer(),

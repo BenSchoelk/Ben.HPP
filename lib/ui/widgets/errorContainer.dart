@@ -12,7 +12,8 @@ class ErrorContainer extends StatelessWidget {
   final bool showErrorImage;
   final double topMargin;
   final Color? errorMessageColor;
-  const ErrorContainer({Key? key, this.errorMessageColor, required this.errorMessage, required this.onTapRetry, required this.showErrorImage, this.topMargin = 0.1}) : super(key: key);
+  final bool ? showBackButton;
+  const ErrorContainer({Key? key, this.errorMessageColor, required this.errorMessage, required this.onTapRetry, required this.showErrorImage, this.topMargin = 0.1, this.showBackButton}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class ErrorContainer extends StatelessWidget {
           SizedBox(
             height: 25.0,
           ),
-          Platform.isIOS?Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Platform.isIOS && showBackButton!?Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CustomRoundedButton(
                 widthPercentage: 0.375,

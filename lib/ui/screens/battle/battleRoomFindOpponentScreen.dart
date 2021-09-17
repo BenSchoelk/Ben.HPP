@@ -455,7 +455,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
         builder: (context, state) {
           Widget child = _buildFindingMap();
           if (state is BattleRoomFailure) {
-            child = ErrorContainer(
+            child = ErrorContainer(showBackButton: true,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode))!,
                 errorMessageColor: Theme.of(context).primaryColor,
                 onTapRetry: () {

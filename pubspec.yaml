@@ -67,6 +67,7 @@ dependencies:
   flutter_exif_rotation: ^0.4.1
 
   webview_flutter: ^2.0.13
+  cupertino_will_pop_scope: ^1.1.0
 
 dev_dependencies:
   flutter_test:

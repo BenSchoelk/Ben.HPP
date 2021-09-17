@@ -616,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           }
           if (state is UserDetailsFetchFailure) {
             return _buildHomeScreen([
-              ErrorContainer(
+              ErrorContainer(showBackButton: true,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
                 onTapRetry: () {
                   context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
@@ -630,7 +630,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           UserProfile userProfile = (state as UserDetailsFetchSuccess).userProfile;
           if (userProfile.status == "0") {
             return _buildHomeScreen([
-              ErrorContainer(
+              ErrorContainer(showBackButton: true,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(accountDeactivatedKey)!,
                 onTapRetry: () {
                   context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());

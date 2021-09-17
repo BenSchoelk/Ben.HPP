@@ -185,7 +185,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
       }
       if (state is GuessTheWordQuizFetchFailure) {
         return Center(
-          child: ErrorContainer(
+          child: ErrorContainer(showBackButton: true,
               errorMessage: AppLocalization.of(context)?.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
               onTapRetry: () {
                 _getQuestions();
