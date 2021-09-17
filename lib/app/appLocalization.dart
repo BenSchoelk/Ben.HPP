@@ -22,7 +22,9 @@ class AppLocalization {
 
   //to load json(language) from assets
   Future loadJson() async {
-    String jsonStringValues = await rootBundle.loadString('assets/languages/${locale.languageCode}.json');
+    String languageJsonName = locale.countryCode == null ? locale.languageCode : "${locale.languageCode}-${locale.countryCode}";
+    print(languageJsonName);
+    String jsonStringValues = await rootBundle.loadString('assets/languages/$languageJsonName.json');
 
     //value from rootbundle will be encoded string
     Map<String, dynamic> mappedJson = json.decode(jsonStringValues);

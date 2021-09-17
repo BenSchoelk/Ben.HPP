@@ -111,7 +111,11 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: supporatedLocales.map((e) => Locale(e)).toList(),
+            supportedLocales: supporatedLocales.map((languageCode) {
+              //(e) => Locale(e)
+              List<String> languageWithCountryCode = languageCode.split('-');
+              return languageWithCountryCode.length == 1 ? Locale(languageWithCountryCode.first) : Locale(languageWithCountryCode.first, languageWithCountryCode.last);
+            }).toList(),
             initialRoute: Routes.splash,
             onGenerateRoute: Routes.onGenerateRouted,
           );

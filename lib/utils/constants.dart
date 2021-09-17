@@ -2,7 +2,7 @@ final String appName = "Elite Quiz";
 final String packageName = "com.wrteam.flutterquiz";
 
 //supporated language codes
-final List<String> supporatedLocales = ['en', 'hi', 'ur'];
+final List<String> supporatedLocales = ['en', 'hi', 'ur', 'pt'];
 //
 final String defaultLanguageCode = 'en';
 
@@ -45,7 +45,7 @@ final String fcmTokenBoxKey = "fcmToken";
 
 //Add your database url
 //make sure do not add '/' at the end of url
-final String databaseUrl = 'https://elitequiz.wrteam.in'; // 'http://flutterquiz.thewrteam.in';
+final String databaseUrl = 'http://flutterquiz.thewrteam.in'; // 'https://elitequiz.wrteam.in';
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
