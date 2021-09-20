@@ -12,6 +12,7 @@ import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/features/statistic/cubits/updateStatisticCubit.dart';
 import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
@@ -346,12 +347,41 @@ class _ResultScreenState extends State<ResultScreen> {
         SizedBox(
           height: 15.0,
         ),
+        //Ios platform back button add
+        Platform.isIOS?Stack(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child:InkWell(
+                    onTap: () {
+                      _showInterstitialAd();
+                      Navigator.pop(context);
+                      },
+                    child: Container(
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Theme.of(context).backgroundColor,
+                        )
+                    )
+                )
+              ),
+              Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "$message",
+                    style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                  )
+              ),
+            ]
+        ):
         Container(
-          alignment: Alignment.center,
-          child: Text(
-            "$message",
-            style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
-          ),
+            alignment: Alignment.center,
+            child: Text(
+              "$message",
+              style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+            )
         ),
         SizedBox(
           height: 5.0,

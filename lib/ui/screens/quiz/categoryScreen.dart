@@ -72,7 +72,7 @@ class _CategoryScreen extends State<CategoryScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,
+            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
           )
         ],
       ),
@@ -92,7 +92,7 @@ class _CategoryScreen extends State<CategoryScreen> {
             );
           }
           if (state is QuizCategoryFailure) {
-            return ErrorContainer(
+            return ErrorContainer(showBackButton: false,
               errorMessageColor: Theme.of(context).primaryColor,
               showErrorImage: true,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(

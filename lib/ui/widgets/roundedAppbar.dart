@@ -20,7 +20,7 @@ class RoundedAppbar extends StatelessWidget {
             child: Padding(
               padding: EdgeInsetsDirectional.only(start: 25.0),
               child: CustomBackButton(
-                removeSnackBars: removeSnackBars,
+                removeSnackBars: removeSnackBars,isShowDialog: false,
                 iconColor: appTextAndIconColor ?? Theme.of(context).primaryColor,
               ),
             ),

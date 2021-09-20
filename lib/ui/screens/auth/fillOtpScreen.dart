@@ -18,7 +18,9 @@ import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:lottie/lottie.dart';
-import 'package:sms_autofill/sms_autofill.dart';
+import 'package:otp_autofill/otp_autofill.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+
 
 class FillOtpScreen extends StatefulWidget {
   final String? mobileNumber, countryCode, name;
@@ -32,7 +34,8 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
   final _formKey = GlobalKey<FormState>();
   String mobile = "", _verificationId = "", otp = "", signature = "";
   bool _isClickable = false, isCodeSent = false, isloading = false, isErrorOtp = false;
-  TextEditingController otpController = TextEditingController();
+  late OTPTextEditController controller;
+  final scaffoldKey = GlobalKey();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   late AnimationController buttonController;
   late Timer _timer;
@@ -40,7 +43,6 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
 
   bool hasError = false;
   String currentText = "";
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
 
   void startTimer() {
@@ -105,17 +107,29 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
   void dispose() {
     super.dispose();
     _timer.cancel();
-    SmsAutoFill().unregisterListener();
     buttonController.dispose();
   }
 
   Future<void> getSingature() async {
-    SmsAutoFill().getAppSignature.then((sign) {
+    OTPInteractor.getAppSignature()
+    //ignore: avoid_print
+        .then((value) => print('signature - $value'));
+    controller = OTPTextEditController(
+      codeLength: 6,
+      //ignore: avoid_print
+      onCodeReceive: (code) => print('Your Application receive code............................. - $code'),
+    )..startListenUserConsent(
+          (code) {
+        final exp = RegExp(r'(\d{5})');
+        return exp.stringMatch(code ?? '') ?? '';
+      },
+    );
+    /*SmsAutoFill().getAppSignature.then((sign) {
       setState(() {
         signature = sign;
       });
     });
-    await SmsAutoFill().listenForCode;
+    await SmsAutoFill().listenForCode;*/
   }
 
   Future<void> checkNetworkOtpResend() async {
@@ -169,6 +183,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
         });
       }
     };
+
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout = (String verificationId) {
       _verificationId = verificationId;
       if (mounted) {
@@ -203,10 +218,10 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
         context.read<AuthCubit>().updateAuthDetails(authProvider: AuthProvider.mobile, authStatus: true, firebaseId: uid, isNewUser: false);
 
         if (value.additionalUserInfo!.isNewUser) {
-          print("in if..........................................");
           context.read<AuthCubit>().authRepository.addUserData(firebaseId: uid, type: "mobile", name: name, profile: profile, mobile: widget.countryCode! + widget.mobileNumber!, email: email, friendCode: "", referCode: "").then((value) {
             if (mounted) {
               context.read<UserDetailsCubit>().fetchUserDetails(uid);
+              Navigator.pop(context);
               Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
               setState(() {
                 isloading = false;
@@ -214,8 +229,8 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
             }
           });
         } else {
-          print("in else...........................................");
           context.read<UserDetailsCubit>().fetchUserDetails(uid);
+          Navigator.pop(context);
           Navigator.of(context).pushReplacementNamed(Routes.home, arguments: false);
         }
         if (value.user != null) {
@@ -328,31 +343,79 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
         ));
   }
-
   Widget showPin() {
     return Padding(
         padding: EdgeInsetsDirectional.only(
           start: MediaQuery.of(context).size.width * .05,
           end: MediaQuery.of(context).size.width * .05,
         ),
-        child: PinFieldAutoFill(
-            controller: otpController,
-            codeLength: 6,
-            decoration: BoxLooseDecoration(
+        child:PinCodeTextField(keyboardType: TextInputType.number,
+          appContext: context,
+          length: 6,
+          obscureText: false,
+          animationType: AnimationType.fade,validator: (val)=>isErrorOtp ? AppLocalization.of(context)!.getTranslatedValues(enterOtp) : null,
+          pinTheme: PinTheme(selectedFillColor:Theme.of(context).colorScheme.secondary,
+            inactiveColor: Theme.of(context).backgroundColor,
+            activeColor:  Theme.of(context).backgroundColor,
+            inactiveFillColor:  Theme.of(context).backgroundColor,
+            selectedColor:Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+            shape: PinCodeFieldShape.box,
+            borderRadius: BorderRadius.circular(5),
+            fieldHeight: 50,
+            fieldWidth: 40,
+            activeFillColor: Theme.of(context).backgroundColor,
+          ),cursorColor:Theme.of(context).backgroundColor,
+          animationDuration: Duration(milliseconds: 300),
+          //backgroundColor:  Theme.of(context).backgroundColor,
+          enableActiveFill: true,
+          controller: controller,
+          onCompleted: (v) {
+            otp = v;
+          },
+          onChanged: (value) {
+            isErrorOtp = controller.text.isEmpty;
+            otp = value;
+            isloading = false;
+          },
+        )
+
+
+
+      /*Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 4,
+          direction: Axis.horizontal,
+          runSpacing: 10,
+          children: [
+            _otpTextField(context, true),
+            _otpTextField(context, false),
+            _otpTextField(context, false),
+            _otpTextField(context, false),
+            _otpTextField(context, false),
+            _otpTextField(context, false),
+          ],
+        ),*/
+    );
+
+
+    /*OtpTextField(
+            controller: controller,
+           // codeLength: 6,
+          *//*  decoration: BoxLooseDecoration(
                 errorText: isErrorOtp ? AppLocalization.of(context)!.getTranslatedValues(enterOtp) : null,
                 strokeColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
                 bgColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
                 gapSpace: 5,
                 textStyle: Theme.of(context).textTheme.headline4!.merge(TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14))),
-            currentCode: otp,
-            onCodeChanged: (String? code) {
-              isErrorOtp = otpController.text.isEmpty;
+            currentCode: otp,*//*
+            onChanged: (String? code) {
+              isErrorOtp = controller.text.isEmpty;
               otp = code!;
               isloading = false;
             },
-            onCodeSubmitted: (String code) {
+            onSubmitted: (String code) {
               otp = code;
-            }));
+            }));*/
   }
 
   Widget showVerify() {
@@ -374,8 +437,8 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
                 ),
                 color: Theme.of(context).primaryColor,
                 onPressed: () {
-                  if (otpController.text.isEmpty) {
-                    otpMobile(otpController.text);
+                  if (controller.text.isEmpty) {
+                    otpMobile(controller.text);
                   } else {
                     _onFormSubmitted();
                   }

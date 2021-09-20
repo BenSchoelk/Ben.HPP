@@ -14,6 +14,7 @@ import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart'
 
 import 'package:flutterquiz/ui/screens/profile/widgets/editProfileFieldBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
@@ -275,8 +276,24 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: constraints.maxHeight * (0.05),
                         ),
-                        Text(
+                        //Ios platform back button add
+                        Platform.isIOS? Stack(
+                        children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                             child:CustomBackButton(iconColor: Theme.of(context).primaryColor,isShowDialog: false,),),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                AppLocalization.of(context)!.getTranslatedValues("profileLbl")!,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
+                              ),
+                            ),
+                          ],
+                        ):Text(
                           AppLocalization.of(context)!.getTranslatedValues("profileLbl")!,
+                          textAlign: TextAlign.center,
                           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
                         ),
                         SizedBox(

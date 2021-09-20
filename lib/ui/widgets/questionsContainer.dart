@@ -234,7 +234,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                   alignment: Alignment.center,
                   children: [
                     Align(
-                      alignment: AlignmentDirectional.centerStart,
+                      alignment: AlignmentDirectional.topStart,
                       child: _buildLevelContainer(),
                     ),
                     _buildCurrentCoins(),
@@ -397,7 +397,6 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
           if (state.settingsModel!.playAreaFontSize != textSize) {
             setState(() {
               textSize = context.read<SettingsCubit>().getSettings().playAreaFontSize;
-              print("in Question Container" + textSize.toString());
             });
           }
         },

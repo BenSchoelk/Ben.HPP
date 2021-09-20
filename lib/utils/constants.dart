@@ -61,9 +61,9 @@ final String skip = "skip";
 final String resetTime = "resetTime";
 
 //firestore collection names
-final String battleRoomCollection = "testBattleRoom"; //battleRoom;
-final String multiUserBattleRoomCollection = "testMultiUserBattleRoom"; //multiUserBattleRoom ;
-final String messagesCollection = "testMessages"; //"messagesCollection";
+final String battleRoomCollection = "battleRoom"; // "testBattleRoom";
+final String multiUserBattleRoomCollection = "multiUserBattleRoom"; // "testMultiUserBattleRoom";
+final String messagesCollection = "testMessagesCollection"; //"messagesCollection";
 
 //api end points
 final String addUserUrl = "${baseUrl}user_signup";
@@ -151,9 +151,6 @@ final int minCoinsForGroupBattleCreation = 0;
 final int maxCoinsForGroupBattleCreation = 50;
 //other constants
 final String defaultQuestionLanguageId = "";
-
-//time in seconds to display message
-final int displayMessageTimeInSeconds = 4;
 
 //Group battle invite message
 final String groupBattleInviteMessage = "Hello, Join a group battle in $appName app. Go to group battle in the app and join using the code : ";

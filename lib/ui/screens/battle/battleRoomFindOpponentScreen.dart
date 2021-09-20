@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -395,7 +396,36 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * (0.025)),
-            CustomRoundedButton(
+            Platform.isIOS?Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CustomRoundedButton(
+                  widthPercentage: 0.375,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  buttonTitle: AppLocalization.of(context)!.getTranslatedValues('retryLbl')!,
+                  radius: 5,
+                  showBorder: false,
+                  height: 40,
+                  titleColor: Theme.of(context).backgroundColor,
+                  elevation: 5.0,
+                  onTap: () {
+                    retryToSearchBattleRoom();
+                  },
+                ),
+                CustomRoundedButton(
+                  widthPercentage: 0.375,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  buttonTitle: "Back",
+                  radius: 5,
+                  showBorder: false,
+                  height: 40,
+                  titleColor: Theme.of(context).backgroundColor,
+                  elevation: 5.0,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ): CustomRoundedButton(
               widthPercentage: 0.375,
               backgroundColor: Theme.of(context).primaryColor,
               buttonTitle: AppLocalization.of(context)!.getTranslatedValues('retryLbl')!,
@@ -425,7 +455,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
         builder: (context, state) {
           Widget child = _buildFindingMap();
           if (state is BattleRoomFailure) {
-            child = ErrorContainer(
+            child = ErrorContainer(showBackButton: true,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode))!,
                 errorMessageColor: Theme.of(context).primaryColor,
                 onTapRetry: () {

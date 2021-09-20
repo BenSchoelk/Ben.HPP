@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 
+import 'exitGameDailog.dart';
+
 class CustomBackButton extends StatelessWidget {
   final bool? removeSnackBars;
   final Color? iconColor;
-  const CustomBackButton({Key? key, this.removeSnackBars, this.iconColor}) : super(key: key);
+  final Color? bgColor;
+  final bool ?isShowDialog;
+  const CustomBackButton({Key? key, this.removeSnackBars, this.iconColor,this.isShowDialog,this.bgColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return isShowDialog!?RawMaterialButton(
+      onPressed: () {
+        print("1");
+        showDialog(context: context, builder: (_) => ExitGameDailog());
+      },
+      constraints: BoxConstraints(),
+      elevation: 2.0,
+      fillColor: bgColor,
+      child: Icon(
+        Icons.arrow_back_ios,
+        color: Theme.of(context).primaryColor,
+        size: 15.0,
+      ),
+      padding: EdgeInsets.all(9.0),
+      shape: CircleBorder(),
+    ):InkWell(
         onTap: () {
           Navigator.pop(context);
           if (removeSnackBars != null && removeSnackBars!) {
@@ -20,6 +39,8 @@ class CustomBackButton extends StatelessWidget {
             child: Icon(
               Icons.arrow_back_ios,
               color: iconColor,
-            )));
+            )
+        )
+    );
   }
 }

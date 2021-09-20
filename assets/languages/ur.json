@@ -288,6 +288,7 @@
     "createRoom" : "کمرہ بنائیں۔",
     "joinRoom" : "روم میں شامل ہوئیے",
     "accountDeactivated" : "آپ کا اکاؤنٹ ایڈمن نے غیر فعال کر دیا ہے۔",
-    "currentlyNotAvailable" : "فی الحال دستیاب نہیں ہے۔"
+    "currentlyNotAvailable" : "فی الحال دستیاب نہیں ہے۔",
+    "notificationLbl": "نوٹیفکیشن"
 }
    

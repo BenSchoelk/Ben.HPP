@@ -164,7 +164,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               if (state is SystemConfigFetchFailure) {
                 child = Center(
                   key: Key("errorContainer"),
-                  child: ErrorContainer(
+                  child: ErrorContainer(showBackButton: true,
                     errorMessageColor: Theme.of(context).primaryColor,
                     errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorCode)),
                     onTapRetry: () {
