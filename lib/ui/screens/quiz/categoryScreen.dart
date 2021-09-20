@@ -72,7 +72,7 @@ class _CategoryScreen extends State<CategoryScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,
+            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
           )
         ],
       ),

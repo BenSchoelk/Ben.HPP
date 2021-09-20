@@ -44,7 +44,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           leading: CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,
+            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,

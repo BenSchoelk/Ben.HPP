@@ -56,7 +56,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 30, start: 20, end: 20),
       child: CustomBackButton(
-        iconColor: Theme.of(context).primaryColor,
+        iconColor: Theme.of(context).primaryColor,isShowDialog: false,
       ),
     );
   }

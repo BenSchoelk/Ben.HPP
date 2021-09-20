@@ -50,7 +50,7 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
       child: Padding(
         padding: EdgeInsetsDirectional.only(top: 15.0, start: 20),
         child: CustomBackButton(
-          iconColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).primaryColor,isShowDialog: false,
         ),
       ),
     );

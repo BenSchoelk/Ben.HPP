@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 class HorizontalTimerContainer extends StatelessWidget {
   final AnimationController timerAnimationController;
 
@@ -9,18 +9,23 @@ class HorizontalTimerContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          color: Theme.of(context).backgroundColor,
+        Container(decoration: BoxDecoration(
+            color: Theme.of(context).backgroundColor,
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+          alignment: Alignment.topCenter,
           height: 10.0,
-          width: MediaQuery.of(context).size.width,
+          width: Platform.isIOS?MediaQuery.of(context).size.width*.8:MediaQuery.of(context).size.width,
         ),
         AnimatedBuilder(
           animation: timerAnimationController,
           builder: (context, child) {
             return Container(
-              color: Theme.of(context).colorScheme.secondary,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              alignment: Alignment.topCenter,
               height: 10.0,
-              width: MediaQuery.of(context).size.width * timerAnimationController.value,
+              width:Platform.isIOS? MediaQuery.of(context).size.width*.8* timerAnimationController.value:MediaQuery.of(context).size.width* timerAnimationController.value,
             );
           },
         ),

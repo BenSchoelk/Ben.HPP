@@ -112,7 +112,7 @@ class _OtpScreen extends State<OtpScreen> {
   Widget otpLabelIos() {
     return Row(
       children: [
-        Expanded(flex:1,child: CustomBackButton(iconColor: Theme.of(context).primaryColor,)),
+        Expanded(flex:1,child: CustomBackButton(iconColor: Theme.of(context).primaryColor,isShowDialog: false,)),
         Expanded(flex:10,
           child: Text(
             AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,

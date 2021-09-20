@@ -65,7 +65,7 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,
+            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
           ),
         ],
       ),

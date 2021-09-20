@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
@@ -56,7 +59,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
 
   Widget _buildTimerContainer() {
     return Align(
-      alignment: Alignment.topCenter,
+      alignment:Platform.isIOS? Alignment.topRight:Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(top: 7.5),
         child: HorizontalTimerContainer(
@@ -109,7 +112,15 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
           )),
     );
   }
-
+  Widget backButton(){
+    return Align(
+        alignment: Alignment.topLeft,
+        child:Padding(
+            padding: EdgeInsets.only(left: 10),
+            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: false,)
+        )
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,8 +130,11 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
         children: [
           PageBackgroundGradientContainer(),
           _buildTimerContainer(),
+          Platform.isIOS?backButton():Container(),
           _buildParagraph(),
           _buildStartButton(),
+
+
         ],
       ),
     ));

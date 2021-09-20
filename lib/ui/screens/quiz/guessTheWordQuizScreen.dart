@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
@@ -228,7 +230,15 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
       },
     );
   }
-
+  Widget backButton(){
+    return Align(
+        alignment: Alignment.topLeft,
+        child:Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top-10),
+            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: true,)
+        )
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final GuessTheWordQuizCubit guessTheWordQuizCubit = context.read<GuessTheWordQuizCubit>();
@@ -260,7 +270,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
                 child: QuizPlayAreaBackgroundContainer(heightPercentage: 0.885),
               ),
               Align(
-                alignment: Alignment.topCenter,
+                alignment: Platform.isIOS?Alignment.topRight:Alignment.topCenter,
                 child: Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
                   child: HorizontalTimerContainer(
@@ -270,6 +280,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
               ),
               _buildQuesitons(guessTheWordQuizCubit),
               _buildSubmitButton(guessTheWordQuizCubit),
+              Platform.isIOS? backButton():Container()
             ],
           ),
         ),

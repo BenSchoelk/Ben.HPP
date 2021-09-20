@@ -20,6 +20,7 @@ import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
@@ -486,7 +487,15 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     return Container();
   }
-
+Widget backButton(){
+    return Align(
+        alignment: Alignment.topLeft,
+        child:Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top-10),
+            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: true,)
+        )
+    );
+}
   @override
   Widget build(BuildContext context) {
     final quesCubit = context.read<QuestionsCubit>();
@@ -505,10 +514,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 heightPercentage: 0.885,
               ),
             ),
+          //showDialog(context: context, builder: (_) => ExitGameDailog());
+
             Align(
-              alignment: Alignment.topCenter,
+              alignment:Platform.isIOS?Alignment.topRight:Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5,right: /*Platform.isIOS?*/10/*:0*/),
                 child: HorizontalTimerContainer(
                   timerAnimationController: timerAnimationController,
                 ),
@@ -580,6 +591,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 return Container();
               },
             ),
+            Platform.isIOS?backButton():Container(),
           ],
         ),
       ),
