@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 //
 
@@ -23,9 +24,7 @@ class AppLocalization {
   //to load json(language) from assets
   Future loadJson() async {
     String languageJsonName = locale.countryCode == null ? locale.languageCode : "${locale.languageCode}-${locale.countryCode}";
-    print(languageJsonName);
     String jsonStringValues = await rootBundle.loadString('assets/languages/$languageJsonName.json');
-
     //value from rootbundle will be encoded string
     Map<String, dynamic> mappedJson = json.decode(jsonStringValues);
 
@@ -48,7 +47,13 @@ class _AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {
   //providing all supporated languages
   @override
   bool isSupported(Locale locale) {
-    return supporatedLocales.contains(locale.languageCode);
+    //
+    return supporatedLocales
+        .map(
+          (languageCode) => UiUtils.getLocaleFromLanguageCode(languageCode),
+        )
+        .toList()
+        .contains(locale);
   }
 
   //load languageCode.json files

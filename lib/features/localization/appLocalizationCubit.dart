@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/settings/settingsLocalDataSource.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class AppLocalizationState {
   final Locale language;
@@ -11,11 +12,11 @@ class AppLocalizationState {
 class AppLocalizationCubit extends Cubit<AppLocalizationState> {
   final SettingsLocalDataSource settingsLocalDataSource;
   AppLocalizationCubit(this.settingsLocalDataSource) : super(AppLocalizationState(Locale(defaultLanguageCode))) {
-    changeLanguage(Locale(settingsLocalDataSource.languageCode()!));
+    changeLanguage(settingsLocalDataSource.languageCode()!);
   }
 
-  void changeLanguage(Locale language) {
-    settingsLocalDataSource.setLanguageCode(language.languageCode);
-    emit(AppLocalizationState(language));
+  void changeLanguage(String languageCode) {
+    settingsLocalDataSource.setLanguageCode(languageCode);
+    emit(AppLocalizationState(UiUtils.getLocaleFromLanguageCode(languageCode)));
   }
 }

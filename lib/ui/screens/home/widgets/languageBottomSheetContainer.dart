@@ -22,19 +22,19 @@ class LanguageDailogContainer extends StatelessWidget {
                 return Container(
                   margin: EdgeInsets.symmetric(vertical: 10.0),
                   decoration: BoxDecoration(
-                    color: state.language.languageCode == UiUtils.getLanguageCode(language.languageCode) ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
+                    color: state.language == UiUtils.getLocaleFromLanguageCode(language.languageCode) ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ListTile(
-                    trailing: state.language.languageCode == UiUtils.getLanguageCode(language.languageCode)
+                    trailing: state.language == UiUtils.getLocaleFromLanguageCode(language.languageCode)
                         ? Icon(
                             Icons.check,
                             color: Theme.of(context).backgroundColor,
                           )
                         : SizedBox(),
                     onTap: () {
-                      if (state.language.languageCode != UiUtils.getLanguageCode(language.languageCode)) {
-                        context.read<AppLocalizationCubit>().changeLanguage(Locale(UiUtils.getLanguageCode(language.languageCode)));
+                      if (state.language != UiUtils.getLocaleFromLanguageCode(language.languageCode)) {
+                        context.read<AppLocalizationCubit>().changeLanguage(language.languageCode);
                       }
                     },
                     title: Text(

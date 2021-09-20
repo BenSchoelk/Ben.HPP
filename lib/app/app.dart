@@ -112,9 +112,7 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: supporatedLocales.map((languageCode) {
-              //(e) => Locale(e)
-              List<String> languageWithCountryCode = languageCode.split('-');
-              return languageWithCountryCode.length == 1 ? Locale(languageWithCountryCode.first) : Locale(languageWithCountryCode.first, languageWithCountryCode.last);
+              return UiUtils.getLocaleFromLanguageCode(languageCode);
             }).toList(),
             initialRoute: Routes.splash,
             onGenerateRoute: Routes.onGenerateRouted,

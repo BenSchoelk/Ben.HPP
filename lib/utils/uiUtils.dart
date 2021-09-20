@@ -88,15 +88,17 @@ class UiUtils {
     final currentLanguage = context.read<AppLocalizationCubit>().state.language;
     if (context.read<SystemConfigCubit>().getLanguageMode() == "1") {
       final supporatedLanguage = context.read<SystemConfigCubit>().getSupportedLanguages();
-      return supporatedLanguage[supporatedLanguage.indexWhere((element) => getLanguageCode(element.languageCode) == currentLanguage.languageCode)].id;
+      final supporatedLanguageIndex = supporatedLanguage.indexWhere((element) => getLocaleFromLanguageCode(element.languageCode) == currentLanguage);
+      print(supporatedLanguageIndex);
+      return supporatedLanguage[supporatedLanguageIndex].id;
     }
 
     return defaultQuestionLanguageId;
   }
 
-  //TODO : for mucasantos client
-  static String getLanguageCode(String code) {
-    return code.split('-').first;
+  static Locale getLocaleFromLanguageCode(String languageCode) {
+    List<String> result = languageCode.split("-");
+    return result.length == 1 ? Locale(result.first) : Locale(result.first, result.last);
   }
 
   static String formatNumber(int number) {

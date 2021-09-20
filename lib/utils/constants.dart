@@ -2,9 +2,12 @@ final String appName = "Elite Quiz";
 final String packageName = "com.wrteam.flutterquiz";
 
 //supporated language codes
-final List<String> supporatedLocales = ['en', 'hi', 'ur', 'pt'];
+//Add language code in this list
+//visit this to find languageCode for your respective language
+//https://developers.google.com/admin-sdk/directory/v1/languages
+final List<String> supporatedLocales = ['en', 'hi', 'ur', 'pt-BR'];
 //
-final String defaultLanguageCode = 'en';
+final String defaultLanguageCode = 'hi';
 
 //Hive all boxes name
 final String authBox = "auth";
