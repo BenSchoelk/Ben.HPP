@@ -7,7 +7,7 @@ final String packageName = "com.wrteam.flutterquiz";
 //https://developers.google.com/admin-sdk/directory/v1/languages
 final List<String> supporatedLocales = ['en', 'hi', 'ur', 'pt-BR'];
 //
-final String defaultLanguageCode = 'hi';
+final String defaultLanguageCode = 'en';
 
 //Hive all boxes name
 final String authBox = "auth";
