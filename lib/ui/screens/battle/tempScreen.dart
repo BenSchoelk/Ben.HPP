@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -16,7 +17,12 @@ class TempScreen extends StatelessWidget {
         child: CustomPaint(
           painter: MessageCustomPainter(triangleIsLeft: false, color: Theme.of(context).colorScheme.secondary),
           child: Container(
-            height: 60,
+            padding: EdgeInsets.symmetric(vertical: 7.5),
+            child: SvgPicture.asset(
+              "assets/images/emojis/cool_emoji.svg",
+              color: Theme.of(context).backgroundColor,
+            ),
+            height: 40,
             width: MediaQuery.of(context).size.width * (0.25),
           ),
         ),
