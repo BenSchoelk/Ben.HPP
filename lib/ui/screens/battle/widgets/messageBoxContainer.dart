@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
+import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -145,82 +146,94 @@ class SendButton extends StatelessWidget {
 class ChatContainer extends StatelessWidget {
   const ChatContainer({Key? key}) : super(key: key);
 
-  Widget _buildMessage(BuildContext context) {
+  Widget _buildMessage(BuildContext context, Message message) {
+    bool messageByCurrentUser = message.by == context.read<UserDetailsCubit>().getUserId();
+
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: messageByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(bottom: 10.0),
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * (0.45),
+          maxWidth: MediaQuery.of(context).size.width * (0.5),
         ),
+        margin: messageByCurrentUser ? EdgeInsets.only(bottom: 20.0, right: 15.0) : EdgeInsets.only(bottom: 20.0, left: 15.0),
         child: Column(
+          crossAxisAlignment: messageByCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            Text(" something"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                messageByCurrentUser
+                    ? SizedBox()
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0, left: 5.0),
+                        child: Text(
+                          "Sender Name",
+                          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold, color: Theme.of(context).backgroundColor),
+                        ),
+                      ),
+                Padding(
+                  padding: messageByCurrentUser ? const EdgeInsets.only(bottom: 5.0, right: 10.0) : const EdgeInsets.only(bottom: 5.0, left: 10.0),
+                  child: Text(
+                    "${message.timestamp.toDate().hour}:${message.timestamp.toDate().minute}",
+                    style: TextStyle(fontSize: 11.0, color: Theme.of(context).backgroundColor),
+                  ),
+                ),
+              ],
+            ),
+            CustomPaint(
+              painter: ChatMessagePainter(isLeft: !messageByCurrentUser, color: Theme.of(context).backgroundColor),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: message.isTextMessage
+                    ? Text(
+                        "${message.message}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          height: 1.25,
+                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.85),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 30,
+                        width: MediaQuery.of(context).size.width * (0.2),
+                        child: SvgPicture.asset(
+                          UiUtils.getEmojiPath(message.message),
+                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.85),
+                        ),
+                      ),
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  /*
-  Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "time",
-                      style: TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
-                    Container(
-                      //width: MediaQuery.of(context).size.width * (0.225),
-                      child: Text(
-                        "sender name",
-                        textAlign: TextAlign.right,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 10,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 10.0, left: 10.0),
-                alignment: Alignment.centerRight,
-                //decoration: BoxDecoration(border: Border.all()),
-                child: Text(" wooohoo",
-                    style: TextStyle(
-                      fontSize: 13,
-                    )),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-            ],
-          ),
-  
-   */
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height * tabBarHeightPercentage,
-          bottom: 10,
-        ),
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return _buildMessage(context);
-        });
+    return BlocBuilder<MessageCubit, MessageState>(
+      bloc: context.read<MessageCubit>(),
+      builder: (context, state) {
+        if (state is MessageFetchedSuccess) {
+          List<Message> messages = state.messages;
+          messages = messages.reversed.toList();
+          return messages.isEmpty
+              ? Container()
+              : ListView.builder(
+                  reverse: true,
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * tabBarHeightPercentage,
+                    bottom: 10,
+                  ),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return _buildMessage(context, messages[index]);
+                  });
+        }
+        return Container();
+      },
+    );
   }
 }
 

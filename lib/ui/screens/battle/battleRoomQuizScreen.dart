@@ -327,12 +327,11 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
           //current user message
           //
           //means timer is running
-          if (currentUserMessageDisappearTimeInSeconds >= 0 && currentUserMessageDisappearTimeInSeconds <= 4) {
+          if (currentUserMessageDisappearTimeInSeconds > 0 && currentUserMessageDisappearTimeInSeconds < 4) {
             print(currentUserMessageDisappearTimeInSeconds);
             currentUserMessageDisappearTimer?.cancel();
-            await messageAnimationController.reverse();
-            await Future.delayed(Duration(milliseconds: 100));
-            messageAnimationController.forward();
+            //await Future.delayed(Duration(milliseconds: 100));
+            //messageAnimationController.forward();
             setCurrentUserMessageDisappearTimer();
           } else {
             messageAnimationController.forward();
@@ -345,9 +344,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
           if (opponentUserMessageDisappearTimeInSeconds > 0 && opponentUserMessageDisappearTimeInSeconds < 4) {
             print(opponentUserMessageDisappearTimeInSeconds);
             opponentUserMessageDisappearTimer?.cancel();
-            await opponentMessageAnimationController.reverse();
-            await Future.delayed(Duration(milliseconds: 100));
-            opponentMessageAnimationController.forward();
+            //await opponentMessageAnimationController.reverse();
+            //await Future.delayed(Duration(milliseconds: 100));
+            //opponentMessageAnimationController.forward();
             setOpponentUserMessageDisappearTimer();
           } else {
             opponentMessageAnimationController.forward();

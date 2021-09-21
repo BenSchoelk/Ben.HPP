@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
@@ -13,21 +14,59 @@ class TempScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: CustomPaint(
-          painter: MessageCustomPainter(triangleIsLeft: false, color: Theme.of(context).colorScheme.secondary),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 7.5),
-            child: SvgPicture.asset(
-              "assets/images/emojis/1.svg",
-              color: Theme.of(context).backgroundColor,
-            ),
-            height: 40,
-            width: MediaQuery.of(context).size.width * (0.25),
-          ),
-        ),
-      ),
-    );
+        body: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * (0.5),
+                  ),
+                  margin: EdgeInsets.only(bottom: 20.0, right: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          /*
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0, right: 5.0),
+                            child: Text(
+                              "Sender Name",
+                              style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          */
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0, right: 10.0),
+                            child: Text(
+                              "23:00",
+                              style: TextStyle(fontSize: 11.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                      CustomPaint(
+                        painter: ChatMessagePainter(isLeft: false, color: Colors.blue),
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10.0, top: 10.0, left: 10.0, right: 10.0),
+                          child: Text(
+                            "Some message some long message buddy",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              height: 1.25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }));
   }
 }
 
