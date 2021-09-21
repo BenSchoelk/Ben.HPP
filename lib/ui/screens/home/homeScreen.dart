@@ -28,8 +28,6 @@ import 'package:flutterquiz/utils/quizTypes.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
-import '../Test.dart';
-
 class HomeScreen extends StatefulWidget {
   final bool isNewUser;
   HomeScreen({Key? key, required this.isNewUser}) : super(key: key);
@@ -134,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void onQuizTypeContainerTap(int quizTypeIndex) {
     if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.dailyQuiz) {
-    // print( context.read<UserDetailsCubit>().getUserProfile().fcmToken);
-     if (context.read<SystemConfigCubit>().getIsDailyQuizAvailable() == "1") {
+      // print( context.read<UserDetailsCubit>().getUserProfile().fcmToken);
+      if (context.read<SystemConfigCubit>().getIsDailyQuizAvailable() == "1") {
         Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.dailyQuiz, "numberOfPlayer": 1, "quizName": "Daily Quiz"});
       } else {
         UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(currentlyNotAvailableKey)!, context, false);
@@ -515,7 +513,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               child: IconButton(
                   onPressed: () {
-                  /*  Navigator.push(
+                    /*  Navigator.push(
                       context,
                       PageRouteBuilder(pageBuilder: (context, anim1, anim2) => LocalNotifications()),
                     );*/
@@ -529,7 +527,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             SizedBox(
               width: 12.5,
             ),
-
             Container(
               width: 45,
               height: 40,
@@ -617,7 +614,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           }
           if (state is UserDetailsFetchFailure) {
             return _buildHomeScreen([
-              ErrorContainer(showBackButton: true,
+              ErrorContainer(
+                showBackButton: true,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
                 onTapRetry: () {
                   context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
@@ -631,7 +629,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           UserProfile userProfile = (state as UserDetailsFetchSuccess).userProfile;
           if (userProfile.status == "0") {
             return _buildHomeScreen([
-              ErrorContainer(showBackButton: true,
+              ErrorContainer(
+                showBackButton: true,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(accountDeactivatedKey)!,
                 onTapRetry: () {
                   context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
@@ -653,5 +652,3 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 }
-
-

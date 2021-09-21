@@ -12,7 +12,7 @@ import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/features/statistic/cubits/updateStatisticCubit.dart';
 import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
-import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
@@ -106,7 +106,7 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
- /* AdmobBannerSize? bannerSize;
+  /* AdmobBannerSize? bannerSize;
   late AdmobInterstitial interstitialAd;*/
 
   void decideWinnerForBattle() {
@@ -184,6 +184,7 @@ class _ResultScreenState extends State<ResultScreen> {
     interstitialAd.load();*/
     _createInterstitialAd();
   }
+
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: getRewardBasedVideoAdUnitId()!,
@@ -196,10 +197,10 @@ class _ResultScreenState extends State<ResultScreen> {
           onAdFailedToLoad: (LoadAdError error) {
             print('InterstitialAd failed to load: $error.');
             _createInterstitialAd();
-
           },
         ));
   }
+
   InterstitialAd? interstitialAd;
   void _showInterstitialAd() {
     if (interstitialAd == null) {
@@ -207,8 +208,7 @@ class _ResultScreenState extends State<ResultScreen> {
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent'),
+      onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent'),
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdDismissedFullScreenContent');
         ad.dispose();
@@ -223,6 +223,7 @@ class _ResultScreenState extends State<ResultScreen> {
     interstitialAd!.show();
     interstitialAd = null;
   }
+
   void setContestLeaderboard() {
     if (widget.quizType == QuizTypes.contest) {
       context.read<SetContestLeaderboardCubit>().setContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), questionAttended: attemptedQuestion(), correctAns: correctAnswer(), contestId: widget.contestId, score: widget.myPoints);
@@ -348,41 +349,35 @@ class _ResultScreenState extends State<ResultScreen> {
           height: 15.0,
         ),
         //Ios platform back button add
-        Platform.isIOS?Stack(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child:InkWell(
-                    onTap: () {
-                      _showInterstitialAd();
-                      Navigator.pop(context);
-                      },
-                    child: Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Theme.of(context).backgroundColor,
-                        )
-                    )
-                )
-              ),
-              Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "$message",
-                    style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
-                  )
-              ),
-            ]
-        ):
-        Container(
-            alignment: Alignment.center,
-            child: Text(
-              "$message",
-              style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
-            )
-        ),
+        Platform.isIOS
+            ? Stack(children: [
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                        onTap: () {
+                          _showInterstitialAd();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                            padding: EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: Theme.of(context).backgroundColor,
+                            )))),
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "$message",
+                      style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                    )),
+              ])
+            : Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "$message",
+                  style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                )),
         SizedBox(
           height: 5.0,
         ),
