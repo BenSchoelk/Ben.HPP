@@ -60,11 +60,12 @@ dependencies:
   screenshot: ^1.2.1
   share_plus: ^2.1.4
   shared_preferences: ^2.0.6
-  sign_in_with_apple: ^3.0.0
+  #sign_in_with_apple: ^3.0.0
   otp_autofill: ^1.1.0
   pin_code_fields: ^7.3.0
   flutter_local_notifications: ^8.1.1+2
   flutter_exif_rotation: ^0.4.1
+  apple_sign_in_safety: ^0.0.6
 
   webview_flutter: ^2.0.13
   cupertino_will_pop_scope: ^1.1.0

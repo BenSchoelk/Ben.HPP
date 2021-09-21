@@ -108,7 +108,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late Animation<double> questionContentAnimation;
   late AnimationController animationController;
   late AnimationController topContainerAnimationController;
-  late List<Question> ques;
+ // late List<Question> ques=[];
   int currentQuestionIndex = 0;
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
@@ -275,7 +275,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   //if user has submitted the answer for current question
   bool hasSubmittedAnswerForCurrentQuestion() {
-    return ques[currentQuestionIndex].attempted;
+    return context.read<QuestionsCubit>().questions()[currentQuestionIndex].attempted;
   }
 
   Map<String, LifelineStatus> getLifeLines() {
@@ -288,12 +288,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   //update answer locally and on cloud
   void submitAnswer(String submittedAnswer) async {
     timerAnimationController.stop();
-    if (!ques[currentQuestionIndex].attempted) {
-      context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(ques[currentQuestionIndex].id, submittedAnswer);
+    if (!context.read<QuestionsCubit>().questions()[currentQuestionIndex].attempted) {
+      context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(context.read<QuestionsCubit>().questions()[currentQuestionIndex].id, submittedAnswer);
 
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
-      if (currentQuestionIndex != (ques.length - 1)) {
+      if (currentQuestionIndex != (context.read<QuestionsCubit>().questions().length - 1)) {
         updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         changeQuestion();
         timerAnimationController.forward(from: 0.0);
@@ -338,11 +338,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildLifelineContainer(VoidCallback onTap, String lifelineTitle, String lifelineIcon) {
+    print(context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length);
     return GestureDetector(
       onTap: onTap,
       child: Container(
           decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+              color: lifelineTitle==fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length==2?Theme.of(context).backgroundColor.withOpacity(0.7):Theme.of(context).backgroundColor,
               boxShadow: [
                 UiUtils.buildBoxShadow(),
               ],
@@ -409,7 +410,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       setState(() {
                         lifelines[fiftyFifty] = LifelineStatus.using;
                       });
-                    } else {
+                    }
+                    else if(context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length==2){
+                      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
+                    }
+                    else {
                       //dialog Show timer stop dialog close timer start
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
@@ -422,7 +427,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
                       // UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
-                  } else {
+                  }
+
+                  else {
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
                   }
                 }, fiftyFifty, "fiftyfifty icon.svg"),
@@ -581,7 +588,7 @@ Widget backButton(){
                     );
                   }
                   final questions = (state as QuestionsFetchSuccess).questions;
-                  ques = questions;
+                  //ques = questions;
 
                   return Align(
                     alignment: Alignment.topCenter,

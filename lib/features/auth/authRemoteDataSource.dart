@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:apple_sign_in_safety/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
@@ -11,7 +12,7 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 class AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -188,13 +189,35 @@ class AuthRemoteDataSource {
   }*/
 
   signInWithApple() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
+      final AuthorizationResult result = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+      print(result);
+        return result;
+    /*  switch (result.status) {
+        case AuthorizationStatus.error:
+          print("Sign in failed: ${result.error!.localizedDescription}");
+          break;
+
+        case AuthorizationStatus.cancelled:
+          print('User cancelled');
+          break;
+        case AuthorizationStatus.authorized:
+          // TODO: Handle this case.
+          break;
+
+      }*/
+
+
+
+
+    /*final credential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
     );
-    return credential;
+    return credential;*/
   }
   Future<UserCredential> signInWithEmailAndPassword(String email, String password) async {
     //sign in using email

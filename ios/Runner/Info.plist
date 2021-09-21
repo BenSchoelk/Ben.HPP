@@ -41,38 +41,41 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<!-- Google Sign-in Section -->
-
-        <key>CFBundleURLTypes</key>
-        <array>
-        	<dict>
-        		<key>CFBundleTypeRole</key>
-        		<string>Editor</string>
-        		<key>CFBundleURLSchemes</key>
-        		<array>
-        			<!-- TODO Replace this value: -->
-        			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-        			<string>com.googleusercontent.apps.322915959213-dh9pngcbov233e8hok2b4i142nem7vs4</string>
-        			<string>fb858040135030262</string>
-        		</array>
-        	</dict>
-        </array>
-        <!-- End of the Google Sign-in Section -->
-        <key>858040135030262</key>
-        <string>858040135030262</string>
-        <key>Elite Quiz</key>
-
-        <!-- Replace "YOUR_APP_NAME" with your Facebook App name. --result.accessToken.token>
-        <string>Elite Quiz</string>
-
-        <key>LSApplicationQueriesSchemes</key>
-        <array>
-            <string>fbapi</string>
-            <string>fb-messenger-share-api</string>
-            <string>fbauth2</string>
-            <string>fbshareextension</string>
-        </array>
-        <key>GADApplicationIdentifier</key>
-        <string>ca-app-pub-3940256099942544~1458002511</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.322915959213-dh9pngcbov233e8hok2b4i142nem7vs4</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb858040135030262</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookDisplayName</key>
+	<string>Elite Quiz</string>
+	<key>FacebookAppID</key>
+	<string>858040135030262</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>allow to use gallary</string>
+	<key>NSCameraUsageDescription</key>
+	<string>allow to use camera</string>
 </dict>
 </plist>

@@ -292,5 +292,6 @@
   "joinRoom" : "कमरे को जोड़ दो",
   "accountDeactivated" : "आपका खाता व्यवस्थापक द्वारा निष्क्रिय कर दिया गया है",
   "currentlyNotAvailable" : "वर्तमान में उपलब्ध नहीं",
-  "notificationLbl": "अधिसूचना"
+  "notificationLbl": "अधिसूचना",
+  "notAvailable": "उपलब्ध नहीं है"
 }
