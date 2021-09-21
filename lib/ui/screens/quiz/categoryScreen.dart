@@ -114,6 +114,8 @@ class _CategoryScreen extends State<CategoryScreen> {
               return GestureDetector(
                 onTap: () {
                   if (widget.quizType == QuizTypes.battle) {
+                    //reset state of battle room to initial
+                    context.read<BattleRoomCubit>().emit(BattleRoomInitial());
                     Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: categoryList[index].id).then((value) {
                       //need to delete room if user exit the process in between of finding opponent
                       //or instantly press exit button

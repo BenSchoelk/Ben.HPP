@@ -28,9 +28,7 @@ class MessageContainer extends StatelessWidget {
       return Text(
         message,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Theme.of(context).backgroundColor,
-        ),
+        style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 13.5, height: 1.0),
       );
     }
     return Container();
@@ -55,8 +53,8 @@ class MessageContainer extends StatelessWidget {
             );
           },
         ),
-        height: 35,
-        width: MediaQuery.of(context).size.width * (0.4),
+        height: 40,
+        width: MediaQuery.of(context).size.width * (0.45),
       ),
     );
   }

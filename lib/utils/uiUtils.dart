@@ -150,7 +150,7 @@ class UiUtils {
     context.read<BattleRoomCubit>().emit(BattleRoomInitial());
     if (context.read<SystemConfigCubit>().getIsCategoryEnableForBattle() == "1") {
       //go to category page
-      Navigator.of(context).pushNamed(Routes.category, arguments: QuizTypes.battle);
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.battle});
     } else {
       Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: "").then((value) {
         //need to delete room if user exit the process in between of finding opponent
