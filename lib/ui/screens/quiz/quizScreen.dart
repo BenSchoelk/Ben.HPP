@@ -158,8 +158,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _getQuestions();
     _createInterstitialAd();
-    //bannerSize = AdmobBannerSize.BANNER;
-
   }
   void _createInterstitialAd() {
     InterstitialAd.load(
@@ -170,7 +168,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             setState(() {
               interstitialAd=ad;
             });
-            print('$ad loaded');
           },
           onAdFailedToLoad: (LoadAdError error) {
             print(error);
@@ -179,13 +176,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
   void _showInterstitialAd() {
     if (interstitialAd == null) {
-      print('Warning: attempt to show interstitial before loaded...................................');
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (InterstitialAd ad){},
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent');
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
         timerAnimationController.forward(from: timerAnimationController.value);
@@ -415,7 +410,16 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         lifelines[fiftyFifty] = LifelineStatus.using;
                       });
                     } else {
-                      showDialog(context: context, builder: (_) => showAdsDialog());
+                      //dialog Show timer stop dialog close timer start
+                      timerAnimationController.stop();
+                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
+                        print(value);
+                        if(value==null){
+                          timerAnimationController.forward(from: timerAnimationController.value);
+                        }
+                        }
+                      );
+
                       // UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -433,7 +437,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         lifelines[audiencePoll] = LifelineStatus.using;
                       });
                     } else {
-                      showDialog(context: context, builder: (_) => showAdsDialog());
+                      timerAnimationController.stop();
+                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
+                        print(value);
+                        if(value==null){
+                          timerAnimationController.forward(from: timerAnimationController.value);
+                        }
+                      }
+                      );
                       //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -455,7 +466,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       timerAnimationController.stop();
                       timerAnimationController.forward(from: 0.0);
                     } else {
-                      showDialog(context: context, builder: (_) => showAdsDialog());
+                      timerAnimationController.stop();
+                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
+                        print(value);
+                        if(value==null){
+                          timerAnimationController.forward(from: timerAnimationController.value);
+                        }
+                      }
+                      );
                       //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -474,7 +492,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       });
                       submitAnswer("0");
                     } else {
-                      showDialog(context: context, builder: (_) => showAdsDialog());
+                      timerAnimationController.stop();
+                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
+                        print(value);
+                        if(value==null){
+                          timerAnimationController.forward(from: timerAnimationController.value);
+                        }
+                      }
+                      );
                       //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -519,7 +544,7 @@ Widget backButton(){
             Align(
               alignment:Platform.isIOS?Alignment.topRight:Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5,right: /*Platform.isIOS?*/10/*:0*/),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5,right: Platform.isIOS?10:0),
                 child: HorizontalTimerContainer(
                   timerAnimationController: timerAnimationController,
                 ),

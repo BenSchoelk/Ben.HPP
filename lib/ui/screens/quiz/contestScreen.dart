@@ -51,7 +51,7 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
             appBar: AppBar(
                 backgroundColor: Theme.of(context).backgroundColor,
                 leading: CustomBackButton(
-                  iconColor: Theme.of(context).primaryColor,
+                  iconColor: Theme.of(context).primaryColor,isShowDialog: false,
                 ),
                 centerTitle: true,
                 title: Padding(
