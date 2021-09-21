@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
+import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class MessageContainer extends StatelessWidget {
   final bool isCurrentUser;
@@ -14,21 +17,33 @@ class MessageContainer extends StatelessWidget {
       if (messageState.messages.isEmpty) {
         return Container();
       }
-      String message = "";
+      Message message = Message.buildEmptyMessage();
       BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
       String currentUserId = context.read<UserDetailsCubit>().getUserId();
       if (isCurrentUser) {
         //get current user's latest message
-        message = context.read<MessageCubit>().getUserLatestMessage(battleRoomCubit.getCurrentUserDetails(currentUserId).uid).message;
+        message = context.read<MessageCubit>().getUserLatestMessage(battleRoomCubit.getCurrentUserDetails(currentUserId).uid);
       } else {
         //get opponent user's latest message
-        message = context.read<MessageCubit>().getUserLatestMessage(battleRoomCubit.getOpponentUserDetails(currentUserId).uid).message;
+        message = context.read<MessageCubit>().getUserLatestMessage(battleRoomCubit.getOpponentUserDetails(currentUserId).uid);
       }
 
-      return Text(
-        message,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 13.5, height: 1.0),
+      return Container(
+        key: message.isTextMessage ? Key("textMessage") : Key("nonTextMessage"),
+        padding: message.isTextMessage ? EdgeInsets.symmetric(horizontal: 15.0) : EdgeInsets.symmetric(vertical: 7.5),
+        alignment: Alignment.center,
+        height: 40,
+        width: MediaQuery.of(context).size.width * (message.isTextMessage ? 0.45 : 0.25),
+        child: message.isTextMessage
+            ? Text(
+                message.message,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 13.5, height: 1.0),
+              )
+            : SvgPicture.asset(
+                UiUtils.getEmojiPath(message.message),
+                color: Theme.of(context).backgroundColor,
+              ),
       );
     }
     return Container();
@@ -41,20 +56,14 @@ class MessageContainer extends StatelessWidget {
         triangleIsLeft: isCurrentUser,
         color: Theme.of(context).colorScheme.secondary,
       ),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15.0),
-        alignment: Alignment.center,
-        child: BlocBuilder<MessageCubit, MessageState>(
-          bloc: context.read<MessageCubit>(),
-          builder: (context, state) {
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 175),
-              child: _buildMessage(context, state),
-            );
-          },
-        ),
-        height: 40,
-        width: MediaQuery.of(context).size.width * (0.45),
+      child: BlocBuilder<MessageCubit, MessageState>(
+        bloc: context.read<MessageCubit>(),
+        builder: (context, state) {
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 175),
+            child: _buildMessage(context, state),
+          );
+        },
       ),
     );
   }

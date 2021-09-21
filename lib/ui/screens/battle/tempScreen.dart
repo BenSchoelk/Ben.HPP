@@ -19,7 +19,7 @@ class TempScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 7.5),
             child: SvgPicture.asset(
-              "assets/images/emojis/cool_emoji.svg",
+              "assets/images/emojis/1.svg",
               color: Theme.of(context).backgroundColor,
             ),
             height: 40,

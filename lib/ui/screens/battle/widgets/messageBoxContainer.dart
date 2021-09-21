@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
@@ -16,13 +18,13 @@ class MessageBoxContainer extends StatefulWidget {
   _MessageBoxContainerState createState() => _MessageBoxContainerState();
 }
 
-final double tabBarHeightPercentage = 0.85;
+final double tabBarHeightPercentage = 0.085;
 final double messageBoxWidthPercentage = 0.775;
-final double messageBoxDetailsHeightPercentage = UiUtils.questionContainerHeightPercentage - 0.05;
-final double messageBoxHeightPercentage = UiUtils.questionContainerHeightPercentage - 0.03;
 
 class _MessageBoxContainerState extends State<MessageBoxContainer> {
   late int _currentSelectedIndex = 1;
+  late final double messageBoxDetailsHeightPercentage = UiUtils.questionContainerHeightPercentage - (0.05);
+  late final double messageBoxHeightPercentage = UiUtils.questionContainerHeightPercentage - (0.03);
 
   Widget _buildTabbarTextContainer(String text, int index) {
     return InkWell(
@@ -66,7 +68,7 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
         closeMessageBox: widget.closeMessageBox,
       );
     }
-    return EmojiesContainer(
+    return EmojisContainer(
       closeMessageBox: widget.closeMessageBox,
     );
   }
@@ -74,21 +76,20 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(),
       margin: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 7.5 + MediaQuery.of(context).size.height * (0.01),
       ),
       width: MediaQuery.of(context).size.width * messageBoxWidthPercentage,
-      height: MediaQuery.of(context).size.height * messageBoxHeightPercentage,
+      height: MediaQuery.of(context).size.height * (messageBoxHeightPercentage),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Align(
             alignment: Alignment.topCenter,
             child: Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * tabBarHeightPercentage * 0.25),
+              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * (0.085) * 0.25),
               width: MediaQuery.of(context).size.width * messageBoxWidthPercentage,
-              height: MediaQuery.of(context).size.height * messageBoxDetailsHeightPercentage,
+              height: MediaQuery.of(context).size.height * (messageBoxDetailsHeightPercentage),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.circular(25),
@@ -107,7 +108,7 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
               ),
             ),
           ),
-          Align(alignment: Alignment.topCenter, child: _buildTabBar(context)),
+          Align(alignment: Alignment.topRight, child: _buildTabBar(context)),
         ],
       ),
     );
@@ -294,18 +295,18 @@ class _MessagesContainerState extends State<MessagesContainer> {
   }
 }
 
-class EmojiesContainer extends StatefulWidget {
+class EmojisContainer extends StatefulWidget {
   final VoidCallback closeMessageBox;
-  EmojiesContainer({Key? key, required this.closeMessageBox}) : super(key: key);
+  EmojisContainer({Key? key, required this.closeMessageBox}) : super(key: key);
 
   @override
-  _EmojiesContainerState createState() => _EmojiesContainerState();
+  _EmojisContainerState createState() => _EmojisContainerState();
 }
 
-class _EmojiesContainerState extends State<EmojiesContainer> {
+class _EmojisContainerState extends State<EmojisContainer> {
   int currentlySelectedEmojiIndex = -1;
 
-  Widget _buildEmojies() {
+  Widget _buildEmojies(List<String> emojis) {
     return GridView.builder(
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).size.height * tabBarHeightPercentage,
@@ -313,7 +314,7 @@ class _EmojiesContainerState extends State<EmojiesContainer> {
           right: MediaQuery.of(context).size.width * (0.05),
           bottom: 100,
         ),
-        itemCount: 15,
+        itemCount: emojis.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 1.0,
@@ -332,7 +333,20 @@ class _EmojiesContainerState extends State<EmojiesContainer> {
                 borderRadius: BorderRadius.circular(10),
                 color: index == currentlySelectedEmojiIndex ? Theme.of(context).primaryColor : Theme.of(context).backgroundColor,
               ),
-              child: Center(child: Text("$index")),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.5, vertical: 15.0),
+                      child: SvgPicture.asset(
+                        UiUtils.getEmojiPath(emojis[index]),
+                        color: index == currentlySelectedEmojiIndex ? Theme.of(context).backgroundColor : Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });
@@ -340,16 +354,28 @@ class _EmojiesContainerState extends State<EmojiesContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final emojis = context.read<SystemConfigCubit>().getEmojis();
     return Stack(
       children: [
         Align(
           alignment: Alignment.topCenter,
-          child: _buildEmojies(),
+          child: _buildEmojies(emojis),
         ),
         Align(
             alignment: Alignment.bottomCenter,
             child: SendButton(onTap: () {
-              widget.closeMessageBox();
+              if (currentlySelectedEmojiIndex != -1) {
+                MessageCubit messageCubit = context.read<MessageCubit>();
+                BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
+                UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
+                messageCubit.addMessage(
+                  message: emojis[currentlySelectedEmojiIndex],
+                  by: userDetailsCubit.getUserId(),
+                  roomId: battleRoomCubit.getRoomId(),
+                  isTextMessage: false,
+                );
+                widget.closeMessageBox();
+              }
             })),
       ],
     );

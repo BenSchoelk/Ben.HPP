@@ -68,6 +68,10 @@ class UiUtils {
     return "assets/images/profile/$imageName";
   }
 
+  static String getEmojiPath(String emojiName) {
+    return "assets/images/emojis/$emojiName";
+  }
+
   static BoxShadow buildBoxShadow({Offset? offset, double? blurRadius, Color? color}) {
     return BoxShadow(
       color: color ?? Colors.black.withOpacity(0.1),
