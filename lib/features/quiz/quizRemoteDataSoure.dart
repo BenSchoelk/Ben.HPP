@@ -8,6 +8,7 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 class QuizRemoteDataSource {
+  static late String profile,score,rank;
   /*static late String profileA, nameA, scoreA, profileM, nameM, scoreM, profileD, nameD, scoreD,rankD,rankM,rankA;
   static late int total=0;
   static List<LeaderBoardMonthly> leaderBoardMonthlyList=[];
@@ -368,6 +369,11 @@ class QuizRemoteDataSource {
       };
       final response = await http.post(Uri.parse(getContestLeaderboardUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
+      rank = responseJson["data"][0]["user_rank"].toString();
+      profile = responseJson["data"][0][profileKey].toString();
+      score = responseJson["data"][0]["score"].toString();
+      print(rank+profile+score);
+
       if (responseJson['error']) {
         throw QuizException(errorMessageCode: responseJson['message']);
       }

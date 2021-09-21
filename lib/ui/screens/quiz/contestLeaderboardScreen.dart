@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/getContestLeaderboardCubit.dart';
+import 'package:flutterquiz/features/quiz/quizRemoteDataSoure.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -72,22 +73,6 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
           ],
         ));
   }
-/*  Widget topDesign() {
-    return Stack(children: [
-      Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .05,
-            ),
-            leaderBoard()
-          ]
-          )
-      )
-    ]);
-  }*/
-
   Widget leaderBoard() {
     return BlocConsumer<GetContestLeaderboardCubit, GetContestLeaderboardState>(
         bloc: context.read<GetContestLeaderboardCubit>(),
@@ -319,7 +304,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                       );
                     })),
                 Container(
-                  height: MediaQuery.of(context).size.height * .59,
+                  height: MediaQuery.of(context).size.height * .51,
                   padding: EdgeInsetsDirectional.only(start: 20, end: 20),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -384,7 +369,47 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                           : Container();
                     },
                   ),
-                )
+                ),
+                Container(
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                  child: ListTile(
+                      title: Text(
+                        "My Rank",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: backgroundColor),
+                      ),
+                      leading: Wrap(children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * .08,
+                          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .02),
+                          child: Text(
+                            QuizRemoteDataSource.rank,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(color: backgroundColor),
+                          ),
+                        ),
+                        Container(
+                            height: MediaQuery.of(context).size.height * .06,
+                            width: MediaQuery.of(context).size.width * .13,
+                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor), image: new DecorationImage(fit: BoxFit.fill, image: NetworkImage(QuizRemoteDataSource.profile)))),
+                      ]),
+                      trailing: Container(
+                        height: MediaQuery.of(context).size.height * .06,
+                        width: MediaQuery.of(context).size.width * .25,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50.0), topLeft: Radius.circular(50.0), bottomRight: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                        ),
+                        child: Center(
+                            child: Text(
+                              QuizRemoteDataSource.score,
+                              style: TextStyle(color: Theme.of(context).backgroundColor),
+                            )
+                        ),
+                      )
+                  ),
+                ),
               ]
               )
           );
