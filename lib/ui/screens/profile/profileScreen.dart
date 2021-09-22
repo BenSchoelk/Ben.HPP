@@ -62,6 +62,12 @@ class ProfileScreen extends StatelessWidget {
       title: "bookmarkLbl",
     ),
     Menu(
+      imagePath:"bookmark_icon.svg",
+      routeArguments: {},
+      routeName: Routes.notification,
+      title: "notificationLbl",
+    ),
+    Menu(
       imagePath: "bookmark_icon.svg",
       routeArguments: {},
       routeName: Routes.coinStore,
@@ -164,7 +170,9 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ));
     } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("bookmarkLbl")!) {
-      Navigator.of(context).pushNamed(Routes.bookmark);
+      Navigator.of(context).pushNamed(Routes.bookmark);}
+    else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("notificationLbl")!) {
+      Navigator.of(context).pushNamed(Routes.notification);
     } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("aboutUs")!) {
       Navigator.of(context).pushNamed(Routes.appSettings, arguments: aboutUs);
     } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("contactUs")!) {

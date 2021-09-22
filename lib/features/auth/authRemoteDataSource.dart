@@ -162,31 +162,6 @@ class AuthRemoteDataSource {
         break;
     }
   }
-
-/*  Future<UserCredential?> signInWithFacebook() async {
-    final res = await FacebookAuth.instance.login(permissions: ['email', 'publicProfile']);
-     print("/////////////////////////////////////////////"+res.message.toString());
-// Check result status
-    switch (res.status) {
-      case LoginStatus.success:
-        final AccessToken? accessToken = res.accessToken;
-        print("0000000000000000000000000000000000000000000000000000000$accessToken");
-        AuthCredential authCredential = FacebookAuthProvider.credential(accessToken!.token);
-        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$userCredential");
-        return userCredential;
-      case LoginStatus.cancelled:
-       print("in cancel.........................................................");
-        break;
-      case LoginStatus.failed:
-        print("in fail..........................................................");
-        break;
-      case LoginStatus.operationInProgress:
-        print("in process......................................................");
-        break;
-    }
-  }*/
-
   Future<UserCredential?> signInWithApple() async {
     try {
       final AuthorizationResult appleResult =
@@ -211,40 +186,9 @@ class AuthRemoteDataSource {
       } else {
         print('Sign in failed');
       }
-
     } catch (error) {
      print(error);
     }
-
-     /* final AuthorizationResult result = await AppleSignIn.performRequests([
-        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-      ]);
-      print(result);
-        return result;*/
-    /*  switch (result.status) {
-        case AuthorizationStatus.error:
-          print("Sign in failed: ${result.error!.localizedDescription}");
-          break;
-
-        case AuthorizationStatus.cancelled:
-          print('User cancelled');
-          break;
-        case AuthorizationStatus.authorized:
-          // TODO: Handle this case.
-          break;
-
-      }*/
-
-
-
-
-    /*final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-    return credential;*/
   }
   Future<UserCredential> signInWithEmailAndPassword(String email, String password) async {
     //sign in using email

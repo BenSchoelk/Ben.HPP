@@ -513,32 +513,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               child: IconButton(
                   onPressed: () {
-                    /*  Navigator.push(
-                      context,
-                      PageRouteBuilder(pageBuilder: (context, anim1, anim2) => LocalNotifications()),
-                    );*/
-                    Navigator.of(context).pushNamed(Routes.notification);
-                  },
-                  icon: Icon(
-                    Icons.notification_important,
-                    color: Theme.of(context).primaryColor,
-                  )),
-            ),
-            SizedBox(
-              width: 12.5,
-            ),
-            Container(
-              width: 45,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                boxShadow: [
-                  UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
-                ],
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: IconButton(
-                  onPressed: () {
                     Navigator.of(context).pushNamed(Routes.leaderBoard);
                   },
                   icon: SvgPicture.asset(
