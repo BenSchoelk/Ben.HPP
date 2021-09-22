@@ -163,15 +163,6 @@ class ChatContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                messageByCurrentUser
-                    ? SizedBox()
-                    : Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0, left: 5.0),
-                        child: Text(
-                          "Sender Name",
-                          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold, color: Theme.of(context).backgroundColor),
-                        ),
-                      ),
                 Padding(
                   padding: messageByCurrentUser ? const EdgeInsets.only(bottom: 5.0, right: 10.0) : const EdgeInsets.only(bottom: 5.0, left: 10.0),
                   child: Text(
