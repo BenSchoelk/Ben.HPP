@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.coinStore);
+        Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
         alignment: Alignment.topCenter,
