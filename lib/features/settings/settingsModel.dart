@@ -6,13 +6,15 @@ class SettingsModel {
   final String languageCode;
   final double playAreaFontSize;
   final bool rewardEarned;
+  final String theme;
 
-  SettingsModel({required this.playAreaFontSize, required this.rewardEarned, required this.backgroundMusic, required this.languageCode, required this.sound, required this.showIntroSlider, required this.vibration});
+  SettingsModel({required this.playAreaFontSize, required this.rewardEarned, required this.backgroundMusic, required this.languageCode, required this.sound, required this.showIntroSlider, required this.vibration, required this.theme});
 
   static SettingsModel fromJson(var settingsJson) {
     //to see the json response go to getCurrentSettings() function in settingsRepository
     return SettingsModel(
         playAreaFontSize: settingsJson['playAreaFontSize'],
+        theme: settingsJson['theme'],
         rewardEarned: settingsJson['rewardEarned'],
         backgroundMusic: settingsJson['backgroundMusic'],
         sound: settingsJson['sound'],
@@ -21,8 +23,9 @@ class SettingsModel {
         languageCode: settingsJson['languageCode']);
   }
 
-  SettingsModel copyWith({bool? showIntroSlider, bool? sound, bool? backgroundMusic, bool? vibration, String? languageCode, double? playAreaFontSize, bool? rewardEarned}) {
+  SettingsModel copyWith({String? theme, bool? showIntroSlider, bool? sound, bool? backgroundMusic, bool? vibration, String? languageCode, double? playAreaFontSize, bool? rewardEarned}) {
     return SettingsModel(
+        theme: theme ?? this.theme,
         rewardEarned: rewardEarned ?? this.rewardEarned,
         playAreaFontSize: playAreaFontSize ?? this.playAreaFontSize,
         backgroundMusic: backgroundMusic ?? this.backgroundMusic,

@@ -1,4 +1,5 @@
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:hive/hive.dart';
 
 class SettingsLocalDataSource {
@@ -56,5 +57,13 @@ class SettingsLocalDataSource {
 
   Future<void> setRewardEarned(bool value) async {
     Hive.box(settingsBox).put(rewardEarnedKey, value);
+  }
+
+  String theme() {
+    return Hive.box(settingsBox).get(settingsThemeKey, defaultValue: lightThemeKey);
+  }
+
+  Future<void> setTheme(String value) async {
+    Hive.box(settingsBox).put(settingsThemeKey, value);
   }
 }

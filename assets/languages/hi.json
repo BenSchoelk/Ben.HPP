@@ -299,5 +299,8 @@
   "productsFetchedFailure" : "Failed to get products",
   "noProducts" : "No products available",
   "inAppPurchaseUnavailable" : "In-app purchase is not available",
-  "coinsBoughtSuccess" : "Coins bought successfully"
+  "coinsBoughtSuccess" : "Coins bought successfully",
+  "theme" : "Theme",
+    "lightTheme" : "Light Theme",
+    "darkTheme" : "Dark Theme"
 }

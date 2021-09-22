@@ -43,6 +43,7 @@ final String languageCodeKey = "language";
 final String fontSizeKey = "fontSize";
 final String rewardEarnedKey = "rewardEarned";
 final String fcmTokenBoxKey = "fcmToken";
+final String settingsThemeKey = "theme";
 
 //Database related constants
 

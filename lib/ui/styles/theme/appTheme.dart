@@ -16,30 +16,14 @@ final appThemeData = {
             secondary: secondaryColor,
           )),
   AppTheme.Dark: ThemeData(
-    shadowColor: primaryColor.withOpacity(0.25),
-    brightness: Brightness.dark,
-    primaryColor: primaryColor,
-    backgroundColor: backgroundColor,
-  ),
+      shadowColor: darkPrimaryColor.withOpacity(0.25),
+      brightness: Brightness.dark,
+      primaryColor: darkPrimaryColor,
+      scaffoldBackgroundColor: darkPageBackgroundColor,
+      backgroundColor: darkBackgroundColor,
+      canvasColor: darkCanvasColor,
+      colorScheme: ThemeData().colorScheme.copyWith(
+            brightness: Brightness.dark,
+            secondary: darkSecondaryColor,
+          )),
 };
-/*
-
-    inputDecorationTheme: InputDecorationTheme(
-      focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-        color: accentColor,
-      )),
-      errorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-        color: accentColor,
-      )),
-      enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-        color: accentColor,
-      )),
-      border: UnderlineInputBorder(
-          borderSide: BorderSide(
-        color: accentColor,
-      )),
-    ),
- */

@@ -193,7 +193,10 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                 padding: EdgeInsetsDirectional.only(
                   end: MediaQuery.of(context).size.width * (0.175),
                 ),
-                child: Text(AppLocalization.of(context)!.getTranslatedValues("coinsLbl")! + ":${state.userProfile.coins}"),
+                child: Text(
+                  AppLocalization.of(context)!.getTranslatedValues("coinsLbl")! + ":${state.userProfile.coins}",
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                ),
               ),
             );
           }

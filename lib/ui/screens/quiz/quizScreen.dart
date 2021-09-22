@@ -353,7 +353,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           width: 45.0,
           height: 45.0,
           padding: EdgeInsets.all(11),
-          child: SvgPicture.asset(UiUtils.getImagePath(lifelineIcon))),
+          child: SvgPicture.asset(
+            UiUtils.getImagePath(lifelineIcon),
+            color: Theme.of(context).colorScheme.secondary,
+          )),
     );
   }
 

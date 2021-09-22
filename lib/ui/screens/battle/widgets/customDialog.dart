@@ -39,11 +39,10 @@ class CustomDialog extends StatelessWidget {
                                 Navigator.of(context).pop();
                               }
                             : onBackButtonPress as void Function()?,
-                        color: Theme.of(context).primaryColor,
                         iconSize: 40.0,
                         icon: Icon(
                           Icons.arrow_back,
-                          color: Theme.of(context).backgroundColor,
+                          color: Theme.of(context).primaryColor,
                         ))),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * (0.02),

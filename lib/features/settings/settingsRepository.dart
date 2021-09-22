@@ -19,6 +19,7 @@ class SettingsRepository {
       "rewardEarned": _settingsLocalDataSource.rewardEarned(),
       "vibration": _settingsLocalDataSource.vibration(),
       "languageCode": _settingsLocalDataSource.languageCode(),
+      "theme": _settingsLocalDataSource.theme(),
       "playAreaFontSize": _settingsLocalDataSource.playAreaFontSize()
     };
   }

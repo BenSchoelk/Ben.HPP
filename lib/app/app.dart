@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
       providers: [
         //Creating cubit/bloc that will be use in whole app or
         //will be use in multiple screens
-        BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
+        BlocProvider<ThemeCubit>(create: (_) => ThemeCubit(SettingsLocalDataSource())),
         BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(SettingsRepository())),
         BlocProvider<AuthCubit>(create: (_) => AuthCubit(AuthRepository())),
         BlocProvider<AppLocalizationCubit>(create: (_) => AppLocalizationCubit(SettingsLocalDataSource())),

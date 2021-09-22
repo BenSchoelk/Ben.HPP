@@ -13,6 +13,7 @@ import 'package:flutterquiz/features/profileManagement/profileManagementReposito
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 
 import 'package:flutterquiz/ui/screens/profile/widgets/editProfileFieldBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/profile/widgets/themeDialog.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
@@ -65,6 +66,12 @@ class ProfileScreen extends StatelessWidget {
       routeArguments: {},
       routeName: Routes.coinStore,
       title: coinStoreKey,
+    ),
+    Menu(
+      imagePath: "bookmark_icon.svg",
+      routeArguments: {},
+      routeName: Routes.coinStore,
+      title: themeKey,
     ),
     Menu(
       imagePath: "howtoplay_icon.svg",
@@ -190,6 +197,8 @@ class ProfileScreen extends StatelessWidget {
       Navigator.of(context).pushNamed(Routes.appSettings, arguments: howToPlayLbl);
     } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues(coinStoreKey)!) {
       Navigator.of(context).pushNamed(Routes.coinStore);
+    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues(themeKey)!) {
+      showDialog(context: context, builder: (context) => ThemeDialog());
     }
   }
 

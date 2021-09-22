@@ -8,9 +8,11 @@ import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
 
 import 'package:flutterquiz/ui/widgets/errorMessageDialog.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:intl/intl.dart';
 
 class UiUtils {
@@ -182,6 +184,20 @@ class UiUtils {
         });
       });
     }
+  }
+
+  static String getThemeLabelFromAppTheme(AppTheme appTheme) {
+    if (appTheme == AppTheme.Dark) {
+      return darkThemeKey;
+    }
+    return lightThemeKey;
+  }
+
+  static AppTheme getAppThemeFromLabel(String label) {
+    if (label == darkThemeKey) {
+      return AppTheme.Dark;
+    }
+    return AppTheme.Light;
   }
 
   //will be in use while playing screen

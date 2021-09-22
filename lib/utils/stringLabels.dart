@@ -290,3 +290,6 @@ String productsFetchedFailureKey = "productsFetchedFailure";
 String noProductsKey = "noProducts";
 String inAppPurchaseUnavailableKey = "inAppPurchaseUnavailable";
 String coinsBoughtSuccessKey = "coinsBoughtSuccess";
+String themeKey = "theme";
+String lightThemeKey = "lightTheme";
+String darkThemeKey = "darkTheme";
