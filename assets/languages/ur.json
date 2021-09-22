@@ -290,6 +290,13 @@
     "accountDeactivated" : "آپ کا اکاؤنٹ ایڈمن نے غیر فعال کر دیا ہے۔",
     "currentlyNotAvailable" : "فی الحال دستیاب نہیں ہے۔",
     "notificationLbl": "نوٹیفکیشن",
-    "notAvailable": "دستیاب نہیں ہے"
+    "notAvailable": "دستیاب نہیں ہے",
+    "coinStore" : "سکے کی دکان۔",
+    "purchaseError" : "خریداری کرنے سے قاصر۔",
+    "productsFetchedFailure" : "Failed to get products",
+    "noProducts" : "No products available",
+    "inAppPurchaseUnavailable" : "In-app purchase is not available",
+    "coinsBoughtSuccess" : "Coins bought successfully"
+  
 }
    

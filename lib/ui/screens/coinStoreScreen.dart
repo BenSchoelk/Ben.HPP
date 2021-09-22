@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/inAppPurchase/inAppPurchaseCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/inAppPurchaseProducts.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -20,33 +24,96 @@ class CoinStoreScreen extends StatefulWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
         builder: (context) => MultiBlocProvider(providers: [
-              BlocProvider<InAppPurchaseCubit>(create: (context) => InAppPurchaseCubit(productIds: inAppPurchaseProducts.keys.toList())),
+              BlocProvider<InAppPurchaseCubit>(create: (context) => InAppPurchaseCubit(productIds: inAppPurchaseProducts.values.toList())),
               BlocProvider<UpdateScoreAndCoinsCubit>(create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
             ], child: CoinStoreScreen()));
   }
 }
 
 class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProviderStateMixin {
+  void initPurchase() {
+    context.read<InAppPurchaseCubit>().initializePurchase(inAppPurchaseProducts.values.toList());
+  }
+
   Widget _buildProducts(List<ProductDetails> products) {
-    return ListView.builder(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage,
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              context.read<InAppPurchaseCubit>().buyConsumableProducts(products[index]);
-            },
-            title: Text("${products[index].title} - ${inAppPurchaseProducts[products[index].id]}"),
-          );
-        });
+    return GridView.builder(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.05),
+        left: 20.0,
+        right: 20.0,
+      ),
+      itemCount: products.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 20.0,
+        mainAxisSpacing: 10.0,
+      ),
+      itemBuilder: (context, index) {
+        var coins = inAppPurchaseProducts.keys.where((element) => inAppPurchaseProducts[element] == products[index].id).toList().first;
+
+        return GestureDetector(
+          onTap: () {
+            print(inAppPurchaseProducts[coins]);
+            context.read<InAppPurchaseCubit>().buyConsumableProducts(products[index]);
+          },
+          child: Container(
+            child: Column(
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "$coins ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!}",
+                      style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.0),
+                        topRight: Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                    flex: 7,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.all(25.0),
+                      child: SvgPicture.asset("assets/images/coins/04_coins.svg"),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(15.0),
+                          bottomRight: Radius.circular(15.0),
+                        ),
+                      ),
+                    )),
+              ],
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).backgroundColor,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
+        final InAppPurchaseCubit inAppPurchaseCubit = context.read<InAppPurchaseCubit>();
+        if (inAppPurchaseCubit.state is InAppPurchaseProcessInProgress) {
+          return Future.value(false);
+        }
         return Future.value(true);
       },
       child: Scaffold(
@@ -54,43 +121,29 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: RoundedAppbar(
-                title: AppLocalization.of(context)!.getTranslatedValues("storeLbl")!,
-              ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
               child: BlocConsumer<InAppPurchaseCubit, InAppPurchaseState>(
                 bloc: context.read<InAppPurchaseCubit>(),
                 listener: (context, state) {
                   print("State change to ${state.toString()}");
                   if (state is InAppPurchaseProcessSuccess) {
-                    print("Add ${inAppPurchaseProducts[state.purchasedProductId]} coins to user wallet");
+                    var coins = inAppPurchaseProducts.keys.where((element) => inAppPurchaseProducts[element] == state.purchasedProductId).toList().first;
                     context.read<UserDetailsCubit>().updateCoins(
                           addCoin: true,
-                          coins: inAppPurchaseProducts[state.purchasedProductId],
+                          coins: coins,
                         );
-                    context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), inAppPurchaseProducts[state.purchasedProductId], true);
-                    UiUtils.setSnackbar("Coins bought successfully", context, false);
-                  } else if (state is InAppPurchaseFailure) {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              content: Text(state.errorMessage),
-                            ));
+                    context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), coins, true);
+                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(coinsBoughtSuccessKey)!, context, false);
                   } else if (state is InAppPurchaseProcessFailure) {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              content: Text(state.errorMessage),
-                            ));
+                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(state.errorMessage)!, context, false);
                   }
                 },
                 builder: (context, state) {
                   //initial state of cubit
                   if (state is InAppPurchaseInitial || state is InAppPurchaseLoading) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressContainer(
+                        useWhiteLoader: false,
+                      ),
                     );
                   }
 
@@ -99,13 +152,25 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
                   if (state is InAppPurchaseFailure) {
                     //
                     return Center(
-                      child: Text("${state.errorMessage}"),
+                      child: ErrorContainer(
+                        errorMessage: AppLocalization.of(context)!.getTranslatedValues(state.errorMessage)!,
+                        onTapRetry: () {
+                          initPurchase();
+                        },
+                        showErrorImage: true,
+                      ),
                     );
                   }
 
                   if (state is InAppPurchaseNotAvailable) {
                     return Center(
-                      child: Text("In-app purchase is not available"),
+                      child: ErrorContainer(
+                        errorMessage: AppLocalization.of(context)!.getTranslatedValues(inAppPurchaseUnavailableKey)!,
+                        onTapRetry: () {
+                          initPurchase();
+                        },
+                        showErrorImage: true,
+                      ),
                     );
                   }
 
@@ -128,7 +193,13 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
                   return Container();
                 },
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: RoundedAppbar(
+                title: AppLocalization.of(context)!.getTranslatedValues(coinStoreKey)!,
+              ),
+            ),
           ],
         ),
       ),

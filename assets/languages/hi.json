@@ -293,5 +293,11 @@
   "accountDeactivated" : "आपका खाता व्यवस्थापक द्वारा निष्क्रिय कर दिया गया है",
   "currentlyNotAvailable" : "वर्तमान में उपलब्ध नहीं",
   "notificationLbl": "अधिसूचना",
-  "notAvailable": "उपलब्ध नहीं है"
+  "notAvailable": "उपलब्ध नहीं है",
+  "coinStore" : "सिक्के की दुकान",
+  "purchaseError" : "खरीदारी करने में असमर्थ",
+  "productsFetchedFailure" : "Failed to get products",
+  "noProducts" : "No products available",
+  "inAppPurchaseUnavailable" : "In-app purchase is not available",
+  "coinsBoughtSuccess" : "Coins bought successfully"
 }

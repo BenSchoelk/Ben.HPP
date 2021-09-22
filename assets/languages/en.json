@@ -293,7 +293,17 @@
     "accountDeactivated" : "Your account has been deactivated by the admin",
     "currentlyNotAvailable" : "Currently not available",
     "notificationLbl": "Notification",
-    "notAvailable": "Not Available"
+    "notAvailable": "Not Available",
+    "coinStore" : "Coin Store",
+    "purchaseError" : "Unable to make a purchase",
+    "productsFetchedFailure" : "Failed to get products",
+    "noProducts" : "No products available",
+    "inAppPurchaseUnavailable" : "In-app purchase is not available",
+    "coinsBoughtSuccess" : "Coins bought successfully"
+
+   
+
+    
     
 }
 
