@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:apple_sign_in_safety/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart' as fcm;
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:flutterquiz/features/auth/auhtException.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
@@ -12,7 +11,7 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:apple_sign_in_safety/apple_sign_in.dart';
 class AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -100,8 +99,8 @@ class AuthRemoteDataSource {
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
       } else if (authProvider == AuthProvider.apple) {
-        UserCredential userCredential = await signInWithApple();
-        result['user'] = userCredential.user!;
+        UserCredential? userCredential = await signInWithApple();
+        result['user'] = userCredential!.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
       }
       return result;
@@ -188,12 +187,40 @@ class AuthRemoteDataSource {
     }
   }*/
 
-  signInWithApple() async {
-      final AuthorizationResult result = await AppleSignIn.performRequests([
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      final AuthorizationResult appleResult =
+      await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+
+      if (appleResult.status == AuthorizationStatus.authorized) {
+        final appleIdCredential = appleResult.credential!;
+        final oAuthProvider = OAuthProvider('apple.com');
+        final credential = oAuthProvider.credential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken!),
+          accessToken:
+          String.fromCharCodes(appleIdCredential.authorizationCode!),
+        );
+        final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        return userCredential;
+      } else if (appleResult.status == AuthorizationStatus.error) {
+        print(appleResult.error.toString());
+      } else if (appleResult.status == AuthorizationStatus.cancelled) {
+        print('Sign in aborted by user');
+      } else {
+        print('Sign in failed');
+      }
+
+    } catch (error) {
+     print(error);
+    }
+
+     /* final AuthorizationResult result = await AppleSignIn.performRequests([
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
       print(result);
-        return result;
+        return result;*/
     /*  switch (result.status) {
         case AuthorizationStatus.error:
           print("Sign in failed: ${result.error!.localizedDescription}");
@@ -235,7 +262,7 @@ class AuthRemoteDataSource {
 
   static Future<String> getFCMToken() async {
     try {
-      return await FirebaseMessaging.instance.getToken() ?? "";
+      return await fcm.FirebaseMessaging.instance.getToken() ?? "";
     } catch (e) {
       return "";
     }

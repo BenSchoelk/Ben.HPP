@@ -162,7 +162,7 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             ));
           }
           if (state is LeaderBoardDailyFailure) {
-            return ErrorContainer(
+            return ErrorContainer(showBackButton: false,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
                 context.read<LeaderBoardDailyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
@@ -205,7 +205,7 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             );
           }
           if (state is LeaderBoardMonthlyFailure) {
-            return ErrorContainer(
+            return ErrorContainer(showBackButton: false,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
                 context.read<LeaderBoardMonthlyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
@@ -239,7 +239,7 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             );
           }
           if (state is LeaderBoardAllTimeFailure) {
-            return ErrorContainer(
+            return ErrorContainer(showBackButton: false,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
                 context.read<LeaderBoardAllTimeCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());

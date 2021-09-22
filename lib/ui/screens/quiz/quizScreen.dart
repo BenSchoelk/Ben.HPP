@@ -589,9 +589,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       ),
                     );
                   }
-                  final questions = (state as QuestionsFetchSuccess).questions;
-                  //ques = questions;
-
                   return Align(
                     alignment: Alignment.topCenter,
                     child: QuestionsContainer(
@@ -601,7 +598,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       bookmarkButton: _buildBookmarkButton(quesCubit),
                       topPadding: 30.0,
                       hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
-                      questions: questions,
+                      questions: context.read<QuestionsCubit>().questions(),
                       submitAnswer: submitAnswer,
                       questionContentAnimation: questionContentAnimation,
                       questionScaleDownAnimation: questionScaleDownAnimation,
