@@ -85,6 +85,9 @@ flutter:
     - assets/images/
     - assets/images/profile/
 
+    - assets/images/emojis/
+    - assets/images/coins/
+
     - assets/languages/
     - assets/animations/
 

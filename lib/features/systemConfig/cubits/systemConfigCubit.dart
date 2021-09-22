@@ -15,10 +15,11 @@ class SystemConfigFetchSuccess extends SystemConfigState {
   final List<String> introSliderImages;
   final SystemConfigModel systemConfigModel;
   final List<SupportedLanguage> supportedLanguages;
+  final List<String> emojis;
 
   final List<String> defaultProfileImages;
 
-  SystemConfigFetchSuccess({required this.systemConfigModel, required this.defaultProfileImages, required this.introSliderImages, required this.supportedLanguages});
+  SystemConfigFetchSuccess({required this.systemConfigModel, required this.defaultProfileImages, required this.introSliderImages, required this.supportedLanguages, required this.emojis});
 }
 
 class SystemConfigFetchFailure extends SystemConfigState {
@@ -38,6 +39,8 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
       final systemConfig = await _systemConfigRepository.getSystemConfig();
       final introSliderImages = await _systemConfigRepository.getImagesFromFile("assets/files/introSliderImages.json");
       final defaultProfileImages = await _systemConfigRepository.getImagesFromFile("assets/files/defaultProfileImages.json");
+      final emojis = await _systemConfigRepository.getImagesFromFile("assets/files/emojis.json");
+
       if (systemConfig.languageMode == "1") {
         supporatedLanguages = await _systemConfigRepository.getSupportedQuestionLanguages();
       }
@@ -46,6 +49,7 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
         defaultProfileImages: defaultProfileImages,
         introSliderImages: introSliderImages,
         supportedLanguages: supporatedLanguages,
+        emojis: emojis,
       ));
     } catch (e) {
       emit(SystemConfigFetchFailure(e.toString()));
@@ -62,6 +66,13 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   List<SupportedLanguage> getSupportedLanguages() {
     if (state is SystemConfigFetchSuccess) {
       return (state as SystemConfigFetchSuccess).supportedLanguages;
+    }
+    return [];
+  }
+
+  List<String> getEmojis() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).emojis;
     }
     return [];
   }
