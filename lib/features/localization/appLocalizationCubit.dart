@@ -11,7 +11,7 @@ class AppLocalizationState {
 
 class AppLocalizationCubit extends Cubit<AppLocalizationState> {
   final SettingsLocalDataSource settingsLocalDataSource;
-  AppLocalizationCubit(this.settingsLocalDataSource) : super(AppLocalizationState(Locale(defaultLanguageCode))) {
+  AppLocalizationCubit(this.settingsLocalDataSource) : super(AppLocalizationState(UiUtils.getLocaleFromLanguageCode(defaultLanguageCode))) {
     changeLanguage(settingsLocalDataSource.languageCode()!);
   }
 
