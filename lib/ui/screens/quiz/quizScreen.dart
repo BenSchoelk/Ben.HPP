@@ -113,6 +113,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
 
+  late double totalSecondsToCompleteQuiz = 0;
+
   late Map<String, LifelineStatus> lifelines = {
     fiftyFifty: LifelineStatus.unused,
     audiencePoll: LifelineStatus.unused,
@@ -158,6 +160,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _getQuestions();
     _createInterstitialAd();
+    //bannerSize = AdmobBannerSize.BANNER;
   }
 
   void _createInterstitialAd() {
@@ -233,7 +236,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       "subcategoryMaxLevel": widget.subcategoryMaxLevel,
       "unlockedLevel": widget.unlockedLevel,
       "contestId": widget.contestId,
-      "comprehensionId": widget.comprehensionId
+      "comprehensionId": widget.comprehensionId,
+      "timeTakenToCompleteQuiz": totalSecondsToCompleteQuiz,
+      "hasUsedAnyLifeline": checkHasUsedAnyLifeline(),
     });
   }
 
@@ -256,6 +261,20 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     if (lifelines[skip] == LifelineStatus.using) {
       lifelines[skip] = LifelineStatus.used;
     }
+  }
+
+  bool checkHasUsedAnyLifeline() {
+    bool hasUsedAnyLifeline = false;
+
+    for (var lifelineStatus in lifelines.values) {
+      if (lifelineStatus == LifelineStatus.used) {
+        hasUsedAnyLifeline = true;
+        break;
+      }
+    }
+    //
+    print("Has used any lifeline : $hasUsedAnyLifeline");
+    return hasUsedAnyLifeline;
   }
 
   //change to next Question
@@ -287,11 +306,17 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return {};
   }
 
+  void updateTotalSecondsToCompleteQuiz() {
+    totalSecondsToCompleteQuiz = totalSecondsToCompleteQuiz + UiUtils.timeTakenToSubmitAnswer(animationControllerValue: timerAnimationController.value, quizType: widget.quizType);
+    print("Time to complete quiz: $totalSecondsToCompleteQuiz");
+  }
+
   //update answer locally and on cloud
   void submitAnswer(String submittedAnswer) async {
     timerAnimationController.stop();
     if (!context.read<QuestionsCubit>().questions()[currentQuestionIndex].attempted) {
       context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(context.read<QuestionsCubit>().questions()[currentQuestionIndex].id, submittedAnswer);
+      updateTotalSecondsToCompleteQuiz();
 
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));

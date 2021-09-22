@@ -60,6 +60,9 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
+  //
+  double timeTakenToCompleteQuiz = 0;
+
   late List<GlobalKey<GuessTheWordQuestionContainerState>> questionContainerKeys = [];
 
   @override
@@ -107,8 +110,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   }
 
   void submitAnswer(List<String> submittedAnswer) async {
-    print(submittedAnswer);
     timerAnimationController.stop();
+    updateTimeTakenToCompleteQuiz();
     final guessTheWordQuizCubit = context.read<GuessTheWordQuizCubit>();
     //if answer not submitted then submit answer
     if (!guessTheWordQuizCubit.getQuestions()[_currentQuestionIndex].hasAnswered) {
@@ -126,6 +129,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
           "myPoints": guessTheWordQuizCubit.getCurrentPoints(),
           "quizType": QuizTypes.guessTheWord,
           "numberOfPlayer": 1,
+          "timeTakenToCompleteQuiz": timeTakenToCompleteQuiz,
           "guessTheWordQuestions": guessTheWordQuizCubit.getQuestions(),
         });
       } else {
@@ -134,6 +138,11 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
         timerAnimationController.forward(from: 0.0);
       }
     }
+  }
+
+  void updateTimeTakenToCompleteQuiz() {
+    timeTakenToCompleteQuiz = timeTakenToCompleteQuiz + UiUtils.timeTakenToSubmitAnswer(animationControllerValue: timerAnimationController.value, quizType: QuizTypes.guessTheWord);
+    print("Time to complete quiz: $timeTakenToCompleteQuiz");
   }
 
   //next question

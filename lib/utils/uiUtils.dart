@@ -157,6 +157,17 @@ class UiUtils {
     return correctAnswerPointsForBattle;
   }
 
+  static double timeTakenToSubmitAnswer({required double animationControllerValue, required QuizTypes quizType}) {
+    double secondsTakenToAnswer;
+
+    if (quizType == QuizTypes.guessTheWord) {
+      secondsTakenToAnswer = (guessTheWordQuestionDurationInSeconds * animationControllerValue);
+    } else {
+      secondsTakenToAnswer = (questionDurationInSeconds * animationControllerValue);
+    }
+    return secondsTakenToAnswer;
+  }
+
   //navigate to battle screen
   static void navigateToOneVSOneBattleScreen(BuildContext context) {
     //reset state of battle room to initial
