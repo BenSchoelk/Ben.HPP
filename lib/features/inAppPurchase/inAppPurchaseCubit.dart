@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 abstract class InAppPurchaseState {}
@@ -62,7 +63,7 @@ class InAppPurchaseCubit extends Cubit<InAppPurchaseState> {
       _subscription.cancel();
     }, onError: (e) {
       emit(InAppPurchaseProcessFailure(
-        errorMessage: "Error while making purchase",
+        errorMessage: purchaseErrorKey,
         products: _getProducts(),
       ));
     });
@@ -82,12 +83,14 @@ class InAppPurchaseCubit extends Cubit<InAppPurchaseState> {
     //load products for purchase (consumable product)
     ProductDetailsResponse productDetailResponse = await inAppPurchase.queryProductDetails(productIds.toSet());
     if (productDetailResponse.error != null) {
-      emit(InAppPurchaseFailure(errorMessage: productDetailResponse.error!.message, notFoundIds: productDetailResponse.notFoundIDs));
+      //error while getting products from store
+      print(productDetailResponse.error!);
+      emit(InAppPurchaseFailure(errorMessage: productsFetchedFailureKey, notFoundIds: productDetailResponse.notFoundIDs));
     }
     //if there is not any product to purchase (consumable)
     else if (productDetailResponse.productDetails.isEmpty) {
       emit(InAppPurchaseFailure(
-        errorMessage: "No products available",
+        errorMessage: noProductsKey,
         notFoundIds: productDetailResponse.notFoundIDs,
       ));
     } else {
@@ -120,9 +123,10 @@ class InAppPurchaseCubit extends Cubit<InAppPurchaseState> {
         print("Purchase is pending");
       } else if (purchaseDetail.status == PurchaseStatus.error) {
         print("Error occurred");
+        print(purchaseDetail.error?.message);
         //if any error occured while making purchase
         emit(InAppPurchaseProcessFailure(
-          errorMessage: purchaseDetail.error?.message ?? "Error while making purchase",
+          errorMessage: purchaseErrorKey,
           products: _getProducts(),
         ));
       }

@@ -108,11 +108,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late Animation<double> questionContentAnimation;
   late AnimationController animationController;
   late AnimationController topContainerAnimationController;
- // late List<Question> ques=[];
+  // late List<Question> ques=[];
   int currentQuestionIndex = 0;
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
-
 
   late Map<String, LifelineStatus> lifelines = {
     fiftyFifty: LifelineStatus.unused,
@@ -149,6 +148,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     return null;
   }
+
   InterstitialAd? interstitialAd;
   @override
   void initState() {
@@ -159,6 +159,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     _getQuestions();
     _createInterstitialAd();
   }
+
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: getRewardBasedVideoAdUnitId()!,
@@ -166,33 +167,34 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             setState(() {
-              interstitialAd=ad;
+              interstitialAd = ad;
             });
           },
           onAdFailedToLoad: (LoadAdError error) {
             print(error);
-            },
+          },
         ));
   }
+
   void _showInterstitialAd() {
     if (interstitialAd == null) {
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad){},
+      onAdShowedFullScreenContent: (InterstitialAd ad) {},
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
         timerAnimationController.forward(from: timerAnimationController.value);
         _createInterstitialAd();
-
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         print('$ad onAdFailedToShowFullScreenContent: $error');
-        },
+      },
     );
     interstitialAd!.show();
   }
+
   void initializeAnimation() {
     questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 525));
@@ -343,7 +345,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       onTap: onTap,
       child: Container(
           decoration: BoxDecoration(
-              color: lifelineTitle==fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length==2?Theme.of(context).backgroundColor.withOpacity(0.7):Theme.of(context).backgroundColor,
+              color: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2 ? Theme.of(context).backgroundColor.withOpacity(0.7) : Theme.of(context).backgroundColor,
               boxShadow: [
                 UiUtils.buildBoxShadow(),
               ],
@@ -367,7 +369,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               _showInterstitialAd();
               //interstitialAd.show();
               //user see full ads coins increment  6
-             /* setState(() {
+              /* setState(() {
                 context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: 6);
               });*/
               Navigator.pop(context);
@@ -410,26 +412,21 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       setState(() {
                         lifelines[fiftyFifty] = LifelineStatus.using;
                       });
-                    }
-                    else if(context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length==2){
+                    } else if (context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2) {
                       UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
-                    }
-                    else {
+                    } else {
                       //dialog Show timer stop dialog close timer start
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
                         print(value);
-                        if(value==null){
+                        if (value == null) {
                           timerAnimationController.forward(from: timerAnimationController.value);
                         }
-                        }
-                      );
+                      });
 
                       // UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
-                  }
-
-                  else {
+                  } else {
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
                   }
                 }, fiftyFifty, "fiftyfifty icon.svg"),
@@ -447,11 +444,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
                         print(value);
-                        if(value==null){
+                        if (value == null) {
                           timerAnimationController.forward(from: timerAnimationController.value);
                         }
-                      }
-                      );
+                      });
                       //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -476,11 +472,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
                         print(value);
-                        if(value==null){
+                        if (value == null) {
                           timerAnimationController.forward(from: timerAnimationController.value);
                         }
-                      }
-                      );
+                      });
                       //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -502,11 +497,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
                         print(value);
-                        if(value==null){
+                        if (value == null) {
                           timerAnimationController.forward(from: timerAnimationController.value);
                         }
-                      }
-                      );
+                      });
                       //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
                     }
                   } else {
@@ -519,15 +513,19 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     return Container();
   }
-Widget backButton(){
+
+  Widget backButton() {
     return Align(
         alignment: Alignment.topLeft,
-        child:Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top-10),
-            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: true,)
-        )
-    );
-}
+        child: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            child: CustomBackButton(
+              iconColor: Theme.of(context).primaryColor,
+              bgColor: Theme.of(context).backgroundColor,
+              isShowDialog: true,
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     final quesCubit = context.read<QuestionsCubit>();
@@ -546,12 +544,12 @@ Widget backButton(){
                 heightPercentage: 0.885,
               ),
             ),
-          //showDialog(context: context, builder: (_) => ExitGameDailog());
+            //showDialog(context: context, builder: (_) => ExitGameDailog());
 
             Align(
-              alignment:Platform.isIOS?Alignment.topRight:Alignment.topCenter,
+              alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5,right: Platform.isIOS?10:0),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5, right: Platform.isIOS ? 10 : 0),
                 child: HorizontalTimerContainer(
                   timerAnimationController: timerAnimationController,
                 ),
@@ -578,7 +576,8 @@ Widget backButton(){
                   }
                   if (state is QuestionsFetchFailure) {
                     return Center(
-                      child: ErrorContainer(showBackButton: true,
+                      child: ErrorContainer(
+                        showBackButton: true,
                         errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                         onTapRetry: () {
                           _getQuestions();
@@ -620,7 +619,7 @@ Widget backButton(){
                 return Container();
               },
             ),
-            Platform.isIOS?backButton():Container(),
+            Platform.isIOS ? backButton() : Container(),
           ],
         ),
       ),

@@ -34,7 +34,7 @@ dependencies:
   firebase_messaging: ^10.0.7
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^7.3.0
   flutter_html: ^2.1.1
   flutter_localizations:
     sdk: flutter
@@ -84,6 +84,9 @@ flutter:
     - assets/google_fonts/
     - assets/images/
     - assets/images/profile/
+
+    - assets/images/emojis/
+    - assets/images/coins/
 
     - assets/languages/
     - assets/animations/

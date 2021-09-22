@@ -15,6 +15,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
@@ -64,6 +65,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   late AnimationController opponentMessageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300), reverseDuration: Duration(milliseconds: 300));
   late Animation<double> opponentMessageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: opponentMessageAnimationController, curve: Curves.easeOutBack));
+
+  late AnimationController messageBoxAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 350));
+  late Animation<double> messageBoxAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: messageBoxAnimationController, curve: Curves.easeInOut));
 
   late int currentQuestionIndex = 0;
 
@@ -326,9 +330,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
           if (currentUserMessageDisappearTimeInSeconds > 0 && currentUserMessageDisappearTimeInSeconds < 4) {
             print(currentUserMessageDisappearTimeInSeconds);
             currentUserMessageDisappearTimer?.cancel();
-            await messageAnimationController.reverse();
-            await Future.delayed(Duration(milliseconds: 100));
-            messageAnimationController.forward();
+            //await Future.delayed(Duration(milliseconds: 100));
+            //messageAnimationController.forward();
             setCurrentUserMessageDisappearTimer();
           } else {
             messageAnimationController.forward();
@@ -341,9 +344,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
           if (opponentUserMessageDisappearTimeInSeconds > 0 && opponentUserMessageDisappearTimeInSeconds < 4) {
             print(opponentUserMessageDisappearTimeInSeconds);
             opponentUserMessageDisappearTimer?.cancel();
-            await opponentMessageAnimationController.reverse();
-            await Future.delayed(Duration(milliseconds: 100));
-            opponentMessageAnimationController.forward();
+            //await opponentMessageAnimationController.reverse();
+            //await Future.delayed(Duration(milliseconds: 100));
+            //opponentMessageAnimationController.forward();
             setOpponentUserMessageDisappearTimer();
           } else {
             opponentMessageAnimationController.forward();
@@ -524,17 +527,39 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   Widget _buildMessageButton() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: IconButton(
-        onPressed: () {
-          context.read<MessageCubit>().addMessage(
-                message: "Hello Sir!",
-                by: context.read<UserDetailsCubit>().getUserId(),
-                roomId: context.read<BattleRoomCubit>().getRoomId(),
-                isTextMessage: true,
-              );
+      child: AnimatedBuilder(
+        animation: messageBoxAnimationController,
+        builder: (context, child) {
+          Color? buttonColor = messageBoxAnimation.drive(ColorTween(begin: Theme.of(context).colorScheme.secondary, end: Theme.of(context).primaryColor)).value;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: IconButton(
+              onPressed: () {
+                if (messageBoxAnimationController.isCompleted) {
+                  messageBoxAnimationController.reverse();
+                } else {
+                  messageBoxAnimationController.forward();
+                }
+              },
+              icon: Icon(CupertinoIcons.chat_bubble_2_fill),
+              color: buttonColor,
+            ),
+          );
         },
-        icon: Icon(CupertinoIcons.chat_bubble_2),
-        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
+
+  Widget _buildMessageBoxContainer() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SlideTransition(
+        position: messageBoxAnimation.drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
+        child: MessageBoxContainer(
+          closeMessageBox: () {
+            messageBoxAnimationController.reverse();
+          },
+        ),
       ),
     );
   }
@@ -618,6 +643,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                   questionContentAnimationController: questionContentAnimationController,
                 ),
               ),
+              _buildMessageBoxContainer(),
               _buildCurrentUserDetailsContainer(),
               _buildCurrentUserMessageContainer(),
               _buildOpponentUserDetailsContainer(),
