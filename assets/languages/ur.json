@@ -299,7 +299,8 @@
     "coinsBoughtSuccess" : "Coins bought successfully",
     "theme" : "Theme",
     "lightTheme" : "Light Theme",
-    "darkTheme" : "Dark Theme"
+    "darkTheme" : "Dark Theme",
+    "badges" : "Badges"
   
 }
    

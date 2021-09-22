@@ -293,3 +293,4 @@ String coinsBoughtSuccessKey = "coinsBoughtSuccess";
 String themeKey = "theme";
 String lightThemeKey = "lightTheme";
 String darkThemeKey = "darkTheme";
+String badgesKey = "badges";

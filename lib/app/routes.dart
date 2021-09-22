@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterquiz/ui/screens/appSettingsScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signInScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signUpScreen.dart';
+import 'package:flutterquiz/ui/screens/badgesScreen.dart';
 import 'package:flutterquiz/ui/screens/battle/battleRoomFindOpponentScreen.dart';
 import 'package:flutterquiz/ui/screens/bookmarkScreen.dart';
 import 'package:flutterquiz/ui/screens/coinStoreScreen.dart';
@@ -78,6 +79,7 @@ class Routes {
   static const guessTheWord = "/guessTheWord";
   static const appSettings = "/appSettings";
   static const levels = "/levels";
+  static const badges = "/badges";
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -158,6 +160,9 @@ class Routes {
 
       case levels:
         return LevelsScreen.route(routeSettings);
+
+      case badges:
+        return BadgesScreen.route(routeSettings);
 
       default:
         return CupertinoPageRoute(builder: (context) => Scaffold());

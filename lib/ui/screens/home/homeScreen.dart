@@ -470,7 +470,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return children;
   }
 
-  Widget _buildLeaderBoardButton(double statusBarPadding) {
+  Widget _buildTopMenu(double statusBarPadding) {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
@@ -478,29 +478,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            /*  Container(
-                width: 45,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).backgroundColor,
-                  boxShadow: [
-                    UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
-                  ],
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Switch(
-                  value: changeAppTheme,
-                  activeColor: Theme.of(context).primaryColor,
-                  inactiveThumbColor: primaryColor,
-                  onChanged: (value) {
-                    changeAppTheme = !changeAppTheme;
-                    changeAppTheme ? BlocProvider.of<ThemeCubit>(context).changeTheme(AppTheme.Dark) : BlocProvider.of<ThemeCubit>(context).changeTheme(AppTheme.Light);
-                  },
-                )),
             SizedBox(
-              width: 12.5,
+              width: MediaQuery.of(context).size.width * (0.085),
             ),
-             */
             Container(
               width: 45,
               height: 40,
@@ -513,20 +493,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               child: IconButton(
                   onPressed: () {
-                    /*  Navigator.push(
-                      context,
-                      PageRouteBuilder(pageBuilder: (context, anim1, anim2) => LocalNotifications()),
-                    );*/
-                    Navigator.of(context).pushNamed(Routes.notification);
+                    Navigator.of(context).pushNamed(Routes.badges);
                   },
                   icon: Icon(
-                    Icons.notification_important,
+                    Icons.badge,
                     color: Theme.of(context).primaryColor,
                   )),
             ),
-            SizedBox(
-              width: 12.5,
-            ),
+            Spacer(),
             Container(
               width: 45,
               height: 40,
@@ -642,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           }
 
           return _buildHomeScreen([
-            _buildLeaderBoardButton(statusBarPadding),
+            _buildTopMenu(statusBarPadding),
             _buildProfileContainer(statusBarPadding),
             _buildSelfChallenge(statusBarPadding),
             ..._buildQuizTypes(statusBarPadding),
