@@ -261,12 +261,16 @@ class SignInScreenState extends State<SignInScreen> {
             child: Text(AppLocalization.of(context)!.getTranslatedValues('forgotPwdLbl')!, style: TextStyle(fontSize: 11, color: Theme.of(context).primaryColor)),
             onTap: () async {
               showModalBottomSheet(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
                   isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0)),
+                  ),
                   context: context,
-                  builder: (context) => Container(
+                  builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child:Container(
                       decoration: BoxDecoration(
                           gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter),
                           color: Theme.of(context).backgroundColor,
@@ -275,41 +279,44 @@ class SignInScreenState extends State<SignInScreen> {
                       child: Form(
                         key: _formKeyDialog,
                         child: Column(
-                          children: [
-                            Text(
-                              AppLocalization.of(context)!.getTranslatedValues('resetPwdLbl')!,
-                              style: TextStyle(fontSize: 24, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                                padding: EdgeInsetsDirectional.only(start: 20, end: 20, top: 20),
-                                child: Text(
-                                  AppLocalization.of(context)!.getTranslatedValues('resetEnterEmailLbl')!,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                                )),
-                            Padding(padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .08, end: MediaQuery.of(context).size.width * .08, top: 20), child: showEmailForForgotPwd()),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CustomRoundedButton(
-                                widthPercentage: 0.85,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                buttonTitle: AppLocalization.of(context)!.getTranslatedValues('submitBtn')!,
-                                radius: 10,
-                                showBorder: false,
-                                height: 50,
-                                onTap: () {
-                                  final form = _formKeyDialog.currentState;
-                                  if (form!.validate()) {
-                                    form.save();
-                                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues('pwdResetLinkLbl')!, context, false);
-                                    AuthRemoteDataSource().resetPassword(edtEmailReset.text.trim());
-                                    Future.delayed(const Duration(seconds: 1), () {
-                                      Navigator.pop(context, 'Cancel');
-                                    });
-                                  }
-                                })
-                          ],
+                            children: [
+                              Text(
+                                AppLocalization.of(context)!.getTranslatedValues('resetPwdLbl')!,
+                                style: TextStyle(fontSize: 24, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                  padding: EdgeInsetsDirectional.only(start: 20, end: 20, top: 20),
+                                  child: Text(
+                                    AppLocalization.of(context)!.getTranslatedValues('resetEnterEmailLbl')!,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                                  )),
+                              Padding(
+                                  padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .08, end: MediaQuery.of(context).size.width * .08, top: 20),
+                                  child: showEmailForForgotPwd()),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              CustomRoundedButton(
+                                  widthPercentage: 0.85,
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  buttonTitle: AppLocalization.of(context)!.getTranslatedValues('submitBtn')!,
+                                  radius: 10,
+                                  showBorder: false,
+                                  height: 50,
+                                  onTap: () {
+                                    final form = _formKeyDialog.currentState;
+                                    if (form!.validate()) {
+                                      form.save();
+                                      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues('pwdResetLinkLbl')!, context, false);
+                                      AuthRemoteDataSource().resetPassword(edtEmailReset.text.trim());
+                                      Future.delayed(const Duration(seconds: 1), () {
+                                        Navigator.pop(context, 'Cancel');
+                                      });
+                                    }
+                                  })
+                            ],
+                          ),
                         ),
                       )));
             }),

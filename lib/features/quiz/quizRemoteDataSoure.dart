@@ -372,8 +372,6 @@ class QuizRemoteDataSource {
       rank = responseJson["data"][0]["user_rank"].toString();
       profile = responseJson["data"][0][profileKey].toString();
       score = responseJson["data"][0]["score"].toString();
-      print(rank+profile+score);
-
       if (responseJson['error']) {
         throw QuizException(errorMessageCode: responseJson['message']);
       }

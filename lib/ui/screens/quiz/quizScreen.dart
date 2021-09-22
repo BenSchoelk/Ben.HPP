@@ -587,9 +587,6 @@ Widget backButton(){
                       ),
                     );
                   }
-                  final questions = (state as QuestionsFetchSuccess).questions;
-                  //ques = questions;
-
                   return Align(
                     alignment: Alignment.topCenter,
                     child: QuestionsContainer(
@@ -599,7 +596,7 @@ Widget backButton(){
                       bookmarkButton: _buildBookmarkButton(quesCubit),
                       topPadding: 30.0,
                       hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
-                      questions: questions,
+                      questions: context.read<QuestionsCubit>().questions(),
                       submitAnswer: submitAnswer,
                       questionContentAnimation: questionContentAnimation,
                       questionScaleDownAnimation: questionScaleDownAnimation,

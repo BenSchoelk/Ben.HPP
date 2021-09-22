@@ -26,6 +26,7 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
 
   //to fetch user details form remote
   void fetchUserDetails(String firebaseId) async {
+    print(firebaseId);
     emit(UserDetailsFetchInProgress());
 
     try {
