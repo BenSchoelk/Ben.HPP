@@ -317,7 +317,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     if (!context.read<QuestionsCubit>().questions()[currentQuestionIndex].attempted) {
       context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(context.read<QuestionsCubit>().questions()[currentQuestionIndex].id, submittedAnswer);
       updateTotalSecondsToCompleteQuiz();
-
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
       if (currentQuestionIndex != (context.read<QuestionsCubit>().questions().length - 1)) {
@@ -431,17 +430,19 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 _buildLifelineContainer(() {
                   if (lifelines[fiftyFifty] == LifelineStatus.unused) {
                     if (hasEnoughCoinsForLifeline(context)) {
-                      //deduct coins for using lifeline
-                      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: lifeLineDeductCoins);
-                      //mark fiftyFifty lifeline as using
+                      if (context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2) {
+                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
+                      } else {
+                        //deduct coins for using lifeline
+                        context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: lifeLineDeductCoins);
+                        //mark fiftyFifty lifeline as using
 
-                      //update coins in cloud
-                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), 5, false);
-                      setState(() {
-                        lifelines[fiftyFifty] = LifelineStatus.using;
-                      });
-                    } else if (context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2) {
-                      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
+                        //update coins in cloud
+                        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), 5, false);
+                        setState(() {
+                          lifelines[fiftyFifty] = LifelineStatus.using;
+                        });
+                      }
                     } else {
                       //dialog Show timer stop dialog close timer start
                       timerAnimationController.stop();
