@@ -17,7 +17,6 @@ import 'package:flutterquiz/ui/screens/profile/widgets/themeDialog.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -62,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
       title: "bookmarkLbl",
     ),
     Menu(
-      imagePath:"bookmark_icon.svg",
+      imagePath: "bookmark_icon.svg",
       routeArguments: {},
       routeName: Routes.notification,
       title: "notificationLbl",
@@ -170,8 +169,8 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ));
     } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("bookmarkLbl")!) {
-      Navigator.of(context).pushNamed(Routes.bookmark);}
-    else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("notificationLbl")!) {
+      Navigator.of(context).pushNamed(Routes.bookmark);
+    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("notificationLbl")!) {
       Navigator.of(context).pushNamed(Routes.notification);
     } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("aboutUs")!) {
       Navigator.of(context).pushNamed(Routes.appSettings, arguments: aboutUs);
