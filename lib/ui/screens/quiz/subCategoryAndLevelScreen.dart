@@ -65,7 +65,8 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+            iconColor: Theme.of(context).primaryColor,
+            isShowDialog: false,
           ),
         ],
       ),
@@ -236,10 +237,12 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
               ),
             ],
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: AdMobBanner(),
+          ),
         ],
       ),
-      //AdMob Banner Show  here
-      bottomNavigationBar: AdMobBanner(),
     );
   }
 }

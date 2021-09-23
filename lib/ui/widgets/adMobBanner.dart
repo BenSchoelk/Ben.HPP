@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobBanner extends StatefulWidget {
@@ -35,15 +36,6 @@ class _AdMobBanner extends State<AdMobBanner> {
 
   BannerAd? _anchoredBanner;
   Future<void> _createAnchoredBanner() async {
-    /*  final AnchoredAdaptiveBannerAdSize? size =
-    await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,500,
-    );
-
-    if (size == null) {
-      print('Unable to get height of anchored banner.');
-      return;
-    }*/
     final BannerAd banner = BannerAd(
       request: AdRequest(),
       adUnitId: getBannerAdUnitId(),
@@ -69,15 +61,13 @@ class _AdMobBanner extends State<AdMobBanner> {
   Widget build(BuildContext context) {
     return _anchoredBanner != null
         ? Container(
-            width: _anchoredBanner!.size.width.toDouble(),
+            decoration: BoxDecoration(
+              gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter),
+            ),
+            width: MediaQuery.of(context).size.width,
             height: _anchoredBanner!.size.height.toDouble(),
             child: AdWidget(ad: _anchoredBanner!),
           )
         : Container();
-
-    /*AdmobBanner(
-      adUnitId: getBannerAdUnitId(),
-      adSize: AdmobBannerSize.BANNER,
-    );*/
   }
 }

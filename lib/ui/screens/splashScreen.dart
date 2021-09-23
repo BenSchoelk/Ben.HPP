@@ -12,6 +12,7 @@ import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -44,10 +45,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   void initState() {
     initAnimations();
-    Future.delayed(Duration.zero, () {
-      context.read<SystemConfigCubit>().getSystemConfig();
-    });
+    loadSystemConfig();
     super.initState();
+  }
+
+  void loadSystemConfig() async {
+    await MobileAds.instance.initialize();
+    print("Ads loaded successfully");
+    context.read<SystemConfigCubit>().getSystemConfig();
   }
 
   void initAnimations() {
@@ -164,7 +169,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               if (state is SystemConfigFetchFailure) {
                 child = Center(
                   key: Key("errorContainer"),
-                  child: ErrorContainer(showBackButton: true,
+                  child: ErrorContainer(
+                    showBackButton: true,
                     errorMessageColor: Theme.of(context).primaryColor,
                     errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorCode)),
                     onTapRetry: () {

@@ -58,10 +58,13 @@ class _CategoryScreen extends State<CategoryScreen> {
           Column(children: <Widget>[
             Expanded(flex: 2, child: back()),
             Expanded(flex: 15, child: showCategory()),
-          ])
+          ]),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: AdMobBanner(),
+          ),
         ],
       ),
-      bottomNavigationBar: AdMobBanner(),
     );
   }
 
@@ -72,7 +75,8 @@ class _CategoryScreen extends State<CategoryScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+            iconColor: Theme.of(context).primaryColor,
+            isShowDialog: false,
           )
         ],
       ),
@@ -92,7 +96,8 @@ class _CategoryScreen extends State<CategoryScreen> {
             );
           }
           if (state is QuizCategoryFailure) {
-            return ErrorContainer(showBackButton: false,
+            return ErrorContainer(
+              showBackButton: false,
               errorMessageColor: Theme.of(context).primaryColor,
               showErrorImage: true,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(
