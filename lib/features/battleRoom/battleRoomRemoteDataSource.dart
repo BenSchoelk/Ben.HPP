@@ -141,6 +141,22 @@ class BattleRoomRemoteDataSource {
     }
   }
 
+  //readyToPlay
+
+  //get multi user battle room
+  Future<List<DocumentSnapshot>> getRoomCreatedByUser(String userId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firebaseFirestore.collection(multiUserBattleRoomCollection).where("createdBy", isEqualTo: userId).get();
+      return querySnapshot.docs;
+    } on SocketException catch (_) {
+      throw BattleRoomException(errorMessageCode: noInternetCode);
+    } on PlatformException catch (_) {
+      throw BattleRoomException(errorMessageCode: defaultErrorMessageCode);
+    } catch (_) {
+      throw BattleRoomException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
+
   //to create room to play quiz
   Future<DocumentSnapshot> createBattleRoom({
     required String categoryId,

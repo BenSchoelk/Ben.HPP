@@ -14,9 +14,14 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
-class WaitingForPlayesDialog extends StatelessWidget {
+class WaitingForPlayesDialog extends StatefulWidget {
   WaitingForPlayesDialog({Key? key}) : super(key: key);
 
+  @override
+  State<WaitingForPlayesDialog> createState() => _WaitingForPlayesDialogState();
+}
+
+class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
   Widget profileAndNameContainer(BuildContext context, BoxConstraints constraints, String name, String profileUrl, Color borderColor) {
     return Column(
       children: [
@@ -65,7 +70,6 @@ class WaitingForPlayesDialog extends StatelessWidget {
     );
   }
 
-  //
   void showRoomDestroyed(BuildContext context) {
     showDialog(
         barrierDismissible: false,
