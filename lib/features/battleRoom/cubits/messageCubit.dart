@@ -31,8 +31,11 @@ class MessageCubit extends Cubit<MessageState> {
     streamSubscription = _battleRoomRepository.subscribeToMessages(roomId: roomId).listen((message) {
       if (message.messageId.isNotEmpty) {
         final messages = List<Message>.from((state as MessageFetchedSuccess).messages);
-        messages.add(message);
-        emit(MessageFetchedSuccess(messages));
+        bool isNewMessage = messages.where((element) => element.messageId == message.messageId).toList().isEmpty;
+        if (isNewMessage) {
+          messages.add(message);
+          emit(MessageFetchedSuccess(messages));
+        }
       }
     });
   }
