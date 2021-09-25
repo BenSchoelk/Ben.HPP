@@ -10,6 +10,7 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/auth/authRepository.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 import 'package:flutterquiz/features/auth/cubits/referAndEarnCubit.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
@@ -576,6 +577,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             //fetch bookmark
             if (context.read<BookmarkCubit>().state is! BookmarkFetchSuccess) {
               context.read<BookmarkCubit>().getBookmark(state.userProfile.userId);
+              //delete any unused gruop battle room which is created by this user
+              BattleRoomRepository().deleteUnusedMultiUserBattleRoom(state.userProfile.userId!);
             }
           }
         },
