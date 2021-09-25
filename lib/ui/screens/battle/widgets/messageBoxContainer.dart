@@ -258,7 +258,7 @@ class _MessagesContainerState extends State<MessagesContainer> {
                 BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
                 UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
                 messageCubit.addMessage(
-                  message: predefinedMessages[currentlySelectedMessageIndex],
+                  message: predefinedMessages[index],
                   by: userDetailsCubit.getUserId(),
                   roomId: battleRoomCubit.getRoomId(),
                   isTextMessage: true,
@@ -339,7 +339,7 @@ class _EmojisContainerState extends State<EmojisContainer> {
               BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
               UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
               messageCubit.addMessage(
-                message: emojis[currentlySelectedEmojiIndex],
+                message: emojis[index],
                 by: userDetailsCubit.getUserId(),
                 roomId: battleRoomCubit.getRoomId(),
                 isTextMessage: false,
