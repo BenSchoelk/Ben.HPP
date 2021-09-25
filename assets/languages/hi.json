@@ -296,11 +296,11 @@
   "notAvailable": "उपलब्ध नहीं है",
   "coinStore" : "सिक्के की दुकान",
   "purchaseError" : "खरीदारी करने में असमर्थ",
-  "productsFetchedFailure" : "Failed to get products",
-  "noProducts" : "No products available",
-  "inAppPurchaseUnavailable" : "In-app purchase is not available",
-  "coinsBoughtSuccess" : "Coins bought successfully",
-  "theme" : "Theme",
-    "lightTheme" : "Light Theme",
-    "darkTheme" : "Dark Theme"
+  "productsFetchedFailure" : "उत्पाद प्राप्त करने में विफल",
+  "noProducts" : "कोई उत्पाद उपलब्ध नहीं है",
+  "inAppPurchaseUnavailable" : "इन-ऐप खरीदारी उपलब्ध नहीं है",
+  "coinsBoughtSuccess" : "सिक्के सफलतापूर्वक खरीदे गए",
+  "theme" : "थीम",
+  "lightTheme" : "लाइट थीम",
+  "darkTheme" : "डार्क थीम"
 }

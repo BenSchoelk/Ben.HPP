@@ -1,4 +1,4 @@
-//in-app purchase procucts configuration
+//in-app purchase products configuration
 
 //
 //Make sure to have same ids of consumable product in both play and app store

@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Animation<Offset> profileSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: profileAnimationController, curve: Curves.easeIn));
 
   late Animation<Offset> selfChallengeSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: selfChallengeAnimationController, curve: Curves.easeIn));
-  late FirebaseMessaging messaging;
+  //late FirebaseMessaging messaging;
   @override
   void initState() {
     // initFirebaseMessaging();
@@ -76,13 +76,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void initFirebaseMessaging() {
-    messaging = FirebaseMessaging.instance;
+   // messaging = FirebaseMessaging.instance;
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message recieved.........................................");
-      print(event.notification!.body);
+      print("onMessage.........................................");
+      print(event.notification!.body!+event.notification!.title!);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('Message clicked!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+message.notification!.title!+message.notification!.body!);
+    });
+    FirebaseMessaging.onBackgroundMessage((message) {
+       print("onBackgroundMessage"+message.notification!.title!+message.notification!.body!);
+       return Future.value(true);
     });
     new NotificationHandler().initializeFcmNotification(context);
   }

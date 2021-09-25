@@ -35,7 +35,6 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
   String mobile = "", _verificationId = "", otp = "", signature = "";
   bool _isClickable = false, isCodeSent = false, isloading = false, isErrorOtp = false;
   late OTPTextEditController controller;
-  final scaffoldKey = GlobalKey();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   late AnimationController buttonController;
   late Timer _timer;
@@ -378,44 +377,7 @@ class _FillOtpScreen extends State<FillOtpScreen> with TickerProviderStateMixin 
             isloading = false;
           },
         )
-
-
-
-      /*Wrap(
-          alignment: WrapAlignment.start,
-          spacing: 4,
-          direction: Axis.horizontal,
-          runSpacing: 10,
-          children: [
-            _otpTextField(context, true),
-            _otpTextField(context, false),
-            _otpTextField(context, false),
-            _otpTextField(context, false),
-            _otpTextField(context, false),
-            _otpTextField(context, false),
-          ],
-        ),*/
     );
-
-
-    /*OtpTextField(
-            controller: controller,
-           // codeLength: 6,
-          *//*  decoration: BoxLooseDecoration(
-                errorText: isErrorOtp ? AppLocalization.of(context)!.getTranslatedValues(enterOtp) : null,
-                strokeColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
-                bgColorBuilder: FixedColorBuilder(Theme.of(context).backgroundColor),
-                gapSpace: 5,
-                textStyle: Theme.of(context).textTheme.headline4!.merge(TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14))),
-            currentCode: otp,*//*
-            onChanged: (String? code) {
-              isErrorOtp = controller.text.isEmpty;
-              otp = code!;
-              isloading = false;
-            },
-            onSubmitted: (String code) {
-              otp = code;
-            }));*/
   }
 
   Widget showVerify() {

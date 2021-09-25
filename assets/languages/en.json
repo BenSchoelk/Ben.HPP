@@ -183,7 +183,7 @@
     "title1":"TEST YOUR KNOWLEDGE",
     "title2": "MIND BATTLES",
     "title3": "LEARN",
-    "description1": "There are hundereds of different categories to choose from",
+    "description1": "There are hundreds of different categories to choose from",
     "description2": "Challenge other players in daily intellectual battles",
     "description3": "Perform tasks, get cool bonuses ,ranks and awards",
 
@@ -192,7 +192,7 @@
     "allTimeLbl":"All time",
 
     "referAndEarn":"REFER AND EARN",
-    "referFrdLbl":"Refer a friend, and you will get 100 coins each time your referral code is used and your friend will get 50 coins by usign your code.",
+    "referFrdLbl":"Refer a friend, and you will get 100 coins each time your referral code is used and your friend will get 50 coins by using your code.",
     "yourRefCOdeLbl":"YOUR REFERRAL CODE",
     "referCodeCopyMsg":"Referral code copied",
     "shareNowLbl":"Share Now",
@@ -230,7 +230,7 @@
     "desContest":"Play quiz contest",
     "desGuessTheWord":"Fun vocabulary game",
     "desFunAndLearn":"it's like a Comprehension game",
-    "desTrueAndFalse":"Quiz with True / Fales format",
+    "desTrueAndFalse":"Quiz with True / False format",
 
     "noCoinsMsg": "No enough coins to play contest",
     "defaultErrorMessage" : "Something went wrong. Please try again later",
@@ -250,12 +250,12 @@
      "fileUploadFail" : "Unable to upload image",
      "dailyQuizAlreadyPlayed" : "Already played",
      "noMatchesPlayed" : "No matches played, yet",
-     "noUpcomingContest" : "No upcoimng contest",
+     "noUpcomingContest" : "No upcoming contest",
      "noContest" : "No contest",
      "notPlayedContest" : "Not played contest",
      "contestAlreadyPlayed" : "Already played",
      "roomAlreadyCreated" : "Room already created",
-     "unauthorizedAccess" : "Unautrhorized access",
+     "unauthorizedAccess" : "Unauthorized access",
      "levelLocked" : "Level is locked",
      "updateBookmarkFailure" : "Unable to update bookmark status",
      "lifeLineUsed" : "Already used this lifeline",
@@ -303,11 +303,6 @@
     "theme" : "Theme",
     "lightTheme" : "Light Theme",
     "darkTheme" : "Dark Theme"
-
-   
-
-    
-    
 }
 
 
