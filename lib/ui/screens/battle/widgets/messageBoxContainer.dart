@@ -254,20 +254,16 @@ class _MessagesContainerState extends State<MessagesContainer> {
             ),
             child: CustomRoundedButton(
               onTap: () {
-                setState(() {
-                  currentlySelectedMessageIndex = index;
-                  if (currentlySelectedMessageIndex != -1) {
-                    MessageCubit messageCubit = context.read<MessageCubit>();
-                    BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
-                    UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
-                    messageCubit.addMessage(
-                    message: predefinedMessages[currentlySelectedMessageIndex],
-                    by: userDetailsCubit.getUserId(),
-                    roomId: battleRoomCubit.getRoomId(),
-                    isTextMessage: true,
-                    );
-                    widget.closeMessageBox();
-                }});
+                MessageCubit messageCubit = context.read<MessageCubit>();
+                BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
+                UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
+                messageCubit.addMessage(
+                  message: predefinedMessages[currentlySelectedMessageIndex],
+                  by: userDetailsCubit.getUserId(),
+                  roomId: battleRoomCubit.getRoomId(),
+                  isTextMessage: true,
+                );
+                widget.closeMessageBox();
               },
               widthPercentage: MediaQuery.of(context).size.width * (0.4),
               backgroundColor: currentlySelectedMessageIndex == index ? Theme.of(context).primaryColor : Theme.of(context).backgroundColor,
@@ -289,7 +285,7 @@ class _MessagesContainerState extends State<MessagesContainer> {
           alignment: Alignment.topCenter,
           child: _buildMessages(),
         ),
-      /*  Align(
+        /*  Align(
             alignment: Alignment.bottomCenter,
             child: SendButton(onTap: () {
               if (currentlySelectedMessageIndex != -1) {
@@ -339,21 +335,16 @@ class _EmojisContainerState extends State<EmojisContainer> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              setState(() {
-                currentlySelectedEmojiIndex = index;
-                if (currentlySelectedEmojiIndex != -1) {
-                  MessageCubit messageCubit = context.read<MessageCubit>();
-                  BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
-                  UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
-                  messageCubit.addMessage(
-                    message: emojis[currentlySelectedEmojiIndex],
-                    by: userDetailsCubit.getUserId(),
-                    roomId: battleRoomCubit.getRoomId(),
-                    isTextMessage: false,
-                  );
-                  widget.closeMessageBox();
-                }
-              });
+              MessageCubit messageCubit = context.read<MessageCubit>();
+              BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
+              UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
+              messageCubit.addMessage(
+                message: emojis[currentlySelectedEmojiIndex],
+                by: userDetailsCubit.getUserId(),
+                roomId: battleRoomCubit.getRoomId(),
+                isTextMessage: false,
+              );
+              widget.closeMessageBox();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -388,7 +379,7 @@ class _EmojisContainerState extends State<EmojisContainer> {
           alignment: Alignment.topCenter,
           child: _buildEmojies(emojis),
         ),
-     /*   Align(
+        /*   Align(
             alignment: Alignment.bottomCenter,
             child: SendButton(onTap: () {
               if (currentlySelectedEmojiIndex != -1) {
