@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
   @override
   void initState() {
     getAppSetting();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     super.initState();
   }
 
@@ -109,11 +111,8 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                   ),
                   child: WebView(
                     javascriptMode: JavascriptMode.unrestricted,
-                    initialUrl: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),
-                  )
-                  //
-                  // initialUrl: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),
-                  );
+                      initialUrl: Uri.dataFromString((state as AppSettingsFetchSuccess).settingsData, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString(),
+                  ));
             },
           )
         ],

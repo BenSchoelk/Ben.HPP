@@ -55,7 +55,7 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
         children: [
           _buildTabbarTextContainer("CHAT", 0),
           _buildTabbarTextContainer("MESSAGES", 1),
-          _buildTabbarTextContainer("EMOJIES", 2),
+          _buildTabbarTextContainer("EMOJIS", 2),
         ],
       ),
     );

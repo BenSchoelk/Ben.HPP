@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 
@@ -25,6 +28,10 @@ class ReferAndEarnScreen extends StatelessWidget {
         child: Stack(
           children: [
             PageBackgroundGradientContainer(),
+            Platform.isIOS ?Container(
+                padding: EdgeInsets.only(left: 10),
+                alignment: Alignment.topLeft,
+                child: CustomBackButton(isShowDialog: false,iconColor: Theme.of(context).primaryColor,)):Container(),
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
