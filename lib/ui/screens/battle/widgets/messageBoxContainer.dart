@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/message.dart';
@@ -53,9 +54,9 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildTabbarTextContainer("CHAT", 0),
-          _buildTabbarTextContainer("MESSAGES", 1),
-          _buildTabbarTextContainer("EMOJIS", 2),
+          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues("chatLbl")!, 0),
+          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues("messageLbl")!, 1),
+          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues("emojisLbl")!, 2),
         ],
       ),
     );

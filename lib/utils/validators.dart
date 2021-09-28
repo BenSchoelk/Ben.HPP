@@ -34,9 +34,6 @@ class Validators {
     if (value.isEmpty) {
       return false;
     }
-    if (value.length != 10) {
-      return false;
-    }
     print(value.length);
     final pattern = RegExp(r'^[0-9]+$');
 

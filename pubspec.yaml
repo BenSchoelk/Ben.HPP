@@ -69,6 +69,7 @@ dependencies:
 
   webview_flutter: ^2.0.13
   cupertino_will_pop_scope: ^1.1.0
+  intl_phone_field: ^2.1.0
 
 
 dev_dependencies:
