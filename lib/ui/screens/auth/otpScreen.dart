@@ -28,6 +28,7 @@ class _OtpScreen extends State<OtpScreen> {
   String? countrycode, countryName;
   // mobile number verify
   RegExp regExp = new RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+  //
   bool validateMobile(String value) {
     String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(pattern);
@@ -86,7 +87,7 @@ class _OtpScreen extends State<OtpScreen> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * .07,
               ),
-              Platform.isIOS?otpLabelIos():otpLabel(),
+              Platform.isIOS ? otpLabelIos() : otpLabel(),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .03,
               ),
@@ -112,8 +113,14 @@ class _OtpScreen extends State<OtpScreen> {
   Widget otpLabelIos() {
     return Row(
       children: [
-        Expanded(flex:1,child: CustomBackButton(iconColor: Theme.of(context).primaryColor,isShowDialog: false,)),
-        Expanded(flex:10,
+        Expanded(
+            flex: 1,
+            child: CustomBackButton(
+              iconColor: Theme.of(context).primaryColor,
+              isShowDialog: false,
+            )),
+        Expanded(
+          flex: 10,
           child: Text(
             AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,
             textAlign: TextAlign.center,
@@ -123,7 +130,8 @@ class _OtpScreen extends State<OtpScreen> {
       ],
     );
   }
-  Widget otpLabel(){
+
+  Widget otpLabel() {
     return Text(
       AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,
       textAlign: TextAlign.center,

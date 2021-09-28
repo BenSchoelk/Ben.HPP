@@ -28,7 +28,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
         Container(
           width: constraints.maxWidth * (0.285),
           decoration: BoxDecoration(border: Border.all(color: Theme.of(context).colorScheme.secondary)),
-          height: constraints.maxHeight * (0.165),
+          height: constraints.maxHeight * (0.15),
           padding: EdgeInsets.symmetric(
             horizontal: 2.5,
             vertical: 2.5,
@@ -181,18 +181,35 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Stack(
                       children: [
-                        Text(
-                          AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getEntryFee()}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Theme.of(context).backgroundColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getEntryFee()}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).backgroundColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              onPressed: () {
+                                try {
+                                  String inviteMessage = "$groupBattleInviteMessage${context.read<MultiUserBattleRoomCubit>().getRoomCode()}";
+                                  Share.share(inviteMessage);
+                                } catch (e) {
+                                  UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+                                }
+                              },
+                              iconSize: 20,
+                              icon: Icon(Icons.share),
+                              color: Theme.of(context).backgroundColor,
+                            ))
                       ],
                     ),
                   ),
@@ -202,7 +219,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                 ),
                 Container(
                   width: constraints.maxWidth * (0.85),
-                  height: constraints.maxHeight * (0.15),
+                  height: constraints.maxHeight * (0.175),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -211,23 +228,17 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
                         child: Row(
                           children: [
-                            Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + ": ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
-                                textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w300, fontSize: 19.0, color: Theme.of(context).colorScheme.secondary)),
-                            Spacer(),
-                            GestureDetector(
-                              child: Icon(
-                                Icons.share,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              onTap: () {
-                                try {
-                                  String inviteMessage = "$groupBattleInviteMessage${context.read<MultiUserBattleRoomCubit>().getRoomCode()}";
-                                  Share.share(inviteMessage);
-                                } catch (e) {
-                                  UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
-                                }
-                              },
-                            )
+                            Expanded(
+                              //
+                              child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0,
+                                    color: Theme.of(context).colorScheme.secondary,
+                                    height: 1.2,
+                                  )),
+                            ),
                           ],
                         ),
                       ),
@@ -238,7 +249,8 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
-                            fontSize: 14.0,
+                            fontSize: 13.5,
+                            height: 1.2,
                             color: Theme.of(context).colorScheme.secondary,
                           )),
                     ],
