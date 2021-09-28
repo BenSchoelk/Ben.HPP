@@ -15,6 +15,7 @@ import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class SelfChallengeScreen extends StatefulWidget {
@@ -37,8 +38,8 @@ class SelfChallengeScreen extends StatefulWidget {
 }
 
 class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
-  static String _defaultSelectedCategoryValue = "Select Category";
-  static String _defaultSelectedSubcategoryValue = "Select Subcategory";
+  static String _defaultSelectedCategoryValue = selectCategoryKey;
+  static String _defaultSelectedSubcategoryValue = selectSubCategoryKey;
 
   //to display category and suncategory
   String? selectedCategory = _defaultSelectedCategoryValue;
@@ -120,7 +121,7 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
         //values is map of name and id. only passing name to dropdown
         items: values.map((e) => e['name']).toList().map((name) {
           return DropdownMenuItem(
-            child: Text(name!),
+            child: name! == selectCategoryKey || name == selectSubCategoryKey ? Text(AppLocalization.of(context)!.getTranslatedValues(name)!) : Text(name),
             value: name,
           );
         }).toList(),

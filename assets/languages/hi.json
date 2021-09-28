@@ -302,5 +302,7 @@
   "coinsBoughtSuccess" : "सिक्के सफलतापूर्वक खरीदे गए",
   "theme" : "थीम",
   "lightTheme" : "लाइट थीम",
-  "darkTheme" : "डार्क थीम"
+  "darkTheme" : "डार्क थीम",
+  "selectCategory" : "श्रेणी का चयन करें",
+  "selectSubCategory" : "उपश्रेणी का चयन करें"
 }

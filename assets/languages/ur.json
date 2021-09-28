@@ -299,7 +299,10 @@
     "coinsBoughtSuccess" : "سکے کامیابی سے خریدے گئے۔",
     "theme" : "خیالیہ",
     "lightTheme" : "لائٹ تھیم۔",
-    "darkTheme" : "ڈارک تھیم۔"
+    "darkTheme" : "ڈارک تھیم۔",
+
+    "selectCategory" : "زمرہ منتخب کریں۔",
+    "selectSubCategory" : "ذیلی زمرہ منتخب کریں۔"
   
 }
    

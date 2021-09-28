@@ -100,7 +100,7 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
     int unlockedLevel = (state as UnlockedLevelFetchSuccess).unlockedLevel;
 
     return ListView.builder(
-        padding: EdgeInsets.only(bottom: 15.0),
+        padding: EdgeInsets.only(bottom: 50.0),
         itemCount: int.parse(subcategoryList[currentIndex].maxLevel!),
         itemBuilder: (context, index) {
           return GestureDetector(

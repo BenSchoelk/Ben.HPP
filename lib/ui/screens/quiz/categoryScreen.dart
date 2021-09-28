@@ -110,6 +110,9 @@ class _CategoryScreen extends State<CategoryScreen> {
           }
           final categoryList = (state as QuizCategorySuccess).categories;
           return ListView.builder(
+            padding: EdgeInsets.only(
+              bottom: 50,
+            ),
             controller: scrollController,
             // scrollDirection: Axis.horizontal,
             shrinkWrap: true,

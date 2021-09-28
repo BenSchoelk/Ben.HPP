@@ -302,7 +302,9 @@
     "coinsBoughtSuccess" : "Coins bought successfully",
     "theme" : "Theme",
     "lightTheme" : "Light Theme",
-    "darkTheme" : "Dark Theme"
+    "darkTheme" : "Dark Theme",
+    "selectCategory" : "Select Category",
+    "selectSubCategory" : "Select Subcategory"
 }
 
 
