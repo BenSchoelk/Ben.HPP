@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   //late FirebaseMessaging messaging;
   @override
   void initState() {
-     initFirebaseMessaging();
+    initFirebaseMessaging();
     super.initState();
   }
 
@@ -502,44 +502,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     UiUtils.getImagePath("leaderboard_dark.svg"),
                   )),
             ),
-            context.read<SystemConfigCubit>().getLanguageMode() == "1"
-                ? SizedBox(
-                    width: 12.5,
-                  )
-                : SizedBox(),
-            context.read<SystemConfigCubit>().getLanguageMode() == "1"
-                ? Container(
-                    width: 45,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor,
-                      boxShadow: [
-                        UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
-                      ],
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            elevation: 5.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0),
-                            )),
-                            context: context,
-                            builder: (context) {
-                              return MenuBottomSheetContainer();
-                            });
-                      },
-                      icon: Icon(
-                        Icons.menu,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  )
-                : SizedBox(),
+            SizedBox(
+              width: 12.5,
+            ),
+            Container(
+              width: 45,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                boxShadow: [
+                  UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
+                ],
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                      isScrollControlled: true,
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      )),
+                      context: context,
+                      builder: (context) {
+                        return MenuBottomSheetContainer();
+                      });
+                },
+                icon: Icon(
+                  Icons.menu,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width * (0.085),
             ),
