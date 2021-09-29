@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(currentlyNotAvailableKey)!, context, false);
       }
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.guessTheWord) {
-      Navigator.of(context).pushNamed(Routes.guessTheWord);
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.guessTheWord});
     }
   }
 

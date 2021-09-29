@@ -8,7 +8,7 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 class QuizRemoteDataSource {
-  static late String profile,score,rank;
+  static late String profile, score, rank;
   /*static late String profileA, nameA, scoreA, profileM, nameM, scoreM, profileD, nameD, scoreD,rankD,rankM,rankA;
   static late int total=0;
   static List<LeaderBoardMonthly> leaderBoardMonthlyList=[];
@@ -106,9 +106,13 @@ class QuizRemoteDataSource {
     }
   }
 
-  Future<List<dynamic>> getGuessTheWordQuestions(String? languageId) async {
+  Future<List<dynamic>> getGuessTheWordQuestions(
+      {required String languageId,
+      required String type, //category or subcategory
+      required String typeId}) //id of the category or subcategory)
+  async {
     try {
-      Map<String, String> body = {accessValueKey: accessValue, languageIdKey: languageId!};
+      Map<String, String> body = {accessValueKey: accessValue, languageIdKey: languageId, typeKey: type, typeIdKey: typeId};
 
       if (languageId.isEmpty) {
         body.remove(languageIdKey);

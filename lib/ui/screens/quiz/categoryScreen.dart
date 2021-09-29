@@ -181,6 +181,19 @@ class _CategoryScreen extends State<CategoryScreen> {
                             categoryId: categoryList[index].id!,
                           );
                         });
+                  } else if (widget.quizType == QuizTypes.guessTheWord) {
+                    //if therse is noo subcategory then get questions by category
+                    if (categoryList[index].noOf == "0") {
+                      Navigator.of(context).pushNamed(Routes.guessTheWord, arguments: {
+                        "type": "category",
+                        "typeId": categoryList[index].id,
+                      });
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                        "categoryId": categoryList[index].id,
+                        "quizType": widget.quizType,
+                      });
+                    }
                   }
                 },
                 child: Container(

@@ -29,3 +29,4 @@ final String statusKey = 'status';
 final String questionIdKey = 'question_id';
 final String messageKey = 'message';
 final String friendCodeKey = 'friends_code';
+final String typeIdKey = 'type_id';

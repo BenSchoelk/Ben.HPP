@@ -118,9 +118,17 @@ class QuizRepository {
     }
   }
 
-  Future<List<GuessTheWordQuestion>> getGuessTheWordQuestions(String? languageId) async {
+  Future<List<GuessTheWordQuestion>> getGuessTheWordQuestions({
+    required String languageId,
+    required String type, //category or subcategory
+    required String typeId, //id of the category or subcategory
+  }) async {
     try {
-      final result = await _quizRemoteDataSource.getGuessTheWordQuestions(languageId);
+      final result = await _quizRemoteDataSource.getGuessTheWordQuestions(
+        languageId: languageId,
+        type: type,
+        typeId: typeId,
+      );
       return result.map((question) => GuessTheWordQuestion.fromJson(Map.from(question))).toList();
     } catch (e) {
       throw QuizException(errorMessageCode: e.toString());
