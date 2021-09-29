@@ -9,6 +9,10 @@ final List<String> supporatedLocales = ['en', 'hi', 'ur', 'pt-BR'];
 //
 final String defaultLanguageCode = 'en';
 
+//Enter 2 Letter ISO Code of country
+//It will be use for phone auth.
+final String initialSelectedCountryCode = 'IN';
+
 //Hive all boxes name
 final String authBox = "auth";
 final String settingsBox = "settings";

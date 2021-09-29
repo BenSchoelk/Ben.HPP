@@ -12,6 +12,7 @@ import 'package:flutterquiz/ui/screens/auth/fillOtpScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/widgets/termsAndCondition.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:lottie/lottie.dart';
@@ -42,8 +43,7 @@ class _OtpScreen extends State<OtpScreen> {
         iserrorNumber = true;
       });
       return false;
-    }
-    else if (value.length.toString()!=phoneNumber.toString()) {
+    } else if (value.length.toString() != phoneNumber.toString()) {
       setState(() {
         iserrorNumber = true;
       });
@@ -176,56 +176,61 @@ class _OtpScreen extends State<OtpScreen> {
           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
         ));
   }
-var phoneNumber;
+
+  var phoneNumber;
   Widget showMobileNumber() {
     return /*Padding(
       padding: EdgeInsetsDirectional.only(start: 25),
-      child:*/ Container(
+      child:*/
+        Container(
       //margin:EdgeInsetsDirectional.only(start: 10,end: 10),
-      height:iserrorNumber?MediaQuery.of(context).size.height*.1: MediaQuery.of(context).size.height*.08,
-      width: MediaQuery.of(context).size.width*.99,
-      decoration: BoxDecoration( color:Theme.of(context).backgroundColor,borderRadius: BorderRadius.circular(10.0),),
-        child: IntlPhoneField(showCountryFlag: false,
-          textAlign: TextAlign.center,
-          controller:phoneController,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
+      height: iserrorNumber ? MediaQuery.of(context).size.height * .1 : MediaQuery.of(context).size.height * .08,
+      width: MediaQuery.of(context).size.width * .99,
+      decoration: BoxDecoration(
+        color: Theme.of(context).backgroundColor,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: IntlPhoneField(
+        showCountryFlag: false,
+        textAlign: TextAlign.center,
+        controller: phoneController,
+        keyboardType: TextInputType.number,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        initialCountryCode: initialSelectedCountryCode,
+        decoration: InputDecoration(
+          errorBorder: InputBorder.none,
+          fillColor: Theme.of(context).backgroundColor,
+          filled: true,
+          errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
+          hintText: "+91 999-999-999",
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
+          labelStyle: TextStyle(
+            fontWeight: FontWeight.w600,
             color: Theme.of(context).colorScheme.secondary,
           ),
-          initialCountryCode: 'IN',
-          decoration: InputDecoration(errorBorder:InputBorder.none ,
-            fillColor: Theme.of(context).backgroundColor,
-            filled: true,
-            errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
-
-            hintText:"+91 999-999-999",
-            hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            contentPadding: EdgeInsets.only(top: 10),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
-            ),
+          contentPadding: EdgeInsets.only(top: 10),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide.none,
           ),
-
-          onChanged: (phone) {
-            countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
-            print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
-            phoneNumber=countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length'];
-          },
-          onCountryChanged: (phone) {
-            print('Country code changed to: ' + phone.countryCode!);
-            countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
-          },
-    ),
-      );
+          enabledBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
+          ),
+        ),
+        onChanged: (phone) {
+          countrycode = phone.countryCode!.toString().replaceFirst("+", "");
+          print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
+          phoneNumber = countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length'];
+        },
+        onCountryChanged: (phone) {
+          print('Country code changed to: ' + phone.countryCode!);
+          countrycode = phone.countryCode!.toString().replaceFirst("+", "");
+        },
+      ),
+    );
   }
 
   /*TextFormField(
@@ -295,8 +300,8 @@ var phoneNumber;
         ),
         color: Theme.of(context).primaryColor,
         onPressed: () {
-          if (phoneController.text.isEmpty || phoneController.text.length.toString()!=phoneNumber.toString()) {
-            print(phoneController.text.length.toString()+" in if  "+phoneNumber.toString());
+          if (phoneController.text.isEmpty || phoneController.text.length.toString() != phoneNumber.toString()) {
+            print(phoneController.text.length.toString() + " in if  " + phoneNumber.toString());
             validateMobile(phoneController.text);
           } else {
             Navigator.pushReplacement(
