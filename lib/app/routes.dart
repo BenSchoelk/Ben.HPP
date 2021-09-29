@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterquiz/ui/screens/aboutAppScreen.dart';
 import 'package:flutterquiz/ui/screens/appSettingsScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signInScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signUpScreen.dart';
@@ -78,6 +79,7 @@ class Routes {
   static const guessTheWord = "/guessTheWord";
   static const appSettings = "/appSettings";
   static const levels = "/levels";
+  static const aboutApp = "/aboutApp";
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -159,6 +161,8 @@ class Routes {
       case levels:
         return LevelsScreen.route(routeSettings);
 
+      case aboutApp:
+        return CupertinoPageRoute(builder: (context) => AboutAppScreen());
       default:
         return CupertinoPageRoute(builder: (context) => Scaffold());
     }

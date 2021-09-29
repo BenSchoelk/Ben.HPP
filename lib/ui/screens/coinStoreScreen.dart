@@ -9,6 +9,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/inAppPurchaseProducts.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -31,6 +32,8 @@ class CoinStoreScreen extends StatefulWidget {
 }
 
 class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProviderStateMixin {
+  bool canGoBack = true;
+
   void initPurchase() {
     context.read<InAppPurchaseCubit>().initializePurchase(inAppPurchaseProducts.values.toList());
   }
@@ -53,7 +56,7 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
 
         return GestureDetector(
           onTap: () {
-            print(inAppPurchaseProducts[coins]);
+            canGoBack = false;
             context.read<InAppPurchaseCubit>().buyConsumableProducts(products[index]);
           },
           child: Container(
@@ -114,11 +117,15 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
         if (inAppPurchaseCubit.state is InAppPurchaseProcessInProgress) {
           return Future.value(false);
         }
+        if (!canGoBack) {
+          return Future.value(false);
+        }
         return Future.value(true);
       },
       child: Scaffold(
         body: Stack(
           children: [
+            PageBackgroundGradientContainer(),
             Align(
               alignment: Alignment.topCenter,
               child: BlocConsumer<InAppPurchaseCubit, InAppPurchaseState>(
@@ -133,7 +140,9 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
                         );
                     context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), coins, true);
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(coinsBoughtSuccessKey)!, context, false);
+                    canGoBack = true;
                   } else if (state is InAppPurchaseProcessFailure) {
+                    canGoBack = true;
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(state.errorMessage)!, context, false);
                   }
                 },

@@ -19,6 +19,7 @@ import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart'
 
 import 'package:flutterquiz/ui/screens/battle/widgets/roomOptionDialog.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/languageBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final pushNotificationService =  NotificationHandler(_firebaseMessaging);
     print("/................................."+pushNotificationService.toString());
     // initFirebaseMessaging();
+    initFirebaseMessaging();
     super.initState();
   }
   void initFirebaseMessaging() {
@@ -479,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return children;
   }
 
-  Widget _buildLeaderBoardButton(double statusBarPadding) {
+  Widget _buildTopMenu(double statusBarPadding) {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
@@ -487,29 +489,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            /*  Container(
-                width: 45,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).backgroundColor,
-                  boxShadow: [
-                    UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
-                  ],
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Switch(
-                  value: changeAppTheme,
-                  activeColor: Theme.of(context).primaryColor,
-                  inactiveThumbColor: primaryColor,
-                  onChanged: (value) {
-                    changeAppTheme = !changeAppTheme;
-                    changeAppTheme ? BlocProvider.of<ThemeCubit>(context).changeTheme(AppTheme.Dark) : BlocProvider.of<ThemeCubit>(context).changeTheme(AppTheme.Light);
-                  },
-                )),
-            SizedBox(
-              width: 12.5,
-            ),
-             */
             Container(
               width: 45,
               height: 40,
@@ -528,31 +507,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     UiUtils.getImagePath("leaderboard_dark.svg"),
                   )),
             ),
-            context.read<SystemConfigCubit>().getLanguageMode() == "1"
-                ? SizedBox(
-                    width: 12.5,
-                  )
-                : SizedBox(),
-            context.read<SystemConfigCubit>().getLanguageMode() == "1"
-                ? Container(
-                    width: 45,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor,
-                      boxShadow: [
-                        UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
-                      ],
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: IconButton(
-                        onPressed: () {
-                          showDialog(context: context, builder: (_) => LanguageDailogContainer());
-                        },
-                        icon: SvgPicture.asset(
-                          UiUtils.getImagePath("language_icon.svg"),
-                        )),
-                  )
-                : SizedBox(),
+            SizedBox(
+              width: 12.5,
+            ),
+            Container(
+              width: 45,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                boxShadow: [
+                  UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
+                ],
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                      isScrollControlled: true,
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      )),
+                      context: context,
+                      builder: (context) {
+                        return MenuBottomSheetContainer();
+                      });
+                },
+                icon: Icon(
+                  Icons.menu,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width * (0.085),
             ),
@@ -627,7 +615,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           }
 
           return _buildHomeScreen([
-            _buildLeaderBoardButton(statusBarPadding),
+            _buildTopMenu(statusBarPadding),
             _buildProfileContainer(statusBarPadding),
             _buildSelfChallenge(statusBarPadding),
             ..._buildQuizTypes(statusBarPadding),

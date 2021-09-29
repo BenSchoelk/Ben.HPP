@@ -295,3 +295,6 @@ String lightThemeKey = "lightTheme";
 String darkThemeKey = "darkTheme";
 String selectCategoryKey = "selectCategory";
 String selectSubCategoryKey = "selectSubCategory";
+String languageKey = "language";
+String accountKey = "account";
+String aboutQuizAppKey = "aboutQuizApp";

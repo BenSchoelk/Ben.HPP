@@ -304,7 +304,11 @@
     "lightTheme" : "Light Theme",
     "darkTheme" : "Dark Theme",
     "selectCategory" : "Select Category",
-    "selectSubCategory" : "Select Subcategory"
+    "selectSubCategory" : "Select Subcategory",
+    "language" : "Language",
+    "account" : "Account",
+    "aboutQuizApp" : "About Elite Quiz"
+
 }
 
 
