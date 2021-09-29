@@ -32,6 +32,8 @@ class CoinStoreScreen extends StatefulWidget {
 }
 
 class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProviderStateMixin {
+  bool canGoBack = true;
+
   void initPurchase() {
     context.read<InAppPurchaseCubit>().initializePurchase(inAppPurchaseProducts.values.toList());
   }
@@ -54,7 +56,7 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
 
         return GestureDetector(
           onTap: () {
-            print(inAppPurchaseProducts[coins]);
+            canGoBack = false;
             context.read<InAppPurchaseCubit>().buyConsumableProducts(products[index]);
           },
           child: Container(
@@ -115,6 +117,9 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
         if (inAppPurchaseCubit.state is InAppPurchaseProcessInProgress) {
           return Future.value(false);
         }
+        if (!canGoBack) {
+          return Future.value(false);
+        }
         return Future.value(true);
       },
       child: Scaffold(
@@ -135,7 +140,9 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
                         );
                     context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), coins, true);
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(coinsBoughtSuccessKey)!, context, false);
+                    canGoBack = true;
                   } else if (state is InAppPurchaseProcessFailure) {
+                    canGoBack = true;
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(state.errorMessage)!, context, false);
                   }
                 },
