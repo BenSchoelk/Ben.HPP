@@ -117,6 +117,7 @@ final String getGuessTheWordQuestionUrl = "${baseUrl}get_guess_the_word";
 final String getAppSettingsUrl = "${baseUrl}get_settings";
 final String reportQuestionUrl = "${baseUrl}report_question";
 final String getQuestionsByCategoryOrSubcategory = "${baseUrl}get_questions";
+final String updateFcmId = "${baseUrl}update_fcm_id";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;

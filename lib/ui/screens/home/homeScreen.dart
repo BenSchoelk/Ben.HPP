@@ -70,12 +70,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   late Animation<Offset> selfChallengeSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: selfChallengeAnimationController, curve: Curves.easeIn));
   //late FirebaseMessaging messaging;
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   @override
   void initState() {
-     initFirebaseMessaging();
+    final pushNotificationService =  NotificationHandler(_firebaseMessaging);
+    print("/................................."+pushNotificationService.toString());
+    // initFirebaseMessaging();
     super.initState();
   }
-
   void initFirebaseMessaging() {
    // messaging = FirebaseMessaging.instance;
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
@@ -85,11 +87,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+message.notification!.title!+message.notification!.body!);
     });
-    FirebaseMessaging.onBackgroundMessage((message) {
-       print("onBackgroundMessage"+message.notification!.title!+message.notification!.body!);
+
+    /*FirebaseMessaging.onBackgroundMessage((message) {
+      //new NotificationHandler().myBackgroundMessageHandler(message);
+       print("onBackgroundMessage"+message.toString()+message.notification!.title!+message.notification!.body!);
        return Future.value(true);
     });
-    new NotificationHandler().initializeFcmNotification(context);
+*/
   }
 
   @override
