@@ -455,24 +455,26 @@ class ProfileScreen extends StatelessWidget {
       padding: EdgeInsets.only(top: 5.0),
       child: Column(
         children: menuList
-            .map((e) => ListTile(
-                  onTap: () {
-                    onMenuTap(AppLocalization.of(context)!.getTranslatedValues(e.title)!, context);
-                  },
-                  title: Text(
-                    AppLocalization.of(context)!.getTranslatedValues(e.title)!,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+            .map(
+              (e) => ListTile(
+                onTap: () {
+                  onMenuTap(AppLocalization.of(context)!.getTranslatedValues(e.title)!, context);
+                },
+                title: Text(
+                  AppLocalization.of(context)!.getTranslatedValues(e.title)!,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                leading: Container(
+                  width: 60,
+                  //decoration: BoxDecoration(border: Border.all()),
+                  transform: Matrix4.identity()..scale(0.45),
+                  transformAlignment: Alignment.center,
+                  child: SvgPicture.asset(
+                    UiUtils.getImagePath(e.imagePath),
                   ),
-                  leading: Container(
-                    width: 60,
-                    //decoration: BoxDecoration(border: Border.all()),
-                    transform: Matrix4.identity()..scale(0.45),
-                    transformAlignment: Alignment.center,
-                    child: SvgPicture.asset(
-                      UiUtils.getImagePath(e.imagePath),
-                    ),
-                  ),
-                ))
+                ),
+              ),
+            )
             .toList(),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/inAppPurchaseProducts.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -119,6 +120,7 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
       child: Scaffold(
         body: Stack(
           children: [
+            PageBackgroundGradientContainer(),
             Align(
               alignment: Alignment.topCenter,
               child: BlocConsumer<InAppPurchaseCubit, InAppPurchaseState>(
