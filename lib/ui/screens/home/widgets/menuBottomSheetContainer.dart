@@ -94,6 +94,16 @@ class MenuBottomSheetContainer extends StatelessWidget {
               isSvgIcon: true,
               onTap: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.appSettings, arguments: howToPlayLbl);
+              },
+              title: howToPlayLbl,
+              leadingIcon: "howtoplay_icon.svg", //theme icon
+            ),
+
+            MenuTile(
+              isSvgIcon: true,
+              onTap: () {
+                Navigator.of(context).pop();
 
                 Navigator.of(context).pushNamed(Routes.aboutApp);
               },
