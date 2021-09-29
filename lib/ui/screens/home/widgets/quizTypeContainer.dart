@@ -25,14 +25,16 @@ class QuizTypeContainer extends StatelessWidget {
           ),
           Text(
             AppLocalization.of(context)!.getTranslatedValues(quizType.title)!,
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold, //
+              height: 1.125,
+              fontSize: 15.5,
+              fontWeight: FontWeight.bold,
               color: Theme.of(context).primaryColor,
             ),
           ),
           SizedBox(
-            height: 2.5,
+            height: 4.0,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -43,8 +45,8 @@ class QuizTypeContainer extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 letterSpacing: -0.25,
-                height: 1.2,
-                fontSize: 13.5,
+                height: 1.1,
+                fontSize: 12.5,
                 color: Theme.of(context).primaryColor.withOpacity(0.6),
               ),
             ),
