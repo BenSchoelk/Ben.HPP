@@ -162,6 +162,7 @@ final String videoIosId = 'ca-app-pub-3940256099942544/1712485313';
 // AdMob Id for banner show
 final String bannerAndroidId = 'ca-app-pub-3940256099942544/6300978111';
 final String bannerIosId = 'ca-app-pub-3940256099942544/2934735716';
+final String initialCountryCode="IN"; // change your initialCountry Code
 
 //predefined messages for battle (1 vs 1)
 final List<String> predefinedMessages = [

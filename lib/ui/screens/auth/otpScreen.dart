@@ -12,6 +12,7 @@ import 'package:flutterquiz/ui/screens/auth/fillOtpScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/widgets/termsAndCondition.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:lottie/lottie.dart';
@@ -28,7 +29,7 @@ class _OtpScreen extends State<OtpScreen> {
   String? countrycode;
   // mobile number verify
   RegExp regExp = new RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-  //
+  var phoneNumber;
   bool validateMobile(String value) {
     String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(pattern);
@@ -176,55 +177,52 @@ class _OtpScreen extends State<OtpScreen> {
           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
         ));
   }
-var phoneNumber;
+
   Widget showMobileNumber() {
-    return /*Padding(
-      padding: EdgeInsetsDirectional.only(start: 25),
-      child:*/ Container(
-      //margin:EdgeInsetsDirectional.only(start: 10,end: 10),
-      height:iserrorNumber?MediaQuery.of(context).size.height*.1: MediaQuery.of(context).size.height*.08,
-      width: MediaQuery.of(context).size.width*.99,
-      decoration: BoxDecoration( color:Theme.of(context).backgroundColor,borderRadius: BorderRadius.circular(10.0),),
-        child: IntlPhoneField(showCountryFlag: false,
-          textAlign: TextAlign.center,
-          controller:phoneController,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          initialCountryCode: 'IN',
-          decoration: InputDecoration(errorBorder:InputBorder.none ,
-            fillColor: Theme.of(context).backgroundColor,
-            filled: true,
-            errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
-
-            hintText:"+91 999-999-999",
-            hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            contentPadding: EdgeInsets.only(top: 10),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
-            ),
-          ),
-
-          onChanged: (phone) {
-            countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
-            print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
-            phoneNumber=countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length'];
-          },
-          onCountryChanged: (phone) {
-            print('Country code changed to: ' + phone.countryCode!);
-            countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
-          },
-    ),
+    return Stack(
+        children: [
+          Container(
+         height:MediaQuery.of(context).size.height*.075,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration( color:Theme.of(context).backgroundColor,borderRadius: BorderRadius.circular(10.0),),),
+            IntlPhoneField(
+                  controller:phoneController,
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  initialCountryCode: initialCountryCode,
+                  decoration: InputDecoration(errorBorder:InputBorder.none,
+                    fillColor: Theme.of(context).backgroundColor,
+                    filled: true,
+                    errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
+                    hintText:"+91 999-999-999",
+                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    contentPadding: EdgeInsets.only(top:25),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
+                    ),
+                  ),
+                  onChanged: (phone) {
+                    countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
+                    print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
+                    phoneNumber=countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length'];
+                  },
+                  onCountryChanged: (phone) {
+                    print('Country code changed to: ' + phone.countryCode!);
+                    countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
+                  },
+               ),
+        ],
       );
   }
 
