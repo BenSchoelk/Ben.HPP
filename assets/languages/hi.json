@@ -304,5 +304,9 @@
   "lightTheme" : "लाइट थीम",
   "darkTheme" : "डार्क थीम",
   "selectCategory" : "श्रेणी का चयन करें",
-  "selectSubCategory" : "उपश्रेणी का चयन करें"
+  "selectSubCategory" : "उपश्रेणी का चयन करें",
+  "language" : "भाषा",
+  "account" : "लेखा",
+
+  "aboutQuizApp" : "Elite Quiz के बारे में"
 }
