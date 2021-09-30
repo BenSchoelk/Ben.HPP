@@ -12,6 +12,7 @@ import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+
 class NotificationScreen extends StatefulWidget {
   @override
   _NotificationScreen createState() => _NotificationScreen();
@@ -23,14 +24,18 @@ class NotificationScreen extends StatefulWidget {
             ));
   }
 }
+
 class _NotificationScreen extends State<NotificationScreen> {
   ScrollController controller = ScrollController();
   @override
   void initState() {
     controller.addListener(scrollListener);
-    Future.delayed(Duration.zero, () {context.read<NotificationCubit>().fetchNotification("20");});
+    Future.delayed(Duration.zero, () {
+      context.read<NotificationCubit>().fetchNotification("20");
+    });
     super.initState();
   }
+
   scrollListener() {
     if (controller.position.maxScrollExtent == controller.offset) {
       if (context.read<NotificationCubit>().hasMoreData()) {
@@ -38,6 +43,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,49 +65,50 @@ class _NotificationScreen extends State<NotificationScreen> {
                 listener: (context, state) {},
                 builder: (context, state) {
                   if (state is NotificationProgress || state is NotificationInitial) {
-                    return Center(
-                      child:CircularProgressContainer(useWhiteLoader: false)
-                    );
+                    return Center(child: CircularProgressContainer(useWhiteLoader: false));
                   }
                   if (state is NotificationFailure) {
-                    return ErrorContainer(errorMessageColor: Theme.of(context).primaryColor,
+                    return ErrorContainer(
+                      errorMessageColor: Theme.of(context).primaryColor,
                       showErrorImage: true,
                       errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)),
                       onTapRetry: () {
-                        context.read<NotificationCubit>().fetchMoreNotificationData("20");
+                        context.read<NotificationCubit>().fetchNotification("20");
                       },
                     );
                   }
                   final notificationList = (state as NotificationSuccess).notificationList;
                   final hasMore = state.hasMore;
                   return ListView.builder(
-                    controller: controller,
+                      controller: controller,
                       itemCount: notificationList.length,
                       padding: EdgeInsets.only(top: 25.0, left: MediaQuery.of(context).size.width * (0.075), right: MediaQuery.of(context).size.width * (0.075), bottom: 100),
                       itemBuilder: (context, index) {
                         return hasMore && index == (notificationList.length - 1)
                             ? Center(
-                            child: CircularProgressContainer(
-                              useWhiteLoader: false,
-                            ))
-                            :GestureDetector(
-                          onTap: (){
-                            notificationList[index]["type"]=="category"?
-                            Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone,"type":notificationList[index]["type"],"typeId":notificationList[index]["type_id"]}): null;
-                            },
-                          child: CustomListTile(
-                            trailingButtonOnTap:null,
-                            title: notificationList[index]["title"],
-                            subtitle: notificationList[index]["message"],
-                            leadingChild: notificationList[index]["image"]!.isNotEmpty?CachedNetworkImage(
-                              imageUrl: notificationList[index]["image"]!,
-                            ):Container(),
-                            opacity: 1,
-                          ),
-                        );
+                                child: CircularProgressContainer(
+                                useWhiteLoader: false,
+                              ))
+                            : GestureDetector(
+                                onTap: () {
+                                  notificationList[index]["type"] == "category"
+                                      ? Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone, "type": notificationList[index]["type"], "typeId": notificationList[index]["type_id"]})
+                                      : null;
+                                },
+                                child: CustomListTile(
+                                  trailingButtonOnTap: null,
+                                  title: notificationList[index]["title"],
+                                  subtitle: notificationList[index]["message"],
+                                  leadingChild: notificationList[index]["image"]!.isNotEmpty
+                                      ? CachedNetworkImage(
+                                          imageUrl: notificationList[index]["image"]!,
+                                        )
+                                      : Container(),
+                                  opacity: 1,
+                                ),
+                              );
                       });
-                }
-                ),
+                }),
           )
         ]),
       ],
