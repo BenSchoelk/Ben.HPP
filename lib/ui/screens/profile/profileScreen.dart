@@ -10,31 +10,18 @@ import 'package:flutterquiz/features/profileManagement/cubits/updateUserDetailsC
 import 'package:flutterquiz/features/profileManagement/cubits/uploadProfileCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 
 import 'package:flutterquiz/ui/screens/profile/widgets/editProfileFieldBottomSheetContainer.dart';
-import 'package:flutterquiz/ui/screens/profile/widgets/themeDialog.dart';
+
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/menuTile.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/constants.dart';
+
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:launch_review/launch_review.dart';
-import 'package:share_plus/share_plus.dart';
-
-//menu
-class Menu {
-  final String title;
-  final String imagePath;
-  final String routeName;
-  final Map<String, dynamic> routeArguments;
-
-  Menu({required this.title, required this.imagePath, required this.routeName, required this.routeArguments});
-}
 
 class ProfileScreen extends StatelessWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
@@ -54,161 +41,6 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({
     Key? key,
   }) : super(key: key);
-  final List<Menu> menuList = [
-    Menu(
-      imagePath: "bookmark_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: "bookmarkLbl",
-    ),
-    Menu(
-      imagePath: "bookmark_icon.svg",
-      routeArguments: {},
-      routeName: Routes.notification,
-      title: "notificationLbl",
-    ),
-    Menu(
-      imagePath: "bookmark_icon.svg",
-      routeArguments: {},
-      routeName: Routes.coinStore,
-      title: coinStoreKey,
-    ),
-    Menu(
-      imagePath: "bookmark_icon.svg",
-      routeArguments: {},
-      routeName: Routes.coinStore,
-      title: themeKey,
-    ),
-    Menu(
-      imagePath: "howtoplay_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: howToPlayLbl,
-    ),
-    Menu(
-      imagePath: "invite_friends.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: "inviteFriendsLbl",
-    ),
-    Menu(
-      imagePath: "contactus_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: contactUs,
-    ),
-    Menu(
-      imagePath: "aboutus_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: aboutUs,
-    ),
-    Menu(
-      imagePath: "termscond_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: termsAndConditions,
-    ),
-    Menu(
-      imagePath: "rateus_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: "rateUsLbl",
-    ),
-    Menu(
-      imagePath: "privacypolicy_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: privacyPolicy,
-    ),
-    Menu(
-      imagePath: "share_app.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: "shareAppLbl",
-    ),
-    Menu(
-      imagePath: "logout_icon.svg",
-      routeArguments: {},
-      routeName: Routes.bookmark,
-      title: "logoutLbl",
-    ),
-  ];
-
-  void onMenuTap(String menuItem, BuildContext context) {
-    if (menuItem == AppLocalization.of(context)!.getTranslatedValues("logoutLbl")!) {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                content: Text(
-                  AppLocalization.of(context)!.getTranslatedValues("logoutDialogLbl")!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-
-                        context.read<AuthCubit>().signOut();
-                        Navigator.of(context).pushReplacementNamed(Routes.login);
-                      },
-                      child: Text(
-                        AppLocalization.of(context)!.getTranslatedValues("yesBtn")!,
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      )),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        AppLocalization.of(context)!.getTranslatedValues("noBtn")!,
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      )),
-                ],
-              ));
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("bookmarkLbl")!) {
-      Navigator.of(context).pushNamed(Routes.bookmark);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("notificationLbl")!) {
-      Navigator.of(context).pushNamed(Routes.notification);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("aboutUs")!) {
-      Navigator.of(context).pushNamed(Routes.appSettings, arguments: aboutUs);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("contactUs")!) {
-      Navigator.of(context).pushNamed(Routes.appSettings, arguments: contactUs);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("termsAndConditions")!) {
-      Navigator.of(context).pushNamed(Routes.appSettings, arguments: termsAndConditions);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("privacyPolicy")!) {
-      Navigator.of(context).pushNamed(Routes.appSettings, arguments: privacyPolicy);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("inviteFriendsLbl")!) {
-      Navigator.of(context).pushNamed(Routes.referAndEarn);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("shareAppLbl")!) {
-      //share app dialog
-      try {
-        if (Platform.isAndroid) {
-          Share.share(appName + " \nhttps://play.google.com/store/apps/details?id=" + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText!);
-        } else {
-          Share.share(appName + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText!);
-          context.read<SystemConfigCubit>().getSystemDetails().shareappText!;
-        }
-      } catch (e) {
-        UiUtils.setSnackbar(e.toString(), context, false);
-      }
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("rateUsLbl")!) {
-      //Rate Us pge navigate to playsore
-      LaunchReview.launch(
-        androidAppId: packageName,
-        iOSAppId: "585027354",
-      );
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues("howToPlayLbl")!) {
-      Navigator.of(context).pushNamed(Routes.appSettings, arguments: howToPlayLbl);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues(coinStoreKey)!) {
-      Navigator.of(context).pushNamed(Routes.coinStore);
-    } else if (menuItem == AppLocalization.of(context)!.getTranslatedValues(themeKey)!) {
-      showDialog(context: context, builder: (context) => ThemeDialog());
-    }
-  }
 
   void editProfileFieldBottomSheet(String fieldTitle, String fieldValue, bool isNumericKeyboardEnable, BuildContext context, UpdateUserDetailCubit updateUserDetailCubit) {
     showModalBottomSheet(
