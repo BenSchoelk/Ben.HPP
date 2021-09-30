@@ -96,8 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         var type=data['type'];
         var image = data['image'];
         String payload = "";
-        image!=null?generateImageNotication(title, body, image, payload): generateSimpleNotification(title, body, payload,type);
-
+        image!=null?generateImageNotification(title, body, image, payload,type): generateSimpleNotification(title, body, payload,type);
       }
     });
   }
@@ -107,8 +106,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
     }
   }
-   Future<void> generateImageNotication(
-      String title, String msg, String image, String type) async {
+   Future<void> generateImageNotification(
+      String title, String msg, String image, String payloads,String type) async {
     var largeIconPath = await _downloadAndSaveFile(image, 'largeIcon');
     var bigPicturePath = await _downloadAndSaveFile(image, 'bigPicture');
     var bigPictureStyleInformation = BigPictureStyleInformation(
@@ -119,14 +118,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         summaryText: msg,
         htmlFormatSummaryText: true);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'com.wrteam.flutterquiz',
-      'flutterquiz',
-      'flutterquiz',
+      'com.wrteam.flutterquiz',//channel id
+      'flutterquiz',//channel name
+      'flutterquiz',//channel description
       largeIcon: FilePathAndroidBitmap(largeIconPath),
       styleInformation: bigPictureStyleInformation,
     );
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: type);
+    await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
     if (type == 'category') {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
     }
@@ -143,9 +142,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // notification on foreground
   Future<void> generateSimpleNotification(String title, String msg, String payloads,String type) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'com.wrteam.flutterquiz',
-      'flutterquiz',
-      'flutterquiz',
+      'com.wrteam.flutterquiz',//channel id
+      'flutterquiz',//channel name
+      'flutterquiz',//channel description
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
