@@ -305,7 +305,13 @@
     "selectSubCategory" : "ذیلی زمرہ منتخب کریں۔",
     "language" : "زبان",
     "account" : "کھاتہ",
-    "aboutQuizApp" : "ایلیٹ کوئز کے بارے میں"
+    "aboutQuizApp" : "ایلیٹ کوئز کے بارے میں",
+    "updateApplication" : "There is an update available. Please update to use this app",
+    "update" : "Update",
+    "warning" : "warning",
+
+    "failedToGetAppUrl" : "Failed to get app url"
+
   
 }
    

@@ -307,7 +307,11 @@
     "selectSubCategory" : "Select Subcategory",
     "language" : "Language",
     "account" : "Account",
-    "aboutQuizApp" : "About Elite Quiz"
+    "aboutQuizApp" : "About Elite Quiz",
+    "updateApplication" : "There is an update available. Please update to use this app",
+    "update" : "Update",
+    "warning" : "warning",
+    "failedToGetAppUrl" : "Failed to get app url, Please update manually"
 
 }
 

@@ -298,3 +298,7 @@ String selectSubCategoryKey = "selectSubCategory";
 String languageKey = "language";
 String accountKey = "account";
 String aboutQuizAppKey = "aboutQuizApp";
+String updateApplicationKey = "updateApplication";
+String updateKey = "update";
+String warningKey = "warning";
+String failedToGetAppUrlKey = "failedToGetAppUrl";

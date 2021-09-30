@@ -308,5 +308,12 @@
   "language" : "भाषा",
   "account" : "लेखा",
 
-  "aboutQuizApp" : "Elite Quiz के बारे में"
+  "aboutQuizApp" : "Elite Quiz के बारे में",
+  "updateApplication" : "There is an update available. Please update to use this app",
+  "update" : "Update",
+
+  "warning" : "warning",
+
+  "failedToGetAppUrl" : "Failed to get app url"
+
 }

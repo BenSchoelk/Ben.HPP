@@ -77,5 +77,10 @@
 	<string>allow to use gallary</string>
 	<key>NSCameraUsageDescription</key>
 	<string>allow to use camera</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>https</string>
+	<string>http</string>
+	</array>
 </dict>
 </plist>

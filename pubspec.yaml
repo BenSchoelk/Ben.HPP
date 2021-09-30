@@ -71,7 +71,8 @@ dependencies:
   cupertino_will_pop_scope: ^1.1.0
   intl_phone_field: ^2.1.0
   firebase_analytics: "^7.0.1"
-
+  package_info_plus: ^1.0.6
+  url_launcher: ^6.0.12
 
 dev_dependencies:
   flutter_test:
