@@ -1,3 +1,5 @@
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,9 +18,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
-
 import 'package:flutterquiz/ui/screens/battle/widgets/roomOptionDialog.dart';
-import 'package:flutterquiz/ui/screens/home/widgets/languageBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
@@ -26,10 +26,10 @@ import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/userAchievementScreen.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/notificationHandler.dart';
 import 'package:flutterquiz/utils/quizTypes.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final bool isNewUser;
@@ -70,34 +70,56 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Animation<Offset> profileSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: profileAnimationController, curve: Curves.easeIn));
 
   late Animation<Offset> selfChallengeSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: selfChallengeAnimationController, curve: Curves.easeIn));
-  //late FirebaseMessaging messaging;
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   @override
   void initState() {
-    final pushNotificationService =  NotificationHandler(_firebaseMessaging);
-    print("/................................."+pushNotificationService.toString());
-    // initFirebaseMessaging();
-    initFirebaseMessaging();
+    setupInteractedMessage();
     super.initState();
   }
-  void initFirebaseMessaging() {
-   // messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("onMessage.........................................");
-      print(event.notification!.body!+event.notification!.title!);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+message.notification!.title!+message.notification!.body!);
-    });
+  Future<void> setupInteractedMessage() async {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+    // handle background notification
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    //handle foreground notification
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.data != null) {
+        var data = message.data;
+        print("data notification*********************************$data");
+        var title = data['title'].toString();
+        var body = data['message'].toString();
+        var type=data['type'];
+        String payload = "";
+        generateSimpleNotification(title, body, payload,type);
 
-    /*FirebaseMessaging.onBackgroundMessage((message) {
-      //new NotificationHandler().myBackgroundMessageHandler(message);
-       print("onBackgroundMessage"+message.toString()+message.notification!.title!+message.notification!.body!);
-       return Future.value(true);
+      }
     });
-*/
   }
-
+// notification type is category then move to category screen
+  Future<void> _handleMessage(RemoteMessage message) async {
+    if (message.data['type'] == 'category') {
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
+    }
+  }
+  // notification on foreground
+  Future<void> generateSimpleNotification(String title, String msg, String payloads,String type) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'com.wrteam.flutterquiz',
+      'flutterquiz',
+      'flutterquiz',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
+    // notification type is category then move to category screen
+    if (type == 'category') {
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
+    }
+  }
   @override
   void dispose() {
     bottomQuizTypeOpacityAnimationController.dispose();

@@ -106,4 +106,10 @@ class NotificationCubit extends Cubit<NotificationState> {
       return false;
     }
   }
+   notificationList() {
+    if (state is NotificationSuccess) {
+      return (state as NotificationSuccess).notificationList;
+    }
+    return [];
+  }
 }
