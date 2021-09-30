@@ -218,13 +218,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  cupertino_will_pop_scope:
-    dependency: "direct main"
-    description:
-      name: cupertino_will_pop_scope
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   dbus:
     dependency: transitive
     description:
@@ -260,34 +253,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
-  firebase:
-    dependency: transitive
-    description:
-      name: firebase
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "9.0.2"
-  firebase_analytics:
-    dependency: "direct main"
-    description:
-      name: firebase_analytics
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.1.1"
-  firebase_analytics_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_analytics_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
-  firebase_analytics_web:
-    dependency: transitive
-    description:
-      name: firebase_analytics_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0+1"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -438,20 +403,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
-  flutter_polygon:
-    dependency: "direct main"
-    description:
-      name: flutter_polygon
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
-  flutter_staggered_grid_view:
-    dependency: "direct main"
-    description:
-      name: flutter_staggered_grid_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   flutter_svg:
     dependency: "direct main"
     description:
