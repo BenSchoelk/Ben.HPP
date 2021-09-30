@@ -26,16 +26,22 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class GuessTheWordQuizScreen extends StatefulWidget {
-  GuessTheWordQuizScreen({Key? key}) : super(key: key);
+  final String type; //category or subcategory
+  final String typeId; //id of category or subcategory
+  GuessTheWordQuizScreen({Key? key, required this.type, required this.typeId}) : super(key: key);
 
   @override
   _GuessTheWordQuizScreenState createState() => _GuessTheWordQuizScreenState();
 
   static Route<dynamic> route(RouteSettings routeSettings) {
+    Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
         builder: (context) => MultiBlocProvider(
               providers: [BlocProvider<GuessTheWordQuizCubit>(create: (_) => GuessTheWordQuizCubit(QuizRepository()))],
-              child: GuessTheWordQuizScreen(),
+              child: GuessTheWordQuizScreen(
+                type: arguments['type'],
+                typeId: arguments['typeId'],
+              ),
             ));
   }
 }
@@ -75,7 +81,11 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
 
   void _getQuestions() {
     Future.delayed(Duration.zero, () {
-      context.read<GuessTheWordQuizCubit>().getQuestion(UiUtils.getCurrentQuestionLanguageId(context));
+      context.read<GuessTheWordQuizCubit>().getQuestion(
+            questionLanguageId: UiUtils.getCurrentQuestionLanguageId(context),
+            type: widget.type,
+            typeId: widget.typeId,
+          );
     });
   }
 
@@ -196,7 +206,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
       }
       if (state is GuessTheWordQuizFetchFailure) {
         return Center(
-          child: ErrorContainer(showBackButton: true,
+          child: ErrorContainer(
+              showBackButton: true,
               errorMessage: AppLocalization.of(context)?.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
               onTapRetry: () {
                 _getQuestions();
@@ -239,15 +250,19 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
       },
     );
   }
-  Widget backButton(){
+
+  Widget backButton() {
     return Align(
         alignment: Alignment.topLeft,
-        child:Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top-10),
-            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: true,)
-        )
-    );
+        child: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            child: CustomBackButton(
+              iconColor: Theme.of(context).primaryColor,
+              bgColor: Theme.of(context).backgroundColor,
+              isShowDialog: true,
+            )));
   }
+
   @override
   Widget build(BuildContext context) {
     final GuessTheWordQuizCubit guessTheWordQuizCubit = context.read<GuessTheWordQuizCubit>();
@@ -279,7 +294,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
                 child: QuizPlayAreaBackgroundContainer(heightPercentage: 0.885),
               ),
               Align(
-                alignment: Platform.isIOS?Alignment.topRight:Alignment.topCenter,
+                alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
                 child: Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
                   child: HorizontalTimerContainer(
@@ -289,7 +304,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
               ),
               _buildQuesitons(guessTheWordQuizCubit),
               _buildSubmitButton(guessTheWordQuizCubit),
-              Platform.isIOS? backButton():Container()
+              Platform.isIOS ? backButton() : Container()
             ],
           ),
         ),
