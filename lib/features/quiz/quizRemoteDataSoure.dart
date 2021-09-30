@@ -389,12 +389,13 @@ class QuizRemoteDataSource {
     }
   }
 
-  Future<dynamic> getComprehension() async {
+  Future<dynamic> getComprehension({required String languageId, required String type, required String typeId}) async {
     try {
       //body of post request
-      final body = {
-        accessValueKey: accessValue,
-      };
+      final body = {accessValueKey: accessValue, typeKey: type, typeIdKey: typeId, languageIdKey: languageId};
+      if (languageId.isEmpty) {
+        body.remove(languageIdKey);
+      }
       final response = await http.post(Uri.parse(getFunAndLearnUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {

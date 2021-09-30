@@ -154,10 +154,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.trueAndFalse) {
       Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.trueAndFalse, "numberOfPlayer": 1, "quizName": "True & False"});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
-      Navigator.of(context).pushNamed(Routes.funAndLearnTitle, arguments: {"quizType": _quizTypes[quizTypeIndex].quizTypeEnum});
-    }
-    //
-    else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
       showDialog(context: context, builder: (context) => RoomOptionDialog());
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.contest) {
       if (context.read<SystemConfigCubit>().getIsContestAvailable() == "1") {

@@ -12,15 +12,17 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class FunAndLearnTitleScreen extends StatefulWidget {
-  final QuizTypes? quizType;
+  final String type;
+  final String typeId;
 
-  const FunAndLearnTitleScreen({Key? key, this.quizType}) : super(key: key);
+  const FunAndLearnTitleScreen({Key? key, required this.type, required this.typeId}) : super(key: key);
   @override
   _FunAndLearnTitleScreen createState() => _FunAndLearnTitleScreen();
   static Route<dynamic> route(RouteSettings routeSettings) {
-    Map? arguments = routeSettings.arguments as Map?;
+    Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(
               providers: [
@@ -29,7 +31,8 @@ class FunAndLearnTitleScreen extends StatefulWidget {
                 ),
               ],
               child: FunAndLearnTitleScreen(
-                quizType: arguments!['quizType'] as QuizTypes?,
+                type: arguments['type'],
+                typeId: arguments['typeId'],
               ),
             ));
   }
@@ -38,10 +41,18 @@ class FunAndLearnTitleScreen extends StatefulWidget {
 class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      context.read<ComprehensionCubit>().getComprehension();
-    });
     super.initState();
+    getComprehension();
+  }
+
+  void getComprehension() {
+    Future.delayed(Duration.zero, () {
+      context.read<ComprehensionCubit>().getComprehension(
+            languageId: UiUtils.getCurrentQuestionLanguageId(context),
+            type: widget.type,
+            typeId: widget.typeId,
+          );
+    });
   }
 
   Widget _buildBackButton() {
@@ -50,7 +61,8 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
       child: Padding(
         padding: EdgeInsetsDirectional.only(top: 15.0, start: 20),
         child: CustomBackButton(
-          iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+          iconColor: Theme.of(context).primaryColor,
+          isShowDialog: false,
         ),
       ),
     );
@@ -78,9 +90,10 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                 return ErrorContainer(
                   errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                   onTapRetry: () {
-                    context.read<ComprehensionCubit>().getComprehension();
+                    getComprehension();
                   },
                   showErrorImage: true,
+                  errorMessageColor: Theme.of(context).primaryColor,
                 );
               }
               final questions = (state as ComprehensionSuccess).getComprehension;
@@ -91,7 +104,7 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.funAndLearn, arguments: {"detail": questions[index].detail, "id": questions[index].id, "quizType": widget.quizType});
+                        Navigator.of(context).pushNamed(Routes.funAndLearn, arguments: {"detail": questions[index].detail, "id": questions[index].id, "quizType": QuizTypes.funAndLearn});
                       },
                       child: Card(
                         margin: EdgeInsets.symmetric(

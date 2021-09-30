@@ -110,7 +110,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       child: ListTile(
                         onTap: () {
                           if (widget.quizType == QuizTypes.guessTheWord) {
-                            Navigator.of(context).pushNamed(Routes.guessTheWord, arguments: {
+                            Navigator.of(context).pushNamed(Routes.guessTheWord, arguments: {});
+                          } else if (widget.quizType == QuizTypes.funAndLearn) {
+                            Navigator.of(context).pushNamed(Routes.funAndLearnTitle, arguments: {
                               "type": "subcategory",
                               "typeId": subCategoryList[index].id,
                             });

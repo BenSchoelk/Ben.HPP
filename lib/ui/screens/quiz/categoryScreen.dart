@@ -194,6 +194,19 @@ class _CategoryScreen extends State<CategoryScreen> {
                         "quizType": widget.quizType,
                       });
                     }
+                  } else if (widget.quizType == QuizTypes.funAndLearn) {
+                    //if therse is no subcategory then get questions by category
+                    if (categoryList[index].noOf == "0") {
+                      Navigator.of(context).pushNamed(Routes.funAndLearnTitle, arguments: {
+                        "type": "category",
+                        "typeId": categoryList[index].id,
+                      });
+                    } else {
+                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                        "categoryId": categoryList[index].id,
+                        "quizType": widget.quizType,
+                      });
+                    }
                   }
                 },
                 child: Container(

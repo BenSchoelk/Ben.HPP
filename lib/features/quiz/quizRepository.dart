@@ -165,10 +165,14 @@ class QuizRepository {
     }
   }
 
-  Future getComprehension() async {
+  Future getComprehension({required String languageId, required String type, required String typeId}) async {
     try {
       List<Comprehension> comprehensionList = [];
-      List result = await _quizRemoteDataSource.getComprehension() /*as Future<dynamic>*/;
+      List result = await _quizRemoteDataSource.getComprehension(
+        languageId: languageId,
+        type: type,
+        typeId: typeId,
+      ) /*as Future<dynamic>*/;
       comprehensionList = result.map((category) => Comprehension.fromJson(Map.from(category))).toList();
       return comprehensionList;
       // await _quizRemoteDataSource.getContestLeaderboard(userId,contestId,);
