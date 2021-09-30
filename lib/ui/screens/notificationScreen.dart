@@ -68,7 +68,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     return Center(child: CircularProgressContainer(useWhiteLoader: false));
                   }
                   if (state is NotificationFailure) {
-                    return ErrorContainer(
+                    return ErrorContainer(showBackButton: false,
                       errorMessageColor: Theme.of(context).primaryColor,
                       showErrorImage: true,
                       errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)),

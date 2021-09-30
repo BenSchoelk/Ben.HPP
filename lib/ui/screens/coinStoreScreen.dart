@@ -161,7 +161,7 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
                   if (state is InAppPurchaseFailure) {
                     //
                     return Center(
-                      child: ErrorContainer(
+                      child: ErrorContainer(showBackButton: false,
                         errorMessage: AppLocalization.of(context)!.getTranslatedValues(state.errorMessage)!,
                         onTapRetry: () {
                           initPurchase();
@@ -173,7 +173,7 @@ class _CoinStoreScreenState extends State<CoinStoreScreen> with SingleTickerProv
 
                   if (state is InAppPurchaseNotAvailable) {
                     return Center(
-                      child: ErrorContainer(
+                      child: ErrorContainer(showBackButton: false,
                         errorMessage: AppLocalization.of(context)!.getTranslatedValues(inAppPurchaseUnavailableKey)!,
                         onTapRetry: () {
                           initPurchase();

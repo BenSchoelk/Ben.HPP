@@ -52,7 +52,7 @@ class _ChooseProfileDialog extends State<ChooseProfileDialog> {
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-        height: MediaQuery.of(context).size.height * .15,
+        height: MediaQuery.of(context).size.height * .2,
         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)), //this right here
         child: Container(
             decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: BorderRadius.circular(15)),
