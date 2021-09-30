@@ -18,7 +18,6 @@ import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 
 import 'package:flutterquiz/ui/screens/battle/widgets/roomOptionDialog.dart';
-import 'package:flutterquiz/ui/screens/home/widgets/languageBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
@@ -74,20 +73,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   @override
   void initState() {
-    final pushNotificationService =  NotificationHandler(_firebaseMessaging);
-    print("/................................."+pushNotificationService.toString());
+    final pushNotificationService = NotificationHandler(_firebaseMessaging);
+    print("/................................." + pushNotificationService.toString());
     // initFirebaseMessaging();
     initFirebaseMessaging();
     super.initState();
   }
+
   void initFirebaseMessaging() {
-   // messaging = FirebaseMessaging.instance;
+    // messaging = FirebaseMessaging.instance;
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("onMessage.........................................");
-      print(event.notification!.body!+event.notification!.title!);
+      print(event.notification!.body! + event.notification!.title!);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+message.notification!.title!+message.notification!.body!);
+      print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + message.notification!.title! + message.notification!.body!);
     });
 
     /*FirebaseMessaging.onBackgroundMessage((message) {
