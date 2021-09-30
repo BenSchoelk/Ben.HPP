@@ -27,9 +27,19 @@ class GuessTheWordQuizCubit extends Cubit<GuessTheWordQuizState> {
   final QuizRepository _quizRepository;
   GuessTheWordQuizCubit(this._quizRepository) : super(GuessTheWordQuizIntial());
 
-  void getQuestion(String? questionLanguageId) {
+  void getQuestion({
+    required String questionLanguageId,
+    required String type, //category or subcategory
+    required String typeId, //id of the category or subcategory
+  }) {
     emit(GuessTheWordQuizFetchInProgress());
-    _quizRepository.getGuessTheWordQuestions(questionLanguageId).then(
+    _quizRepository
+        .getGuessTheWordQuestions(
+      languageId: questionLanguageId,
+      type: type,
+      typeId: typeId,
+    )
+        .then(
       (questions) {
         emit(GuessTheWordQuizFetchSuccess(questions: questions, currentPoints: 0));
       },

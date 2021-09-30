@@ -23,10 +23,14 @@ class ComprehensionCubit extends Cubit<ComprehensionState> {
   final QuizRepository _quizRepository;
   ComprehensionCubit(this._quizRepository) : super(ComprehensionInitial());
 
-  getComprehension() async {
+  getComprehension({required String languageId, required String type, required String typeId}) async {
     emit(ComprehensionProgress());
     _quizRepository
-        .getComprehension()
+        .getComprehension(
+          languageId: languageId,
+          type: type,
+          typeId: typeId,
+        )
         .then(
           (val) => emit(ComprehensionSuccess(val)),
         )

@@ -31,6 +31,7 @@ import 'package:flutterquiz/ui/screens/quiz/selfChallengeScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/subCategoryAndLevelScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/quizScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/resultScreen.dart';
+import 'package:flutterquiz/ui/screens/quiz/subCategoryScreen.dart';
 
 import 'package:flutterquiz/ui/screens/referAndEarnScreen.dart';
 import 'package:flutterquiz/ui/screens/rewardsScreen.dart';
@@ -48,6 +49,8 @@ class Routes {
   static const selectProfile = "selectProfile";
   static const quiz = "/quiz";
   static const subcategoryAndLevel = "/subcategoryAndLevel";
+  static const subCategory = "/subCategory";
+
   static const statistics = "/statistics";
   static const referAndEarn = "/referAndEarn";
   static const notification = "/notification";
@@ -163,6 +166,10 @@ class Routes {
 
       case aboutApp:
         return CupertinoPageRoute(builder: (context) => AboutAppScreen());
+
+      case subCategory:
+        return SubCategoryScreen.route(routeSettings);
+
       default:
         return CupertinoPageRoute(builder: (context) => Scaffold());
     }

@@ -42,7 +42,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pushNamed(Routes.coinStore);
               },
               title: coinStoreKey,
-              leadingIcon: "bookmark_icon.svg",
+              leadingIcon: "coin_store.svg",
             ),
 
             context.read<SystemConfigCubit>().getLanguageMode() == "1"
@@ -64,7 +64,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 showDialog(context: context, builder: (_) => ThemeDialog());
               },
               title: themeKey,
-              leadingIcon: "language_icon.svg", //theme icon
+              leadingIcon: "theme.svg", //theme icon
             ),
 
             MenuTile(
@@ -76,7 +76,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 //
               },
               title: "notificationLbl",
-              leadingIcon: "language_icon.svg", //theme icon
+              leadingIcon: "notification.svg", //theme icon
             ),
 
             MenuTile(
@@ -87,7 +87,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pushNamed(Routes.profile);
               },
               title: accountKey,
-              leadingIcon: "language_icon.svg", //theme icon
+              leadingIcon: "account.svg", //theme icon
             ),
 
             MenuTile(
@@ -108,7 +108,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pushNamed(Routes.aboutApp);
               },
               title: aboutQuizAppKey,
-              leadingIcon: "language_icon.svg", //theme icon
+              leadingIcon: "about_us.svg", //theme icon
             ),
 
             MenuTile(
