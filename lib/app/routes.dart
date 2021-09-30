@@ -38,7 +38,6 @@ import 'package:flutterquiz/ui/screens/rewardsScreen.dart';
 import 'package:flutterquiz/ui/screens/profile/selectProfilePictureScreen.dart';
 
 import 'package:flutterquiz/ui/screens/splashScreen.dart';
-import 'package:flutterquiz/ui/screens/statisticScreen.dart';
 
 class Routes {
   static const home = "/";
@@ -51,7 +50,6 @@ class Routes {
   static const subcategoryAndLevel = "/subcategoryAndLevel";
   static const subCategory = "/subCategory";
 
-  static const statistics = "/statistics";
   static const referAndEarn = "/referAndEarn";
   static const notification = "/notification";
   static const bookmark = "/bookmark";
@@ -108,8 +106,7 @@ class Routes {
         return CoinStoreScreen.route(routeSettings);
       case rewards:
         return CupertinoPageRoute(builder: (_) => RewardsScreen());
-      case statistics:
-        return StatisticScreen.route(routeSettings);
+
       case referAndEarn:
         return CupertinoPageRoute(builder: (_) => ReferAndEarnScreen());
       case result:

@@ -189,14 +189,14 @@ class _ResultScreenState extends State<ResultScreen> {
       } else {
         _isWinner = false;
       }
-      earnBadges();
+      //earnBadges();
       earnCoinsBasedOnWinPercentage();
       updateResultDetails();
       setContestLeaderboard();
     }
     _createInterstitialAd();
   }
-
+  /*
   void earnBadges() {
     if (widget.quizType == QuizTypes.battle) {
       //
@@ -236,6 +236,7 @@ class _ResultScreenState extends State<ResultScreen> {
       }
     }
   }
+  */
 
   void _createInterstitialAd() {
     InterstitialAd.load(

@@ -5,7 +5,7 @@ final String packageName = "com.wrteam.flutterquiz";
 //Add language code in this list
 //visit this to find languageCode for your respective language
 //https://developers.google.com/admin-sdk/directory/v1/languages
-final List<String> supporatedLocales = ['en', 'hi', 'ur', 'pt-BR'];
+final List<String> supporatedLocales = ['en', 'hi', 'ur'];
 //
 final String defaultLanguageCode = 'en';
 
@@ -53,7 +53,7 @@ final String settingsThemeKey = "theme";
 
 //Add your database url
 //make sure do not add '/' at the end of url
-final String databaseUrl = 'http://flutterquiz.thewrteam.in'; // 'https://elitequiz.wrteam.in';
+final String databaseUrl = 'https://elitequiz.wrteam.in'; // 'http://flutterquiz.thewrteam.in';
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
@@ -167,7 +167,7 @@ final String videoIosId = 'ca-app-pub-3940256099942544/1712485313';
 // AdMob Id for banner show
 final String bannerAndroidId = 'ca-app-pub-3940256099942544/6300978111';
 final String bannerIosId = 'ca-app-pub-3940256099942544/2934735716';
-final String initialCountryCode="IN"; // change your initialCountry Code
+final String initialCountryCode = "IN"; // change your initialCountry Code
 
 //predefined messages for battle (1 vs 1)
 final List<String> predefinedMessages = [
