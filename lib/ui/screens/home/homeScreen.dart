@@ -1,4 +1,6 @@
 
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -29,6 +31,7 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/quizTypes.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -91,8 +94,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         var title = data['title'].toString();
         var body = data['message'].toString();
         var type=data['type'];
+        var image = data['image'];
         String payload = "";
-        generateSimpleNotification(title, body, payload,type);
+        image!=null?generateImageNotication(title, body, image, payload): generateSimpleNotification(title, body, payload,type);
 
       }
     });
@@ -102,6 +106,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (message.data['type'] == 'category') {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
     }
+  }
+   Future<void> generateImageNotication(
+      String title, String msg, String image, String type) async {
+    var largeIconPath = await _downloadAndSaveFile(image, 'largeIcon');
+    var bigPicturePath = await _downloadAndSaveFile(image, 'bigPicture');
+    var bigPictureStyleInformation = BigPictureStyleInformation(
+        FilePathAndroidBitmap(bigPicturePath),
+        hideExpandedLargeIcon: true,
+        contentTitle: title,
+        htmlFormatContentTitle: true,
+        summaryText: msg,
+        htmlFormatSummaryText: true);
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'com.wrteam.flutterquiz',
+      'flutterquiz',
+      'flutterquiz',
+      largeIcon: FilePathAndroidBitmap(largeIconPath),
+      styleInformation: bigPictureStyleInformation,
+    );
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: type);
+    if (type == 'category') {
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
+    }
+  }
+  static Future<String> _downloadAndSaveFile(
+      String url, String fileName) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/$fileName';
+    final http.Response response = await http.get(Uri.parse(url));
+    final File file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
+    return filePath;
   }
   // notification on foreground
   Future<void> generateSimpleNotification(String title, String msg, String payloads,String type) async {
