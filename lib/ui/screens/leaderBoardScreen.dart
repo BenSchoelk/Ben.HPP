@@ -495,11 +495,12 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .01, start: 10),
+                            padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .01,),
                             child: Column(children: <Widget>[
                               Text(
-                                "$index",
-                                style: TextStyle(fontSize: 18),
+                                UiUtils.formatNumber(int.parse(index.toString())),
+                              //  "$index",maxLines: 1,
+                                style: TextStyle(fontSize: 16),
                               ),
                               Icon(Icons.arrow_drop_up, color: Theme.of(context).primaryColor)
                             ]),
