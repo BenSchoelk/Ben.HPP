@@ -478,7 +478,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   //if currentUser has left the game
   Widget _buildCurrentUserLeftTheGame() {
-    //TODO: if opponent already left the game then handle this case
     return showYouLeftQuiz
         ? Container(
             color: Theme.of(context).backgroundColor.withOpacity(0.12),

@@ -108,7 +108,6 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       }
 
       if (widget.lifeLines[audiencePoll] == LifelineStatus.using) {
-        //TODO : test this more
         if (!question.attempted) {
           percentages = LifeLineOptions.getAudiencePollPercentage(question.answerOptions!, question.correctAnswerOptionId!);
         }
@@ -133,7 +132,6 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       //build answer when no lifeline is in using state
       return Column(
         children: question.answerOptions!.map((option) {
-          //TODO : add explantion
           return OptionContainer(
             submittedAnswerId: question.submittedAnswerId,
             showAnswerCorrectness: widget.showAnswerCorrectness!,

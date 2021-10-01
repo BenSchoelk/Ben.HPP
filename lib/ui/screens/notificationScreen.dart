@@ -68,7 +68,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                     return Center(child: CircularProgressContainer(useWhiteLoader: false));
                   }
                   if (state is NotificationFailure) {
-                    return ErrorContainer(showBackButton: false,
+                    return ErrorContainer(
+                      showBackButton: false,
                       errorMessageColor: Theme.of(context).primaryColor,
                       showErrorImage: true,
                       errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)),
@@ -91,9 +92,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                               ))
                             : GestureDetector(
                                 onTap: () {
-                                  notificationList[index]["type"] == "category"
-                                      ? Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone, "type": notificationList[index]["type"], "typeId": notificationList[index]["type_id"]})
-                                      : null;
+                                  if (notificationList[index]["type"] == "category") {
+                                    Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone, "type": notificationList[index]["type"], "typeId": notificationList[index]["type_id"]});
+                                  }
                                 },
                                 child: CustomListTile(
                                   trailingButtonOnTap: null,
