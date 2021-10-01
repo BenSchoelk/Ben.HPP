@@ -12,6 +12,7 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:apple_sign_in_safety/apple_sign_in.dart';
+
 class AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -84,6 +85,7 @@ class AuthRemoteDataSource {
     try {
       if (authProvider == AuthProvider.gmail) {
         UserCredential userCredential = await signInWithGoogle();
+
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
       } else if (authProvider == AuthProvider.fb) {
@@ -96,11 +98,12 @@ class AuthRemoteDataSource {
         }
       } else if (authProvider == AuthProvider.email) {
         UserCredential userCredential = await signInWithEmailAndPassword(email!, password!);
+
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
       } else if (authProvider == AuthProvider.apple) {
-        UserCredential? userCredential = await signInWithApple();
-        result['user'] = userCredential!.user!;
+        UserCredential userCredential = await signInWithApple();
+        result['user'] = _firebaseAuth.currentUser!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
       }
       return result;
@@ -133,7 +136,6 @@ class AuthRemoteDataSource {
       idToken: googleAuth.idToken,
     );
     final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
-
     return userCredential;
   }
 
@@ -147,25 +149,25 @@ class AuthRemoteDataSource {
     switch (res.status) {
       case FacebookLoginStatus.success:
 
-      // Send access token to server for validation and auth
+        // Send access token to server for validation and auth
         final FacebookAccessToken? accessToken = res.accessToken;
         AuthCredential authCredential = FacebookAuthProvider.credential(accessToken!.token);
         final UserCredential userCredential = await _firebaseAuth.signInWithCredential(authCredential);
         return userCredential;
       case FacebookLoginStatus.cancel:
-      // User cancel log in
+        // User cancel log in
         break;
 
       case FacebookLoginStatus.error:
-      // Log in failed
+        // Log in failed
 
         break;
     }
   }
-  Future<UserCredential?> signInWithApple() async {
+
+  Future<UserCredential> signInWithApple() async {
     try {
-      final AuthorizationResult appleResult =
-      await AppleSignIn.performRequests([
+      final AuthorizationResult appleResult = await AppleSignIn.performRequests([
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
 
@@ -174,22 +176,29 @@ class AuthRemoteDataSource {
         final oAuthProvider = OAuthProvider('apple.com');
         final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken!),
-          accessToken:
-          String.fromCharCodes(appleIdCredential.authorizationCode!),
+          accessToken: String.fromCharCodes(appleIdCredential.authorizationCode!),
         );
         final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          final user = userCredential.user!;
+          final String givenName = appleIdCredential.fullName!.givenName ?? "";
+
+          final String familyName = appleIdCredential.fullName!.familyName ?? "";
+          await user.updateDisplayName("$givenName $familyName");
+          await user.reload();
+        }
+
         return userCredential;
       } else if (appleResult.status == AuthorizationStatus.error) {
-        print(appleResult.error.toString());
-      } else if (appleResult.status == AuthorizationStatus.cancelled) {
-        print('Sign in aborted by user');
+        throw AuthException(errorMessageCode: defaultErrorMessageCode);
       } else {
-        print('Sign in failed');
+        throw AuthException(errorMessageCode: defaultErrorMessageCode);
       }
     } catch (error) {
-     print(error);
+      throw AuthException(errorMessageCode: defaultErrorMessageCode);
     }
   }
+
   Future<UserCredential> signInWithEmailAndPassword(String email, String password) async {
     //sign in using email
     UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
@@ -211,6 +220,7 @@ class AuthRemoteDataSource {
       return "";
     }
   }
+
   //create user account
   Future<void> signUpUser(String email, String password) async {
     try {
@@ -225,7 +235,8 @@ class AuthRemoteDataSource {
       throw AuthException(errorMessageCode: defaultErrorMessageCode);
     }
   }
-    Future<void> signOut(AuthProvider? authProvider) async {
+
+  Future<void> signOut(AuthProvider? authProvider) async {
     _firebaseAuth.signOut();
     if (authProvider == AuthProvider.gmail) {
       _googleSignIn.signOut();

@@ -109,6 +109,8 @@ class AuthRepository {
       authType = "gmail";
     } else if (provider == AuthProvider.mobile) {
       authType = "mobile";
+    } else if (provider == AuthProvider.apple) {
+      authType = "apple";
     } else {
       authType = "email";
     }
@@ -135,6 +137,8 @@ class AuthRepository {
       authProvider = AuthProvider.gmail;
     } else if (value == "mobile") {
       authProvider = AuthProvider.mobile;
+    } else if (value == "apple") {
+      authProvider = AuthProvider.apple;
     } else {
       authProvider = AuthProvider.email;
     }
