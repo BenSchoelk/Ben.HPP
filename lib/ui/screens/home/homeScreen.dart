@@ -559,7 +559,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     UiUtils.getImagePath("leaderboard_dark.svg"),
                   )),
             ),
-            Spacer(),
+            SizedBox(
+              width: 12.5,
+            ),
             Container(
               width: 45,
               height: 40,
