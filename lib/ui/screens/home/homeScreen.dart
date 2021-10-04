@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -32,7 +31,6 @@ import 'package:flutterquiz/utils/quizTypes.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:path_provider/path_provider.dart';
-
 
 class HomeScreen extends StatefulWidget {
   final bool isNewUser;
@@ -79,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     setupInteractedMessage();
     super.initState();
   }
+
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
@@ -93,45 +92,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         print("data notification*********************************$data");
         var title = data['title'].toString();
         var body = data['message'].toString();
-        var type=data['type'];
+        var type = data['type'];
         var image = data['image'];
         String payload = "";
-        image!=null?generateImageNotification(title, body, image, payload,type): generateSimpleNotification(title, body, payload,type);
+        image != null ? generateImageNotification(title, body, image, payload, type) : generateSimpleNotification(title, body, payload, type);
       }
     });
   }
+
 // notification type is category then move to category screen
   Future<void> _handleMessage(RemoteMessage message) async {
     if (message.data['type'] == 'category') {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
     }
   }
-   Future<void> generateImageNotification(
-      String title, String msg, String image, String payloads,String type) async {
+
+  Future<void> generateImageNotification(String title, String msg, String image, String payloads, String type) async {
     var largeIconPath = await _downloadAndSaveFile(image, 'largeIcon');
     var bigPicturePath = await _downloadAndSaveFile(image, 'bigPicture');
-    var bigPictureStyleInformation = BigPictureStyleInformation(
-        FilePathAndroidBitmap(bigPicturePath),
-        hideExpandedLargeIcon: true,
-        contentTitle: title,
-        htmlFormatContentTitle: true,
-        summaryText: msg,
-        htmlFormatSummaryText: true);
+    var bigPictureStyleInformation = BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath), hideExpandedLargeIcon: true, contentTitle: title, htmlFormatContentTitle: true, summaryText: msg, htmlFormatSummaryText: true);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'com.wrteam.flutterquiz',//channel id
-      'flutterquiz',//channel name
-      'flutterquiz',//channel description
+      'com.wrteam.flutterquiz', //channel id
+      'flutterquiz', //channel name
+      'flutterquiz', //channel description
       largeIcon: FilePathAndroidBitmap(largeIconPath),
       styleInformation: bigPictureStyleInformation,
     );
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
     if (type == 'category') {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
     }
   }
-  static Future<String> _downloadAndSaveFile(
-      String url, String fileName) async {
+
+  static Future<String> _downloadAndSaveFile(String url, String fileName) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
     final http.Response response = await http.get(Uri.parse(url));
@@ -139,12 +133,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     await file.writeAsBytes(response.bodyBytes);
     return filePath;
   }
+
   // notification on foreground
-  Future<void> generateSimpleNotification(String title, String msg, String payloads,String type) async {
+  Future<void> generateSimpleNotification(String title, String msg, String payloads, String type) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'com.wrteam.flutterquiz',//channel id
-      'flutterquiz',//channel name
-      'flutterquiz',//channel description
+      'com.wrteam.flutterquiz', //channel id
+      'flutterquiz', //channel name
+      'flutterquiz', //channel description
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
@@ -153,9 +148,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
     // notification type is category then move to category screen
     if (type == 'category') {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType":QuizTypes.quizZone});
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
     }
   }
+
   @override
   void dispose() {
     bottomQuizTypeOpacityAnimationController.dispose();
@@ -563,9 +559,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     UiUtils.getImagePath("leaderboard_dark.svg"),
                   )),
             ),
-            SizedBox(
-              width: 12.5,
-            ),
+            Spacer(),
             Container(
               width: 45,
               height: 40,

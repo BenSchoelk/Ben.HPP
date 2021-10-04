@@ -301,3 +301,4 @@ String aboutQuizAppKey = "aboutQuizApp";
 String chatKey = "chat";
 String messagesKey = "messages";
 String emojisKey = "emojis";
+String badgesKey = "badges";
