@@ -298,3 +298,6 @@ String selectSubCategoryKey = "selectSubCategory";
 String languageKey = "language";
 String accountKey = "account";
 String aboutQuizAppKey = "aboutQuizApp";
+String chatKey = "chat";
+String messagesKey = "messages";
+String emojisKey = "emojis";

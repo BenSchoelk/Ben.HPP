@@ -9,6 +9,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -54,9 +55,9 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues("chatLbl")!, 0),
-          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues("messageLbl")!, 1),
-          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues("emojisLbl")!, 2),
+          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(chatKey)!, 0),
+          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(messagesKey)!, 1),
+          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(emojisKey)!, 2),
         ],
       ),
     );

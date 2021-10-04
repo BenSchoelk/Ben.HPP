@@ -307,7 +307,10 @@
     "selectSubCategory" : "Select Subcategory",
     "language" : "Language",
     "account" : "Account",
-    "aboutQuizApp" : "About Elite Quiz"
+    "aboutQuizApp" : "About Elite Quiz",
+    "chat" : "Chat",
+    "messages" : "Messages",
+    "emojis" : "Emojis"
 
 }
 

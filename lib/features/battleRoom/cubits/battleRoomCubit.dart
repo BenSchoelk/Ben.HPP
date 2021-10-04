@@ -122,6 +122,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           languageId: questionLanguageId,
           roomCreater: true,
         );
+        print(questions.length);
         subscribeToBattleRoom(createdRoomDocument.id, questions);
       }
     } catch (e) {

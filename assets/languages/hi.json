@@ -308,5 +308,8 @@
   "language" : "भाषा",
   "account" : "लेखा",
 
-  "aboutQuizApp" : "Elite Quiz के बारे में"
+  "aboutQuizApp" : "Elite Quiz के बारे में",
+  "chat" : "चैट",
+    "messages" : "संदेशों",
+    "emojis" : "emojis"
 }
