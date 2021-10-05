@@ -213,7 +213,8 @@ class _GettingStartedScreenState extends State<IntroSliderScreen> with TickerPro
   }
 
   Widget _buildIntroSlider(List<String> images) {
-    return PageView.builder(physics: AlwaysScrollableScrollPhysics(),
+    return PageView.builder(
+      physics: AlwaysScrollableScrollPhysics(),
       onPageChanged: onPageChanged,
       itemBuilder: (context, index) {
         return Column(
@@ -239,6 +240,7 @@ class _GettingStartedScreenState extends State<IntroSliderScreen> with TickerPro
             ),
             Text(
               slideList[index].title,
+              textAlign: TextAlign.center,
               style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 25.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(
