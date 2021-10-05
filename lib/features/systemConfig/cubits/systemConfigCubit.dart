@@ -118,4 +118,25 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     }
     return "0";
   }
+
+  String? getIsFunNLearnAvailable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.funNLearnMode;
+    }
+    return "0";
+  }
+
+  String? getIsGuessTheWordAvailable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.guessTheWordMode;
+    }
+    return "0";
+  }
+
+  String? getIsAudioQuestionAvailable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.audioQuestionMode;
+    }
+    return "0";
+  }
 }

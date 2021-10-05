@@ -22,31 +22,38 @@ class SystemConfigModel {
   String? shareappText;
   String? battleRandomCategoryMode;
   String? battleGroupCategoryMode;
+  String? funNLearnMode;
+  String? audioQuestionMode;
+  String? guessTheWordMode;
 
-  SystemConfigModel(
-      {this.systemTimezone,
-      this.systemTimezoneGmt,
-      this.appLink,
-      this.moreApps,
-      this.iosAppLink,
-      this.iosMoreApps,
-      this.referCoin,
-      this.earnCoin,
-      this.rewardCoin,
-      this.appVersion,
-      this.trueValue,
-      this.falseValue,
-      this.answerMode,
-      this.languageMode,
-      this.optionEMode,
-      this.forceUpdate,
-      this.dailyQuizMode,
-      this.contestMode,
-      this.fixQuestion,
-      this.totalQuestion,
-      this.shareappText,
-      this.battleRandomCategoryMode,
-      this.battleGroupCategoryMode});
+  SystemConfigModel({
+    this.systemTimezone,
+    this.systemTimezoneGmt,
+    this.appLink,
+    this.moreApps,
+    this.iosAppLink,
+    this.iosMoreApps,
+    this.referCoin,
+    this.earnCoin,
+    this.rewardCoin,
+    this.appVersion,
+    this.trueValue,
+    this.falseValue,
+    this.answerMode,
+    this.languageMode,
+    this.optionEMode,
+    this.forceUpdate,
+    this.dailyQuizMode,
+    this.contestMode,
+    this.fixQuestion,
+    this.totalQuestion,
+    this.shareappText,
+    this.battleRandomCategoryMode,
+    this.battleGroupCategoryMode,
+    this.audioQuestionMode,
+    this.funNLearnMode,
+    this.guessTheWordMode,
+  });
 
   SystemConfigModel.fromJson(Map<String, dynamic> json) {
     systemTimezone = json['system_timezone'];
@@ -72,6 +79,9 @@ class SystemConfigModel {
     shareappText = json['shareapp_text'];
     battleRandomCategoryMode = json['battle_random_category_mode'];
     battleGroupCategoryMode = json['battle_group_category_mode'];
+    funNLearnMode = json['fun_n_learn_question'];
+    guessTheWordMode = json['guess_the_word_question'];
+    audioQuestionMode = json['audio_mode_question'];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +109,10 @@ class SystemConfigModel {
     data['shareapp_text'] = this.shareappText;
     data['battle_random_category_mode'] = this.battleRandomCategoryMode;
     data['battle_group_category_mode'] = this.battleGroupCategoryMode;
+    data['fun_n_learn_question'] = this.funNLearnMode;
+    data['guess_the_word_question'] = this.guessTheWordMode;
+    data['audio_mode_question'] = this.audioQuestionMode;
+
     return data;
   }
 }

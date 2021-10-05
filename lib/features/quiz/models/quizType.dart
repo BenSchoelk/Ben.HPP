@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
-enum QuizTypes { dailyQuiz, contest, groupPlay, praticeSection, battle, funAndLearn, trueAndFalse, selfChallenge, guessTheWord, quizZone, bookmarkQuiz }
+enum QuizTypes {
+  dailyQuiz,
+  contest,
+  groupPlay,
+  praticeSection,
+  battle,
+  funAndLearn,
+  trueAndFalse,
+  selfChallenge,
+  guessTheWord,
+  quizZone,
+  bookmarkQuiz,
+  mathMania,
+  audioRoom,
+}
 
 QuizTypes getQuizTypeEnumFromTitle(String? title) {
   if (title == "contest") {
@@ -22,6 +37,10 @@ QuizTypes getQuizTypeEnumFromTitle(String? title) {
     return QuizTypes.selfChallenge;
   } else if (title == "quizZone") {
     return QuizTypes.quizZone;
+  } else if (title == mathManiaKey) {
+    return QuizTypes.mathMania;
+  } else if (title == audioRoomKey) {
+    return QuizTypes.audioRoom;
   }
   return QuizTypes.praticeSection;
 }

@@ -67,9 +67,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   late Animation<Offset> selfChallengeSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: selfChallengeAnimationController, curve: Curves.easeIn));
 
-  late AnimationController firstAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  late AnimationController firstAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
   late Animation<double> firstAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: firstAnimationController, curve: Curves.easeInOut));
-  late AnimationController secondAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  late AnimationController secondAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
   late Animation<double> secondAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: secondAnimationController, curve: Curves.easeInOut));
 
   bool? dragUP;
@@ -79,7 +79,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     setupInteractedMessage();
+    setQuizMenu();
     super.initState();
+  }
+
+  void setQuizMenu() {
+    Future.delayed(Duration.zero, () {
+      final systemCubit = context.read<SystemConfigCubit>();
+      if (systemCubit.getIsContestAvailable() == "0") {
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.contest);
+      }
+      if (systemCubit.getIsDailyQuizAvailable() == "0") {
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.dailyQuiz);
+      }
+      if (systemCubit.getIsAudioQuestionAvailable() == "0") {
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.audioRoom);
+      }
+      if (systemCubit.getIsFunNLearnAvailable() == "0") {
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.funAndLearn);
+      }
+      if (systemCubit.getIsGuessTheWordAvailable() == "0") {
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.guessTheWord);
+      }
+      setState(() {});
+    });
   }
 
   Future<void> setupInteractedMessage() async {
@@ -187,38 +210,46 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     //container number will be [1,2,3,4]
     if (currentMenu == 1) {
       if (containerNumber == 1) {
-        print("Navigate to _quizTypes : ${_quizTypes[0].title}");
+        _onQuizTypeContainerTap(0);
       } else if (containerNumber == 2) {
+        _onQuizTypeContainerTap(1);
         print("Navigate to _quizTypes : ${_quizTypes[1].title}");
       } else if (containerNumber == 3) {
+        _onQuizTypeContainerTap(2);
         print("Navigate to _quizTypes : ${_quizTypes[2].title}");
       } else {
+        _onQuizTypeContainerTap(3);
         print("Navigate to _quizTypes : ${_quizTypes[3].title}");
       }
     } else if (currentMenu == 2) {
       //determine
       if (containerNumber == 1) {
-        print("Navigate to _quizTypes : ${_quizTypes[4].title}");
+        _onQuizTypeContainerTap(4);
       } else if (containerNumber == 2) {
         if (_quizTypes.length >= 6) {
+          _onQuizTypeContainerTap(5);
           print("Navigate to _quizTypes : ${_quizTypes[5].title}");
         }
       } else if (containerNumber == 3) {
         if (_quizTypes.length >= 7) {
+          _onQuizTypeContainerTap(6);
           print("Navigate to _quizTypes : ${_quizTypes[6].title}");
         }
       } else {
         if (_quizTypes.length >= 8) {
+          _onQuizTypeContainerTap(7);
           print("Navigate to _quizTypes : ${_quizTypes[7].title}");
         }
       }
     } else {
       if (containerNumber == 1) {
         if (_quizTypes.length >= 9) {
+          _onQuizTypeContainerTap(8);
           print("Navigate to _quizTypes : ${_quizTypes[8].title}");
         }
       } else if (containerNumber == 2) {
         if (_quizTypes.length >= 10) {
+          _onQuizTypeContainerTap(9);
           print("Navigate to _quizTypes : ${_quizTypes[9].title}");
         }
       }

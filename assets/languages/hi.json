@@ -312,5 +312,9 @@
   "chat" : "चैट",
     "messages" : "संदेशों",
     "emojis" : "emojis",
-    "badges" : "Badges"
+    "badges" : "Badges",
+    "mathMania" : "Math Mania",
+    "audioRoom" : "Audio Room",
+    "desAudioRoom" : "Quiz with audio",
+    "desMathMania" : "It's math quiz"
 }
