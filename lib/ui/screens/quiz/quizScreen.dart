@@ -324,7 +324,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         changeQuestion();
         //if quizType is not audio then start timer again
-        if (widget.quizType != QuizTypes.audioRoom) {
+        if (widget.quizType == QuizTypes.audioRoom) {
+          timerAnimationController.value = 0.0;
+        } else {
           timerAnimationController.forward(from: 0.0);
         }
       } else {

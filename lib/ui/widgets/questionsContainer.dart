@@ -234,6 +234,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       } else {
         if (widget.quizType == QuizTypes.audioRoom) {
           return AudioQuestionContainer(
+            hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
             constraints: constraints,
             currentQuestionIndex: widget.currentQuestionIndex,
             questions: widget.questions,
