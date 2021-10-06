@@ -306,3 +306,4 @@ String chatKey = "chat";
 String messagesKey = "messages";
 String emojisKey = "emojis";
 String badgesKey = "badges";
+String showOptionsKey = "showOptions";

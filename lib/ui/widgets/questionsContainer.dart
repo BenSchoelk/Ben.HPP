@@ -21,6 +21,8 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 class QuestionsContainer extends StatefulWidget {
   final List<GlobalKey> guessTheWordQuestionContainerKeys;
+
+  final List<GlobalKey>? audioQuestionContainerKeys;
   final QuizTypes quizType;
   final Function hasSubmittedAnswerForCurrentQuestion;
   final int currentQuestionIndex;
@@ -59,6 +61,7 @@ class QuestionsContainer extends StatefulWidget {
     required this.questions,
     required this.bookmarkButton,
     required this.lifeLines,
+    this.audioQuestionContainerKeys,
     this.showAnswerCorrectness,
     this.timerAnimationController,
     this.level,
@@ -234,6 +237,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       } else {
         if (widget.quizType == QuizTypes.audioRoom) {
           return AudioQuestionContainer(
+            key: widget.audioQuestionContainerKeys![widget.currentQuestionIndex],
             hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
             constraints: constraints,
             currentQuestionIndex: widget.currentQuestionIndex,

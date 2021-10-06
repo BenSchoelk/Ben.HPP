@@ -17,10 +17,12 @@ import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/audioQuestionContainer.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
@@ -29,6 +31,7 @@ import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -109,7 +112,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late Animation<double> questionContentAnimation;
   late AnimationController animationController;
   late AnimationController topContainerAnimationController;
-  // late List<Question> ques=[];
+  late AnimationController showOptionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  late Animation<double> showOptionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: showOptionAnimationController, curve: Curves.easeInOut));
+  late List<GlobalKey<AudioQuestionContainerState>> audioQuestionContainerKeys = [];
   int currentQuestionIndex = 0;
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
@@ -161,7 +166,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _getQuestions();
     _createInterstitialAd();
-    //bannerSize = AdmobBannerSize.BANNER;
   }
 
   void _createInterstitialAd() {
@@ -326,6 +330,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         //if quizType is not audio then start timer again
         if (widget.quizType == QuizTypes.audioRoom) {
           timerAnimationController.value = 0.0;
+          showOptionAnimationController.forward();
         } else {
           timerAnimationController.forward(from: 0.0);
         }
@@ -338,9 +343,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   //listener for current user timer
   void currentUserTimerAnimationStatusListener(AnimationStatus status) {
+    print(status.toString());
     if (status == AnimationStatus.completed) {
       print("User has left the question so submit answer as -1");
       submitAnswer("-1");
+    } else if (status == AnimationStatus.forward) {
+      if (widget.quizType == QuizTypes.audioRoom) {
+        showOptionAnimationController.reverse();
+      }
     }
   }
 
@@ -351,6 +361,46 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       return false;
     }
     return true;
+  }
+
+  Widget _buildShowOptionButton() {
+    if (widget.quizType == QuizTypes.audioRoom) {
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: SlideTransition(
+          position: showOptionAnimation.drive<Offset>(Tween<Offset>(
+            begin: Offset(0.0, 1.5),
+            end: Offset.zero,
+          )),
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height * (0.025),
+              left: MediaQuery.of(context).size.width * (0.2),
+              right: MediaQuery.of(context).size.width * (0.2),
+            ),
+            child: CustomRoundedButton(
+              widthPercentage: MediaQuery.of(context).size.width * (0.5),
+              backgroundColor: Theme.of(context).primaryColor,
+              buttonTitle: AppLocalization.of(context)!.getTranslatedValues(showOptionsKey)!,
+              radius: 5,
+              onTap: () {
+                if (!showOptionAnimationController.isAnimating) {
+                  showOptionAnimationController.reverse();
+                  audioQuestionContainerKeys[currentQuestionIndex].currentState!.changeShowOption();
+                  timerAnimationController.forward(from: 0.0);
+                }
+              },
+              titleColor: Theme.of(context).backgroundColor,
+              showBorder: false,
+              height: 40.0,
+              elevation: 5.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 
   Widget _buildBookmarkButton(QuestionsCubit questionsCubit) {
@@ -596,9 +646,16 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   if (state is QuestionsFetchSuccess) {
                     if (currentQuestionIndex == 0 && !state.questions[currentQuestionIndex].attempted) {
                       if (widget.quizType == QuizTypes.audioRoom) {
+                        state.questions.forEach((element) {
+                          audioQuestionContainerKeys.add(GlobalKey<AudioQuestionContainerState>());
+                        });
+
+                        //
+                        showOptionAnimationController.forward();
                         questionContentAnimationController.forward();
+                        //add audio question container keys
+
                       } else {
-                        //start timer
                         timerAnimationController.forward();
                         questionContentAnimationController.forward();
                       }
@@ -628,6 +685,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   return Align(
                     alignment: Alignment.topCenter,
                     child: QuestionsContainer(
+                      audioQuestionContainerKeys: audioQuestionContainerKeys,
                       quizType: widget.quizType,
                       toggleSettingDialog: toggleSettingDialog,
                       showAnswerCorrectness: true,
@@ -656,6 +714,15 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               builder: (context, state) {
                 if (state is QuestionsFetchSuccess) {
                   return _buildLifeLines();
+                }
+                return Container();
+              },
+            ),
+            BlocBuilder<QuestionsCubit, QuestionsState>(
+              bloc: quesCubit,
+              builder: (context, state) {
+                if (state is QuestionsFetchSuccess) {
+                  return _buildShowOptionButton();
                 }
                 return Container();
               },

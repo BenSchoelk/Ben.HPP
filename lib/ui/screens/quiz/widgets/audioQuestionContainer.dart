@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/ui/widgets/optionContainer.dart';
 import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
+
 import 'package:just_audio/just_audio.dart';
 
 class AudioQuestionContainer extends StatefulWidget {
@@ -25,10 +26,10 @@ class AudioQuestionContainer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AudioQuestionContainerState createState() => _AudioQuestionContainerState();
+  AudioQuestionContainerState createState() => AudioQuestionContainerState();
 }
 
-class _AudioQuestionContainerState extends State<AudioQuestionContainer> {
+class AudioQuestionContainerState extends State<AudioQuestionContainer> {
   double textSize = 14;
   late bool _showOption = false;
   late AudioPlayer _audioPlayer;
@@ -153,6 +154,13 @@ class _AudioQuestionContainerState extends State<AudioQuestionContainer> {
     super.dispose();
   }
 
+  bool get showOption => _showOption;
+
+  void changeShowOption() {
+    _showOption = true;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = widget.questions[widget.currentQuestionIndex];
@@ -191,50 +199,61 @@ class _AudioQuestionContainerState extends State<AudioQuestionContainer> {
           ),
         ),
         SizedBox(
-          height: widget.constraints.maxHeight * (0.025),
+          height: widget.constraints.maxHeight * (0.04),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        Container(
+          width: widget.constraints.maxWidth * 1.2,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).primaryColor.withOpacity(0.1)),
+          padding: EdgeInsets.symmetric(horizontal: widget.constraints.maxWidth * (0.05), vertical: 10.0),
+          child: Column(
             children: [
-              CurrentDurationContainer(audioPlayer: _audioPlayer),
-              Spacer(),
-              _buildPlayAudioContainer(),
-              Spacer(),
-              Text(
-                "${_audioDuration.inSeconds}s",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CurrentDurationContainer(audioPlayer: _audioPlayer),
+                  Spacer(),
+                  _buildPlayAudioContainer(),
+                  Spacer(),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    //decoration: BoxDecoration(border: Border.all()),
+                    width: MediaQuery.of(context).size.width * (0.1),
+                    child: Text(
+                      "${_audioDuration.inSeconds}s",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Stack(
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: BufferedDurationContainer(audioPlayer: _audioPlayer),
+                  ),
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: CurrentDurationSliderContainer(
+                        audioPlayer: _audioPlayer,
+                        duration: _audioDuration,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: widget.constraints.minHeight * (0.025),
               ),
             ],
           ),
         ),
 
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: BufferedDurationContainer(audioPlayer: _audioPlayer),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: CurrentDurationSliderContainer(
-                    audioPlayer: _audioPlayer,
-                    duration: _audioDuration,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
         SizedBox(
-          height: widget.constraints.maxHeight * (0.025),
+          height: widget.constraints.maxHeight * (0.04),
         ),
         _showOption
             ? Column(
@@ -266,7 +285,7 @@ class _AudioQuestionContainerState extends State<AudioQuestionContainer> {
                           ),
                           margin: EdgeInsets.only(top: widget.constraints.maxHeight * (0.015)),
                           height: widget.constraints.maxHeight * (0.105),
-                          width: widget.constraints.maxWidth,
+                          width: widget.constraints.maxWidth * (0.95),
                         ))
                     .toList(),
               ),
@@ -376,9 +395,12 @@ class _BufferedDurationContainerState extends State<BufferedDurationContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(2.5),
+        color: Theme.of(context).primaryColor.withOpacity(0.6),
+      ),
       width: MediaQuery.of(context).size.width * bufferedPercentage,
-      height: 4.0,
-      color: Theme.of(context).primaryColor.withOpacity(0.6),
+      height: 5.0,
     );
   }
 }
@@ -415,23 +437,29 @@ class _CurrentDurationContainerState extends State<CurrentDurationContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "${currentDuration.inSeconds}",
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.secondary,
+    return Container(
+      alignment: Alignment.centerLeft,
+      //decoration: BoxDecoration(border: Border.all()),
+      width: MediaQuery.of(context).size.width * (0.1),
+      child: Text(
+        "${currentDuration.inSeconds}",
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
       ),
     );
   }
 }
 
-class CustomTrackShape extends RectangularSliderTrackShape {
+class CustomTrackShape extends RoundedRectSliderTrackShape {
   Rect getPreferredRect({
     required RenderBox parentBox,
     Offset offset = Offset.zero,
     required SliderThemeData sliderTheme,
     bool isEnabled = false,
     bool isDiscrete = false,
+    double additionalActiveTrackHeight = 0,
   }) {
     return Offset(offset.dx, offset.dy) & Size(parentBox.size.width, sliderTheme.trackHeight!);
-  }
+  } //
 }
