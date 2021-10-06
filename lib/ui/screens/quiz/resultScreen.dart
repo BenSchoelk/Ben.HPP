@@ -287,7 +287,12 @@ class _ResultScreenState extends State<ResultScreen> {
   void updateResultDetails() {
     Future.delayed(Duration.zero, () {
       //we need to update score and coins only for some type of quiz
-      if (widget.quizType == QuizTypes.quizZone || widget.quizType == QuizTypes.dailyQuiz || widget.quizType == QuizTypes.guessTheWord || widget.quizType == QuizTypes.trueAndFalse || widget.quizType == QuizTypes.funAndLearn) {
+      if (widget.quizType == QuizTypes.quizZone ||
+          widget.quizType == QuizTypes.dailyQuiz ||
+          widget.quizType == QuizTypes.guessTheWord ||
+          widget.quizType == QuizTypes.trueAndFalse ||
+          widget.quizType == QuizTypes.funAndLearn ||
+          widget.quizType == QuizTypes.audioRoom) {
         /*
         //update statistic for given user
         context.read<UpdateStatisticCubit>().updateStatistic(
@@ -921,6 +926,7 @@ class _ResultScreenState extends State<ResultScreen> {
         return Container();
       }
       return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
+        //
         Navigator.of(context).pushReplacementNamed(Routes.guessTheWord);
       }, context);
     } else if (widget.quizType == QuizTypes.funAndLearn) {
