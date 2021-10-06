@@ -4,6 +4,7 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,8 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class JoinRoomDialog extends StatelessWidget {
-  JoinRoomDialog({Key? key}) : super(key: key);
+  final QuizTypes quizType;
+  JoinRoomDialog({Key? key, required this.quizType}) : super(key: key);
 
   final TextEditingController _textEditingController = TextEditingController();
 
@@ -54,7 +56,7 @@ class JoinRoomDialog extends StatelessWidget {
             listener: (context, state) {
               if (state is MultiUserBattleRoomSuccess) {
                 Navigator.of(context).pop();
-                showDialog(context: context, builder: (context) => WaitingForPlayesDialog());
+                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType:quizType==QuizTypes.battle?QuizTypes.battle:QuizTypes.groupPlay,));
               } else if (state is MultiUserBattleRoomFailure) {
                 UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
               }

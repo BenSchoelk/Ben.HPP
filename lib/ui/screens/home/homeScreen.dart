@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -270,13 +271,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(Routes.selfChallenge);
     } //
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
-      UiUtils.navigateToOneVSOneBattleScreen(context);
+      showDialog(context: context, builder: (context) => RandomOrOlayFrdDialog());
+      //UiUtils.navigateToOneVSOneBattleScreen(context);
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.trueAndFalse) {
       Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.trueAndFalse, "numberOfPlayer": 1, "quizName": "True & False"});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
-      showDialog(context: context, builder: (context) => RoomOptionDialog());
+      showDialog(context: context, builder: (context) => RoomOptionDialog(quizType:QuizTypes.groupPlay,));
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.contest) {
       if (context.read<SystemConfigCubit>().getIsContestAvailable() == "1") {
         Navigator.of(context).pushNamed(Routes.contest);

@@ -4,6 +4,7 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 
 import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/waitingForPlayersDialog.dart';
@@ -15,7 +16,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateRoomDialog extends StatefulWidget {
   final String categoryId;
-  CreateRoomDialog({Key? key, required this.categoryId}) : super(key: key);
+  final QuizTypes quizType;
+  final String ?battleLbl;
+  CreateRoomDialog({Key? key, required this.categoryId, required this.quizType, this.battleLbl}) : super(key: key);
 
   @override
   _CreateRoomDialogState createState() => _CreateRoomDialogState();
@@ -134,7 +137,7 @@ class _CreateRoomDialogState extends State<CreateRoomDialog> {
               if (state is MultiUserBattleRoomSuccess) {
                 //wait for others
                 Navigator.of(context).pop();
-                showDialog(context: context, builder: (context) => WaitingForPlayesDialog());
+                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType: widget.quizType==QuizTypes.battle?QuizTypes.battle:QuizTypes.groupPlay,battleLbl: widget.quizType==QuizTypes.battle?widget.battleLbl:"",));
               } else if (state is MultiUserBattleRoomFailure) {
                 UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
               }

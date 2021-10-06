@@ -20,10 +20,11 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 class CategoryScreen extends StatefulWidget {
   final QuizTypes? quizType;
+  final String ?battleLabel;
   final String? type;
   final String? typeId;
 
-  CategoryScreen({this.quizType, this.type, this.typeId});
+  CategoryScreen({this.quizType, this.type, this.typeId, this.battleLabel});
 
   @override
   _CategoryScreen createState() => _CategoryScreen();
@@ -36,6 +37,7 @@ class CategoryScreen extends StatefulWidget {
                 quizType: arguments['quizType'] as QuizTypes,
                 type: arguments['type'],
                 typeId: arguments['typeId'],
+                battleLabel: arguments["battleLabel"],
               ),
             ));
   }
@@ -45,6 +47,7 @@ class _CategoryScreen extends State<CategoryScreen> {
   final ScrollController scrollController = ScrollController();
   @override
   void initState() {
+    print("..........................................${widget.battleLabel}");
     context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), widget.type == "category" ? widget.typeId! : "");
     super.initState();
   }
@@ -122,28 +125,40 @@ class _CategoryScreen extends State<CategoryScreen> {
               return GestureDetector(
                 onTap: () {
                   if (widget.quizType == QuizTypes.battle) {
+                    if(widget.battleLabel=="playFrd"){
+                      print("///////////////////////////////////////////////${widget.battleLabel}");
+                        showDialog(
+                        context: context,
+                        builder: (_) {
+                        return CreateRoomDialog(
+                        categoryId: categoryList[index].id!,quizType:QuizTypes.battle,battleLbl:widget.battleLabel,
+                        );
+                        });
+                    }
+                    else{
+                      print("in else......................................");
                     //reset state of battle room to initial
                     context.read<BattleRoomCubit>().emit(BattleRoomInitial());
                     Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: categoryList[index].id).then((value) {
-                      //need to delete room if user exit the process in between of finding opponent
-                      //or instantly press exit button
+                    //need to delete room if user exit the process in between of finding opponent
+                    //or instantly press exit button
 
-                      Future.delayed(Duration(milliseconds: 3000)).then((value) {
-                        //In battleRoomFindOpponent screen
-                        //we are calling pushReplacement method so it will trigger this
-                        //callback so we need to check if state is not battleUserFound then
-                        //and then we need to call deleteBattleRoom
+                    Future.delayed(Duration(milliseconds: 3000)).then((value) {
+                    //In battleRoomFindOpponent screen
+                    //we are calling pushReplacement method so it will trigger this
+                    //callback so we need to check if state is not battleUserFound then
+                    //and then we need to call deleteBattleRoom
 
-                        //when user press the backbutton and choose to exit the game and
-                        //process of creating room(in firebase) is still running
-                        //then state of battleRoomCubit will not be battleRoomUserFound
-                        //deleteRoom call execute
-                        if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-                          context.read<BattleRoomCubit>().deleteBattleRoom();
-                        }
-                      });
+                    //when user press the backbutton and choose to exit the game and
+                    //process of creating room(in firebase) is still running
+                    //then state of battleRoomCubit will not be battleRoomUserFound
+                    //deleteRoom call execute
+                    if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
+                    context.read<BattleRoomCubit>().deleteBattleRoom();
+                    }
                     });
-                  } else if (widget.quizType == QuizTypes.quizZone) {
+                    } );
+                  }} else if (widget.quizType == QuizTypes.quizZone) {
                     //noOf means how many subcategory it has
                     //if subcategory is 0 then check for level
 
@@ -178,7 +193,7 @@ class _CategoryScreen extends State<CategoryScreen> {
                         context: context,
                         builder: (_) {
                           return CreateRoomDialog(
-                            categoryId: categoryList[index].id!,
+                            categoryId: categoryList[index].id!,quizType:  QuizTypes.groupPlay,
                           );
                         });
                   } else if (widget.quizType == QuizTypes.guessTheWord) {

@@ -157,7 +157,11 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       emit(BattleRoomDeleted());
     }
   }
-
+  void startGame() {
+    if (state is BattleRoomCreated) {
+      _battleRoomRepository.startMultiUserQuiz((state as BattleRoomCreated).battleRoom.roomId);
+    }
+  }
   //submit anser
   void submitAnswer(String? currentUserId, String? submittedAnswer, bool isCorrectAnswer, int points) {
     if (state is BattleRoomUserFound) {
@@ -225,6 +229,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
 
   String getRoomId() {
     if (state is BattleRoomUserFound) {
+      print((state as BattleRoomUserFound).battleRoom.roomId!);
       return (state as BattleRoomUserFound).battleRoom.roomId!;
     }
     return "";
@@ -233,8 +238,10 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   UserBattleRoomDetails getCurrentUserDetails(String currentUserId) {
     if (state is BattleRoomUserFound) {
       if (currentUserId == (state as BattleRoomUserFound).battleRoom.user1?.uid) {
+        print((state as BattleRoomUserFound).battleRoom.user1!);
         return (state as BattleRoomUserFound).battleRoom.user1!;
       } else {
+        print((state as BattleRoomUserFound).battleRoom.user2!);
         return (state as BattleRoomUserFound).battleRoom.user2!;
       }
     }
@@ -244,6 +251,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   UserBattleRoomDetails getOpponentUserDetails(String currentUserId) {
     if (state is BattleRoomUserFound) {
       if (currentUserId == (state as BattleRoomUserFound).battleRoom.user1?.uid) {
+        print((state as BattleRoomUserFound).battleRoom.user2!);
         return (state as BattleRoomUserFound).battleRoom.user2!;
       } else {
         return (state as BattleRoomUserFound).battleRoom.user1!;

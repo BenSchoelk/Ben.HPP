@@ -316,5 +316,7 @@
     "mathMania" : "Math Mania",
     "audioRoom" : "Audio Room",
     "desAudioRoom" : "Quiz with audio",
-    "desMathMania" : "It's math quiz"
+    "desMathMania" : "It's math quiz",
+    "randomLbl": "Random",
+    "playWithFrdLbl": "Play With Friends"
 }

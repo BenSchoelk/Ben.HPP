@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +19,6 @@ import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
 import 'package:flutterquiz/ui/widgets/userDetailsWithTimerContainer.dart';
@@ -28,14 +26,18 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BattleRoomQuizScreen extends StatefulWidget {
-  BattleRoomQuizScreen({Key? key}) : super(key: key);
+  final String ?battleLbl;
+  BattleRoomQuizScreen({Key? key, this.battleLbl}) : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
+    Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(providers: [
               BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
               BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
-            ], child: BattleRoomQuizScreen()));
+            ], child: BattleRoomQuizScreen(
+          battleLbl: arguments['battleLbl'],
+        )));
   }
 
   @override
@@ -389,7 +391,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
           bloc: battleRoomCubit,
           builder: (context, state) {
             if (state is BattleRoomUserFound) {
-              UserBattleRoomDetails curretUserDetails = battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
+              UserBattleRoomDetails curretUserDetails =battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
               //it contains correct answer by respective user and user name
               return UserDetailsWithTimerContainer(
                 points: curretUserDetails.points.toString(),

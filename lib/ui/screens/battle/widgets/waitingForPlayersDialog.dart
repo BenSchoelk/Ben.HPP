@@ -6,6 +6,7 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/utils/constants.dart';
@@ -15,7 +16,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
 class WaitingForPlayesDialog extends StatefulWidget {
-  WaitingForPlayesDialog({Key? key}) : super(key: key);
+  final QuizTypes quizType;
+  final String ?battleLbl;
+  WaitingForPlayesDialog({Key? key, required this.quizType, this.battleLbl}) : super(key: key);
 
   @override
   State<WaitingForPlayesDialog> createState() => _WaitingForPlayesDialogState();
@@ -291,7 +294,14 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                     bloc: context.read<MultiUserBattleRoomCubit>(),
                     builder: (context, state) {
                       if (state is MultiUserBattleRoomSuccess) {
-                        return Row(
+                        return widget.quizType==QuizTypes.battle?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
+                             ],
+                        ):
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
@@ -321,9 +331,9 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                             UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
                           } else {
                             //start quiz
-                            context.read<MultiUserBattleRoomCubit>().startGame();
+                        /*    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().startGame():*/ context.read<MultiUserBattleRoomCubit>().startGame();
                             //navigate to quiz screen
-                            Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
+                            widget.quizType==QuizTypes.battle?Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments: {"battleLbl":widget.battleLbl}):Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
                           }
                         },
                         child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),

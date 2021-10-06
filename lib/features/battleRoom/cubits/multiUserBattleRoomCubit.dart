@@ -252,7 +252,6 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
     final users = getUsers();
     return users[users.indexWhere((element) => element!.uid == userId)];
   }
-
   List<UserBattleRoomDetails?> getOpponentUsers(String userId) {
     final users = getUsers();
     users.removeWhere((element) => element!.uid == userId);
