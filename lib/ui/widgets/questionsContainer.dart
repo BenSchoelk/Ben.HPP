@@ -6,8 +6,10 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/quiz/models/answerOption.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/ui/screens/quiz/quizScreen.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/audioQuestionContainer.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/optionContainer.dart';
@@ -19,6 +21,7 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 class QuestionsContainer extends StatefulWidget {
   final List<GlobalKey> guessTheWordQuestionContainerKeys;
+  final QuizTypes quizType;
   final Function hasSubmittedAnswerForCurrentQuestion;
   final int currentQuestionIndex;
   final Function submitAnswer;
@@ -36,10 +39,12 @@ class QuestionsContainer extends StatefulWidget {
   final Map<String, LifelineStatus> lifeLines;
   final bool? showAnswerCorrectness;
   final Function toggleSettingDialog;
+  final AnimationController? timerAnimationController;
 
   const QuestionsContainer({
     Key? key,
     required this.submitAnswer,
+    required this.quizType,
     required this.toggleSettingDialog,
     required this.guessTheWordQuestionContainerKeys,
     required this.hasSubmittedAnswerForCurrentQuestion,
@@ -55,6 +60,7 @@ class QuestionsContainer extends StatefulWidget {
     required this.bookmarkButton,
     required this.lifeLines,
     this.showAnswerCorrectness,
+    this.timerAnimationController,
     this.level,
     this.topPadding,
   }) : super(key: key);
@@ -226,6 +232,15 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
           questions: widget.guessTheWordQuestions,
         );
       } else {
+        if (widget.quizType == QuizTypes.audioRoom) {
+          return AudioQuestionContainer(
+            constraints: constraints,
+            currentQuestionIndex: widget.currentQuestionIndex,
+            questions: widget.questions,
+            submitAnswer: widget.submitAnswer,
+            timerAnimationController: widget.timerAnimationController!,
+          );
+        }
         Question question = widget.questions[index];
         return SingleChildScrollView(
           child: Column(

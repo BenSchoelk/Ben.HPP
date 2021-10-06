@@ -14,6 +14,8 @@ class Question {
   final String? questionType; //multiple option if type is 1, binary options type 2
   final List<AnswerOption>? answerOptions;
   final bool attempted;
+  final String? audio;
+  final String? audioType;
 
   Question({
     this.questionType,
@@ -27,6 +29,8 @@ class Question {
     this.categoryId,
     this.imageUrl,
     this.subcategoryId,
+    this.audio,
+    this.audioType,
     this.attempted = false,
     this.submittedAnswerId = "",
   });
@@ -79,12 +83,16 @@ class Question {
         question: questionJson['question'],
         note: questionJson['note'] ?? "",
         questionType: questionJson['question_type'] ?? "",
+        audio: questionJson['audio'] ?? "",
+        audioType: questionJson['audio_type'] ?? "",
         answerOptions: options);
   }
 
   Question updateQuestionWithAnswer({required String submittedAnswerId}) {
     return Question(
         submittedAnswerId: submittedAnswerId,
+        audio: this.audio,
+        audioType: this.audioType,
         answerOptions: this.answerOptions,
         attempted: submittedAnswerId.isEmpty ? false : true,
         categoryId: this.categoryId,
@@ -103,6 +111,8 @@ class Question {
     return Question(
         submittedAnswerId: submittedAnswer ?? this.submittedAnswerId,
         answerOptions: this.answerOptions,
+        audio: this.audio,
+        audioType: this.audioType,
         attempted: attempted ?? this.attempted,
         categoryId: this.categoryId,
         correctAnswerOptionId: this.correctAnswerOptionId,

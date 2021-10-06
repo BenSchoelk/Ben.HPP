@@ -619,6 +619,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
               Align(
                 alignment: Alignment.topCenter,
                 child: QuestionsContainer(
+                  quizType: QuizTypes.battle,
                   toggleSettingDialog: toggleSettingDialog,
                   showAnswerCorrectness: true,
                   lifeLines: {},

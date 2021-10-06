@@ -205,6 +205,31 @@ class QuizRemoteDataSource {
     }
   }
 
+  Future<List> getAudioQuestions({required String type, required String id}) async {
+    try {
+      Map<String, String> body = {
+        accessValueKey: accessValue,
+        typeKey: type,
+        typeIdKey: id,
+      };
+
+      final response = await http.post(Uri.parse(getAudioQuestionUrl), body: body, headers: ApiUtils.getHeaders());
+
+      final responseJson = jsonDecode(response.body);
+
+      if (responseJson['error']) {
+        throw QuizException(errorMessageCode: responseJson['message']);
+      }
+      return responseJson['data'];
+    } on SocketException catch (_) {
+      throw QuizException(errorMessageCode: noInternetCode);
+    } on QuizException catch (e) {
+      throw QuizException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw QuizException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
+
   Future<dynamic> getCategory(String languageId, String id) async {
     try {
       //body of post request

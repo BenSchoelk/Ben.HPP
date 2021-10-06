@@ -24,7 +24,7 @@ class QuestionsFetchFailure extends QuestionsState {
 class QuestionsFetchSuccess extends QuestionsState {
   final List<Question> questions;
   final int currentPoints;
-  final QuizTypes? quizType;
+  final QuizTypes quizType;
 
   QuestionsFetchSuccess({required this.questions, required this.currentPoints, required this.quizType});
 }
@@ -39,7 +39,7 @@ class QuestionsCubit extends Cubit<QuestionsState> {
       String? categoryId, //will be in use for quizZone and self-challenge (quizType)
       String? subcategoryId, //will be in use for quizZone and self-challenge (quizType)
       String? numberOfQuestions, //will be in use forself-challenge (quizType),
-      String? level, ////will be in use for quizZone (quizType)
+      String? level, //will be in use for quizZone (quizType)
       String? contestId,
       String? funAndLearnId}) {
     emit(QuestionsFetchInProgress(quizType));

@@ -143,6 +143,23 @@ class _CategoryScreen extends State<CategoryScreen> {
                         }
                       });
                     });
+                  } else if (widget.quizType == QuizTypes.audioRoom) {
+                    //noOf means how many subcategory it has
+
+                    if (categoryList[index].noOf == "0") {
+                      //
+                      Navigator.of(context).pushNamed(Routes.quiz, arguments: {
+                        "numberOfPlayer": 1,
+                        "quizType": QuizTypes.audioRoom,
+                        "categoryId": categoryList[index].id,
+                      });
+                    } else {
+                      //
+                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                        "categoryId": categoryList[index].id,
+                        "quizType": widget.quizType,
+                      });
+                    }
                   } else if (widget.quizType == QuizTypes.quizZone) {
                     //noOf means how many subcategory it has
                     //if subcategory is 0 then check for level

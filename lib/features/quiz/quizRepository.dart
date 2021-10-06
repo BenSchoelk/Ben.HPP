@@ -67,15 +67,17 @@ class QuizRepository {
     }
   }
 
-  Future<List<Question>> getQuestions(QuizTypes? quizType,
-      {String? userId, //will be in use for dailyQuiz
-      String? languageId, // will be in use for dailyQuiz and self-challenge (quizType)
-      String? categoryId, //will be in use for quizZone and self-challenge (quizType)
-      String? subcategoryId, //will be in use for quizZone and self-challenge (quizType)
-      String? numberOfQuestions, //will be in use forself-challenge (quizType),
-      String? level, ////will be in use for quizZone (quizType)
-      String? contestId, //will use to get contest id vise question
-      String? funAndLearnId}) async {
+  Future<List<Question>> getQuestions(
+    QuizTypes? quizType, {
+    String? userId, //will be in use for dailyQuiz
+    String? languageId, // will be in use for dailyQuiz and self-challenge (quizType)
+    String? categoryId, //will be in use for quizZone and self-challenge (quizType)
+    String? subcategoryId, //will be in use for quizZone and self-challenge (quizType)
+    String? numberOfQuestions, //will be in use forself-challenge (quizType),
+    String? level, ////will be in use for quizZone (quizType)
+    String? contestId, //will use to get contest id vise question
+    String? funAndLearnId,
+  }) async {
     try {
       List<Question> questions = [];
       List? result;
@@ -110,6 +112,11 @@ class QuizRepository {
       } else if (quizType == QuizTypes.funAndLearn) {
         result = await (_quizRemoteDataSource.getComprehensionQuestion(funAndLearnId) /*as Future<List<dynamic>?>*/);
         questions = result!.map((question) => Question.fromJson(Map.from(question))).toList();
+      } else if (quizType == QuizTypes.audioRoom) {
+        String type = categoryId!.isNotEmpty ? "category" : "subcategory";
+        String id = type == "category" ? categoryId : subcategoryId!;
+        result = await _quizRemoteDataSource.getAudioQuestions(type: type, id: id);
+        questions = result.map((question) => Question.fromJson(Map.from(question))).toList();
       }
 
       return questions;

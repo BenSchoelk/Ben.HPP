@@ -184,6 +184,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
         return Align(
           alignment: Alignment.topCenter,
           child: QuestionsContainer(
+            quizType: QuizTypes.guessTheWord,
             toggleSettingDialog: toggleSettingDialog,
             showAnswerCorrectness: true,
             lifeLines: {},

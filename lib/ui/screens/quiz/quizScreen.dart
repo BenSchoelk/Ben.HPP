@@ -45,6 +45,7 @@ class QuizScreen extends StatefulWidget {
   final String contestId;
   final String comprehensionId; // will be in use for quizZone quizType (to pass in result screen)
   final String quizName;
+
   QuizScreen(
       {Key? key,
       required this.numberOfPlayer,
@@ -322,7 +323,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       if (currentQuestionIndex != (context.read<QuestionsCubit>().questions().length - 1)) {
         updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         changeQuestion();
-        timerAnimationController.forward(from: 0.0);
+        //if quizType is not audio then start timer again
+        if (widget.quizType != QuizTypes.audioRoom) {
+          timerAnimationController.forward(from: 0.0);
+        }
       } else {
         updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         navigateToResultScreen();
@@ -589,9 +593,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 listener: (context, state) {
                   if (state is QuestionsFetchSuccess) {
                     if (currentQuestionIndex == 0 && !state.questions[currentQuestionIndex].attempted) {
-                      //start timer
-                      timerAnimationController.forward();
-                      questionContentAnimationController.forward();
+                      if (widget.quizType == QuizTypes.audioRoom) {
+                        questionContentAnimationController.forward();
+                      } else {
+                        //start timer
+                        timerAnimationController.forward();
+                        questionContentAnimationController.forward();
+                      }
                     }
                   }
                 },
@@ -618,9 +626,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   return Align(
                     alignment: Alignment.topCenter,
                     child: QuestionsContainer(
+                      quizType: widget.quizType,
                       toggleSettingDialog: toggleSettingDialog,
                       showAnswerCorrectness: true,
                       lifeLines: getLifeLines(),
+                      timerAnimationController: widget.quizType == QuizTypes.audioRoom ? timerAnimationController : null,
                       bookmarkButton: _buildBookmarkButton(quesCubit),
                       topPadding: 30.0,
                       hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,

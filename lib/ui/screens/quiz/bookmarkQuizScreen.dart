@@ -161,15 +161,19 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
     questionContentAnimationController.dispose();
     super.dispose();
   }
-  Widget backButton(){
+
+  Widget backButton() {
     return Align(
         alignment: Alignment.topLeft,
-        child:Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top-10),
-            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: true,)
-        )
-    );
+        child: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            child: CustomBackButton(
+              iconColor: Theme.of(context).primaryColor,
+              bgColor: Theme.of(context).backgroundColor,
+              isShowDialog: true,
+            )));
   }
+
   @override
   Widget build(BuildContext context) {
     final quesCubit = context.read<QuestionsCubit>();
@@ -189,7 +193,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
               completedQuiz
                   ? Container()
                   : Align(
-                      alignment: Platform.isIOS?Alignment.topRight:Alignment.topCenter,
+                      alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
                       child: Padding(
                         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
                         child: HorizontalTimerContainer(
@@ -207,7 +211,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                            AppLocalization.of(context)!.getTranslatedValues("completeAllQueLbl")!+" (:",
+                              AppLocalization.of(context)!.getTranslatedValues("completeAllQueLbl")! + " (:",
                               style: TextStyle(
                                 color: Theme.of(context).backgroundColor,
                                 fontSize: 18.0,
@@ -247,7 +251,8 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
                           }
                           if (state is QuestionsFetchFailure) {
                             return Center(
-                              child: ErrorContainer(showBackButton: true,
+                              child: ErrorContainer(
+                                showBackButton: true,
                                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                                 onTapRetry: () {
                                   _getQuestions();
@@ -261,6 +266,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
                           return Align(
                               alignment: Alignment.topCenter,
                               child: QuestionsContainer(
+                                quizType: QuizTypes.bookmarkQuiz,
                                 toggleSettingDialog: toggleSettingDialog,
                                 topPadding: 30.0,
                                 showAnswerCorrectness: true,
@@ -281,7 +287,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
                               ));
                         }),
               ),
-              Platform.isIOS?backButton():Container(),
+              Platform.isIOS ? backButton() : Container(),
             ],
           ),
         ));

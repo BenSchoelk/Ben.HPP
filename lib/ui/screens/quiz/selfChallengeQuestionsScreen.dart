@@ -387,15 +387,19 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
       },
     );
   }
-  Widget backButton(){
+
+  Widget backButton() {
     return Align(
         alignment: Alignment.topLeft,
-        child:Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top-10),
-            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: true,)
-        )
-    );
+        child: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            child: CustomBackButton(
+              iconColor: Theme.of(context).primaryColor,
+              bgColor: Theme.of(context).backgroundColor,
+              isShowDialog: true,
+            )));
   }
+
   @override
   Widget build(BuildContext context) {
     final quesCubit = context.read<QuestionsCubit>();
@@ -415,7 +419,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
               ),
             ),
             Align(
-              alignment:Platform.isIOS?Alignment.topRight:Alignment.topCenter,
+              alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
               child: Padding(
                 padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
                 child: HorizontalTimerContainer(
@@ -442,7 +446,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                   }
                   if (state is QuestionsFetchFailure) {
                     return Center(
-                      child: ErrorContainer(showBackButton: true,
+                      child: ErrorContainer(
+                        showBackButton: true,
                         errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                         onTapRetry: () {
                           _getQuestions();
@@ -456,6 +461,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                   return Align(
                       alignment: Alignment.topCenter,
                       child: QuestionsContainer(
+                        quizType: QuizTypes.selfChallenge,
                         toggleSettingDialog: toggleSettingDialog,
                         showAnswerCorrectness: false,
                         lifeLines: {},
@@ -488,7 +494,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                 return Container();
               },
             ),
-            Platform.isIOS?backButton():Container()
+            Platform.isIOS ? backButton() : Container()
           ],
         ),
       ),

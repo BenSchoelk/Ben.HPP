@@ -118,6 +118,7 @@ final String getAppSettingsUrl = "${baseUrl}get_settings";
 final String reportQuestionUrl = "${baseUrl}report_question";
 final String getQuestionsByCategoryOrSubcategory = "${baseUrl}get_questions";
 final String updateFcmId = "${baseUrl}update_fcm_id";
+final String getAudioQuestionUrl = "${baseUrl}get_audio_questions";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;

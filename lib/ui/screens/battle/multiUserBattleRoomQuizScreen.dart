@@ -15,6 +15,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 
 import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/waitForOthersContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
@@ -496,6 +497,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                             key: Key("waitForOthers"),
                           )
                         : QuestionsContainer(
+                            quizType: QuizTypes.groupPlay,
                             toggleSettingDialog: toggleSettingDialog,
                             showAnswerCorrectness: true,
                             lifeLines: {},
