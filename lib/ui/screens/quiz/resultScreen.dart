@@ -921,13 +921,29 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget _buildPlayAgainButton() {
     if (widget.quizType == QuizTypes.selfChallenge) {
       return Container();
+    } else if (widget.quizType == QuizTypes.audioRoom) {
+      if (_isWinner) {
+        return Container();
+      }
+
+      return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
+        Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
+          "numberOfPlayer": 1,
+          "quizType": QuizTypes.audioRoom,
+          "subcategoryId": widget.questions!.first.subcategoryId == "0" ? "" : widget.questions!.first.subcategoryId,
+          "categoryId": widget.questions!.first.subcategoryId == "0" ? widget.questions!.first.categoryId : "",
+        });
+      }, context);
     } else if (widget.quizType == QuizTypes.guessTheWord) {
       if (_isWinner) {
         return Container();
       }
+
       return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
-        //
-        Navigator.of(context).pushReplacementNamed(Routes.guessTheWord);
+        Navigator.of(context).pushReplacementNamed(Routes.guessTheWord, arguments: {
+          "type": widget.guessTheWordQuestions!.first.subcategory == "0" ? "category" : "subcategory",
+          "typeId": widget.guessTheWordQuestions!.first.subcategory == "0" ? widget.guessTheWordQuestions!.first.category : widget.guessTheWordQuestions!.first.subcategory,
+        });
       }, context);
     } else if (widget.quizType == QuizTypes.funAndLearn) {
       return Container();
@@ -1038,6 +1054,7 @@ class _ResultScreenState extends State<ResultScreen> {
         ],
       );
     }
+    //
 
     return Column(
       children: [

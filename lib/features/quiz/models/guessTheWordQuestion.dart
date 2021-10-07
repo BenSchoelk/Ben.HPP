@@ -13,6 +13,9 @@ class GuessTheWordQuestion {
   late String image;
   late String question;
   late String answer;
+  late String subcategory;
+
+  late String category;
 
   //it store option letter index
   late List<String> submittedAnswer;
@@ -28,6 +31,8 @@ class GuessTheWordQuestion {
     required this.submittedAnswer,
     required this.options,
     required this.hasAnswered,
+    required this.subcategory,
+    required this.category,
   });
 
   GuessTheWordQuestion.fromJson(Map<String, dynamic> json) {
@@ -46,6 +51,8 @@ class GuessTheWordQuestion {
     languageId = json['language_id'];
     image = json['image'];
     question = json['question'];
+    subcategory = json['subcategory'];
+    category = json['category'];
     answer = correctAnswer;
     submittedAnswer = submittedAns;
     options = initialOptions;
@@ -54,6 +61,8 @@ class GuessTheWordQuestion {
 
   GuessTheWordQuestion copyWith({List<String>? updatedAnswer, bool? hasAnswerGiven}) {
     return GuessTheWordQuestion(
+      category: this.category,
+      subcategory: this.subcategory,
       answer: this.answer,
       id: this.id,
       image: this.image,
