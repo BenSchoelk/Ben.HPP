@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:flutterquiz/features/musicPlayer/musicPlayerCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/models/answerOption.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/reportQuestion/reportQuestionCubit.dart';
 import 'package:flutterquiz/features/reportQuestion/reportQuestionRepository.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/musicPlayerContainer.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/questionContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
@@ -35,7 +37,8 @@ class ReviewAnswersScreen extends StatefulWidget {
                   BlocProvider<UpdateBookmarkCubit>(
                     create: (context) => UpdateBookmarkCubit(BookmarkRepository()),
                   ),
-                  BlocProvider<ReportQuestionCubit>(create: (_) => ReportQuestionCubit(ReportQuestionRepository()))
+                  BlocProvider<ReportQuestionCubit>(create: (_) => ReportQuestionCubit(ReportQuestionRepository())),
+                  BlocProvider<MusicPlayerCubit>(create: (_) => MusicPlayerCubit())
                 ],
                 child: ReviewAnswersScreen(
                   guessTheWordQuestions: arguments!['guessTheWordQuestions'] ?? List<GuessTheWordQuestion>.from([]),
@@ -54,7 +57,20 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
   @override
   void initState() {
     _pageController = PageController();
+    if (_hasAudioQuestion()) {
+      Future.delayed(Duration.zero, () {
+        context.read<MusicPlayerCubit>().initPlayer(widget.questions.first.audio!);
+      });
+    }
+
     super.initState();
+  }
+
+  bool _hasAudioQuestion() {
+    if (widget.questions.isNotEmpty) {
+      return widget.questions.first.audio!.isNotEmpty;
+    }
+    return false;
   }
 
   void showNotes() {
@@ -190,6 +206,10 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
               onPressed: () {
                 if (_currentIndex != 0) {
                   _pageController!.animateToPage(_currentIndex - 1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                  if (_hasAudioQuestion()) {
+                    //
+                    context.read<MusicPlayerCubit>().initPlayer(widget.questions[_currentIndex - 1].audio!);
+                  }
                 }
               },
               icon: Icon(
@@ -206,6 +226,10 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
               onPressed: () {
                 if (_currentIndex != (getQuestionsLength() - 1)) {
                   _pageController!.animateToPage(_currentIndex + 1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                  if (_hasAudioQuestion()) {
+                    //
+                    context.read<MusicPlayerCubit>().initPlayer(widget.questions[_currentIndex + 1].audio!);
+                  }
                 }
               },
               icon: Icon(
@@ -273,7 +297,6 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
   }
 
   Widget _buildNotes(String notes) {
-    print("question for notes..........................................." + notes);
     return notes.isEmpty
         ? Container()
         : Container(
@@ -305,6 +328,8 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           QuestionContainer(
             question: question,
           ),
+          _hasAudioQuestion() ? MusicPlayerContainer() : Container(),
+
           //build options
           _buildOptions(question),
           _buildNotes(question.note!),
@@ -342,6 +367,9 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
             setState(() {
               _currentIndex = index;
             });
+            if (_hasAudioQuestion()) {
+              context.read<MusicPlayerCubit>().initPlayer(widget.questions[_currentIndex].audio!);
+            }
           },
           controller: _pageController,
           itemCount: getQuestionsLength(),
