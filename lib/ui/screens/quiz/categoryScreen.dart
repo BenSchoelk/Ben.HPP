@@ -20,7 +20,7 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 class CategoryScreen extends StatefulWidget {
   final QuizTypes? quizType;
-  final String ?battleLabel;
+  final String? battleLabel;
   final String? type;
   final String? typeId;
 
@@ -32,14 +32,14 @@ class CategoryScreen extends StatefulWidget {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
         builder: (_) => BlocProvider<QuizCategoryCubit>(
-          create: (_) => QuizCategoryCubit(QuizRepository()),
-          child: CategoryScreen(
-            quizType: arguments['quizType'] as QuizTypes,
-            type: arguments['type'],
-            typeId: arguments['typeId'],
-            battleLabel: arguments["battleLabel"],
-          ),
-        ));
+              create: (_) => QuizCategoryCubit(QuizRepository()),
+              child: CategoryScreen(
+                quizType: arguments['quizType'] as QuizTypes,
+                type: arguments['type'],
+                typeId: arguments['typeId'],
+                battleLabel: arguments["battleLabel"],
+              ),
+            ));
   }
 }
 
@@ -124,16 +124,17 @@ class _CategoryScreen extends State<CategoryScreen> {
               return GestureDetector(
                 onTap: () {
                   if (widget.quizType == QuizTypes.battle) {
-                    if(widget.battleLabel=="playFrd"){
+                    if (widget.battleLabel == "playFrd") {
                       showDialog(
                           context: context,
                           builder: (_) {
                             return CreateRoomDialog(
-                              categoryId: categoryList[index].id!,quizType:QuizTypes.battle,battleLbl:widget.battleLabel,
+                              categoryId: categoryList[index].id!,
+                              quizType: QuizTypes.battle,
+                              battleLbl: widget.battleLabel,
                             );
                           });
-                    }
-                    else{
+                    } else {
                       //reset state of battle room to initial
                       context.read<BattleRoomCubit>().emit(BattleRoomInitial());
                       Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: categoryList[index].id).then((value) {
@@ -154,8 +155,9 @@ class _CategoryScreen extends State<CategoryScreen> {
                             context.read<BattleRoomCubit>().deleteBattleRoom(false);
                           }
                         });
-                      } );
-                    }} else if (widget.quizType == QuizTypes.quizZone) {
+                      });
+                    }
+                  } else if (widget.quizType == QuizTypes.quizZone) {
                     //noOf means how many subcategory it has
                     //if subcategory is 0 then check for level
 
@@ -185,12 +187,30 @@ class _CategoryScreen extends State<CategoryScreen> {
                     } else {
                       Navigator.of(context).pushNamed(Routes.subcategoryAndLevel, arguments: categoryList[index].id);
                     }
+                  } else if (widget.quizType == QuizTypes.audioRoom) {
+                    //noOf means how many subcategory it has
+
+                    if (categoryList[index].noOf == "0") {
+                      //
+                      Navigator.of(context).pushNamed(Routes.quiz, arguments: {
+                        "numberOfPlayer": 1,
+                        "quizType": QuizTypes.audioRoom,
+                        "categoryId": categoryList[index].id,
+                      });
+                    } else {
+                      //
+                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                        "categoryId": categoryList[index].id,
+                        "quizType": widget.quizType,
+                      });
+                    }
                   } else if (widget.quizType == QuizTypes.groupPlay) {
                     showDialog(
                         context: context,
                         builder: (_) {
                           return CreateRoomDialog(
-                            categoryId: categoryList[index].id!,quizType:  QuizTypes.groupPlay,
+                            categoryId: categoryList[index].id!,
+                            quizType: QuizTypes.groupPlay,
                           );
                         });
                   } else if (widget.quizType == QuizTypes.guessTheWord) {

@@ -218,7 +218,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
-    interstitialAd!.dispose();
+    interstitialAd?.dispose();
     super.dispose();
   }
 
