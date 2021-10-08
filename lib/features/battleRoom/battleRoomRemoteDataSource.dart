@@ -43,12 +43,8 @@ class BattleRoomRemoteDataSource {
       if (languageId.isEmpty) {
         body.remove(languageIdKey);
       }
-
       final response = await http.post(Uri.parse(getQuestionForOneToOneBattle), body: body, headers: ApiUtils.getHeaders());
-
       final responseJson = jsonDecode(response.body);
-      print(responseJson);
-
       if (responseJson['error']) {
         throw BattleRoomException(errorMessageCode: responseJson['message']); //error
       }
@@ -84,10 +80,8 @@ class BattleRoomRemoteDataSource {
   //subscribe to battle room
   Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser,String battle) {
     if (forMultiUser && battle!="battle") {
-      print("in subscribeToBattleRoom if......................................");
       return _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(battleRoomDocumentId).snapshots();
     }
-    print("in subscribeToBattleRoom else......................................");
     return _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).snapshots();
   }
 
@@ -120,9 +114,9 @@ class BattleRoomRemoteDataSource {
   }
 
   //delete battle room
-  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, {String? roomCode}) async {
+  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser,String ?type, {String? roomCode}) async {
     try {
-      if (forMultiUser) {
+      if (forMultiUser && type!="battle") {
         Map<String, String> body = {
           accessValueKey: accessValue,
           roomIdKey: roomCode!,

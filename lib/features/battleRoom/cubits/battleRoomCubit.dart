@@ -93,7 +93,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       } else {
         //update state with room does not exist
         emit(
-          BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, isRoomExist: false, questions: (state as BattleRoomUserFound).questions, hasLeft: false),
+          BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, isRoomExist: false, questions: (state as BattleRoomUserFound).questions, hasLeft: true),
         );
       }
     }, onError: (e) {
@@ -127,7 +127,6 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         subscribeToBattleRoom(room.id, questions,false);
       } else {
         emit(BattleRoomCreating());
-
         final createdRoomDocument = await _battleRoomRepository.createBattleRoom(
           categoryId: categoryId,
           name: name,
@@ -147,7 +146,6 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           languageId: questionLanguageId,
           roomCreater: true,
         );
-        print("......................................."+questions.length.toString());
         subscribeToBattleRoom(createdRoomDocument.id, questions,false);
       }
     } catch (e) {
@@ -220,18 +218,18 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   }
 
   //delete room after qutting the game or finishing the game
-  void deleteBattleRoom() {
+  void deleteBattleRoom(bool type) {
     if (state is BattleRoomUserFound) {
-      _battleRoomRepository.deleteBattleRoom((state as BattleRoomUserFound).battleRoom.roomId, false);
+      _battleRoomRepository.deleteBattleRoom((state as BattleRoomUserFound).battleRoom.roomId, type,"battle");
       emit(BattleRoomDeleted());
     } else if (state is BattleRoomCreated) {
-      _battleRoomRepository.deleteBattleRoom((state as BattleRoomCreated).battleRoom.roomId, false);
+      _battleRoomRepository.deleteBattleRoom((state as BattleRoomCreated).battleRoom.roomId, type,"battle");
       emit(BattleRoomDeleted());
     }
   }
   void startGame() {
-    if (state is BattleRoomCreated) {
-      _battleRoomRepository.startMultiUserQuiz((state as BattleRoomCreated).battleRoom.roomId,"battle");
+    if (state is BattleRoomUserFound) {
+      _battleRoomRepository.startMultiUserQuiz((state as BattleRoomUserFound).battleRoom.roomId,"battle");
     }
   }
   //get questions in quiz battle
@@ -315,7 +313,6 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
 
   String getRoomId() {
     if (state is BattleRoomUserFound) {
-      print((state as BattleRoomUserFound).battleRoom.roomId!);
       return (state as BattleRoomUserFound).battleRoom.roomId!;
     }
     return "";

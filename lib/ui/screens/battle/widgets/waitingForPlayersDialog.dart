@@ -105,19 +105,19 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
   Widget build(BuildContext context) {
     return CustomDialog(
       onWillPop: () {
-        if (widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomCreated:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomSuccess) {
+        if (widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomUserFound:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomSuccess) {
           showDialog(
               context: context,
               builder: (context) => ExitGameDailog(
                     onTapYes: () {
-                      bool createdRoom = widget.quizType==QuizTypes.battle?(context.read<BattleRoomCubit>().state as BattleRoomCreated).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId:(context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                      bool createdRoom = widget.quizType==QuizTypes.battle?(context.read<BattleRoomCubit>().state as BattleRoomUserFound).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId:(context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
 
                       //if room is created by current user then delete room
                       if (createdRoom) {
-                        widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom():context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+                        widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
                       } else {
                         //if room is not created by current user then remove user from room
-                        context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
+                        widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
                       }
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
@@ -127,19 +127,19 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
         return Future.value(false);
       },
       onBackButtonPress: () {
-        if (widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomCreated:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomSuccess) {
+        if (widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomUserFound:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomSuccess) {
           showDialog(
               context: context,
               builder: (context) => ExitGameDailog(
                 onTapYes: () {
-                  bool createdRoom = widget.quizType==QuizTypes.battle?(context.read<BattleRoomCubit>().state as BattleRoomCreated).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId:(context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                  bool createdRoom = widget.quizType==QuizTypes.battle?(context.read<BattleRoomCubit>().state as BattleRoomUserFound).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId:(context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
 
                   //if room is created by current user then delete room
                   if (createdRoom) {
-                    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom():context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+                    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
                   } else {
                     //if room is not created by current user then remove user from room
-                    context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
+                    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
                   }
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -157,7 +157,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
               if (state.battleRoom.readyToPlay!) {
                 //if user has joined room then navigate to quiz screen
                 if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz);
+                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments: {"battleLbl":widget.battleLbl});
                 }
               }
 
@@ -316,15 +316,16 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                         return Container();
                       }
                       return TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           //need minimum 2 player to start the game
                           //mark as ready to play in database
                           if (state.battleRoom.user2!.uid.isEmpty) {
                             UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
                           } else {
                             context.read<BattleRoomCubit>().startGame();
+                            await Future.delayed(Duration(milliseconds: 500));
                             //navigate to quiz screen
-                            Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments: {"battleLbl":widget.battleLbl});
+                            Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments:{"battleLbl":widget.battleLbl});
                           }
                         },
                         child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),

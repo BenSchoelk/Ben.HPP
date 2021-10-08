@@ -137,12 +137,10 @@ class _CreateRoomDialogState extends State<CreateRoomDialog> {
             //this listener will be in use for both creating and join room callbacks
             listener: (context, state) {
               if (state is BattleRoomUserFound) {
-                print("lister if-----------------------------------");
                 //wait for others
                 Navigator.of(context).pop();
                 showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType: QuizTypes.battle,battleLbl:widget.battleLbl));
               } else if (state is BattleRoomFailure) {
-                print("lister else if-----------------------------------");
                 UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
               }
             },

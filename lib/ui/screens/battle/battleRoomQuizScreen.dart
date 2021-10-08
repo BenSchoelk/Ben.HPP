@@ -122,7 +122,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       //delete all messages entered by current user
       deleteMessages(context.read<BattleRoomCubit>());
       //delete battle room
-      context.read<BattleRoomCubit>().deleteBattleRoom();
+      context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false);
     }
     //show you left the game
     if (state == AppLifecycleState.resumed) {
@@ -268,7 +268,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             //delete messages by current user
             deleteMessages(battleRoomCubit);
             //delete room
-            battleRoomCubit.deleteBattleRoom();
+            battleRoomCubit.deleteBattleRoom(widget.battleLbl=="playFrd"?true:false);
             //navigate to result
             if (isSettingDialogOpen) {
               Navigator.of(context).pop();
@@ -581,7 +581,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                   //delete messages
                   deleteMessages(battleRoomCubit);
                   //delete battle room
-                  battleRoomCubit.deleteBattleRoom();
+                  battleRoomCubit.deleteBattleRoom(widget.battleLbl=="playFrd"?true:false);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },

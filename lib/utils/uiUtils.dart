@@ -190,7 +190,7 @@ class UiUtils {
           //then state of battleRoomCubit will not be battleRoomUserFound
           //deleteRoom call execute
           if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-            context.read<BattleRoomCubit>().deleteBattleRoom();
+            context.read<BattleRoomCubit>().deleteBattleRoom(false);
           }
         });
       });

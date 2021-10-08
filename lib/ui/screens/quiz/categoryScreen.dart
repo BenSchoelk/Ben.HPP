@@ -47,7 +47,6 @@ class _CategoryScreen extends State<CategoryScreen> {
   final ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    print("..........................................${widget.battleLabel}");
     context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), widget.type == "category" ? widget.typeId! : "");
     super.initState();
   }
@@ -126,7 +125,6 @@ class _CategoryScreen extends State<CategoryScreen> {
                 onTap: () {
                   if (widget.quizType == QuizTypes.battle) {
                     if(widget.battleLabel=="playFrd"){
-                      print("///////////////////////////////////////////////${widget.battleLabel}");
                         showDialog(
                         context: context,
                         builder: (_) {
@@ -136,8 +134,7 @@ class _CategoryScreen extends State<CategoryScreen> {
                         });
                     }
                     else{
-                      print("in else......................................");
-                    //reset state of battle room to initial
+                      //reset state of battle room to initial
                     context.read<BattleRoomCubit>().emit(BattleRoomInitial());
                     Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: categoryList[index].id).then((value) {
                     //need to delete room if user exit the process in between of finding opponent
@@ -154,7 +151,7 @@ class _CategoryScreen extends State<CategoryScreen> {
                     //then state of battleRoomCubit will not be battleRoomUserFound
                     //deleteRoom call execute
                     if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-                    context.read<BattleRoomCubit>().deleteBattleRoom();
+                    context.read<BattleRoomCubit>().deleteBattleRoom(false);
                     }
                     });
                     } );

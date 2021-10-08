@@ -129,7 +129,7 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
     if (state is MultiUserBattleRoomSuccess) {
       _battleRoomRepository.deleteBattleRoom(
         (state as MultiUserBattleRoomSuccess).battleRoom.roomId,
-        true,
+        true,"",
         roomCode: (state as MultiUserBattleRoomSuccess).battleRoom.roomCode,
       );
     }

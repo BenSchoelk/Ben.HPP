@@ -28,7 +28,7 @@ class BattleRoomRepository {
       //so user will not join room that was created by him/her self
       int index = documents.indexWhere((element) => (element.data() as Map<String, dynamic>)['createdBy'] == uid);
       if (index != -1) {
-        deleteBattleRoom(documents[index].id, false);
+        deleteBattleRoom(documents[index].id, false,"battle");
         documents.removeAt(index);
       }
       return documents;
@@ -210,9 +210,9 @@ class BattleRoomRepository {
   }
 
   //delete room by id
-  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, {String? roomCode}) async {
+  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser,String ?type,{String? roomCode}) async {
     try {
-      await _battleRoomRemoteDataSource.deleteBattleRoom(documentId, forMultiUser, roomCode: roomCode);
+      await _battleRoomRemoteDataSource.deleteBattleRoom(documentId, forMultiUser,type, roomCode: roomCode);
     } catch (e) {}
   }
 
@@ -223,7 +223,7 @@ class BattleRoomRepository {
         BattleRoom battleRoom = BattleRoom.fromDocumentSnapshot(element);
         if (!battleRoom.readyToPlay!) {
           print("${battleRoom.roomId} deleted");
-          _battleRoomRemoteDataSource.deleteBattleRoom(battleRoom.roomId, true, roomCode: battleRoom.roomCode);
+          _battleRoomRemoteDataSource.deleteBattleRoom(battleRoom.roomId, true,"" ,roomCode: battleRoom.roomCode);
         }
       });
     } catch (e) {}
@@ -243,7 +243,7 @@ class BattleRoomRepository {
     } catch (e) {
       if (roomCreater) {
         //if any error occurs while fetching question deleteRoom
-        deleteBattleRoom(roomDocumentId, forMultiUser);
+        deleteBattleRoom(roomDocumentId, forMultiUser,forMultiUser?"":"battle");
       }
       throw BattleRoomException(errorMessageCode: e.toString());
     }
