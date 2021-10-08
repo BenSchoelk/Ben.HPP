@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
@@ -52,11 +53,50 @@ class JoinRoomDialog extends StatelessWidget {
           SizedBox(
             height: constraints.maxHeight * (0.05),
           ),
-          BlocConsumer<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+          quizType==QuizTypes.battle?BlocConsumer<BattleRoomCubit, BattleRoomState>(
+            listener: (context, state) {
+              if (state is BattleRoomUserFound) {
+                Navigator.of(context).pop();
+                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType:QuizTypes.battle));
+              } else if (state is BattleRoomFailure) {
+                UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
+              }
+            },
+            bloc: context.read<BattleRoomCubit>(),
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: state is BattleRoomSearchInProgress
+                    ? () {}
+                    : () {
+                  if (_textEditingController.text.trim().isEmpty) {
+                    return;
+                  }
+                  UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
+                  context.read<BattleRoomCubit>().joinRoom(
+                    currentCoin: userProfile.coins!,
+                    name: userProfile.name,
+                    uid: userProfile.userId,
+                    profileUrl: userProfile.profileUrl,
+                    roomCode: _textEditingController.text.trim(),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(MediaQuery.of(context).size.width * .4, MediaQuery.of(context).size.height * .07),
+                  onPrimary: Theme.of(context).colorScheme.secondary,
+                  primary: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                child: Text(
+                  state is BattleRoomSearchInProgress ? AppLocalization.of(context)!.getTranslatedValues('joiningLoadingLbl')! : AppLocalization.of(context)!.getTranslatedValues('joinLbl')!,
+                  style: Theme.of(context).textTheme.subtitle1!.merge(TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+              );
+            },
+          ): BlocConsumer<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
             listener: (context, state) {
               if (state is MultiUserBattleRoomSuccess) {
                 Navigator.of(context).pop();
-                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType:quizType==QuizTypes.battle?QuizTypes.battle:QuizTypes.groupPlay,));
+                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType:QuizTypes.groupPlay,));
               } else if (state is MultiUserBattleRoomFailure) {
                 UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
               }
@@ -102,13 +142,13 @@ class JoinRoomDialog extends StatelessWidget {
     return CustomDialog(
       height: MediaQuery.of(context).size.height * (0.45),
       onWillPop: () {
-        if (context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
+        if (quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomSearchInProgress:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
           return Future.value(false);
         }
         return Future.value(true);
       },
       onBackButtonPress: () {
-        if (context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
+        if (quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomSearchInProgress:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
           return;
         }
         Navigator.of(context).pop();

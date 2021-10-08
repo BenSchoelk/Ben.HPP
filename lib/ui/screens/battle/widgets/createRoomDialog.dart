@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
@@ -129,6 +130,56 @@ class _CreateRoomDialogState extends State<CreateRoomDialog> {
           SizedBox(
             height: constraints.maxHeight * (0.075),
           ),
+
+          widget.quizType==QuizTypes.battle? BlocConsumer<BattleRoomCubit, BattleRoomState>(
+            bloc: context.read<BattleRoomCubit>(),
+
+            //this listener will be in use for both creating and join room callbacks
+            listener: (context, state) {
+              if (state is BattleRoomUserFound) {
+                print("lister if-----------------------------------");
+                //wait for others
+                Navigator.of(context).pop();
+                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType: QuizTypes.battle,battleLbl:widget.battleLbl));
+              } else if (state is BattleRoomFailure) {
+                print("lister else if-----------------------------------");
+                UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
+              }
+            },
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: state is BattleRoomSearchInProgress
+                    ? () {}
+                    : () {
+                  UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
+
+                  if (int.parse(userProfile.coins!) < coins) {
+                    UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode)));
+                    return;
+                  }
+                  context.read<BattleRoomCubit>().createRoom(
+                    categoryId: widget.categoryId,
+                    entryFee: coins,
+                    name: userProfile.name,
+                    profileUrl: userProfile.profileUrl,
+                    roomType: "public",
+                    uid: userProfile.userId,
+                    questionLanguageId: UiUtils.getCurrentQuestionLanguageId(context),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(constraints.maxWidth * (0.5), constraints.maxHeight * (0.15)),
+                  onPrimary: Theme.of(context).colorScheme.secondary,
+                  primary: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                child: Text(
+                  state is BattleRoomSearchInProgress ? AppLocalization.of(context)!.getTranslatedValues('creatingLoadingLbl')! + "..." : AppLocalization.of(context)!.getTranslatedValues('creatingLbl')!,
+                  style: Theme.of(context).textTheme.subtitle1!.merge(TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+              );
+            },
+          ):
           BlocConsumer<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
             bloc: context.read<MultiUserBattleRoomCubit>(),
 
@@ -137,7 +188,7 @@ class _CreateRoomDialogState extends State<CreateRoomDialog> {
               if (state is MultiUserBattleRoomSuccess) {
                 //wait for others
                 Navigator.of(context).pop();
-                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType: widget.quizType==QuizTypes.battle?QuizTypes.battle:QuizTypes.groupPlay,battleLbl: widget.quizType==QuizTypes.battle?widget.battleLbl:"",));
+                showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType:QuizTypes.groupPlay,battleLbl:"",));
               } else if (state is MultiUserBattleRoomFailure) {
                 UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
               }

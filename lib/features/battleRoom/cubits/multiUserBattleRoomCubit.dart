@@ -45,7 +45,7 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
   //subscribe battle room
   void subscribeToMultiUserBattleRoom(String battleRoomDocumentId, List<Question> questions) {
     //for realtimeness
-    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, true).listen((event) {
+    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, true,"").listen((event) {
       //to check if room destroyed by owner
       if (event.exists) {
         emit(MultiUserBattleRoomSuccess(
@@ -152,7 +152,7 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
 
   void startGame() {
     if (state is MultiUserBattleRoomSuccess) {
-      _battleRoomRepository.startMultiUserQuiz((state as MultiUserBattleRoomSuccess).battleRoom.roomId);
+      _battleRoomRepository.startMultiUserQuiz((state as MultiUserBattleRoomSuccess).battleRoom.roomId,"");
     }
   }
 
