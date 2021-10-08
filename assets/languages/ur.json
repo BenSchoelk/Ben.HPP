@@ -314,7 +314,8 @@
     "audioRoom" : "Audio Room",
     "desAudioRoom" : "Quiz with audio",
     "desMathMania" : "It's math quiz",
-    "showOptions" : "Show Options"
+    "randomLbl": "Random",
+    "playWithFrdLbl": "Play With Friends"
   
 }
    

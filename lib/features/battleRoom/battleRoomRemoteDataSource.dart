@@ -43,11 +43,8 @@ class BattleRoomRemoteDataSource {
       if (languageId.isEmpty) {
         body.remove(languageIdKey);
       }
-
       final response = await http.post(Uri.parse(getQuestionForOneToOneBattle), body: body, headers: ApiUtils.getHeaders());
-
       final responseJson = jsonDecode(response.body);
-
       if (responseJson['error']) {
         throw BattleRoomException(errorMessageCode: responseJson['message']); //error
       }
@@ -66,9 +63,7 @@ class BattleRoomRemoteDataSource {
       Map<String, String?> body = {accessValueKey: accessValue, roomIdKey: roomCode};
 
       final response = await http.post(Uri.parse(getQuestionForMultiUserBattle), body: body, headers: ApiUtils.getHeaders());
-
       final responseJson = jsonDecode(response.body);
-
       if (responseJson['error']) {
         throw BattleRoomException(errorMessageCode: responseJson['message']); //error
       }
@@ -83,8 +78,8 @@ class BattleRoomRemoteDataSource {
   }
 
   //subscribe to battle room
-  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser) {
-    if (forMultiUser) {
+  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser,String battle) {
+    if (forMultiUser && battle!="battle") {
       return _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(battleRoomDocumentId).snapshots();
     }
     return _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).snapshots();
@@ -119,9 +114,9 @@ class BattleRoomRemoteDataSource {
   }
 
   //delete battle room
-  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, {String? roomCode}) async {
+  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser,String ?type, {String? roomCode}) async {
     try {
-      if (forMultiUser) {
+      if (forMultiUser && type!="battle") {
         Map<String, String> body = {
           accessValueKey: accessValue,
           roomIdKey: roomCode!,
@@ -163,6 +158,7 @@ class BattleRoomRemoteDataSource {
     required String name,
     required String profileUrl,
     required String uid,
+    String? roomCode, String? roomType, int? entryFee,
     required String questionLanguageId,
   }) async {
     try {
@@ -171,6 +167,9 @@ class BattleRoomRemoteDataSource {
         "createdBy": uid,
         "categoryId": categoryId,
         "languageId": questionLanguageId,
+        "roomCode": roomCode,
+        "entryFee": entryFee,
+        "readyToPlay": false,
         "user1": {"name": name, "points": 0, "answers": [], "uid": uid, "profileUrl": profileUrl},
         "user2": {"name": "", "points": 0, "answers": [], "uid": "", "profileUrl": ""},
         "createdAt": Timestamp.now(),
@@ -245,10 +244,9 @@ class BattleRoomRemoteDataSource {
   }
 
   //get room by roomCode (multiUserBattleRoom)
-  Future<QuerySnapshot> getMultiUserBattleRoom(String? roomCode) async {
+  Future<QuerySnapshot> getMultiUserBattleRoom(String? roomCode,String ?type) async {
     try {
-      QuerySnapshot querySnapshot = await _firebaseFirestore.collection(multiUserBattleRoomCollection).where("roomCode", isEqualTo: roomCode).get();
-
+      QuerySnapshot querySnapshot = await _firebaseFirestore.collection(type=="battle"?battleRoomCollection:multiUserBattleRoomCollection).where("roomCode", isEqualTo: roomCode).get();
       return querySnapshot;
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
@@ -277,9 +275,9 @@ class BattleRoomRemoteDataSource {
   }
 
   //delete user from multiple user room
-  Future<void> updateMultiUserRoom(String? documentId, Map<String, dynamic> updatedData) async {
+  Future<void> updateMultiUserRoom(String? documentId, Map<String, dynamic> updatedData,String battle) async {
     try {
-      _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(documentId).update(updatedData);
+      _firebaseFirestore.collection(battle=="battle"?battleRoomCollection:multiUserBattleRoomCollection).doc(documentId).update(updatedData);
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
     } on PlatformException catch (_) {

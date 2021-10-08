@@ -77,7 +77,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
     super.didChangeAppLifecycleState(state);
     //delete battle room if user press home button or move from battleOpponentFind screen
     if (state == AppLifecycleState.paused) {
-      context.read<BattleRoomCubit>().deleteBattleRoom();
+      context.read<BattleRoomCubit>().deleteBattleRoom(false);
       Navigator.of(context).pop();
     }
   }
@@ -116,7 +116,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
     waitForOpponentTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (waitingTime == 0) {
         //delete room so other user can not join
-        context.read<BattleRoomCubit>().deleteBattleRoom();
+        context.read<BattleRoomCubit>().deleteBattleRoom(false);
         //stop other activities
         letterAnimationController.stop();
         scrollController.jumpTo(scrollController.position.maxScrollExtent);
@@ -524,7 +524,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
             context: context,
             builder: (context) => ExitGameDailog(
                   onTapYes: () {
-                    battleRoomCubit.deleteBattleRoom();
+                    battleRoomCubit.deleteBattleRoom(false);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
@@ -544,7 +544,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
               waitForOpponentTimer?.cancel();
               await Future.delayed(Duration(milliseconds: 500));
               await quizCountDownAnimationController.forward();
-              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz);
+              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments:{"battleLbl":""});
             }
           },
           child: Stack(

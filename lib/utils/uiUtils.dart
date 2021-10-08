@@ -176,7 +176,7 @@ class UiUtils {
       //go to category page
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.battle});
     } else {
-      Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: "").then((value) {
+      Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments:{"battleLbl":""}).then((value) {
         //need to delete room if user exit the process in between of finding opponent
         //or instantly press exit button
         Future.delayed(Duration(milliseconds: 3000)).then((value) {
@@ -190,7 +190,7 @@ class UiUtils {
           //then state of battleRoomCubit will not be battleRoomUserFound
           //deleteRoom call execute
           if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-            context.read<BattleRoomCubit>().deleteBattleRoom();
+            context.read<BattleRoomCubit>().deleteBattleRoom(false);
           }
         });
       });
