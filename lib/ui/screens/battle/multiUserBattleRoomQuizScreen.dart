@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
@@ -17,6 +19,7 @@ import 'package:flutterquiz/features/profileManagement/profileManagementReposito
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/waitForOthersContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
@@ -43,6 +46,7 @@ class MultiUserBattleRoomQuizScreen extends StatefulWidget {
                 create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
               ),
               BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
+              BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
             ], child: MultiUserBattleRoomQuizScreen()));
   }
 }
@@ -64,6 +68,14 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   //to slude the question content from right to left
   late Animation<double> questionContentAnimation;
 
+  late AnimationController messageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300), reverseDuration: Duration(milliseconds: 300));
+  late Animation<double> messageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: messageAnimationController, curve: Curves.easeOutBack));
+
+  late List<AnimationController> opponentMessageAnimationControllers = [];
+  late List<Animation<double>> opponentMessageAnimations = [];
+
+  late List<AnimationController> opponentProgressAnimationControllers = [];
+
   int currentQuestionIndex = 0;
 
   //if user has minimized the app
@@ -74,6 +86,14 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
+  //current user message timer
+  Timer? currentUserMessageDisappearTimer;
+  int currentUserMessageDisappearTimeInSeconds = 4;
+
+  //opponent user message timer
+  Timer? opponentUserMessageDisappearTimer;
+  int opponentUserMessageDisappearTimeInSeconds = 4;
+
   @override
   void initState() {
     //deduct coins of entry fee
@@ -82,6 +102,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: context.read<MultiUserBattleRoomCubit>().getEntryFee());
     });
     initializeAnimation();
+    initOpponentAnimations();
     questionContentAnimationController.forward();
     //add observer to track app lifecycle activity
     WidgetsBinding.instance!.addObserver(this);
@@ -94,6 +115,13 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
+    messageAnimationController.dispose();
+    opponentMessageAnimationControllers.forEach((element) {
+      element.dispose();
+    });
+    opponentProgressAnimationControllers.forEach((element) {
+      element.dispose();
+    });
     WidgetsBinding.instance!.removeObserver(this);
 
     super.dispose();
@@ -110,6 +138,14 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         showUserLeftTheGame = true;
       });
       timerAnimationController.stop();
+    }
+  }
+
+  void initOpponentAnimations() {
+    for (var i = 0; i < 3; i++) {
+      opponentMessageAnimationControllers.add(AnimationController(vsync: this, duration: Duration(milliseconds: 300)));
+      opponentProgressAnimationControllers.add(AnimationController(vsync: this));
+      opponentMessageAnimations.add(Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: opponentMessageAnimationControllers[i], curve: Curves.easeOutBack)));
     }
   }
 
@@ -335,76 +371,46 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   }
 
   Widget _buildCurrentUserDetails(UserBattleRoomDetails userBattleRoomDetails) {
-    return Container(
-      width: MediaQuery.of(context).size.width * (0.225),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              CircularTimerContainer(timerAnimationController: timerAnimationController, heightAndWidth: MediaQuery.of(context).size.width * 0.14),
-              CircularImageContainer(height: MediaQuery.of(context).size.width * (0.125), imagePath: userBattleRoomDetails.profileUrl, width: MediaQuery.of(context).size.width * (0.15))
-            ],
-          ),
-          SizedBox(
-            height: 2.5,
-          ),
-          Text(
-            userBattleRoomDetails.name,
-            style: TextStyle(fontSize: 13.0),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+    return Align(
+      alignment: AlignmentDirectional.bottomStart,
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(
+          start: 15,
+          bottom: 15.0,
+        ),
+        child: RectangleUserProfileContainer(
+          userBattleRoomDetails: userBattleRoomDetails,
+          isLeft: true,
+          animationController: timerAnimationController,
+          progressColor: Theme.of(context).backgroundColor,
+        ),
       ),
     );
   }
 
-  Widget _buildOpponentUserDetails(UserBattleRoomDetails userBattleRoomDetails, int questionsLength) {
+  Widget _buildOpponentUserDetails({required int questionsLength, required AlignmentDirectional alignment, required List<UserBattleRoomDetails?> opponentUsers, required int opponentUserIndex}) {
+    UserBattleRoomDetails userBattleRoomDetails = opponentUsers[opponentUserIndex]!;
     double progressPercentage = (100.0 * userBattleRoomDetails.answers.length) / questionsLength;
-    double sweepAngle = NormalizeNumber.inRange(currentValue: progressPercentage, minValue: 0.0, maxValue: 100.0, newMaxValue: 360.0, newMinValue: 0.0);
-    return Container(
-      width: MediaQuery.of(context).size.width * (0.225),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                child: CustomPaint(
-                  painter: CircleCustomPainter(color: Theme.of(context).backgroundColor, radiusPercentage: 0.5, strokeWidth: 3.0),
-                ),
-                height: MediaQuery.of(context).size.width * (0.14),
-                width: MediaQuery.of(context).size.width * (0.14),
-              ),
-              Container(
-                child: CustomPaint(
-                  painter: ArcCustomPainter(sweepAngle: sweepAngle, color: Theme.of(context).colorScheme.secondary, radiusPercentage: 0.5, strokeWidth: 3.0),
-                ),
-                height: MediaQuery.of(context).size.width * (0.14),
-                width: MediaQuery.of(context).size.width * (0.14),
-              ),
-              CircularImageContainer(height: MediaQuery.of(context).size.width * (0.125), imagePath: userBattleRoomDetails.profileUrl, width: MediaQuery.of(context).size.width * (0.15))
-            ],
-          ),
-          SizedBox(
-            height: 2.5,
-          ),
-          Text(
-            userBattleRoomDetails.name,
-            style: TextStyle(fontSize: 13.0),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+    opponentProgressAnimationControllers[opponentUserIndex].value = NormalizeNumber.inRange(currentValue: progressPercentage, minValue: 0.0, maxValue: 100.0, newMaxValue: 1.0, newMinValue: 0.0);
+    return Align(
+      alignment: alignment,
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(
+          start: alignment == AlignmentDirectional.bottomEnd || alignment == AlignmentDirectional.topEnd ? 0 : 15,
+          end: alignment == AlignmentDirectional.bottomEnd || alignment == AlignmentDirectional.topEnd ? 15 : 0,
+          bottom: 15.0,
+        ),
+        child: RectangleUserProfileContainer(
+          userBattleRoomDetails: userBattleRoomDetails,
+          isLeft: true,
+          animationController: opponentProgressAnimationControllers[opponentUserIndex],
+          progressColor: Theme.of(context).backgroundColor,
+        ),
       ),
     );
   }
 
+  /*
   Widget _buildPlayersDetails(MultiUserBattleRoomCubit battleRoomCubit) {
     return Align(
       alignment: AlignmentDirectional.bottomCenter,
@@ -431,6 +437,16 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       ),
     );
   }
+  */
+
+  /*
+  Widget _buildCurrentUserDetails() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: ,
+    );
+  }
+  */
 
   Widget _buildBookmarkButton(MultiUserBattleRoomCubit battleRoomCubit) {
     return BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
@@ -469,6 +485,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         return Future.value(false);
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
         body: MultiBlocListener(
           listeners: [
             //update ui and do other callback based on changes in MultiUserBattleRoomCubit
@@ -481,43 +498,70 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
           ],
           child: Stack(
             children: [
-              PageBackgroundGradientContainer(),
+              //PageBackgroundGradientContainer(),
+              /*
               Align(
                 alignment: Alignment.topCenter,
                 child: QuizPlayAreaBackgroundContainer(
                   heightPercentage: 0.875,
                 ),
               ),
+              */
               Align(
                   alignment: Alignment.topCenter,
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 500),
-                    child: showWaitForOthers
-                        ? WaitForOthersContainer(
-                            key: Key("waitForOthers"),
-                          )
-                        : QuestionsContainer(
-                            quizType: QuizTypes.groupPlay,
-                            toggleSettingDialog: toggleSettingDialog,
-                            showAnswerCorrectness: true,
-                            lifeLines: {},
-                            bookmarkButton: _buildBookmarkButton(battleRoomCubit),
-                            guessTheWordQuestionContainerKeys: [],
-                            key: Key("questions"),
-                            guessTheWordQuestions: [],
-                            hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
-                            questions: battleRoomCubit.getQuestions(),
-                            submitAnswer: submitAnswer,
-                            questionContentAnimation: questionContentAnimation,
-                            questionScaleDownAnimation: questionScaleDownAnimation,
-                            questionScaleUpAnimation: questionScaleUpAnimation,
-                            questionSlideAnimation: questionSlideAnimation,
-                            currentQuestionIndex: currentQuestionIndex,
-                            questionAnimationController: questionAnimationController,
-                            questionContentAnimationController: questionContentAnimationController,
-                          ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * (0.075),
+                    ),
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: showWaitForOthers
+                          ? WaitForOthersContainer(
+                              key: Key("waitForOthers"),
+                            )
+                          : QuestionsContainer(
+                              quizType: QuizTypes.groupPlay,
+                              toggleSettingDialog: toggleSettingDialog,
+                              showAnswerCorrectness: true,
+                              lifeLines: {},
+                              bookmarkButton: _buildBookmarkButton(battleRoomCubit),
+                              guessTheWordQuestionContainerKeys: [],
+                              key: Key("questions"),
+                              guessTheWordQuestions: [],
+                              hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
+                              questions: battleRoomCubit.getQuestions(),
+                              submitAnswer: submitAnswer,
+                              questionContentAnimation: questionContentAnimation,
+                              questionScaleDownAnimation: questionScaleDownAnimation,
+                              questionScaleUpAnimation: questionScaleUpAnimation,
+                              questionSlideAnimation: questionSlideAnimation,
+                              currentQuestionIndex: currentQuestionIndex,
+                              questionAnimationController: questionAnimationController,
+                              questionContentAnimationController: questionContentAnimationController,
+                            ),
+                    ),
                   )),
-              showUserLeftTheGame ? Container() : _buildPlayersDetails(battleRoomCubit),
+              //showUserLeftTheGame ? Container() : _buildPlayersDetails(battleRoomCubit),
+              showUserLeftTheGame ? Container() : _buildCurrentUserDetails(battleRoomCubit.getUser(context.read<UserDetailsCubit>().getUserId())!),
+              showUserLeftTheGame
+                  ? Container()
+                  : BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      bloc: battleRoomCubit,
+                      builder: (context, state) {
+                        if (state is MultiUserBattleRoomSuccess) {
+                          List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                          return opponentUsers.length >= 2
+                              ? _buildOpponentUserDetails(
+                                  questionsLength: state.questions.length,
+                                  alignment: AlignmentDirectional.bottomEnd,
+                                  opponentUsers: opponentUsers,
+                                  opponentUserIndex: 1,
+                                )
+                              : Container();
+                        }
+                        return Container();
+                      },
+                    ),
               _buildYouWonContainer(battleRoomCubit),
               _buildUserLeftTheGame(),
             ],
