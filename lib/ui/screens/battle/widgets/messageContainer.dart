@@ -89,7 +89,8 @@ class MessageContainer extends StatelessWidget {
 
     return TopMessageCustomPainter(
       triangleIsLeft: opponentUserIndex == 1,
-      color: Theme.of(context).colorScheme.secondary,
+      firstGradientColor: Theme.of(context).scaffoldBackgroundColor,
+      secondGradientColor: Theme.of(context).canvasColor,
     );
   }
 
@@ -118,22 +119,34 @@ class MessageContainer extends StatelessWidget {
 
 class TopMessageCustomPainter extends CustomPainter {
   final bool triangleIsLeft;
-  final Color color;
+  final Color firstGradientColor;
 
-  TopMessageCustomPainter({required this.triangleIsLeft, required this.color});
+  final Color secondGradientColor;
+
+  TopMessageCustomPainter({required this.triangleIsLeft, required this.firstGradientColor, required this.secondGradientColor});
 
   @override
   void paint(Canvas canvas, Size size) {
     Path path = Path();
 
     Paint paint = Paint()
-      ..color = color
+      ..shader = ui.Gradient.linear(Offset(size.width * (0.5), 0), Offset(size.width * (0.5), size.height), [firstGradientColor, secondGradientColor])
       ..style = PaintingStyle.fill;
 
     path.moveTo(size.width * (0.1), 0);
-    path.lineTo(size.width * (triangleIsLeft ? 0.35 : 0.65), 0);
-    path.lineTo(size.width * (triangleIsLeft ? 0.25 : 0.75), size.height - size.height * (1.3)); //75,25
+    path.lineTo(size.width * (triangleIsLeft ? 0.25 : 0.75), 0);
+    path.lineTo(size.width * (triangleIsLeft ? 0.2 : 0.8), size.height - size.height * (1.3));
     path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.85), 0); //85,15
+
+    /*
+    path.lineTo(size.width * (triangleIsLeft ? 0.25 : 0.75), size.height);
+    //to add how long triangle will go down
+    path.lineTo(size.width * (triangleIsLeft ? 0.2 : 0.8), size.height * (1.3));
+    //
+    path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.85), size.height);
+    
+    
+     */
 
     //
     path.lineTo(size.width * (0.9), 0);

@@ -22,7 +22,6 @@ class RectangleUserProfileContainer extends StatelessWidget {
   }) : super(key: key);
 
   Widget _buildProfileContainer(BuildContext context) {
-    print(userBattleRoomDetails.profileUrl);
     return Stack(
       alignment: Alignment.center,
       children: [

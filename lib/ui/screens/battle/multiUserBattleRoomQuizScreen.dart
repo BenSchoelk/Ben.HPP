@@ -509,7 +509,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
           start: alignment == AlignmentDirectional.bottomEnd || alignment == AlignmentDirectional.topEnd ? 0 : userDetailsPadding,
           end: alignment == AlignmentDirectional.bottomEnd || alignment == AlignmentDirectional.topEnd ? userDetailsPadding : 0,
           bottom: userDetailsPadding,
-          top: alignment == AlignmentDirectional.topStart || alignment == AlignmentDirectional.topEnd ? MediaQuery.of(context).padding.top : 0,
+          top: alignment == AlignmentDirectional.topStart || alignment == AlignmentDirectional.topEnd ? MediaQuery.of(context).padding.top + userDetailsPadding * (0.25) : 0,
         ),
         child: RectangleUserProfileContainer(
           userBattleRoomDetails: userBattleRoomDetails,
@@ -613,7 +613,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         alignment: alignment, //-0.5 left side and 0.5 is right side,
       ),
       start: opponentUserIndex == 1 ? userDetailsPadding : null,
-      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top,
+      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top + userDetailsPadding * (1.5),
       bottom: opponentUserIndex == 0 ? MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2.5 : null,
     );
   }
@@ -633,8 +633,12 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
             context: context,
             builder: (_) => ExitGameDailog(
                   onTapYes: () {
-                    //delete user from game room
-                    battleRoomCubit.deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
+                    if (battleRoomCubit.getUsers().length == 1) {
+                      battleRoomCubit.deleteMultiUserBattleRoom();
+                    } else {
+                      //delete user from game room
+                      battleRoomCubit.deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
+                    }
                     deleteMessages(battleRoomCubit);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
