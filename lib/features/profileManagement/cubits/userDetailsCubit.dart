@@ -113,7 +113,7 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
       final oldUserDetails = (state as UserDetailsFetchSuccess).userProfile;
       final currentCoins = int.parse(oldUserDetails.coins!);
       final updatedCoins = addCoin! ? (currentCoins + coins!) : (currentCoins - coins!);
-      print("Coins update " + updatedCoins.toString());
+      print("Coins update ......" + updatedCoins.toString());
       final userDetails = oldUserDetails.copyWith(
         coins: updatedCoins.toString(),
       );

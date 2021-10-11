@@ -178,7 +178,7 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
     if (isSettingDialogOpen) {
       Navigator.of(context).pop();
     }
-    Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {"numberOfPlayer": 1, "myPoints": context.read<QuestionsCubit>().currentPoints(), "quizType": QuizTypes.selfChallenge, "questions": context.read<QuestionsCubit>().questions()});
+    Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {"numberOfPlayer": 1, "myPoints": context.read<QuestionsCubit>().currentPoints(), "quizType": QuizTypes.selfChallenge, "questions": context.read<QuestionsCubit>().questions(),"entryFee":0});
   }
 
   Widget hasQuestionAttemptedContainer(int questionIndex, bool attempted) {

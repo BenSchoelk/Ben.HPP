@@ -244,6 +244,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       "comprehensionId": widget.comprehensionId,
       "timeTakenToCompleteQuiz": totalSecondsToCompleteQuiz,
       "hasUsedAnyLifeline": checkHasUsedAnyLifeline(),
+      "entryFee":0
     });
   }
 

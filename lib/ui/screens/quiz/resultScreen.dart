@@ -43,7 +43,7 @@ class ResultScreen extends StatefulWidget {
   final String? contestId;
   final String? comprehensionId; //will be use to set contest leaderboard
   final List<GuessTheWordQuestion>? guessTheWordQuestions; //questions when quiz type is guessTheWord
-
+  final int ?entryFee;
   //if quizType is quizZone then it will be in use
   //to determine to show next level button
   //it will be in use if quizType is quizZone
@@ -58,7 +58,6 @@ class ResultScreen extends StatefulWidget {
   //has used any lifeline - it will be in use to check badge earned or not for
   //quizZone quiz type
   final bool? hasUsedAnyLifeline;
-
   ResultScreen(
       {Key? key,
       this.timeTakenToCompleteQuiz,
@@ -72,7 +71,7 @@ class ResultScreen extends StatefulWidget {
       this.subcategoryMaxLevel,
       this.contestId,
       this.comprehensionId,
-      this.guessTheWordQuestions})
+      this.guessTheWordQuestions,this.entryFee})
       : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
@@ -115,7 +114,9 @@ class ResultScreen extends StatefulWidget {
                   guessTheWordQuestions: arguments['guessTheWordQuestions'], //
                   hasUsedAnyLifeline: arguments['hasUsedAnyLifeline'],
                   timeTakenToCompleteQuiz: arguments['timeTakenToCompleteQuiz'],
-                  contestId: arguments["contestId"]),
+                  contestId: arguments["contestId"],
+                  entryFee: arguments['entryFee'],
+              ),
             ));
   }
 
@@ -125,14 +126,14 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen> {
   final ScreenshotController screenshotController = ScreenshotController();
-
+  List<Map<String, dynamic>> usersWithRank = [];
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
-  /* AdmobBannerSize? bannerSize;
-  late AdmobInterstitial interstitialAd;*/
 
   void decideWinnerForBattle() {
+    final winAmount = widget.entryFee!*2;
+    print("Winning Amount is :$winAmount");
     if (widget.numberOfPlayer == 2) {
       String winnerId = "";
       if (widget.battleRoom!.user1!.points == widget.battleRoom!.user2!.points) {
@@ -147,6 +148,8 @@ class _ResultScreenState extends State<ResultScreen> {
         Future.delayed(Duration.zero, () {
           if (context.read<UserDetailsCubit>().getUserId() == winnerId) {
             _isWinner = true;
+            context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), winAmount.toInt(), true);
+            context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: winAmount.toInt(),);
           } else {
             _isWinner = false;
           }
@@ -196,6 +199,7 @@ class _ResultScreenState extends State<ResultScreen> {
     }
     _createInterstitialAd();
   }
+  
   /*
   void earnBadges() {
     if (widget.quizType == QuizTypes.battle) {

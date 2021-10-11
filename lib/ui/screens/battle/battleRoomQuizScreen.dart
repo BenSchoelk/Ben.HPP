@@ -10,7 +10,9 @@ import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
@@ -34,6 +36,7 @@ class BattleRoomQuizScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(providers: [
               BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
+              BlocProvider<UpdateScoreAndCoinsCubit>(create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),),
               BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
             ], child: BattleRoomQuizScreen(
           battleLbl: arguments['battleLbl'],
@@ -92,6 +95,10 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () {
+      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<BattleRoomCubit>().getEntryFee(), false);
+      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: context.read<BattleRoomCubit>().getEntryFee());
+    });
     initializeAnimation();
     initMessageListener();
     questionContentAnimationController.forward();
@@ -280,6 +287,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                 "battleRoom": state.battleRoom,
                 "numberOfPlayer": 2,
                 "quizType": QuizTypes.battle,
+                "entryFee": state.battleRoom.entryFee,
               },
             );
           }

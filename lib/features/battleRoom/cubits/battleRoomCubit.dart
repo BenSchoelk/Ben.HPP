@@ -8,6 +8,7 @@ import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/utils/constants.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
@@ -93,7 +94,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       } else {
         //update state with room does not exist
         emit(
-          BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, isRoomExist: false, questions: (state as BattleRoomUserFound).questions, hasLeft: true),
+          BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, isRoomExist: false, questions: (state as BattleRoomUserFound).questions, hasLeft: false),
         );
       }
     }, onError: (e) {
@@ -134,7 +135,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           uid: uid,
           roomCode: "",
           roomType: "public",
-          entryFee: 0,
+          entryFee: randomBattleEntryCoins,// random battle fix entry fee 5 coins
           questionLanguageId: questionLanguageId,
         );
         emit(BattleRoomCreated(BattleRoom.fromDocumentSnapshot(createdRoomDocument)));
@@ -342,7 +343,27 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     }
     return UserBattleRoomDetails(points: 0, answers: [], correctAnswers: 0, name: "name", profileUrl: "profileUrl", uid: "uid");
   }
+  List<UserBattleRoomDetails?> getUsers() {
+    if (state is MultiUserBattleRoomSuccess) {
+      List<UserBattleRoomDetails?> users = [];
+      BattleRoom battleRoom = (state as MultiUserBattleRoomSuccess).battleRoom;
+      if (battleRoom.user1!.uid.isNotEmpty) {
+        users.add(battleRoom.user1);
+      }
+      if (battleRoom.user2!.uid.isNotEmpty) {
+        users.add(battleRoom.user2);
+      }
+     /* if (battleRoom.user3!.uid.isNotEmpty) {
+        users.add(battleRoom.user3);
+      }
+      if (battleRoom.user4!.uid.isNotEmpty) {
+        users.add(battleRoom.user4);
+      }*/
 
+      return users;
+    }
+    return [];
+  }
   //to close the stream subsciption
   @override
   Future<void> close() async {
