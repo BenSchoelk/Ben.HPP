@@ -136,16 +136,6 @@ class TopMessageCustomPainter extends CustomPainter {
     path.lineTo(size.width * (triangleIsLeft ? 0.2 : 0.8), size.height - size.height * (1.3));
     path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.85), 0); //85,15
 
-    /*
-    path.lineTo(size.width * (triangleIsLeft ? 0.25 : 0.75), size.height);
-    //to add how long triangle will go down
-    path.lineTo(size.width * (triangleIsLeft ? 0.2 : 0.8), size.height * (1.3));
-    //
-    path.lineTo(size.width * (triangleIsLeft ? 0.15 : 0.85), size.height);
-    
-    
-     */
-
     //
     path.lineTo(size.width * (0.9), 0);
     //add curve effect
@@ -205,7 +195,7 @@ class MessageCustomPainter extends CustomPainter {
     path.lineTo(0, size.height * (0.2));
     //add curve
     path.quadraticBezierTo(0, 0, size.width * (0.1), 0);
-
+    canvas.drawShadow(path.shift(Offset(3, 3)), Colors.grey.withOpacity(0.3), 3.0, true);
     canvas.drawPath(path, paint);
   }
 

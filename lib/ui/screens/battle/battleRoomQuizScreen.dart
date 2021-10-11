@@ -377,7 +377,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         alignment: Alignment(-0.5, 1.0), //-0.5 left side nad 0.5 is right side,
       ),
       start: 10,
-      bottom: (bottomPadding * 2) + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
+      bottom: (bottomPadding * 2.5) + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
     );
   }
 
@@ -392,7 +392,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         alignment: Alignment(0.5, 1.0), //-0.5 left side nad 0.5 is right side,
       ),
       end: 10,
-      bottom: (bottomPadding * 2) + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
+      bottom: (bottomPadding * 2.5) + MediaQuery.of(context).size.width * timerHeightAndWidthPercentage,
     );
   }
 
