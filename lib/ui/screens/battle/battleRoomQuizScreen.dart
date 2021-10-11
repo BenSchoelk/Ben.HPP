@@ -38,6 +38,9 @@ class BattleRoomQuizScreen extends StatefulWidget {
                 providers: [
                   BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
                   BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
+                  BlocProvider<UpdateScoreAndCoinsCubit>(
+                    create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  ),
                 ],
                 child: BattleRoomQuizScreen(
                   battleLbl: arguments['battleLbl'],
