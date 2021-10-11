@@ -26,18 +26,20 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BattleRoomQuizScreen extends StatefulWidget {
-  final String ?battleLbl;
+  final String? battleLbl;
   BattleRoomQuizScreen({Key? key, this.battleLbl}) : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
-        builder: (_) => MultiBlocProvider(providers: [
-              BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
-              BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
-            ], child: BattleRoomQuizScreen(
-          battleLbl: arguments['battleLbl'],
-        )));
+        builder: (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
+                  BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
+                ],
+                child: BattleRoomQuizScreen(
+                  battleLbl: arguments['battleLbl'],
+                )));
   }
 
   @override
@@ -122,7 +124,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       //delete all messages entered by current user
       deleteMessages(context.read<BattleRoomCubit>());
       //delete battle room
-      context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false);
+      context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl == "playFrd" ? true : false);
     }
     //show you left the game
     if (state == AppLifecycleState.resumed) {
@@ -268,7 +270,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             //delete messages by current user
             deleteMessages(battleRoomCubit);
             //delete room
-            battleRoomCubit.deleteBattleRoom(widget.battleLbl=="playFrd"?true:false);
+            battleRoomCubit.deleteBattleRoom(widget.battleLbl == "playFrd" ? true : false);
             //navigate to result
             if (isSettingDialogOpen) {
               Navigator.of(context).pop();
@@ -359,6 +361,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       child: ScaleTransition(
         scale: messageAnimation,
         child: MessageContainer(
+          quizType: QuizTypes.battle,
           isCurrentUser: true,
         ),
         alignment: Alignment(-0.5, 1.0), //-0.5 left side nad 0.5 is right side,
@@ -373,6 +376,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       child: ScaleTransition(
         scale: opponentMessageAnimation,
         child: MessageContainer(
+          quizType: QuizTypes.battle,
           isCurrentUser: false,
         ),
         alignment: Alignment(0.5, 1.0), //-0.5 left side nad 0.5 is right side,
@@ -391,7 +395,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
           bloc: battleRoomCubit,
           builder: (context, state) {
             if (state is BattleRoomUserFound) {
-              UserBattleRoomDetails curretUserDetails =battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
+              UserBattleRoomDetails curretUserDetails = battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
               //it contains correct answer by respective user and user name
               return UserDetailsWithTimerContainer(
                 points: curretUserDetails.points.toString(),
@@ -552,6 +556,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       child: SlideTransition(
         position: messageBoxAnimation.drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
+          quizType: QuizTypes.battle,
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
           },
@@ -581,7 +586,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                   //delete messages
                   deleteMessages(battleRoomCubit);
                   //delete battle room
-                  battleRoomCubit.deleteBattleRoom(widget.battleLbl=="playFrd"?true:false);
+                  battleRoomCubit.deleteBattleRoom(widget.battleLbl == "playFrd" ? true : false);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },

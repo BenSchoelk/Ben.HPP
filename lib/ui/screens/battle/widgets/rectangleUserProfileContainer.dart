@@ -10,6 +10,9 @@ class RectangleUserProfileContainer extends StatelessWidget {
   final AnimationController animationController;
   final Color progressColor;
   final bool isLeft;
+
+  static final userDetailsHeightPercentage = (0.0675);
+  static final userDetailsWidthPercentage = (0.135);
   const RectangleUserProfileContainer({
     Key? key,
     required this.animationController,
@@ -18,68 +21,80 @@ class RectangleUserProfileContainer extends StatelessWidget {
     required this.isLeft,
   }) : super(key: key);
 
+  Widget _buildProfileContainer(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        CustomPaint(
+          child: Container(
+            width: MediaQuery.of(context).size.width * userDetailsWidthPercentage,
+            height: MediaQuery.of(context).size.height * userDetailsHeightPercentage,
+          ),
+          painter: RectanglePainter(
+            color: Theme.of(context).colorScheme.secondary,
+            paintingStyle: PaintingStyle.stroke,
+            points: [],
+            animationControllerValue: 1.0,
+            curveRadius: 10,
+          ),
+        ),
+        RectangleTimerProgressContainer(animationController: animationController, color: progressColor),
+        CustomPaint(
+          child: Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                userBattleRoomDetails.profileUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: MediaQuery.of(context).size.width * (0.135),
+            height: MediaQuery.of(context).size.height * (0.0675),
+          ),
+          painter: RectanglePainter(
+            color: Theme.of(context).primaryColor,
+            paintingStyle: PaintingStyle.fill,
+            points: [],
+            animationControllerValue: 1.0,
+            curveRadius: 10,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserName(BuildContext context) {
+    return Flexible(
+      child: Text(
+        userBattleRoomDetails.name,
+        style: TextStyle(
+          height: 1.1,
+          fontSize: 13.0,
+          color: Theme.of(context).backgroundColor,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width * (0.45),
+        width: MediaQuery.of(context).size.width * (0.4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * (0.135),
-                    height: MediaQuery.of(context).size.height * (0.0675),
-                  ),
-                  painter: RectanglePainter(
-                    color: Theme.of(context).colorScheme.secondary,
-                    paintingStyle: PaintingStyle.stroke,
-                    points: [],
-                    animationControllerValue: 1.0,
-                    curveRadius: 10,
-                  ),
-                ),
-                RectangleTimerProgressContainer(animationController: animationController, color: progressColor),
-                CustomPaint(
-                  child: Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        userBattleRoomDetails.profileUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    width: MediaQuery.of(context).size.width * (0.135),
-                    height: MediaQuery.of(context).size.height * (0.0675),
-                  ),
-                  painter: RectanglePainter(
-                    color: Theme.of(context).primaryColor,
-                    paintingStyle: PaintingStyle.fill,
-                    points: [],
-                    animationControllerValue: 1.0,
-                    curveRadius: 10,
-                  ),
-                ),
-              ],
-            ),
+            isLeft ? _buildProfileContainer(context) : _buildUserName(context),
             SizedBox(
-              width: 5.0,
+              width: 12.50,
             ),
-            Expanded(
-              child: Text(
-                userBattleRoomDetails.name,
-                style: TextStyle(fontSize: 13.0),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            isLeft ? _buildUserName(context) : _buildProfileContainer(context),
           ],
         ));
   }
@@ -178,42 +193,7 @@ class RectanglePainter extends CustomPainter {
       canvas.drawPath(path, paint);
     } else {
       canvas.drawRRect(RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(curveRadius)), paint);
-      //
-      /*
-      path.lineTo((size.width - curveRadius), 0);
-      path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, pi / 2);
-      path.lineTo(size.width, (size.height - curveRadius));
-      path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, pi / 2);
-      path.lineTo(curveRadius, size.height);
-      path.addArc(Rect.fromCircle(center: Offset(curveRadius, size.height - curveRadius), radius: curveRadius), pi / 2, pi / 2);
-      path.lineTo(0, curveRadius);
-      path.addArc(Rect.fromCircle(center: Offset(curveRadius, curveRadius), radius: curveRadius), pi, pi / 2);
-    */
-
     }
-
-/*
-    if (animationControllerValue <= 0.25) {
-      path.lineTo(size.width * points.first, 0);
-    } else if (animationControllerValue > 0.25 && animationControllerValue <= 0.5) {
-      path.lineTo(size.width * points.first, 0);
-      path.lineTo(size.width * points.first, size.height * points[1]);
-    } else if (animationControllerValue > 0.5 && animationControllerValue <= 0.75) {
-      path.lineTo(size.width * points.first, 0);
-      path.lineTo(size.width * points.first, size.height * points[1]);
-      path.lineTo(size.width * points[2], size.height * points[1]);
-    } else if (animationControllerValue > 0.75 && animationControllerValue < 1.0) {
-      path.lineTo(size.width * points.first, 0);
-      path.lineTo(size.width * points.first, size.height * points[1]);
-      path.lineTo(size.width * points[2], size.height * points[1]);
-      path.lineTo(size.width * points[2], size.height * points[3]);
-    } else {
-      path.lineTo(size.width * points.first, 0);
-      path.lineTo(size.width * points.first, size.height * points[1]);
-      path.lineTo(size.width * points[2], size.height * points[1]);
-      path.close();
-    }
-    */
   }
 
   @override
