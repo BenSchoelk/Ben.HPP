@@ -128,6 +128,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       element?.cancel();
     });
     messageBoxAnimationController.dispose();
+    currentUserMessageDisappearTimer?.cancel();
     WidgetsBinding.instance!.removeObserver(this);
 
     super.dispose();
@@ -139,12 +140,27 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     //remove user from room
     if (state == AppLifecycleState.paused) {
       MultiUserBattleRoomCubit multiUserBattleRoomCubit = context.read<MultiUserBattleRoomCubit>();
-      deleteMessages(multiUserBattleRoomCubit);
-      multiUserBattleRoomCubit.deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
+      //if user has already won the game then do nothing
+      if (multiUserBattleRoomCubit.getUsers().length != 1) {
+        deleteMessages(multiUserBattleRoomCubit);
+        multiUserBattleRoomCubit.deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
+      }
+      //
     } else if (state == AppLifecycleState.resumed) {
-      setState(() {
-        showUserLeftTheGame = true;
-      });
+      MultiUserBattleRoomCubit multiUserBattleRoomCubit = context.read<MultiUserBattleRoomCubit>();
+      //if user has won the game already
+      if (multiUserBattleRoomCubit.getUsers().length == 1 && multiUserBattleRoomCubit.getUsers().first!.uid == context.read<UserDetailsCubit>().getUserId()) {
+        setState(() {
+          showUserLeftTheGame = false;
+        });
+      }
+      //
+      else {
+        setState(() {
+          showUserLeftTheGame = true;
+        });
+      }
+
       timerAnimationController.stop();
     }
   }
@@ -325,6 +341,10 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
   void navigateToResultScreen(List<UserBattleRoomDetails?> users, BattleRoom? battleRoom, List<Question>? questions) {
     bool navigateToResult = true;
+
+    if (users.isEmpty) {
+      return;
+    }
 
     //checking if every user has given all question's answer
     users.forEach((element) {
@@ -582,8 +602,9 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     }
 
     return PositionedDirectional(
+      end: opponentUserIndex == 1 ? null : userDetailsPadding,
       child: ScaleTransition(
-        scale: messageAnimation,
+        scale: opponentMessageAnimations[opponentUserIndex],
         child: MessageContainer(
           quizType: QuizTypes.groupPlay,
           isCurrentUser: false,
@@ -591,8 +612,9 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         ),
         alignment: alignment, //-0.5 left side and 0.5 is right side,
       ),
-      start: userDetailsPadding,
-      bottom: MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2,
+      start: opponentUserIndex == 1 ? userDetailsPadding : null,
+      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top,
+      bottom: opponentUserIndex == 0 ? MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2.5 : null,
     );
   }
 
@@ -700,6 +722,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                         return Container();
                       },
                     ),
+              _buildOpponentUserMessageContainer(0),
               //user in topLeft corner
               showUserLeftTheGame
                   ? Container()
@@ -720,6 +743,17 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                         return Container();
                       },
                     ),
+
+              BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                bloc: battleRoomCubit,
+                builder: (context, state) {
+                  if (state is MultiUserBattleRoomSuccess) {
+                    List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                    return opponentUsers.length >= 2 ? _buildOpponentUserMessageContainer(1) : Container();
+                  }
+                  return Container();
+                },
+              ),
               //user in top End corner
               showUserLeftTheGame
                   ? Container()
@@ -740,6 +774,17 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                         return Container();
                       },
                     ),
+
+              BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                bloc: battleRoomCubit,
+                builder: (context, state) {
+                  if (state is MultiUserBattleRoomSuccess) {
+                    List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                    return opponentUsers.length >= 3 ? _buildOpponentUserMessageContainer(2) : Container();
+                  }
+                  return Container();
+                },
+              ),
               _buildMessageButton(),
               _buildYouWonContainer(battleRoomCubit),
               _buildUserLeftTheGame(),

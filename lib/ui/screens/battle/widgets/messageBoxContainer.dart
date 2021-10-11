@@ -59,7 +59,7 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(chatKey)!, 0),
+          //_buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(chatKey)!, 0),
           _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(messagesKey)!, 1),
           _buildTabbarTextContainer(AppLocalization.of(context)!.getTranslatedValues(emojisKey)!, 2),
         ],
@@ -159,11 +159,13 @@ class ChatContainer extends StatelessWidget {
 
   Widget _buildMessage(BuildContext context, Message message) {
     bool messageByCurrentUser = message.by == context.read<UserDetailsCubit>().getUserId();
+    MultiUserBattleRoomCubit battleRoomCubit = context.read<MultiUserBattleRoomCubit>();
 
     return Align(
-      alignment: messageByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: messageByCurrentUser ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
       child: Container(
         constraints: BoxConstraints(
+          minWidth: MediaQuery.of(context).size.width * (0.3),
           maxWidth: MediaQuery.of(context).size.width * (0.5),
         ),
         margin: messageByCurrentUser ? EdgeInsets.only(bottom: 20.0, right: 15.0) : EdgeInsets.only(bottom: 20.0, left: 15.0),
@@ -174,6 +176,17 @@ class ChatContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                //
+                messageByCurrentUser
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsetsDirectional.only(bottom: 5.0, start: 10.0),
+                        child: Text(
+                          "${battleRoomCubit.getUser(message.by)!.name}  ",
+                          style: TextStyle(fontSize: 11.0, color: Theme.of(context).backgroundColor),
+                        ),
+                      ),
+
                 Padding(
                   padding: messageByCurrentUser ? const EdgeInsets.only(bottom: 5.0, right: 10.0) : const EdgeInsets.only(bottom: 5.0, left: 10.0),
                   child: Text(

@@ -8,6 +8,7 @@ import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'dart:ui' as ui;
 
 class MessageContainer extends StatelessWidget {
   final bool isCurrentUser;
@@ -47,20 +48,30 @@ class MessageContainer extends StatelessWidget {
       }
 
       return Container(
+        // decoration: BoxDecoration(boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 5,
+        //     blurRadius: 7,
+        //     offset: Offset(0, 3), // changes position of shadow
+        //   ),
+        // ]),
         key: message.isTextMessage ? Key("textMessage") : Key("nonTextMessage"),
         padding: message.isTextMessage ? EdgeInsets.symmetric(horizontal: 15.0) : EdgeInsets.symmetric(vertical: 7.5),
         alignment: Alignment.center,
-        height: 40,
-        width: MediaQuery.of(context).size.width * (message.isTextMessage ? 0.45 : 0.25),
+        height: 42.5,
+        width: MediaQuery.of(context).size.width * (message.isTextMessage ? 0.45 : 0.4),
         child: message.isTextMessage
             ? Text(
                 message.message,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 13.5, height: 1.0),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.secondary, fontSize: 13.5, height: 1.05),
               )
             : SvgPicture.asset(
                 UiUtils.getEmojiPath(message.message),
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
       );
     }
@@ -71,7 +82,8 @@ class MessageContainer extends StatelessWidget {
     if (isCurrentUser || opponentUserIndex == 0) {
       return MessageCustomPainter(
         triangleIsLeft: isCurrentUser,
-        color: Theme.of(context).colorScheme.secondary,
+        firstGradientColor: Theme.of(context).scaffoldBackgroundColor,
+        secondGradientColor: Theme.of(context).canvasColor,
       );
     }
 
@@ -87,7 +99,8 @@ class MessageContainer extends StatelessWidget {
       painter: quizType == QuizTypes.battle
           ? MessageCustomPainter(
               triangleIsLeft: isCurrentUser,
-              color: Theme.of(context).colorScheme.secondary,
+              firstGradientColor: Theme.of(context).scaffoldBackgroundColor,
+              secondGradientColor: Theme.of(context).canvasColor,
             )
           : _buildGroupBattleCustomPainter(context),
       child: BlocBuilder<MessageCubit, MessageState>(
@@ -147,16 +160,18 @@ class TopMessageCustomPainter extends CustomPainter {
 
 class MessageCustomPainter extends CustomPainter {
   final bool triangleIsLeft;
-  final Color color;
+  final Color firstGradientColor;
 
-  MessageCustomPainter({required this.triangleIsLeft, required this.color});
+  final Color secondGradientColor;
+
+  MessageCustomPainter({required this.triangleIsLeft, required this.firstGradientColor, required this.secondGradientColor});
 
   @override
   void paint(Canvas canvas, Size size) {
     Path path = Path();
 
     Paint paint = Paint()
-      ..color = color
+      ..shader = ui.Gradient.linear(Offset(size.width * (0.5), 0), Offset(size.width * (0.5), size.height), [firstGradientColor, secondGradientColor])
       ..style = PaintingStyle.fill;
 
     path.moveTo(size.width * (0.1), 0);
