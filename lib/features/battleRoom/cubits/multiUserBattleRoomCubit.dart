@@ -45,7 +45,7 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
   //subscribe battle room
   void subscribeToMultiUserBattleRoom(String battleRoomDocumentId, List<Question> questions) {
     //for realtimeness
-    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, true,"").listen((event) {
+    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, true, "").listen((event) {
       //to check if room destroyed by owner
       if (event.exists) {
         emit(MultiUserBattleRoomSuccess(
@@ -129,7 +129,8 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
     if (state is MultiUserBattleRoomSuccess) {
       _battleRoomRepository.deleteBattleRoom(
         (state as MultiUserBattleRoomSuccess).battleRoom.roomId,
-        true,"",
+        true,
+        "",
         roomCode: (state as MultiUserBattleRoomSuccess).battleRoom.roomCode,
       );
     }
@@ -152,7 +153,7 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
 
   void startGame() {
     if (state is MultiUserBattleRoomSuccess) {
-      _battleRoomRepository.startMultiUserQuiz((state as MultiUserBattleRoomSuccess).battleRoom.roomId,"");
+      _battleRoomRepository.startMultiUserQuiz((state as MultiUserBattleRoomSuccess).battleRoom.roomId, "");
     }
   }
 
@@ -210,10 +211,16 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
     return [];
   }
 
-  //get questions in quiz battle
   String getRoomCode() {
     if (state is MultiUserBattleRoomSuccess) {
       return (state as MultiUserBattleRoomSuccess).battleRoom.roomCode!;
+    }
+    return "";
+  }
+
+  String getRoomId() {
+    if (state is MultiUserBattleRoomSuccess) {
+      return (state as MultiUserBattleRoomSuccess).battleRoom.roomId!;
     }
     return "";
   }
@@ -252,6 +259,7 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
     final users = getUsers();
     return users[users.indexWhere((element) => element!.uid == userId)];
   }
+
   List<UserBattleRoomDetails?> getOpponentUsers(String userId) {
     final users = getUsers();
     users.removeWhere((element) => element!.uid == userId);
