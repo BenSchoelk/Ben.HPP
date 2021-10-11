@@ -613,7 +613,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         alignment: alignment, //-0.5 left side and 0.5 is right side,
       ),
       start: opponentUserIndex == 1 ? userDetailsPadding : null,
-      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top + userDetailsPadding * (1.5),
+      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top + userDetailsPadding * (1.65),
       bottom: opponentUserIndex == 0 ? MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2.5 : null,
     );
   }
