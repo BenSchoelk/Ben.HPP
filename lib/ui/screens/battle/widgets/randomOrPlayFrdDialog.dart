@@ -25,6 +25,7 @@ class RandomOrOlayFrdDialog extends StatelessWidget{
       children: [
         TextButton(
           onPressed: () {
+            Navigator.pop(context);
             if (int.parse(userProfile.coins!) < 5) {
               UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode)));
               return;
@@ -38,6 +39,7 @@ class RandomOrOlayFrdDialog extends StatelessWidget{
         ),
         TextButton(
           onPressed: () {
+            Navigator.pop(context);
             showDialog(context: context, builder: (context) => RoomOptionDialog(quizType:QuizTypes.battle,type: "playFrd",));
           },
           child: Text(

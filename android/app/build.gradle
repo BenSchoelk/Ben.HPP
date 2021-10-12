@@ -32,7 +32,6 @@ def keystoreProperties = new Properties()
 
 android {
     compileSdkVersion 30
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.wrteam.flutterquiz"

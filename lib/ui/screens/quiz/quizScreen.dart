@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -189,8 +190,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) {},
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
+        timerAnimationController.stop();
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+      },
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
         timerAnimationController.forward(from: timerAnimationController.value);
@@ -448,8 +453,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         ),
         actions: [
           CupertinoButton(
-            onPressed: () async {
-              timerAnimationController.stop();
+            onPressed: () {
+               timerAnimationController.stop();
               _showInterstitialAd();
               //interstitialAd.show();
               //user see full ads coins increment  6
@@ -504,7 +509,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       //dialog Show timer stop dialog close timer start
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
-                        print(value);
+                        print("****************************************:"+value.toString());
                         if (value == null) {
                           timerAnimationController.forward(from: timerAnimationController.value);
                         }
