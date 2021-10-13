@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -265,8 +266,11 @@ class _ResultScreenState extends State<ResultScreen> {
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent'),
+      onAdShowedFullScreenContent: (InterstitialAd ad){
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    },
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
         print('$ad onAdDismissedFullScreenContent');
         ad.dispose();
         _createInterstitialAd();

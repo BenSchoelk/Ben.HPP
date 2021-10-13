@@ -6,7 +6,6 @@ import 'package:flutterquiz/utils/apiUtils.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
-
 class ProfileManagementRemoteDataSource {
   /*
   {id: 11, firebase_id: G1thaSiA43WYx29dOXmUd6jqUWS2,
@@ -17,7 +16,6 @@ class ProfileManagementRemoteDataSource {
   */
 
   Future<dynamic> getUserDetailsById(String firebaseId) async {
-    print(firebaseId);
     try {
       //body of post request
       final body = {
