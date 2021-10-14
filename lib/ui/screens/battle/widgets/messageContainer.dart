@@ -48,24 +48,20 @@ class MessageContainer extends StatelessWidget {
       }
 
       return Container(
-        // decoration: BoxDecoration(boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.grey.withOpacity(0.3),
-        //     offset: Offset(0, 3), // changes position of shadow
-        //   ),
-        // ]),
         key: message.isTextMessage ? Key("textMessage") : Key("nonTextMessage"),
         padding: message.isTextMessage ? EdgeInsets.symmetric(horizontal: 15.0) : EdgeInsets.symmetric(vertical: 7.5),
         alignment: Alignment.center,
-        height: 42.5,
-        width: MediaQuery.of(context).size.width * (message.isTextMessage ? 0.45 : 0.4),
+        height: 40,
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * (message.isTextMessage ? 0.4 : 0.4),
+        ),
         child: message.isTextMessage
             ? Text(
                 message.message,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.secondary, fontSize: 13.5, height: 1.05),
+                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 13, height: 1.0),
               )
             : SvgPicture.asset(
                 UiUtils.getEmojiPath(message.message),
@@ -149,6 +145,7 @@ class TopMessageCustomPainter extends CustomPainter {
     path.lineTo(0, size.height * (0.2));
     //add curve
     path.quadraticBezierTo(0, 0, size.width * (0.1), 0);
+    canvas.drawShadow(path.shift(Offset(2, 2)), Colors.grey.withOpacity(0.3), 3.0, true);
 
     canvas.drawPath(path, paint);
   }
@@ -195,7 +192,7 @@ class MessageCustomPainter extends CustomPainter {
     path.lineTo(0, size.height * (0.2));
     //add curve
     path.quadraticBezierTo(0, 0, size.width * (0.1), 0);
-    canvas.drawShadow(path.shift(Offset(3, 3)), Colors.grey.withOpacity(0.3), 3.0, true);
+    canvas.drawShadow(path.shift(Offset(2, 2)), Colors.grey.withOpacity(0.3), 3.0, true);
     canvas.drawPath(path, paint);
   }
 

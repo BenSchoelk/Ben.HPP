@@ -11,7 +11,7 @@ import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
-const characters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+const characters = '1234567890'; //AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz
 
 @immutable
 class MultiUserBattleRoomState {}

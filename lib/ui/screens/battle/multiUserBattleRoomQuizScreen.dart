@@ -567,7 +567,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         position: messageBoxAnimation.drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
           quizType: QuizTypes.groupPlay,
-          topPadding: MediaQuery.of(context).size.height * (0.095) + MediaQuery.of(context).padding.top,
+          topPadding: MediaQuery.of(context).size.height * (0.095) + MediaQuery.of(context).padding.top + 15,
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
           },
@@ -613,7 +613,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         alignment: alignment, //-0.5 left side and 0.5 is right side,
       ),
       start: opponentUserIndex == 1 ? userDetailsPadding : null,
-      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top + userDetailsPadding * (1.65),
+      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top + userDetailsPadding * (1.375),
       bottom: opponentUserIndex == 0 ? MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2.5 : null,
     );
   }
@@ -680,6 +680,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                               key: Key("waitForOthers"),
                             )
                           : QuestionsContainer(
+                              topPadding: 17.5,
                               quizType: QuizTypes.groupPlay,
                               toggleSettingDialog: toggleSettingDialog,
                               showAnswerCorrectness: true,
@@ -702,11 +703,86 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                     ),
                   )),
               _buildMessageBoxContainer(),
-
-              showUserLeftTheGame ? Container() : _buildCurrentUserDetails(battleRoomCubit.getUser(context.read<UserDetailsCubit>().getUserId())!),
-              _buildCurrentUserMessageContainer(),
-              //user in bottom Right corner
-
+              ...showUserLeftTheGame
+                  ? []
+                  : [
+                      _buildCurrentUserDetails(battleRoomCubit.getUser(context.read<UserDetailsCubit>().getUserId())!),
+                      _buildCurrentUserMessageContainer(),
+                      //
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: battleRoomCubit,
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            return opponentUsers.length >= 1
+                                ? _buildOpponentUserDetails(
+                                    questionsLength: state.questions.length,
+                                    alignment: AlignmentDirectional.bottomEnd,
+                                    opponentUsers: opponentUsers,
+                                    opponentUserIndex: 0,
+                                  )
+                                : Container();
+                          }
+                          return Container();
+                        },
+                      ),
+                      _buildOpponentUserMessageContainer(0),
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: battleRoomCubit,
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            return opponentUsers.length >= 2
+                                ? _buildOpponentUserDetails(
+                                    questionsLength: state.questions.length,
+                                    alignment: AlignmentDirectional.topStart,
+                                    opponentUsers: opponentUsers,
+                                    opponentUserIndex: 1,
+                                  )
+                                : Container();
+                          }
+                          return Container();
+                        },
+                      ),
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: battleRoomCubit,
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            return opponentUsers.length >= 2 ? _buildOpponentUserMessageContainer(1) : Container();
+                          }
+                          return Container();
+                        },
+                      ),
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: battleRoomCubit,
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            return opponentUsers.length >= 3
+                                ? _buildOpponentUserDetails(
+                                    questionsLength: state.questions.length,
+                                    alignment: AlignmentDirectional.topEnd,
+                                    opponentUsers: opponentUsers,
+                                    opponentUserIndex: 2,
+                                  )
+                                : Container();
+                          }
+                          return Container();
+                        },
+                      ),
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: battleRoomCubit,
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            return opponentUsers.length >= 3 ? _buildOpponentUserMessageContainer(2) : Container();
+                          }
+                          return Container();
+                        },
+                      ),
+                    ],
+              /*
               showUserLeftTheGame
                   ? Container()
                   : BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
@@ -726,7 +802,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                         return Container();
                       },
                     ),
-              _buildOpponentUserMessageContainer(0),
+
+              showUserLeftTheGame ? Container() : _buildOpponentUserMessageContainer(0),
               //user in topLeft corner
               showUserLeftTheGame
                   ? Container()
@@ -748,16 +825,18 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                       },
                     ),
 
-              BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-                bloc: battleRoomCubit,
-                builder: (context, state) {
-                  if (state is MultiUserBattleRoomSuccess) {
-                    List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
-                    return opponentUsers.length >= 2 ? _buildOpponentUserMessageContainer(1) : Container();
-                  }
-                  return Container();
-                },
-              ),
+              showUserLeftTheGame
+                  ? Container()
+                  : BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      bloc: battleRoomCubit,
+                      builder: (context, state) {
+                        if (state is MultiUserBattleRoomSuccess) {
+                          List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                          return opponentUsers.length >= 2 ? _buildOpponentUserMessageContainer(1) : Container();
+                        }
+                        return Container();
+                      },
+                    ),
               //user in top End corner
               showUserLeftTheGame
                   ? Container()
@@ -779,16 +858,19 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                       },
                     ),
 
-              BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-                bloc: battleRoomCubit,
-                builder: (context, state) {
-                  if (state is MultiUserBattleRoomSuccess) {
-                    List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
-                    return opponentUsers.length >= 3 ? _buildOpponentUserMessageContainer(2) : Container();
-                  }
-                  return Container();
-                },
-              ),
+              showUserLeftTheGame
+                  ? Container()
+                  : BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      bloc: battleRoomCubit,
+                      builder: (context, state) {
+                        if (state is MultiUserBattleRoomSuccess) {
+                          List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                          return opponentUsers.length >= 3 ? _buildOpponentUserMessageContainer(2) : Container();
+                        }
+                        return Container();
+                      },
+                    ),
+                   */
               _buildMessageButton(),
               _buildYouWonContainer(battleRoomCubit),
               _buildUserLeftTheGame(),

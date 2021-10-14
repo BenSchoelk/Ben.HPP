@@ -250,6 +250,11 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
         return SingleChildScrollView(
           child: Column(
             children: [
+              widget.quizType == QuizTypes.groupPlay
+                  ? SizedBox(
+                      height: 22.5,
+                    )
+                  : SizedBox(),
               Container(
                 child: Stack(
                   alignment: Alignment.center,
