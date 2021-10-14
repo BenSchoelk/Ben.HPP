@@ -153,7 +153,7 @@ final int maxWinningCoins = 4;
 final int guessTheWordMaxWinningCoins = 6;
 //Coins to give winner of battle (1 vs 1)
 final int battleWinnerCoins = 5;
-final int randomBattleEntryCoins=5;
+final int randomBattleEntryCoins = 5;
 //minimum coins for creating group battle
 final int minCoinsForGroupBattleCreation = 0;
 final int maxCoinsForGroupBattleCreation = 50;
@@ -185,3 +185,8 @@ final List<String> predefinedMessages = [
 //constants for badges and rewards
 final int guessTheWordQuestionMinimumTimeForBadge = 25;
 final int funNLearnQuestionMinimumTimeForBadge = 8;
+
+//
+const String roomCodeGenerateCharacters = "1234567890"; //Numeric 
+//to make roomCode alpha numeric use below string in roomCodeGenerateCharacters
+//AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890
