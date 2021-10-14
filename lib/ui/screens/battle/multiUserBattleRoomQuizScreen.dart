@@ -680,7 +680,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                               key: Key("waitForOthers"),
                             )
                           : QuestionsContainer(
-                              topPadding: 15,
+                              topPadding: 16.5,
                               quizType: QuizTypes.groupPlay,
                               toggleSettingDialog: toggleSettingDialog,
                               showAnswerCorrectness: true,
