@@ -38,7 +38,7 @@ class BattleRoomUserFound extends BattleRoomState {
   final bool isRoomExist;
   final List<Question> questions;
 
-  BattleRoomUserFound({required this.battleRoom, required this.hasLeft, required this.questions,required this.isRoomExist});
+  BattleRoomUserFound({required this.battleRoom, required this.hasLeft, required this.questions, required this.isRoomExist});
 }
 
 class BattleRoomFailure extends BattleRoomState {
@@ -53,9 +53,9 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   StreamSubscription<DocumentSnapshot>? _battleRoomStreamSubscription;
   Random _rnd = Random.secure();
   //subscribe battle room
-  void subscribeToBattleRoom(String battleRoomDocumentId, List<Question> questions,bool type) {
+  void subscribeToBattleRoom(String battleRoomDocumentId, List<Question> questions, bool type) {
     //for realtimeness
-    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId,type,"battle").listen((event) {
+    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, type, "battle").listen((event) {
       if (event.exists) {
         //emit new state
         BattleRoom battleRoom = BattleRoom.fromDocumentSnapshot(event);
@@ -66,14 +66,15 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           emit(BattleRoomUserFound(
             battleRoom: battleRoom,
             isRoomExist: true,
-            questions: questions, hasLeft: false,
+            questions: questions,
+            hasLeft: false,
           ));
         }
       } else {
         if (state is BattleRoomUserFound) {
           //if one of the user has left the game while playing
           emit(
-            BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, hasLeft: true,isRoomExist: false, questions: (state as BattleRoomUserFound).questions),
+            BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, hasLeft: true, isRoomExist: false, questions: (state as BattleRoomUserFound).questions),
           );
         }
       }
@@ -81,15 +82,17 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       emit(BattleRoomFailure(defaultErrorMessageCode));
     }, cancelOnError: true);
   }
-  void subscribeToMultiUserBattleRoom(String battleRoomDocumentId, List<Question> questions,bool type) {
+
+  void subscribeToMultiUserBattleRoom(String battleRoomDocumentId, List<Question> questions, bool type) {
     //for realtimeness
-    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, type,"battle").listen((event) {
+    _battleRoomStreamSubscription = _battleRoomRepository.subscribeToBattleRoom(battleRoomDocumentId, type, "battle").listen((event) {
       //to check if room destroyed by owner
       if (event.exists) {
         emit(BattleRoomUserFound(
           battleRoom: BattleRoom.fromDocumentSnapshot(event),
           isRoomExist: true,
-          questions: questions, hasLeft: false,
+          questions: questions,
+          hasLeft: false,
         ));
       } else {
         //update state with room does not exist
@@ -101,6 +104,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       emit(BattleRoomFailure(defaultErrorMessageCode));
     }, cancelOnError: true);
   }
+
   void searchRoom({required String categoryId, required String name, required String profileUrl, required String uid, required String questionLanguageId}) async {
     emit(BattleRoomSearchInProgress());
     try {
@@ -125,7 +129,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           roomCreater: false,
         );
         await _battleRoomRepository.joinBattleRoom(battleRoomDocumentId: room.id, name: name, profileUrl: profileUrl, uid: uid);
-        subscribeToBattleRoom(room.id, questions,false);
+        subscribeToBattleRoom(room.id, questions, false);
       } else {
         emit(BattleRoomCreating());
         final createdRoomDocument = await _battleRoomRepository.createBattleRoom(
@@ -135,7 +139,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           uid: uid,
           roomCode: "",
           roomType: "public",
-          entryFee: randomBattleEntryCoins,// random battle fix entry fee 5 coins
+          entryFee: randomBattleEntryCoins, // random battle fix entry fee 5 coins
           questionLanguageId: questionLanguageId,
         );
         emit(BattleRoomCreated(BattleRoom.fromDocumentSnapshot(createdRoomDocument)));
@@ -147,14 +151,14 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           languageId: questionLanguageId,
           roomCreater: true,
         );
-        subscribeToBattleRoom(createdRoomDocument.id, questions,false);
+        subscribeToBattleRoom(createdRoomDocument.id, questions, false);
       }
     } catch (e) {
       emit(BattleRoomFailure(e.toString()));
     }
   }
 
-  String generateRoomCode(int length) => String.fromCharCodes(Iterable.generate(length, (_) => characters.codeUnitAt(_rnd.nextInt(characters.length))));
+  String generateRoomCode(int length) => String.fromCharCodes(Iterable.generate(length, (_) => roomCodeGenerateCharacters.codeUnitAt(_rnd.nextInt(roomCodeGenerateCharacters.length))));
   //to create room for battle
   void createRoom({required String categoryId, String? name, String? profileUrl, String? uid, String? roomType, int? entryFee, String? questionLanguageId}) async {
     emit(BattleRoomSearchInProgress());
@@ -178,7 +182,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         roomCreater: true,
         languageId: questionLanguageId,
       );
-      subscribeToMultiUserBattleRoom(documentSnapshot.id, questions,true);
+      subscribeToMultiUserBattleRoom(documentSnapshot.id, questions, true);
     } catch (e) {
       emit(BattleRoomFailure(e.toString()));
     }
@@ -195,11 +199,12 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         uid: uid,
         currentCoin: int.parse(currentCoin),
       );
-      subscribeToMultiUserBattleRoom(result['roomId'], result['questions'],true);
+      subscribeToMultiUserBattleRoom(result['roomId'], result['questions'], true);
     } catch (e) {
       emit(BattleRoomFailure(e.toString()));
     }
   }
+
   //this will be call when user submit answer and marked questions attempted
   //if time expired for given question then default "-1" answer will be submitted
   void updateQuestionAnswer(String? questionId, String? submittedAnswerId) {
@@ -221,18 +226,20 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   //delete room after qutting the game or finishing the game
   void deleteBattleRoom(bool type) {
     if (state is BattleRoomUserFound) {
-      _battleRoomRepository.deleteBattleRoom((state as BattleRoomUserFound).battleRoom.roomId, type,"battle");
+      _battleRoomRepository.deleteBattleRoom((state as BattleRoomUserFound).battleRoom.roomId, type, "battle");
       emit(BattleRoomDeleted());
     } else if (state is BattleRoomCreated) {
-      _battleRoomRepository.deleteBattleRoom((state as BattleRoomCreated).battleRoom.roomId, type,"battle");
+      _battleRoomRepository.deleteBattleRoom((state as BattleRoomCreated).battleRoom.roomId, type, "battle");
       emit(BattleRoomDeleted());
     }
   }
+
   void startGame() {
     if (state is BattleRoomUserFound) {
-      _battleRoomRepository.startMultiUserQuiz((state as BattleRoomUserFound).battleRoom.roomId,"battle");
+      _battleRoomRepository.startMultiUserQuiz((state as BattleRoomUserFound).battleRoom.roomId, "battle");
     }
   }
+
   //get questions in quiz battle
   int getEntryFee() {
     if (state is BattleRoomUserFound) {
@@ -240,6 +247,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     }
     return 0;
   }
+
   //get questions in quiz battle
   String getRoomCode() {
     if (state is BattleRoomUserFound) {
@@ -247,6 +255,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     }
     return "";
   }
+
   //submit anser
   void submitAnswer(String? currentUserId, String? submittedAnswer, bool isCorrectAnswer, int points) {
     if (state is BattleRoomUserFound) {
@@ -343,6 +352,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     }
     return UserBattleRoomDetails(points: 0, answers: [], correctAnswers: 0, name: "name", profileUrl: "profileUrl", uid: "uid");
   }
+
   List<UserBattleRoomDetails?> getUsers() {
     if (state is MultiUserBattleRoomSuccess) {
       List<UserBattleRoomDetails?> users = [];
@@ -353,7 +363,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       if (battleRoom.user2!.uid.isNotEmpty) {
         users.add(battleRoom.user2);
       }
-     /* if (battleRoom.user3!.uid.isNotEmpty) {
+      /* if (battleRoom.user3!.uid.isNotEmpty) {
         users.add(battleRoom.user3);
       }
       if (battleRoom.user4!.uid.isNotEmpty) {
@@ -364,6 +374,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     }
     return [];
   }
+
   //to close the stream subsciption
   @override
   Future<void> close() async {
