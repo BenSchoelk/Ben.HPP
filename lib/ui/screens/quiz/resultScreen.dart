@@ -1042,7 +1042,7 @@ class _ResultScreenState extends State<ResultScreen> {
             height: betweenButoonSpace,
           ),
           _buildShareYourScoreButton(),
-          SizedBox(
+          /*SizedBox(
             height: betweenButoonSpace,
           ),
           _buildButton(AppLocalization.of(context)!.getTranslatedValues("anotherOpponentBtn")!, () {
@@ -1050,7 +1050,7 @@ class _ResultScreenState extends State<ResultScreen> {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
             UiUtils.navigateToOneVSOneBattleScreen(context);
-          }, context),
+          }, context),*/
           SizedBox(
             height: betweenButoonSpace,
           ),

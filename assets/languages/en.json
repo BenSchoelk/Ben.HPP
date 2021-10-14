@@ -315,11 +315,10 @@
     "mathMania" : "Math Mania",
     "audioRoom" : "Audio Room",
     "desAudioRoom" : "Quiz with audio",
-    "randomLbl": "Random",
+    "randomLbl": "Random Battle",
     "playWithFrdLbl": "Play With Friends",
     "desMathMania" : "It's math quiz",
     "showOptions" : "Show Options"
-
 
 }
 
