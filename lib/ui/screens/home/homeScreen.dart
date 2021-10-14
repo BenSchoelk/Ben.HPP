@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -278,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
-      showDialog(context: context, builder: (context) => RoomOptionDialog(quizType:QuizTypes.groupPlay,));
+      showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RoomDialog(quizType: QuizTypes.groupPlay)));
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.contest) {
       if (context.read<SystemConfigCubit>().getIsContestAvailable() == "1") {
         Navigator.of(context).pushNamed(Routes.contest);

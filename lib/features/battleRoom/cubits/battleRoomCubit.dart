@@ -137,9 +137,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           name: name,
           profileUrl: profileUrl,
           uid: uid,
-          roomCode: "",
           roomType: "public",
-          entryFee: randomBattleEntryCoins, // random battle fix entry fee 5 coins
           questionLanguageId: questionLanguageId,
         );
         emit(BattleRoomCreated(BattleRoom.fromDocumentSnapshot(createdRoomDocument)));
@@ -161,7 +159,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   String generateRoomCode(int length) => String.fromCharCodes(Iterable.generate(length, (_) => roomCodeGenerateCharacters.codeUnitAt(_rnd.nextInt(roomCodeGenerateCharacters.length))));
   //to create room for battle
   void createRoom({required String categoryId, String? name, String? profileUrl, String? uid, String? roomType, int? entryFee, String? questionLanguageId}) async {
-    emit(BattleRoomSearchInProgress());
+    emit(BattleRoomCreating());
     try {
       String roomCode = generateRoomCode(6);
       final DocumentSnapshot documentSnapshot = await _battleRoomRepository.createBattleRoom(
@@ -190,7 +188,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
 
   //to join multi user battle room
   void joinRoom({String? name, String? profileUrl, String? uid, String? roomCode, required String currentCoin}) async {
-    emit(BattleRoomSearchInProgress());
+    emit(BattleRoomJoining());
     try {
       final result = await _battleRoomRepository.joinBattleRoomFrd(
         name: name,

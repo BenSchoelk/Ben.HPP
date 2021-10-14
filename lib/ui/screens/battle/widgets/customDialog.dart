@@ -8,7 +8,8 @@ class CustomDialog extends StatelessWidget {
   final Widget child;
   final Function? onBackButtonPress;
   final Function? onWillPop;
-  CustomDialog({Key? key, this.height, required this.child, this.onBackButtonPress, this.onWillPop}) : super(key: key);
+  final double? topPadding;
+  CustomDialog({Key? key, this.height, required this.child, this.topPadding, this.onBackButtonPress, this.onWillPop}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class CustomDialog extends StatelessWidget {
                           color: Theme.of(context).primaryColor,
                         ))),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * (0.02),
+                  height: topPadding ?? MediaQuery.of(context).size.height * (0.02),
                 ),
                 Center(
                   child: Container(
