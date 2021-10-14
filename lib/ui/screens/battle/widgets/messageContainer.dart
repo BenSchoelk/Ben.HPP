@@ -47,13 +47,10 @@ class MessageContainer extends StatelessWidget {
         }
       }
 
-      return Container(
-        key: message.isTextMessage ? Key("textMessage") : Key("nonTextMessage"),
-        padding: message.isTextMessage ? EdgeInsets.symmetric(horizontal: 15.0) : EdgeInsets.symmetric(vertical: 7.5),
-        alignment: Alignment.center,
-        height: 40,
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * (message.isTextMessage ? 0.4 : 0.4),
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15.0,
+          vertical: 8.0,
         ),
         child: message.isTextMessage
             ? Text(
@@ -61,7 +58,7 @@ class MessageContainer extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 13, height: 1.0),
+                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 13.5, height: 1.0),
               )
             : SvgPicture.asset(
                 UiUtils.getEmojiPath(message.message),
@@ -90,22 +87,28 @@ class MessageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: quizType == QuizTypes.battle
-          ? MessageCustomPainter(
-              triangleIsLeft: isCurrentUser,
-              firstGradientColor: Theme.of(context).scaffoldBackgroundColor,
-              secondGradientColor: Theme.of(context).canvasColor,
-            )
-          : _buildGroupBattleCustomPainter(context),
-      child: BlocBuilder<MessageCubit, MessageState>(
-        bloc: context.read<MessageCubit>(),
-        builder: (context, state) {
-          return AnimatedSwitcher(
-            duration: Duration(milliseconds: 175),
-            child: _buildMessage(context, state),
-          );
-        },
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: MediaQuery.of(context).size.width * (0.2),
+        maxWidth: MediaQuery.of(context).size.width * (0.4),
+      ),
+      child: CustomPaint(
+        painter: quizType == QuizTypes.battle
+            ? MessageCustomPainter(
+                triangleIsLeft: isCurrentUser,
+                firstGradientColor: Theme.of(context).scaffoldBackgroundColor,
+                secondGradientColor: Theme.of(context).canvasColor,
+              )
+            : _buildGroupBattleCustomPainter(context),
+        child: BlocBuilder<MessageCubit, MessageState>(
+          bloc: context.read<MessageCubit>(),
+          builder: (context, state) {
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 175),
+              child: _buildMessage(context, state),
+            );
+          },
+        ),
       ),
     );
   }
