@@ -90,7 +90,7 @@ class MessageContainer extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width * (0.2),
-        maxWidth: MediaQuery.of(context).size.width * (0.4),
+        maxWidth: MediaQuery.of(context).size.width * (0.425),
       ),
       child: CustomPaint(
         painter: quizType == QuizTypes.battle
