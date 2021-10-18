@@ -130,13 +130,16 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     super.didChangeAppLifecycleState(state);
     //delete battle room
     if (state == AppLifecycleState.paused) {
-      //delete all messages entered by current user
-      deleteMessages(context.read<BattleRoomCubit>());
-      //delete battle room
-      context.read<BattleRoomCubit>().deleteBattleRoom(false);
+      if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+        //delete all messages entered by current user
+        deleteMessages(context.read<BattleRoomCubit>());
+        //delete battle room
+        context.read<BattleRoomCubit>().deleteBattleRoom(false);
+      }
     }
     //show you left the game
     if (state == AppLifecycleState.resumed) {
+      print(context.read<BattleRoomCubit>().getUsers().length);
       if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
         setState(() {
           showYouLeftQuiz = true;

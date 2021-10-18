@@ -74,6 +74,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
       } else {
         if (state is BattleRoomUserFound) {
           print("User left the room");
+
           //if one of the user has left the game while playing
           emit(
             BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, hasLeft: true, isRoomExist: false, questions: (state as BattleRoomUserFound).questions),
@@ -368,8 +369,11 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
 
   bool opponentLeftTheGame(String userId) {
     if (state is BattleRoomUserFound) {
+      print((state as BattleRoomUserFound).hasLeft);
+      print("User submitted answer ${getCurrentUserDetails(userId).answers.length}");
       return (state as BattleRoomUserFound).hasLeft && getCurrentUserDetails(userId).answers.length != (state as BattleRoomUserFound).questions.length;
     }
+    print("State is not battle user found");
     return false;
   }
 
