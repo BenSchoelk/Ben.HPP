@@ -73,6 +73,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         }
       } else {
         if (state is BattleRoomUserFound) {
+          print("User left the room");
           //if one of the user has left the game while playing
           emit(
             BattleRoomUserFound(battleRoom: (state as BattleRoomUserFound).battleRoom, hasLeft: true, isRoomExist: false, questions: (state as BattleRoomUserFound).questions),
@@ -138,6 +139,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           name: name,
           profileUrl: profileUrl,
           uid: uid,
+          entryFee: randomBattleEntryCoins,
           roomType: "public",
           questionLanguageId: questionLanguageId,
         );
@@ -233,6 +235,12 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     } else if (state is BattleRoomCreated) {
       _battleRoomRepository.deleteBattleRoom((state as BattleRoomCreated).battleRoom.roomId, type);
       emit(BattleRoomDeleted());
+    }
+  }
+
+  void removeOpponentFromBattleRoom() {
+    if (state is BattleRoomUserFound) {
+      _battleRoomRepository.removeOpponentFromBattleRoom((state as BattleRoomUserFound).battleRoom.roomId!);
     }
   }
 

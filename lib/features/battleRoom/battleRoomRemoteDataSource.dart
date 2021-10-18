@@ -85,6 +85,20 @@ class BattleRoomRemoteDataSource {
     return _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).snapshots();
   }
 
+  Future<void> removeOpponentFromBattleRoom(String roomId) async {
+    try {
+      await _firebaseFirestore.collection(battleRoomCollection).doc(roomId).update({
+        "user2": {"name": "", "correctAnswers": 0, "answers": [], "uid": "", "profileUrl": ""},
+      });
+    } on SocketException catch (_) {
+      throw BattleRoomException(errorMessageCode: noInternetCode);
+    } on PlatformException catch (_) {
+      throw BattleRoomException(errorMessageCode: defaultErrorMessageCode);
+    } catch (_) {
+      throw BattleRoomException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
+
   //to find room to play quiz
   Future<List<DocumentSnapshot>> searchBattleRoom(String categoryId, String questionLanguageId) async {
     try {

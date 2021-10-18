@@ -203,6 +203,12 @@ class BattleRoomRepository {
     } catch (e) {}
   }
 
+  Future<void> removeOpponentFromBattleRoom(String roomId) async {
+    try {
+      await _battleRoomRemoteDataSource.removeOpponentFromBattleRoom(roomId);
+    } catch (e) {}
+  }
+
   Future<void> deleteUnusedMultiUserBattleRoom(String userId) async {
     try {
       List<DocumentSnapshot> rooms = await _battleRoomRemoteDataSource.getRoomCreatedByUser(userId);

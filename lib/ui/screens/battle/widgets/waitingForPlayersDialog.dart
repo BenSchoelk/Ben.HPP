@@ -116,14 +116,11 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                     } else {
                       createdRoom = (context.read<BattleRoomCubit>().state as BattleRoomCreated).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
                     }
-
                     //if room is created by current user then delete room
                     if (createdRoom) {
                       context.read<BattleRoomCubit>().deleteBattleRoom(false); // : context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
                     } else {
-                      //TODO: remove user from battle 1 vs 1
-                      //if room is not created by current user then remove user from room
-                      context.read<BattleRoomCubit>().deleteBattleRoom(false);
+                      context.read<BattleRoomCubit>().removeOpponentFromBattleRoom();
                     }
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();

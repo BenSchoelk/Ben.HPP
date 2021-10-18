@@ -605,10 +605,10 @@ class _RoomDialogState extends State<RoomDialog> {
                       _buildTabContainer(2, "Join", constraints),
                     ],
                   ),
-                  Container(
-                    color: Theme.of(context).primaryColorDark,
-                    height: 5.0,
-                  ),
+                  // Container(
+                  //   color: Theme.of(context).primaryColorDark,
+                  //   height: 5.0,
+                  // ),
                   SizedBox(
                     height: constraints.maxHeight * (0.05),
                   ),
