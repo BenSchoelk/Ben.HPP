@@ -307,3 +307,6 @@ String messagesKey = "messages";
 String emojisKey = "emojis";
 String badgesKey = "badges";
 String showOptionsKey = "showOptions";
+String enterRoomCodeHereKey = "enterRoomCodeHere";
+String currentCoinsKey = "currentCoins";
+String pleaseSelectCategoryKey = "pleaseSelectCategory";

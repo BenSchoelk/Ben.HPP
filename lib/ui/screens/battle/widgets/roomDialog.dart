@@ -201,11 +201,10 @@ class _RoomDialogState extends State<RoomDialog> {
     return Column(
       key: Key("joinTab"),
       children: [
-        //TODO: add enter room code localization
         Container(
             alignment: Alignment.center,
             child: Text(
-              "Enter Room code here",
+              AppLocalization.of(context)!.getTranslatedValues(enterRoomCodeHereKey)!,
               style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 18.0),
             )),
         SizedBox(
@@ -231,7 +230,6 @@ class _RoomDialogState extends State<RoomDialog> {
         SizedBox(
           height: constraints.maxHeight * (0.1),
         ),
-
         widget.quizType == QuizTypes.battle
             ? BlocConsumer<BattleRoomCubit, BattleRoomState>(
                 listener: (context, state) {
@@ -408,9 +406,8 @@ class _RoomDialogState extends State<RoomDialog> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //TODO : add localization current coins
               Text(
-                "Current coins:  ",
+                "${AppLocalization.of(context)!.getTranslatedValues(currentCoinsKey)!}:  ",
                 style: TextStyle(
                   color: Theme.of(context).primaryColor.withOpacity(0.75),
                   fontSize: 18.0,
@@ -450,8 +447,7 @@ class _RoomDialogState extends State<RoomDialog> {
                         ? () {}
                         : () {
                             if (isCategoryEnabled() && getCategoryId().isEmpty) {
-                              //TODO : Add please select category localization
-                              UiUtils.errorMessageDialog(context, "Please select category");
+                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
@@ -505,8 +501,7 @@ class _RoomDialogState extends State<RoomDialog> {
                         ? () {}
                         : () {
                             if (isCategoryEnabled() && getCategoryId().isEmpty) {
-                              //TODO : Add please select category localization
-                              UiUtils.errorMessageDialog(context, "Please select category");
+                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();

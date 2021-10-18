@@ -318,7 +318,10 @@
     "randomLbl": "Random",
     "playWithFrdLbl": "Play With Friends",
     "desMathMania" : "It's math quiz",
-    "showOptions" : "Show Options"
+    "showOptions" : "Show Options",
+    "enterRoomCodeHere" : "Enter room code here",
+    "currentCoins" : "Current Coins",
+    "pleaseSelectCategory" : "Please select category"
 
 
 }
