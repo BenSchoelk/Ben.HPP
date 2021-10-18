@@ -87,7 +87,7 @@ class _RandomOrOlayFrdDialogState extends State<RandomOrOlayFrdDialog> {
         value: selectedCategory);
   }
 
-  Widget _buildDropDown(BoxConstraints constraints) {
+  Widget _buildDropDownContainer(BoxConstraints constraints) {
     return context.read<SystemConfigCubit>().getIsCategoryEnableForBattle() == "1"
         ? Container(
             padding: EdgeInsets.symmetric(
@@ -292,7 +292,7 @@ class _RandomOrOlayFrdDialogState extends State<RandomOrOlayFrdDialog> {
                             SizedBox(
                               height: constraints.maxHeight * (0.075),
                             ),
-                            _buildDropDown(constraints),
+                            _buildDropDownContainer(constraints),
                             SizedBox(
                               height: constraints.maxHeight * (0.075),
                             ),

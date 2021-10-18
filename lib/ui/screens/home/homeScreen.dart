@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
@@ -282,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
+      context.read<MultiUserBattleRoomCubit>().emit(MultiUserBattleRoomInitial());
       showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RoomDialog(quizType: QuizTypes.groupPlay)));
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.contest) {
       if (context.read<SystemConfigCubit>().getIsContestAvailable() == "1") {
