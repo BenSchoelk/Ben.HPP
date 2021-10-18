@@ -28,6 +28,7 @@ import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/updateAppContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
@@ -83,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   @override
   void initState() {
+    checkForUpdates();
     setupInteractedMessage();
     setQuizMenu();
     super.initState();
@@ -107,6 +109,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.guessTheWord);
       }
       setState(() {});
+    });
+  }
+
+  late bool showUpdateContainer = false;
+
+  void checkForUpdates() async {
+    await Future.delayed(Duration.zero);
+    if (context.read<SystemConfigCubit>().isForceUpdateEnable()) {
+      bool forceUpdate = await UiUtils.forceUpdate(context.read<SystemConfigCubit>().getAppVersion());
+      if (forceUpdate) {
+        setState(() {
+          showUpdateContainer = true;
+        });
+      }
+    }
+  }
+
+  void initFirebaseMessaging() {
+    // messaging = FirebaseMessaging.instance;
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print("onMessage.........................................");
+      print(event.notification!.body! + event.notification!.title!);
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + message.notification!.title! + message.notification!.body!);
     });
   }
 
@@ -157,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  static Future<String> _downloadAndSaveFile(String url, String fileName) async {
+  Future<String> _downloadAndSaveFile(String url, String fileName) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
     final http.Response response = await http.get(Uri.parse(url));
@@ -820,6 +847,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             _buildSelfChallenge(statusBarPadding),
             ..._buildQuizTypes(statusBarPadding),
             _buildTopMenuContainer(statusBarPadding),
+            showUpdateContainer ? UpdateAppContainer() : Container(),
           ]);
         },
       ),

@@ -322,7 +322,12 @@
     "enterRoomCodeHere" : "Enter room code here",
     "currentCoins" : "Current Coins",
     "pleaseSelectCategory" : "Please select category",
-    "moreThanZeroCoins" : "Please enter more than zero coins"
+    "moreThanZeroCoins" : "Please enter more than zero coins",
+    "updateApplication" : "There is an update available. Please update to use this app",
+    "update" : "Update",
+    "warning" : "warning",
+    "failedToGetAppUrl" : "Failed to get app url, Please update manually"
+
 }
 
 

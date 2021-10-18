@@ -324,4 +324,24 @@
     "currentCoins" : "वर्तमान सिक्के",
     "pleaseSelectCategory" : "कृपया श्रेणी चुनें",
     "moreThanZeroCoins" : "कृपया शून्य से अधिक सिक्के दर्ज करें"
+    "emojis" : "emojis",
+    "badges" : "Badges",
+    "mathMania" : "Math Mania",
+    "audioRoom" : "Audio Room",
+    "desAudioRoom" : "Quiz with audio",
+    "desMathMania" : "It's math quiz",
+    "randomLbl": "Random Battle",
+    "playWithFrdLbl": "Play With Friends",
+    "showOptions" : "Show Options",
+    "enterRoomCodeHere" : "Enter room code here",
+    "currentCoins" : "Current Coins",
+    "pleaseSelectCategory" : "Please select category",
+    "moreThanZeroCoins" : "Please enter more than zero coins",
+  "updateApplication" : "There is an update available. Please update to use this app",
+  "update" : "Update",
+
+  "warning" : "warning",
+
+  "failedToGetAppUrl" : "Failed to get app url"
+
 }
