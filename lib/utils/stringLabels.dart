@@ -310,3 +310,4 @@ String showOptionsKey = "showOptions";
 String enterRoomCodeHereKey = "enterRoomCodeHere";
 String currentCoinsKey = "currentCoins";
 String pleaseSelectCategoryKey = "pleaseSelectCategory";
+String moreThanZeroCoinsKey = "moreThanZeroCoins";

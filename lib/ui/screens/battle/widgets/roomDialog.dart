@@ -28,7 +28,7 @@ class _RoomDialogState extends State<RoomDialog> {
   int currentSelectedTab = 1; //1 is create and second is join
 
   String selectedCategory = selectCategoryKey;
-  List<int> entryFees = [minCoinsForGroupBattleCreation, 5, 10, 15];
+  List<int> entryFees = [minCoinsForGroupBattleCreation, 10, 15, 20];
   int entryFee = minCoinsForGroupBattleCreation; //difference between two entries is
   TextEditingController textEditingController = TextEditingController();
   TextEditingController roomCodeEditingController = TextEditingController();
@@ -447,6 +447,10 @@ class _RoomDialogState extends State<RoomDialog> {
                               UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
                               return;
                             }
+                            if (entryFee < 0) {
+                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey));
+                              return;
+                            }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
 
                             if (int.parse(userProfile.coins!) < entryFee) {
@@ -499,6 +503,10 @@ class _RoomDialogState extends State<RoomDialog> {
                         : () {
                             if (isCategoryEnabled() && getCategoryId().isEmpty) {
                               UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
+                              return;
+                            }
+                            if (entryFee < 0) {
+                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey));
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();

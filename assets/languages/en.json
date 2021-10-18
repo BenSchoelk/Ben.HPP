@@ -321,8 +321,8 @@
     "showOptions" : "Show Options",
     "enterRoomCodeHere" : "Enter room code here",
     "currentCoins" : "Current Coins",
-    "pleaseSelectCategory" : "Please select category"
-
+    "pleaseSelectCategory" : "Please select category",
+    "moreThanZeroCoins" : "Please enter more than zero coins"
 }
 
 

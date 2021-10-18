@@ -318,5 +318,10 @@
     "desAudioRoom" : "Quiz with audio",
     "desMathMania" : "It's math quiz",
     "randomLbl": "Random Battle",
-    "playWithFrdLbl": "Play With Friends"
+    "playWithFrdLbl": "Play With Friends",
+    "showOptions" : "Show Options",
+    "enterRoomCodeHere" : "Enter room code here",
+    "currentCoins" : "Current Coins",
+    "pleaseSelectCategory" : "Please select category",
+    "moreThanZeroCoins" : "Please enter more than zero coins"
 }
