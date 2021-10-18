@@ -273,7 +273,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(Routes.selfChallenge);
     } //
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
-      showDialog(context: context, builder: (context) => RandomOrOlayFrdDialog());
+
+      showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RandomOrOlayFrdDialog()));
+     // showDialog(context: context, builder: (context) => RandomOrOlayFrdDialog());
       //UiUtils.navigateToOneVSOneBattleScreen(context);
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.trueAndFalse) {
       Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.trueAndFalse, "numberOfPlayer": 1, "quizName": "True & False"});
