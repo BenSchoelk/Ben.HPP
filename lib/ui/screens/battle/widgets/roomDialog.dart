@@ -557,7 +557,17 @@ class _RoomDialogState extends State<RoomDialog> {
         }
         //user in join tab
         else {
-          return Future.value(true);
+          if (widget.quizType == QuizTypes.groupPlay) {
+            if (context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
+              return Future.value(false);
+            }
+            return Future.value(true);
+          } else {
+            if (context.read<BattleRoomCubit>().state is BattleRoomJoining) {
+              return Future.value(false);
+            }
+            return Future.value(true);
+          }
         }
       },
       onBackButtonPress: () {
@@ -571,7 +581,17 @@ class _RoomDialogState extends State<RoomDialog> {
               Navigator.of(context).pop();
             }
           }
-        } else {}
+        } else {
+          if (widget.quizType == QuizTypes.groupPlay) {
+            if (context.read<MultiUserBattleRoomCubit>().state is! MultiUserBattleRoomInProgress) {
+              Navigator.of(context).pop();
+            }
+          } else {
+            if (context.read<BattleRoomCubit>().state is! BattleRoomJoining) {
+              Navigator.of(context).pop();
+            }
+          }
+        }
       },
       topPadding: MediaQuery.of(context).size.height * (0.15),
       child: ClipRRect(

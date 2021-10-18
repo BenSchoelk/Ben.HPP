@@ -97,6 +97,7 @@ class BattleRoomRemoteDataSource {
           .collection(battleRoomCollection)
           .where("languageId", isEqualTo: questionLanguageId)
           .where("categoryId", isEqualTo: categoryId)
+          .where("roomCode", isEqualTo: "")
           .where(
             "user2.uid",
             isEqualTo: "",
