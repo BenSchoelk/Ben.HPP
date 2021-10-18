@@ -110,6 +110,7 @@ class _RoomDialogState extends State<RoomDialog> {
   }) {
     return DropdownButton<String>(
         key: Key(keyValue),
+        borderRadius: BorderRadius.circular(20),
         dropdownColor: Theme.of(context).canvasColor, //same as background of dropdown color
         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),
         isExpanded: true,
@@ -216,7 +217,7 @@ class _RoomDialogState extends State<RoomDialog> {
           decoration: BoxDecoration(color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(25.0)),
           height: constraints.maxHeight * (0.115),
           child: TextField(
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: TextStyle(color: Theme.of(context).primaryColor),keyboardType: TextInputType.number,
             cursorColor: Theme.of(context).primaryColor,
             decoration: InputDecoration(
                 border: InputBorder.none,

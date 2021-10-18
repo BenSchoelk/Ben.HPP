@@ -66,6 +66,7 @@ class _RandomOrOlayFrdDialogState extends State<RandomOrOlayFrdDialog> {
   }) {
     return DropdownButton<String>(
         key: Key(keyValue),
+        borderRadius: BorderRadius.circular(20),
         dropdownColor: Theme.of(context).canvasColor, //same as background of dropdown color
         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),
         isExpanded: true,

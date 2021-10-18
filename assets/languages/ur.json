@@ -309,24 +309,12 @@
     "chat" : "چیٹ",
     "messages" : "پیغامات",
     "emojis" : "ایموجیز۔",
-    "badges" : "Badges",
-    "mathMania" : "Math Mania",
-    "audioRoom" : "Audio Room",
-    "desAudioRoom" : "Quiz with audio",
-    "desMathMania" : "It's math quiz",
-    "randomLbl": "Random Battle",
-    "playWithFrdLbl": "Play With Friends",
-    "showOptions" : "Show Options",
-    "enterRoomCodeHere" : "Enter room code here",
-    "currentCoins" : "Current Coins",
-    "pleaseSelectCategory" : "Please select category",
-    "moreThanZeroCoins" : "Please enter more than zero coins",
-    "updateApplication" : "There is an update available. Please update to use this app",
-    "update" : "Update",
-    "warning" : "warning",
+    "updateApplication" : "ایک اپ ڈیٹ دستیاب ہے۔ براہ کرم اس ایپ کو استعمال کرنے کے لیے اپ ڈیٹ کریں۔",
+    "update" : "اپ ڈیٹ",
+    "warning" : "انتباہ",
 
-    "failedToGetAppUrl" : "Failed to get app url"
+    "failedToGetAppUrl" : "ایپ url حاصل کرنے میں ناکام۔"
 
-  
+
 }
    
