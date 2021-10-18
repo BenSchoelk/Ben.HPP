@@ -366,6 +366,13 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     return UserBattleRoomDetails(points: 0, answers: [], correctAnswers: 0, name: "name", profileUrl: "profileUrl", uid: "uid");
   }
 
+  bool opponentLeftTheGame(String userId) {
+    if (state is BattleRoomUserFound) {
+      return (state as BattleRoomUserFound).hasLeft && getCurrentUserDetails(userId).answers.length != (state as BattleRoomUserFound).questions.length;
+    }
+    return false;
+  }
+
   List<UserBattleRoomDetails?> getUsers() {
     if (state is MultiUserBattleRoomSuccess) {
       List<UserBattleRoomDetails?> users = [];

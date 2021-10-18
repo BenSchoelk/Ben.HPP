@@ -137,10 +137,12 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     }
     //show you left the game
     if (state == AppLifecycleState.resumed) {
-      // came back to Foreground
-      setState(() {
-        showYouLeftQuiz = true;
-      });
+      if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+        setState(() {
+          showYouLeftQuiz = true;
+        });
+      }
+
       timerAnimationController.stop();
       opponentUserTimerAnimationController.stop();
     }
@@ -453,7 +455,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             builder: (context, state) {
               if (state is BattleRoomUserFound) {
                 //show you won game only opponent user has left the game
-                if (state.hasLeft && battleRoomCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId()).answers.length != state.questions.length) {
+                if (battleRoomCubit.opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
                   return Container(
                     alignment: Alignment.center,
                     color: Theme.of(context).backgroundColor.withOpacity(0.1),
@@ -480,6 +482,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                             ),
                             onPressed: () {
                               deleteMessages(battleRoomCubit);
+                              context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<BattleRoomCubit>().getEntryFee() * 2, true);
+                              context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: context.read<BattleRoomCubit>().getEntryFee() * 2);
                               Navigator.of(context).pop();
                             }),
                       ],
@@ -583,6 +587,10 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         //if user left the game
         if (showYouLeftQuiz) {
           return Future.value(true);
+        }
+        //if user already won the game
+        if (battleRoomCubit.opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+          return Future.value(false);
         }
         //show warning
         showDialog(

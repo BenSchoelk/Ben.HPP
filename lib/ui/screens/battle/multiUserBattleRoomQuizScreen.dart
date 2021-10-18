@@ -421,8 +421,6 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                 actions: [
                   TextButton(
                     onPressed: () {
-                      //delete room
-                      battleRoomCubit.deleteMultiUserBattleRoom();
                       //delete messages
                       deleteMessages(context.read<MultiUserBattleRoomCubit>());
 
@@ -430,6 +428,9 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                       context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: battleRoomCubit.getEntryFee());
                       //add coins in database
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), battleRoomCubit.getEntryFee(), true);
+
+                      //delete room
+                      battleRoomCubit.deleteMultiUserBattleRoom();
                       Navigator.of(context).pop();
                     },
                     child: Text(
@@ -627,6 +628,11 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         if (showUserLeftTheGame) {
           return Future.value(true);
         }
+        //
+        if (battleRoomCubit.getUsers().length == 1 && battleRoomCubit.getUsers().first!.uid == context.read<UserDetailsCubit>().getUserId()) {
+          return Future.value(false);
+        }
+
         //if user is playing game then show
         //exit game dialog
         showDialog(
