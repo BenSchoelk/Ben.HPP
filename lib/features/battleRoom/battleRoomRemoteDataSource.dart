@@ -78,8 +78,8 @@ class BattleRoomRemoteDataSource {
   }
 
   //subscribe to battle room
-  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser, String battle) {
-    if (forMultiUser && battle != "battle") {
+  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser) {
+    if (forMultiUser) {
       return _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(battleRoomDocumentId).snapshots();
     }
     return _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).snapshots();
@@ -115,9 +115,9 @@ class BattleRoomRemoteDataSource {
   }
 
   //delete battle room
-  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, String? type, {String? roomCode}) async {
+  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, {String? roomCode}) async {
     try {
-      if (forMultiUser && type != "battle") {
+      if (forMultiUser) {
         Map<String, String> body = {
           accessValueKey: accessValue,
           roomIdKey: roomCode!,

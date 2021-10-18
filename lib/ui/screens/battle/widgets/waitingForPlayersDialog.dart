@@ -18,7 +18,7 @@ import 'package:share_plus/share_plus.dart';
 
 class WaitingForPlayesDialog extends StatefulWidget {
   final QuizTypes quizType;
-  final String ?battleLbl;
+  final String? battleLbl;
   WaitingForPlayesDialog({Key? key, required this.quizType, this.battleLbl}) : super(key: key);
 
   @override
@@ -101,445 +101,486 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
             )));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return CustomDialog(
-      onWillPop: () {
-        if (widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomUserFound:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomSuccess) {
-          showDialog(
-              context: context,
-              builder: (context) => ExitGameDailog(
-                    onTapYes: () {
-                      bool createdRoom = widget.quizType==QuizTypes.battle?(context.read<BattleRoomCubit>().state as BattleRoomUserFound).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId:(context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+  Function? onBackEvent() {
+    if (widget.quizType == QuizTypes.battle) {
+      if (context.read<BattleRoomCubit>().state is BattleRoomCreated || context.read<BattleRoomCubit>().state is BattleRoomUserFound) {
+        //if user
+        showDialog(
+            context: context,
+            builder: (context) => ExitGameDailog(
+                  onTapYes: () {
+                    bool createdRoom = false;
 
-                      //if room is created by current user then delete room
-                      if (createdRoom) {
-                        widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
-                      } else {
-                        //if room is not created by current user then remove user from room
-                        widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
-                      }
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                  ));
-        }
-        return Future.value(false);
-      },
-      onBackButtonPress: () {
-        if (widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().state is BattleRoomUserFound:context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomSuccess) {
-          showDialog(
-              context: context,
-              builder: (context) => ExitGameDailog(
+                    if (context.read<BattleRoomCubit>().state is BattleRoomUserFound) {
+                      createdRoom = (context.read<BattleRoomCubit>().state as BattleRoomUserFound).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                    } else {
+                      createdRoom = (context.read<BattleRoomCubit>().state as BattleRoomCreated).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                    }
+
+                    //if room is created by current user then delete room
+                    if (createdRoom) {
+                      context.read<BattleRoomCubit>().deleteBattleRoom(false); // : context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+                    } else {
+                      //TODO: remove user from battle 1 vs 1
+                      //if room is not created by current user then remove user from room
+                      context.read<BattleRoomCubit>().deleteBattleRoom(false);
+                    }
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                ));
+      }
+    } else {
+      //
+      showDialog(
+          context: context,
+          builder: (context) => ExitGameDailog(
                 onTapYes: () {
-                  bool createdRoom = widget.quizType==QuizTypes.battle?(context.read<BattleRoomCubit>().state as BattleRoomUserFound).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId:(context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                  bool createdRoom = (context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
 
                   //if room is created by current user then delete room
                   if (createdRoom) {
-                    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+                    context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
                   } else {
                     //if room is not created by current user then remove user from room
-                    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().deleteBattleRoom(widget.battleLbl=="playFrd"?true:false):context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
+                    context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
                   }
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
               ));
-        }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomDialog(
+      onWillPop: () {
+        onBackEvent();
+        return Future.value(false);
       },
+      onBackButtonPress: onBackEvent,
       height: MediaQuery.of(context).size.height * (0.8),
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(UiUtils.dailogRadius), gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
-        child: widget.quizType==QuizTypes.battle? BlocListener<BattleRoomCubit, BattleRoomState>(
-          listener: (context, state) {
-            if (state is BattleRoomUserFound) {
-              //if game is ready to play
-              if (state.battleRoom.readyToPlay!) {
-                //if user has joined room then navigate to quiz screen
-                if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments: {"battleLbl":widget.battleLbl});
-                }
-              }
+        child: widget.quizType == QuizTypes.battle
+            ? BlocListener<BattleRoomCubit, BattleRoomState>(
+                bloc: context.read<BattleRoomCubit>(),
+                listener: (context, state) {
+                  if (state is BattleRoomUserFound) {
+                    //if game is ready to play
+                    if (state.battleRoom.readyToPlay!) {
+                      //if user has joined room then navigate to quiz screen
+                      if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
+                        Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl});
+                      }
+                    }
 
-              //if owner deleted the room then show this dialog
-              if (!state.isRoomExist) {
-                if (context.read<UserDetailsCubit>().getUserProfile().userId != state.battleRoom.user1!.uid) {
-                  //Room destroyed by owner
-                  showRoomDestroyed(context);
-                }
-              }
-            }
-          },
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Column(
-              children: [
-                Container(
-                  height: constraints.maxHeight * (0.11),
-                  width: constraints.maxWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(UiUtils.dailogRadius),
-                      topRight: Radius.circular(UiUtils.dailogRadius),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<BattleRoomCubit>().getEntryFee()}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).backgroundColor,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                              onPressed: () {
-                                try {
-                                  String inviteMessage = "$groupBattleInviteMessage${context.read<BattleRoomCubit>().getRoomCode()}";
-                                  Share.share(inviteMessage);
-                                } catch (e) {
-                                  UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
-                                }
-                              },
-                              iconSize: 20,
-                              icon: Icon(Icons.share),
-                              color: Theme.of(context).backgroundColor,
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.025),
-                ),
-                Container(
-                  width: constraints.maxWidth * (0.85),
-                  height: constraints.maxHeight * (0.175),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    //if owner deleted the room then show this dialog
+                    if (!state.isRoomExist) {
+                      if (context.read<UserDetailsCubit>().getUserProfile().userId != state.battleRoom.user1!.uid) {
+                        //Room destroyed by owner
+                        showRoomDestroyed(context);
+                      }
+                    }
+                  }
+                },
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              //
-                              child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<BattleRoomCubit>().getRoomCode()}",
+                      Container(
+                        height: constraints.maxHeight * (0.11),
+                        width: constraints.maxWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(UiUtils.dailogRadius),
+                            topRight: Radius.circular(UiUtils.dailogRadius),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<BattleRoomCubit>().getEntryFee()}",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18.0,
-                                    color: Theme.of(context).colorScheme.secondary,
-                                    height: 1.2,
-                                  )),
-                            ),
-                          ],
+                                    color: Theme.of(context).backgroundColor,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      try {
+                                        String inviteMessage = "$groupBattleInviteMessage${context.read<BattleRoomCubit>().getRoomCode()}";
+                                        Share.share(inviteMessage);
+                                      } catch (e) {
+                                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+                                      }
+                                    },
+                                    iconSize: 20,
+                                    icon: Icon(Icons.share),
+                                    color: Theme.of(context).backgroundColor,
+                                  ))
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
-                        height: 5.0,
+                        height: constraints.maxHeight * (0.025),
                       ),
-                      Text(AppLocalization.of(context)!.getTranslatedValues('shareRoomCodeLbl')!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 13.5,
-                            height: 1.2,
-                            color: Theme.of(context).colorScheme.secondary,
-                          )),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).colorScheme.secondary),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.0275),
-                ),
-                BlocBuilder<BattleRoomCubit, BattleRoomState>(
-                  bloc: context.read<BattleRoomCubit>(),
-                  builder: (context, state) {
-                    if (state is BattleRoomUserFound) {
-                      return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
-                    }
-                    return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
-                  },
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.027),
-                ),
-                CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    AppLocalization.of(context)!.getTranslatedValues('vsLbl')!,
-                    style: TextStyle(color: Theme.of(context).backgroundColor),
-                  ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.03),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: BlocBuilder<BattleRoomCubit, BattleRoomState>(
-                    bloc: context.read<BattleRoomCubit>(),
-                    builder: (context, state) {
-                      if (state is BattleRoomUserFound) {
-                        return Row(
+                      Container(
+                        width: constraints.maxWidth * (0.85),
+                        height: constraints.maxHeight * (0.175),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
-                          ],
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ),
-                Spacer(),
-                BlocBuilder<BattleRoomCubit, BattleRoomState>(
-                  bloc: context.read<BattleRoomCubit>(),
-                  builder: (context, state) {
-                    if (state is BattleRoomUserFound) {
-                      if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                        return Container();
-                      }
-                      return TextButton(
-                        onPressed: () async {
-                          //need minimum 2 player to start the game
-                          //mark as ready to play in database
-                          if (state.battleRoom.user2!.uid.isEmpty) {
-                            UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
-                          } else {
-                            context.read<BattleRoomCubit>().startGame();
-                            await Future.delayed(Duration(milliseconds: 500));
-                            //navigate to quiz screen
-                            Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments:{"battleLbl":widget.battleLbl});
-                          }
-                        },
-                        child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
-                      );
-                    }
-                    return Container();
-                  },
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.01),
-                ),
-              ],
-            );
-          }),
-        ):BlocListener<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-          listener: (context, state) {
-            if (state is MultiUserBattleRoomSuccess) {
-              //if game is ready to play
-              if (state.battleRoom.readyToPlay!) {
-                //if user has joined room then navigate to quiz screen
-                if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                  Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
-                }
-              }
-
-              //if owner deleted the room then show this dialog
-              if (!state.isRoomExist) {
-                if (context.read<UserDetailsCubit>().getUserProfile().userId != state.battleRoom.user1!.uid) {
-                  //Room destroyed by owner
-                  showRoomDestroyed(context);
-                }
-              }
-            }
-          },
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Column(
-              children: [
-                Container(
-                  height: constraints.maxHeight * (0.11),
-                  width: constraints.maxWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(UiUtils.dailogRadius),
-                      topRight: Radius.circular(UiUtils.dailogRadius),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getEntryFee()}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).backgroundColor,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    //
+                                    child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<BattleRoomCubit>().getRoomCode()}",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18.0,
+                                          color: Theme.of(context).colorScheme.secondary,
+                                          height: 1.2,
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(AppLocalization.of(context)!.getTranslatedValues('shareRoomCodeLbl')!,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 13.5,
+                                  height: 1.2,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                )),
+                          ],
                         ),
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                              onPressed: () {
-                                try {
-                                  String inviteMessage = "$groupBattleInviteMessage${context.read<MultiUserBattleRoomCubit>().getRoomCode()}";
-                                  Share.share(inviteMessage);
-                                } catch (e) {
-                                  UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
-                                }
-                              },
-                              iconSize: 20,
-                              icon: Icon(Icons.share),
-                              color: Theme.of(context).backgroundColor,
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.025),
-                ),
-                Container(
-                  width: constraints.maxWidth * (0.85),
-                  height: constraints.maxHeight * (0.175),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              //
-                              child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18.0,
-                                    color: Theme.of(context).colorScheme.secondary,
-                                    height: 1.2,
-                                  )),
-                            ),
-                          ],
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
                       SizedBox(
-                        height: 5.0,
+                        height: constraints.maxHeight * (0.0275),
                       ),
-                      Text(AppLocalization.of(context)!.getTranslatedValues('shareRoomCodeLbl')!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 13.5,
-                            height: 1.2,
-                            color: Theme.of(context).colorScheme.secondary,
-                          )),
+                      BlocBuilder<BattleRoomCubit, BattleRoomState>(
+                        bloc: context.read<BattleRoomCubit>(),
+                        builder: (context, state) {
+                          if (state is BattleRoomUserFound) {
+                            return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
+                          }
+                          if (state is BattleRoomCreated) {
+                            return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
+                          }
+                          return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
+                        },
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.027),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: Text(
+                          AppLocalization.of(context)!.getTranslatedValues('vsLbl')!,
+                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                        ),
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.03),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: BlocBuilder<BattleRoomCubit, BattleRoomState>(
+                          bloc: context.read<BattleRoomCubit>(),
+                          builder: (context, state) {
+                            if (state is BattleRoomUserFound) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
+                                ],
+                              );
+                            }
+                            if (state is BattleRoomCreated) {
+                              return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
+                            }
+                            return Container();
+                          },
+                        ),
+                      ),
+                      Spacer(),
+                      BlocBuilder<BattleRoomCubit, BattleRoomState>(
+                        bloc: context.read<BattleRoomCubit>(),
+                        builder: (context, state) {
+                          if (state is BattleRoomCreated) {
+                            return TextButton(
+                              onPressed: () async {
+                                //need minimum 2 player to start the game
+                                //mark as ready to play in database
+                                if (state.battleRoom.user2!.uid.isEmpty) {
+                                  UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
+                                } else {
+                                  context.read<BattleRoomCubit>().startGame();
+                                  await Future.delayed(Duration(milliseconds: 500));
+                                  //navigate to quiz screen
+                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl});
+                                }
+                              },
+                              child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
+                            );
+                          }
+                          if (state is BattleRoomUserFound) {
+                            if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
+                              return Container();
+                            }
+
+                            return TextButton(
+                              onPressed: () async {
+                                //need minimum 2 player to start the game
+                                //mark as ready to play in database
+                                if (state.battleRoom.user2!.uid.isEmpty) {
+                                  UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
+                                } else {
+                                  context.read<BattleRoomCubit>().startGame();
+                                  await Future.delayed(Duration(milliseconds: 500));
+                                  //navigate to quiz screen
+                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl});
+                                }
+                              },
+                              child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.01),
+                      ),
                     ],
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).colorScheme.secondary),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.0275),
-                ),
-                BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-                  bloc: context.read<MultiUserBattleRoomCubit>(),
-                  builder: (context, state) {
-                    if (state is MultiUserBattleRoomSuccess) {
-                      return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
+                  );
+                }),
+              )
+            : BlocListener<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                listener: (context, state) {
+                  if (state is MultiUserBattleRoomSuccess) {
+                    //if game is ready to play
+                    if (state.battleRoom.readyToPlay!) {
+                      //if user has joined room then navigate to quiz screen
+                      if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
+                        Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
+                      }
                     }
-                    return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
-                  },
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.027),
-                ),
-                CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    AppLocalization.of(context)!.getTranslatedValues('vsLbl')!,
-                    style: TextStyle(color: Theme.of(context).backgroundColor),
-                  ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.03),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-                    bloc: context.read<MultiUserBattleRoomCubit>(),
-                    builder: (context, state) {
-                      if (state is MultiUserBattleRoomSuccess) {
-                        return widget.quizType==QuizTypes.battle?
-                        Row(
+
+                    //if owner deleted the room then show this dialog
+                    if (!state.isRoomExist) {
+                      if (context.read<UserDetailsCubit>().getUserProfile().userId != state.battleRoom.user1!.uid) {
+                        //Room destroyed by owner
+                        showRoomDestroyed(context);
+                      }
+                    }
+                  }
+                },
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: constraints.maxHeight * (0.11),
+                        width: constraints.maxWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(UiUtils.dailogRadius),
+                            topRight: Radius.circular(UiUtils.dailogRadius),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getEntryFee()}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Theme.of(context).backgroundColor,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      try {
+                                        String inviteMessage = "$groupBattleInviteMessage${context.read<MultiUserBattleRoomCubit>().getRoomCode()}";
+                                        Share.share(inviteMessage);
+                                      } catch (e) {
+                                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+                                      }
+                                    },
+                                    iconSize: 20,
+                                    icon: Icon(Icons.share),
+                                    color: Theme.of(context).backgroundColor,
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.025),
+                      ),
+                      Container(
+                        width: constraints.maxWidth * (0.85),
+                        height: constraints.maxHeight * (0.175),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
-                             ],
-                        ):
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
-                            profileAndNameContainer(context, constraints, state.battleRoom.user3!.name, state.battleRoom.user3!.profileUrl, Colors.black54),
-                            profileAndNameContainer(context, constraints, state.battleRoom.user4!.name, state.battleRoom.user4!.profileUrl, Colors.black54),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    //
+                                    child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18.0,
+                                          color: Theme.of(context).colorScheme.secondary,
+                                          height: 1.2,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(AppLocalization.of(context)!.getTranslatedValues('shareRoomCodeLbl')!,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 13.5,
+                                  height: 1.2,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                )),
                           ],
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ),
-                Spacer(),
-                BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-                  bloc: context.read<MultiUserBattleRoomCubit>(),
-                  builder: (context, state) {
-                    if (state is MultiUserBattleRoomSuccess) {
-                      if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                        return Container();
-                      }
-                      return TextButton(
-                        onPressed: () {
-                          //need minimum 2 player to start the game
-                          //mark as ready to play in database
-                          if (state.battleRoom.user2!.uid.isEmpty) {
-                            UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
-                          } else {
-                            //start quiz
-                        /*    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().startGame():*/ context.read<MultiUserBattleRoomCubit>().startGame();
-                            //navigate to quiz screen
-                            widget.quizType==QuizTypes.battle?Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments: {"battleLbl":widget.battleLbl}):Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.0275),
+                      ),
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: context.read<MultiUserBattleRoomCubit>(),
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
                           }
+                          return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
                         },
-                        child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
-                      );
-                    }
-                    return Container();
-                  },
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * (0.01),
-                ),
-              ],
-            );
-          }),
-        ),
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.027),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: Text(
+                          AppLocalization.of(context)!.getTranslatedValues('vsLbl')!,
+                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                        ),
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.03),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                          bloc: context.read<MultiUserBattleRoomCubit>(),
+                          builder: (context, state) {
+                            if (state is MultiUserBattleRoomSuccess) {
+                              return widget.quizType == QuizTypes.battle
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
+                                      ],
+                                    )
+                                  : Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
+                                        profileAndNameContainer(context, constraints, state.battleRoom.user3!.name, state.battleRoom.user3!.profileUrl, Colors.black54),
+                                        profileAndNameContainer(context, constraints, state.battleRoom.user4!.name, state.battleRoom.user4!.profileUrl, Colors.black54),
+                                      ],
+                                    );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      ),
+                      Spacer(),
+                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        bloc: context.read<MultiUserBattleRoomCubit>(),
+                        builder: (context, state) {
+                          if (state is MultiUserBattleRoomSuccess) {
+                            if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
+                              return Container();
+                            }
+                            return TextButton(
+                              onPressed: () {
+                                //need minimum 2 player to start the game
+                                //mark as ready to play in database
+                                if (state.battleRoom.user2!.uid.isEmpty) {
+                                  UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
+                                } else {
+                                  //start quiz
+                                  /*    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().startGame():*/ context.read<MultiUserBattleRoomCubit>().startGame();
+                                  //navigate to quiz screen
+                                  widget.quizType == QuizTypes.battle
+                                      ? Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl})
+                                      : Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
+                                }
+                              },
+                              child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * (0.01),
+                      ),
+                    ],
+                  );
+                }),
+              ),
       ),
     );
   }

@@ -119,7 +119,9 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
         context.read<BattleRoomCubit>().deleteBattleRoom(false);
         //stop other activities
         letterAnimationController.stop();
-        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        if (scrollController.hasClients) {
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        }
         timer.cancel();
         setState(() {
           waitForOpponent = false;
@@ -538,13 +540,15 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
           listener: (context, state) async {
             //start timer for waiting user only room created successfully
             if (state is BattleRoomCreated) {
-              setWaitForOpponentTimer();
+              if (waitForOpponentTimer == null) {
+                setWaitForOpponentTimer();
+              }
             } else if (state is BattleRoomUserFound) {
               //if opponent found
               waitForOpponentTimer?.cancel();
               await Future.delayed(Duration(milliseconds: 500));
               await quizCountDownAnimationController.forward();
-              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,arguments:{"battleLbl":""});
+              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": ""});
             }
           },
           child: Stack(

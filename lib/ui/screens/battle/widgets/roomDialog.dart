@@ -55,7 +55,7 @@ class _RoomDialogState extends State<RoomDialog> {
     if (widget.quizType == QuizTypes.battle) {
       return context.read<SystemConfigCubit>().getIsCategoryEnableForBattle()! == "1";
     }
-    return context.read<SystemConfigCubit>().getIsCategoryEnableForGroupBattle() == "1";
+    return context.read<SystemConfigCubit>().getIsCategoryEnableForGroupBattle()! == "1";
   }
 
   String getCategoryId() {
@@ -242,9 +242,6 @@ class _RoomDialogState extends State<RoomDialog> {
                 },
                 bloc: context.read<BattleRoomCubit>(),
                 builder: (context, state) {
-                  /*
-
-                   */
                   return CustomRoundedButton(
                     onTap: state is BattleRoomJoining
                         ? () {}

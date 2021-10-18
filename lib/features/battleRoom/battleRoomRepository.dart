@@ -28,7 +28,7 @@ class BattleRoomRepository {
       //so user will not join room that was created by him/her self
       int index = documents.indexWhere((element) => (element.data() as Map<String, dynamic>)['createdBy'] == uid);
       if (index != -1) {
-        deleteBattleRoom(documents[index].id, false,"battle");
+        deleteBattleRoom(documents[index].id, false);
         documents.removeAt(index);
       }
       return documents;
@@ -42,7 +42,9 @@ class BattleRoomRepository {
     required String name,
     required String profileUrl,
     required String uid,
-    String? roomCode, String? roomType, int? entryFee,
+    String? roomCode,
+    String? roomType,
+    int? entryFee,
     required String questionLanguageId,
   }) async {
     try {
@@ -60,11 +62,12 @@ class BattleRoomRepository {
       throw BattleRoomException(errorMessageCode: e.toString());
     }
   }
+
   //join multi user battle room
   Future<Map<String, dynamic>> joinBattleRoomFrd({String? name, String? profileUrl, String? uid, String? roomCode, int? currentCoin}) async {
     try {
       //verify roomCode is valid or not
-      QuerySnapshot querySnapshot = await _battleRoomRemoteDataSource.getMultiUserBattleRoom(roomCode,"battle");
+      QuerySnapshot querySnapshot = await _battleRoomRemoteDataSource.getMultiUserBattleRoom(roomCode, "battle");
 
       //invalid room code
       if (querySnapshot.docs.isEmpty) {
@@ -90,8 +93,6 @@ class BattleRoomRepository {
       return FirebaseFirestore.instance.runTransaction((transaction) async {
         //get latest document
         DocumentSnapshot documentSnapshot = await documentReference.get();
-        Map? user4Details = Map.from(documentSnapshot.data() as Map<String, dynamic>)['user4'];
-        Map? user3Details = Map.from(documentSnapshot.data() as Map<String, dynamic>)['user3'];
         Map user2Details = Map.from(documentSnapshot.data() as Map<String, dynamic>)['user2'];
 
         if (user2Details['uid'].toString().isEmpty) {
@@ -100,21 +101,6 @@ class BattleRoomRepository {
             "user2.name": name,
             "user2.uid": uid,
             "user2.profileUrl": profileUrl,
-          });
-        } else if (user3Details!['uid'].toString().isEmpty) {
-          //join as user3
-          transaction.update(documentReference, {
-            "user3.name": name,
-            "user3.uid": uid,
-            "user3.profileUrl": profileUrl,
-          });
-        } else if (user4Details!['uid'].toString().isEmpty) {
-          //join as user4
-
-          transaction.update(documentReference, {
-            "user4.name": name,
-            "user4.uid": uid,
-            "user4.profileUrl": profileUrl,
           });
         } else {
           //room is full
@@ -126,6 +112,7 @@ class BattleRoomRepository {
       throw BattleRoomException(errorMessageCode: e.toString());
     }
   }
+
   //create multi user battle room
   Future<DocumentSnapshot> createMultiUserBattleRoom({required String categoryId, String? name, String? profileUrl, String? uid, String? roomCode, String? roomType, int? entryFee, String? questionLanguageId}) async {
     try {
@@ -139,7 +126,7 @@ class BattleRoomRepository {
   Future<Map<String, dynamic>> joinMultiUserBattleRoom({String? name, String? profileUrl, String? uid, String? roomCode, int? currentCoin}) async {
     try {
       //verify roomCode is valid or not
-      QuerySnapshot querySnapshot = await _battleRoomRemoteDataSource.getMultiUserBattleRoom(roomCode,"");
+      QuerySnapshot querySnapshot = await _battleRoomRemoteDataSource.getMultiUserBattleRoom(roomCode, "");
 
       //invalid room code
       if (querySnapshot.docs.isEmpty) {
@@ -205,14 +192,14 @@ class BattleRoomRepository {
   }
 
   //subscribe to battle room
-  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser,String battle) {
-    return _battleRoomRemoteDataSource.subscribeToBattleRoom(battleRoomDocumentId, forMultiUser,battle);
+  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser) {
+    return _battleRoomRemoteDataSource.subscribeToBattleRoom(battleRoomDocumentId, forMultiUser);
   }
 
   //delete room by id
-  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser,String ?type,{String? roomCode}) async {
+  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, {String? roomCode}) async {
     try {
-      await _battleRoomRemoteDataSource.deleteBattleRoom(documentId, forMultiUser,type, roomCode: roomCode);
+      await _battleRoomRemoteDataSource.deleteBattleRoom(documentId, forMultiUser, roomCode: roomCode);
     } catch (e) {}
   }
 
@@ -223,7 +210,7 @@ class BattleRoomRepository {
         BattleRoom battleRoom = BattleRoom.fromDocumentSnapshot(element);
         if (!battleRoom.readyToPlay!) {
           print("${battleRoom.roomId} deleted");
-          _battleRoomRemoteDataSource.deleteBattleRoom(battleRoom.roomId, true,"" ,roomCode: battleRoom.roomCode);
+          _battleRoomRemoteDataSource.deleteBattleRoom(battleRoom.roomId, true, roomCode: battleRoom.roomCode);
         }
       });
     } catch (e) {}
@@ -243,7 +230,7 @@ class BattleRoomRepository {
     } catch (e) {
       if (roomCreater) {
         //if any error occurs while fetching question deleteRoom
-        deleteBattleRoom(roomDocumentId, forMultiUser,forMultiUser?"":"battle");
+        deleteBattleRoom(roomDocumentId, forMultiUser);
       }
       throw BattleRoomException(errorMessageCode: e.toString());
     }
@@ -314,13 +301,13 @@ class BattleRoomRepository {
       } else {
         updatedData['user4'] = {"name": "", "correctAnswers": 0, "answers": [], "uid": "", "profileUrl": ""};
       }
-      _battleRoomRemoteDataSource.updateMultiUserRoom(battleRoom.roomId, updatedData,"");
+      _battleRoomRemoteDataSource.updateMultiUserRoom(battleRoom.roomId, updatedData, "");
     } catch (e) {}
   }
 
   Future<void> startMultiUserQuiz(String? battleRoomDocumentId, String battle) async {
     try {
-      _battleRoomRemoteDataSource.updateMultiUserRoom(battleRoomDocumentId, {"readyToPlay": true},battle);
+      _battleRoomRemoteDataSource.updateMultiUserRoom(battleRoomDocumentId, {"readyToPlay": true}, battle);
     } catch (e) {}
   }
 
