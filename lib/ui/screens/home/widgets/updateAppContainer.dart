@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -36,6 +37,7 @@ class UpdateAppContainer extends StatelessWidget {
             ),
           ),
           actions: [
+            //CustomRoundedButton(widthPercentage: 0.5, backgroundColor: Theme., buttonTitle: buttonTitle, radius: radius, showBorder: showBorder, height: height,),
             CupertinoButton(
                 onPressed: () async {
                   try {
@@ -56,7 +58,7 @@ class UpdateAppContainer extends StatelessWidget {
                 child: Text(
                   AppLocalization.of(context)!.getTranslatedValues(updateKey)!,
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ))
           ],
