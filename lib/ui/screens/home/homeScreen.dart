@@ -84,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   @override
   void initState() {
+    checkForUpdates();
     setupInteractedMessage();
     setQuizMenu();
     super.initState();
@@ -108,20 +109,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.guessTheWord);
       }
       setState(() {});
-  //late FirebaseMessaging messaging;
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    });
+  }
 
   late bool showUpdateContainer = false;
-
-  @override
-  void initState() {
-    final pushNotificationService = NotificationHandler(_firebaseMessaging);
-    print("/................................." + pushNotificationService.toString());
-    // initFirebaseMessaging();
-    initFirebaseMessaging();
-    checkForUpdates();
-    super.initState();
-  }
 
   void checkForUpdates() async {
     await Future.delayed(Duration.zero);
@@ -193,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  static Future<String> _downloadAndSaveFile(String url, String fileName) async {
+  Future<String> _downloadAndSaveFile(String url, String fileName) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
     final http.Response response = await http.get(Uri.parse(url));

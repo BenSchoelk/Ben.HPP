@@ -65,8 +65,3 @@ class UpdateAppContainer extends StatelessWidget {
     );
   }
 }
-
-/*
-
-
- */
