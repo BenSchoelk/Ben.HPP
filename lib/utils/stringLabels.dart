@@ -311,3 +311,7 @@ String enterRoomCodeHereKey = "enterRoomCodeHere";
 String currentCoinsKey = "currentCoins";
 String pleaseSelectCategoryKey = "pleaseSelectCategory";
 String moreThanZeroCoinsKey = "moreThanZeroCoins";
+String updateApplicationKey = "updateApplication";
+String updateKey = "update";
+String warningKey = "warning";
+String failedToGetAppUrlKey = "failedToGetAppUrl";

@@ -1,4 +1,6 @@
 //State
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/systemConfig/model/supportedQuestionLanguage.dart';
 import 'package:flutterquiz/features/systemConfig/model/systemConfigModel.dart';
@@ -139,5 +141,31 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
       return (state as SystemConfigFetchSuccess).systemConfigModel.audioQuestionMode;
     }
     return "0";
+  }
+
+  String getAppVersion() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.appVersion!;
+    }
+    return "1.0.0+1";
+  }
+
+  String getAppUrl() {
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.appLink!;
+      }
+      if (Platform.isIOS) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosAppLink!;
+      }
+    }
+    return "";
+  }
+
+  bool isForceUpdateEnable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.forceUpdate! == "1";
+    }
+    return false;
   }
 }
