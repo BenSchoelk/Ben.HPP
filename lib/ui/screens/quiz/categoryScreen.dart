@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/createRoomDialog.dart';
 import 'package:flutterquiz/ui/widgets/adMobBanner.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
@@ -123,41 +121,7 @@ class _CategoryScreen extends State<CategoryScreen> {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
-                  if (widget.quizType == QuizTypes.battle) {
-                    if (widget.battleLabel == "playFrd") {
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return CreateRoomDialog(
-                              categoryId: categoryList[index].id!,
-                              quizType: QuizTypes.battle,
-                              battleLbl: widget.battleLabel,
-                            );
-                          });
-                    } else {
-                      //reset state of battle room to initial
-                      context.read<BattleRoomCubit>().emit(BattleRoomInitial());
-                      Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: categoryList[index].id).then((value) {
-                        //need to delete room if user exit the process in between of finding opponent
-                        //or instantly press exit button
-
-                        Future.delayed(Duration(milliseconds: 3000)).then((value) {
-                          //In battleRoomFindOpponent screen
-                          //we are calling pushReplacement method so it will trigger this
-                          //callback so we need to check if state is not battleUserFound then
-                          //and then we need to call deleteBattleRoom
-
-                          //when user press the backbutton and choose to exit the game and
-                          //process of creating room(in firebase) is still running
-                          //then state of battleRoomCubit will not be battleRoomUserFound
-                          //deleteRoom call execute
-                          if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-                            context.read<BattleRoomCubit>().deleteBattleRoom(false);
-                          }
-                        });
-                      });
-                    }
-                  } else if (widget.quizType == QuizTypes.quizZone) {
+                  if (widget.quizType == QuizTypes.quizZone) {
                     //noOf means how many subcategory it has
                     //if subcategory is 0 then check for level
 
@@ -204,15 +168,6 @@ class _CategoryScreen extends State<CategoryScreen> {
                         "quizType": widget.quizType,
                       });
                     }
-                  } else if (widget.quizType == QuizTypes.groupPlay) {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return CreateRoomDialog(
-                            categoryId: categoryList[index].id!,
-                            quizType: QuizTypes.groupPlay,
-                          );
-                        });
                   } else if (widget.quizType == QuizTypes.guessTheWord) {
                     //if therse is noo subcategory then get questions by category
                     if (categoryList[index].noOf == "0") {

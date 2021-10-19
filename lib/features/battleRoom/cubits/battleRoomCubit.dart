@@ -12,8 +12,6 @@ import 'package:flutterquiz/utils/constants.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
-import 'multiUserBattleRoomCubit.dart';
-
 @immutable
 class BattleRoomState {}
 
@@ -256,6 +254,9 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     if (state is BattleRoomUserFound) {
       return (state as BattleRoomUserFound).battleRoom.entryFee!;
     }
+    if (state is BattleRoomCreated) {
+      return (state as BattleRoomCreated).battleRoom.entryFee!;
+    }
     return 0;
   }
 
@@ -339,6 +340,9 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     if (state is BattleRoomUserFound) {
       return (state as BattleRoomUserFound).battleRoom.roomId!;
     }
+    if (state is BattleRoomCreated) {
+      return (state as BattleRoomCreated).battleRoom.roomId!;
+    }
     return "";
   }
 
@@ -378,9 +382,9 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   }
 
   List<UserBattleRoomDetails?> getUsers() {
-    if (state is MultiUserBattleRoomSuccess) {
+    if (state is BattleRoomUserFound) {
       List<UserBattleRoomDetails?> users = [];
-      BattleRoom battleRoom = (state as MultiUserBattleRoomSuccess).battleRoom;
+      BattleRoom battleRoom = (state as BattleRoomUserFound).battleRoom;
       if (battleRoom.user1!.uid.isNotEmpty) {
         users.add(battleRoom.user1);
       }

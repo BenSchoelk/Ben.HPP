@@ -12,6 +12,8 @@ import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 
+import 'package:flutterquiz/utils/stringLabels.dart';
+
 class MultiUserBattleRoomResultScreen extends StatefulWidget {
   final List<UserBattleRoomDetails?> users;
   final int entryFee;
@@ -36,6 +38,7 @@ class MultiUserBattleRoomResultScreen extends StatefulWidget {
 
 class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomResultScreen> {
   List<Map<String, dynamic>> usersWithRank = [];
+  int _winAmount = -1; //if amount is -1 then show nothing
 
   @override
   void initState() {
@@ -76,6 +79,9 @@ class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomRes
               addCoin: true,
               coins: winAmount.toInt(),
             );
+        //update winAmount in ui as well
+        _winAmount = winAmount.toInt();
+        setState(() {});
         //
       }
     });
@@ -167,16 +173,18 @@ class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomRes
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              AppLocalization.of(context)!.getTranslatedValues('resultLbl')!,
-              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
+              currentUser['rank'] == 1 ? AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!.toUpperCase() : AppLocalization.of(context)!.getTranslatedValues('youLostLbl')!,
+              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22.0, fontWeight: FontWeight.w500),
             ),
             SizedBox(
               height: 2.5,
             ),
-            Text(
-              currentUser['rank'] == 1 ? AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!.toUpperCase() : AppLocalization.of(context)!.getTranslatedValues('youLostLbl')!,
-              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22.0, fontWeight: FontWeight.w500),
-            ),
+            _winAmount != -1
+                ? Text(
+                    "$_winAmount ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!} ",
+                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
+                  )
+                : Container(),
           ],
         ),
       ),
