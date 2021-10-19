@@ -42,7 +42,7 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
       },
       child: Text(
         text,
-        style: TextStyle(color: Theme.of(context).backgroundColor.withOpacity(index == _currentSelectedIndex ? 1.0 : 0.5)),
+        style: TextStyle(color: Theme.of(context).backgroundColor.withOpacity(index == _currentSelectedIndex ? 1.0 : 0.65)),
       ),
     );
   }

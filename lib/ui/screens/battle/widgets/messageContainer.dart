@@ -62,6 +62,7 @@ class MessageContainer extends StatelessWidget {
               )
             : SvgPicture.asset(
                 UiUtils.getEmojiPath(message.message),
+                height: 25,
                 color: Theme.of(context).colorScheme.secondary,
               ),
       );
