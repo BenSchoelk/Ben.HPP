@@ -53,6 +53,8 @@ final String settingsThemeKey = "theme";
 
 //Add your database url
 //make sure do not add '/' at the end of url
+
+//TODO : remove test url and add production url
 final String databaseUrl = 'http://flutterquiz.thewrteam.in'; // 'https://elitequiz.wrteam.in';
 final String baseUrl = databaseUrl + '/Api/';
 //
@@ -171,7 +173,7 @@ final String bannerAndroidId = 'ca-app-pub-3940256099942544/6300978111';
 final String bannerIosId = 'ca-app-pub-3940256099942544/2934735716';
 final String initialCountryCode = "IN"; // change your initialCountry Code
 
-//predefined messages for battle (1 vs 1)
+//predefined messages for battle
 final List<String> predefinedMessages = [
   "Hello..!!",
   "How are you..?",
