@@ -117,11 +117,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void checkForUpdates() async {
     await Future.delayed(Duration.zero);
     if (context.read<SystemConfigCubit>().isForceUpdateEnable()) {
-      bool forceUpdate = await UiUtils.forceUpdate(context.read<SystemConfigCubit>().getAppVersion());
-      if (forceUpdate) {
-        setState(() {
-          showUpdateContainer = true;
-        });
+      try {
+        bool forceUpdate = await UiUtils.forceUpdate(context.read<SystemConfigCubit>().getAppVersion());
+        if (forceUpdate) {
+          setState(() {
+            showUpdateContainer = true;
+          });
+        }
+      } catch (e) {
+        print(e.toString());
       }
     }
   }
