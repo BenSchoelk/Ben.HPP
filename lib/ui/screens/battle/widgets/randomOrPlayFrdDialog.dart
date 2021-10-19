@@ -19,14 +19,14 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
-class RandomOrOlayFrdDialog extends StatefulWidget {
-  RandomOrOlayFrdDialog({Key? key}) : super(key: key);
+class RandomOrPlayFrdDialog extends StatefulWidget {
+  RandomOrPlayFrdDialog({Key? key}) : super(key: key);
 
   @override
-  _RandomOrOlayFrdDialogState createState() => _RandomOrOlayFrdDialogState();
+  _RandomOrPlayFrdDialogState createState() => _RandomOrPlayFrdDialogState();
 }
 
-class _RandomOrOlayFrdDialogState extends State<RandomOrOlayFrdDialog> {
+class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
   static String _defaultSelectedCategoryValue = selectCategoryKey;
   String? selectedCategory = _defaultSelectedCategoryValue;
   String? selectedCategoryId = "";
