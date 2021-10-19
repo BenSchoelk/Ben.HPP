@@ -327,7 +327,8 @@
     "update" : "Update",
     "warning" : "Warning",
     "failedToGetAppUrl" : "Failed to get app url, Please update manually",
-    "youWin": "You win"
+    "youWin": "You win",
+    "letsPlay": "Let's Play"
 
 }
 
