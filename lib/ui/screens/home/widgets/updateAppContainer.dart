@@ -7,8 +7,8 @@ import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart'
 
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UpdateAppContainer extends StatelessWidget {
   const UpdateAppContainer({Key? key}) : super(key: key);
