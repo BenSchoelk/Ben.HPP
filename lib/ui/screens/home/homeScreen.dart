@@ -126,17 +126,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  void initFirebaseMessaging() {
-    // messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("onMessage.........................................");
-      print(event.notification!.body! + event.notification!.title!);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('onMessageOpenedApp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + message.notification!.title! + message.notification!.body!);
-    });
-  }
-
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {

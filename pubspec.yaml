@@ -27,7 +27,6 @@ dependencies:
   cloud_firestore: ^2.2.2
   connectivity_plus: ^1.1.0
   cupertino_icons: ^1.0.3
-  dotted_border: ^2.0.0
   firebase_auth: ^3.0.1
   firebase_core: ^1.6.0
   firebase_messaging: ^10.0.7
@@ -64,10 +63,8 @@ dependencies:
   share_plus: ^2.1.4
   shared_preferences: ^2.0.6
   webview_flutter: ^2.0.13
-  cupertino_will_pop_scope: ^1.1.0
-  firebase_analytics: "^7.0.1"
   package_info_plus: ^1.0.6
-  url_launcher: ^6.0.12
+
 
 dev_dependencies:
   flutter_test:

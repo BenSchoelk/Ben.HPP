@@ -610,8 +610,8 @@ class _RoomDialogState extends State<RoomDialog> {
                 children: [
                   Row(
                     children: [
-                      _buildTabContainer(1, "Create", constraints),
-                      _buildTabContainer(2, "Join", constraints),
+                      _buildTabContainer(1, AppLocalization.of(context)!.getTranslatedValues("creatingLbl")!, constraints),
+                      _buildTabContainer(2,AppLocalization.of(context)!.getTranslatedValues("joinLbl")!, constraints),
                     ],
                   ),
                   // Container(

@@ -157,9 +157,9 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           text: TextSpan(
             style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 18),
             children: <TextSpan>[
-              TextSpan(text: 'Entry Fee ', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
-              TextSpan(text: '$randomBattleEntryCoins ', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
-              TextSpan(text: 'coins', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
+              TextSpan(text: AppLocalization.of(context)!.getTranslatedValues("entryFeesLbl")!, style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
+              TextSpan(text: ' $randomBattleEntryCoins ', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
+              TextSpan(text: AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!, style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
             ],
           ),
         ));
@@ -240,7 +240,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           });
         },
         child: Text(
-          "Let's Play",
+          AppLocalization.of(context)!.getTranslatedValues("letsPlay")!,
           style: _buildTextStyle(),
         ),
       ),
