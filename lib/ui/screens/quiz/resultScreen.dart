@@ -131,9 +131,10 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
+   late var winAmount;
 
   void decideWinnerForBattle() {
-    final winAmount = widget.entryFee!*2;
+     winAmount = widget.entryFee!*2;
     print("Winning Amount is :$winAmount");
     if (widget.numberOfPlayer == 2) {
       String winnerId = "";
@@ -647,8 +648,9 @@ class _ResultScreenState extends State<ResultScreen> {
                       : _isWinner
                           ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("victoryLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
                           : _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("defeatLbl")!, AppLocalization.of(context)!.getTranslatedValues("betterNextLbl")!),
+                  context.read<UserDetailsCubit>().getUserId() == _winnerId?Text(AppLocalization.of(context)!.getTranslatedValues("youWin")!+" $winAmount "+ AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),):Text(AppLocalization.of(context)!.getTranslatedValues("youLossLbl")! +" ${widget.entryFee} "+ AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),),
                   SizedBox(
-                    height: constraints.maxHeight * verticalSpacePercentage,
+                    height: constraints.maxHeight * verticalSpacePercentage-8.2,
                   ),
                   _winnerId!.isEmpty
                       ? Padding(

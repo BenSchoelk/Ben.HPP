@@ -326,7 +326,8 @@
     "updateApplication" : "There is an update available. Please update to use this app",
     "update" : "Update",
     "warning" : "Warning",
-    "failedToGetAppUrl" : "Failed to get app url, Please update manually"
+    "failedToGetAppUrl" : "Failed to get app url, Please update manually",
+    "youWin": "You win"
 
 }
 

@@ -313,7 +313,8 @@
     "update" : "اپ ڈیٹ",
     "warning" : "انتباہ",
 
-    "failedToGetAppUrl" : "ایپ url حاصل کرنے میں ناکام۔"
+    "failedToGetAppUrl" : "ایپ url حاصل کرنے میں ناکام۔",
+    "youWin": "تم جیت گئے"
 
 
 }

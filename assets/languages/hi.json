@@ -329,6 +329,7 @@
 
   "warning" : "चेतावनी",
 
-  "failedToGetAppUrl" : "ऐप url पाने में विफल"
+  "failedToGetAppUrl" : "ऐप url पाने में विफल",
+  "youWin": "आप जीतते हैं"
 
 }
