@@ -216,9 +216,8 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
             UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
             return;
           }
-          Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: selectedCategoryId).then((value) {
-            Navigator.of(context).pop(true); //need to pass this to fire room delete callback
-          });
+
+          Navigator.of(context).pushReplacementNamed(Routes.battleRoomFindOpponent, arguments: selectedCategoryId);
         },
         child: Text(
           AppLocalization.of(context)!.getTranslatedValues("letsPlay")!,
@@ -240,7 +239,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         onPressed: () {
-          Navigator.of(context).pop(false); //
+          Navigator.of(context).pop();
           showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RoomDialog(quizType: QuizTypes.battle)));
         },
         child: Text(

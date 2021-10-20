@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
@@ -11,6 +12,7 @@ import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/utils/constants.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
 @immutable
 class BattleRoomState {}
@@ -58,7 +60,16 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         //emit new state
         BattleRoom battleRoom = BattleRoom.fromDocumentSnapshot(event);
         bool? userNotFound = battleRoom.user2?.uid.isEmpty;
+        //if opponent userId is empty menas we have not found any user
         if (userNotFound == true) {
+          //if currentRoute is not battleRoomOpponent and battle room created then we
+          //have to delete the room so other user can not join the room
+
+          //If roomCode is empty means room is created for playing random battle
+          //else room is created for play with friend battle
+          if (Routes.currentRoute != Routes.battleRoomFindOpponent && battleRoom.roomCode!.isEmpty) {
+            deleteBattleRoom(false);
+          }
           //if user not found yet
           emit(BattleRoomCreated(battleRoom));
         } else {
@@ -71,7 +82,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         }
       } else {
         if (state is BattleRoomUserFound) {
-          print("User left the room");
+          print("One of the user left the room");
 
           //if one of the user has left the game while playing
           emit(

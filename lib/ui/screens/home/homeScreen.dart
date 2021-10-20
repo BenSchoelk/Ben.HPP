@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     profileAnimationController.dispose();
     selfChallengeAnimationController.dispose();
-    //print("");
+    print("Delete unused room");
     super.dispose();
   }
 
@@ -297,30 +297,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
       context.read<BattleRoomCubit>().emit(BattleRoomInitial());
 
-      showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RandomOrPlayFrdDialog()))
-        ..then((value) {
-          if (value != null && value) {
-            Future.delayed(Duration(milliseconds: 3000)).then((value) {
-              //In battleRoomFindOpponent screen
-              //we are calling pushReplacement method so it will trigger this
-              //callback so we need to check if state is not battleUserFound then
-              //and then we need to call deleteBattleRoom
-
-              //when user press the backbutton and choose to exit the game and
-              //process of creating room(in firebase) is still running
-              //then state of battleRoomCubit will not be battleRoomUserFound
-              //deleteRoom call execute
-
-              if (mounted) {
-                if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-                  context.read<BattleRoomCubit>().deleteBattleRoom(false);
-                }
-              }
-            });
-          }
-          //need to delete room if user exit the process in between of finding opponent
-          //or instantly press exit button
-        });
+      showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RandomOrPlayFrdDialog()));
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.trueAndFalse) {
       Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.trueAndFalse, "numberOfPlayer": 1, "quizName": "True & False"});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {

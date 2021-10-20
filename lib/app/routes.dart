@@ -83,8 +83,13 @@ class Routes {
   static const levels = "/levels";
   static const aboutApp = "/aboutApp";
   static const badges = "/badges";
+  static String currentRoute = splash;
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
+    //to track current route
+    //this will only track pushed route on top of previous route
+    currentRoute = routeSettings.name ?? "";
+    print("Current route is : $currentRoute");
     switch (routeSettings.name) {
       case splash:
         return CupertinoPageRoute(builder: (context) => SplashScreen());

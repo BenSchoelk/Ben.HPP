@@ -65,7 +65,6 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
       //search for battle room after initial animation completed
       searchBattleRoom();
       startScrollImageAnimation();
-
       letterAnimationController.repeat(reverse: false);
     });
     WidgetsBinding.instance!.addObserver(this);
@@ -91,6 +90,12 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
     waitForOpponentTimer?.cancel();
     WidgetsBinding.instance!.removeObserver(this);
 
+    //we need to set the current route to home.
+    //so room will be delete only if user has left this screen and
+    //room created afterwards
+    if (Routes.currentRoute == Routes.battleRoomFindOpponent) {
+      Routes.currentRoute = Routes.home;
+    }
     super.dispose();
   }
 
@@ -156,6 +161,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
     Future.delayed(Duration(milliseconds: 100), () {
       startScrollImageAnimation();
     });
+    setWaitForOpponentTimer();
     searchBattleRoom();
   }
 
