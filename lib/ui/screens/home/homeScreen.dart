@@ -119,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (context.read<SystemConfigCubit>().isForceUpdateEnable()) {
       try {
         bool forceUpdate = await UiUtils.forceUpdate(context.read<SystemConfigCubit>().getAppVersion());
+        print(forceUpdate);
         if (forceUpdate) {
           setState(() {
             showUpdateContainer = true;

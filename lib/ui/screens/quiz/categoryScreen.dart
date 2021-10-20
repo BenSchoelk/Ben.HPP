@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:facebook_audience_network/ad/ad_banner.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +17,7 @@ import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
@@ -61,8 +66,17 @@ class _CategoryScreen extends State<CategoryScreen> {
           ]),
           Align(
             alignment: Alignment.bottomCenter,
-            child: AdMobBanner(),
+            child: FacebookBannerAd(
+              // placementId: "YOUR_PLACEMENT_ID",
+              placementId: placementId,
+              bannerSize: BannerSize.STANDARD,
+              listener: (result, value) {
+                print("Banner Ad: $result -->  $value");
+              },
+            ),
+            //AdMobBanner(),
           ),
+
         ],
       ),
     );

@@ -65,6 +65,7 @@ dependencies:
   webview_flutter: ^2.0.13
   package_info_plus: ^1.0.6
   url_launcher: ^6.0.12
+  facebook_audience_network: ^1.0.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:
