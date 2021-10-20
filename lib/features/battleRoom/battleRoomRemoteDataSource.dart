@@ -43,6 +43,7 @@ class BattleRoomRemoteDataSource {
       if (languageId.isEmpty) {
         body.remove(languageIdKey);
       }
+      print(body);
       final response = await http.post(Uri.parse(getQuestionForOneToOneBattle), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
@@ -244,12 +245,26 @@ class BattleRoomRemoteDataSource {
   }
 
   //to create room to play quiz
-  Future<void> joinBattleRoom({String? name, String? profileUrl, String? uid, String? battleRoomDocumentId}) async {
+  Future<bool> joinBattleRoom({String? name, String? profileUrl, String? uid, String? battleRoomDocumentId}) async {
     try {
-      await _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).update({
-        "user2.name": name,
-        "user2.uid": uid,
-        "user2.profileUrl": profileUrl,
+      DocumentReference documentReference = (await _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).get()).reference;
+      print("Join user here ");
+      return FirebaseFirestore.instance.runTransaction((transaction) async {
+        //get latest document
+        DocumentSnapshot documentSnapshot = await documentReference.get();
+        Map user2Details = Map.from(documentSnapshot.data() as Map<String, dynamic>)['user2'];
+        print("User 2 : $user2Details");
+        if (user2Details['uid'].toString().isEmpty) {
+          //print("Join user");
+          //join as user2
+          transaction.update(documentReference, {
+            "user2.name": name,
+            "user2.uid": uid,
+            "user2.profileUrl": profileUrl,
+          });
+          return false;
+        }
+        return true; //search for other room
       });
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);

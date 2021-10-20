@@ -67,7 +67,7 @@ final String skip = "skip";
 final String resetTime = "resetTime";
 
 //firestore collection names
-final String battleRoomCollection = "testBattleRoom"; // battleRoom
+final String battleRoomCollection = "battleRoom"; //  testBattleRoom
 final String multiUserBattleRoomCollection = "multiUserBattleRoom"; // "testMultiUserBattleRoom";
 final String messagesCollection = "messages"; //"testMessages";
 

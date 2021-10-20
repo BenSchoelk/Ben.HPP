@@ -247,9 +247,9 @@ class BattleRoomRepository {
   }
 
   //to join battle room (one to one)
-  Future<void> joinBattleRoom({String? battleRoomDocumentId, String? name, String? profileUrl, String? uid}) async {
+  Future<bool> joinBattleRoom({String? battleRoomDocumentId, String? name, String? profileUrl, String? uid}) async {
     try {
-      await _battleRoomRemoteDataSource.joinBattleRoom(
+      return await _battleRoomRemoteDataSource.joinBattleRoom(
         battleRoomDocumentId: battleRoomDocumentId,
         name: name,
         profileUrl: profileUrl,

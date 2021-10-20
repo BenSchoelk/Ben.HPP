@@ -217,7 +217,8 @@ class _RoomDialogState extends State<RoomDialog> {
           decoration: BoxDecoration(color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(25.0)),
           height: constraints.maxHeight * (0.115),
           child: TextField(
-            style: TextStyle(color: Theme.of(context).primaryColor),keyboardType: TextInputType.number,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+            keyboardType: TextInputType.number,
             cursorColor: Theme.of(context).primaryColor,
             decoration: InputDecoration(
                 border: InputBorder.none,
@@ -459,11 +460,11 @@ class _RoomDialogState extends State<RoomDialog> {
                               return;
                             }
                             context.read<BattleRoomCubit>().createRoom(
+                                  shouldGenerateRoomCode: true,
                                   categoryId: getCategoryId(),
                                   entryFee: entryFee,
                                   name: userProfile.name,
                                   profileUrl: userProfile.profileUrl,
-                                  roomType: "public",
                                   uid: userProfile.userId,
                                   questionLanguageId: UiUtils.getCurrentQuestionLanguageId(context),
                                 );
@@ -611,7 +612,7 @@ class _RoomDialogState extends State<RoomDialog> {
                   Row(
                     children: [
                       _buildTabContainer(1, AppLocalization.of(context)!.getTranslatedValues("creatingLbl")!, constraints),
-                      _buildTabContainer(2,AppLocalization.of(context)!.getTranslatedValues("joinLbl")!, constraints),
+                      _buildTabContainer(2, AppLocalization.of(context)!.getTranslatedValues("joinLbl")!, constraints),
                     ],
                   ),
                   // Container(
