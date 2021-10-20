@@ -209,15 +209,19 @@ class BattleRoomRepository {
     } catch (e) {}
   }
 
-  Future<void> deleteUnusedMultiUserBattleRoom(String userId) async {
+  Future<void> deleteUnusedBattleRoom(String userId) async {
     try {
-      List<DocumentSnapshot> rooms = await _battleRoomRemoteDataSource.getRoomCreatedByUser(userId);
-      rooms.forEach((element) {
+      final rooms = await _battleRoomRemoteDataSource.getRoomCreatedByUser(userId);
+      rooms['groupBattle']!.forEach((element) {
         BattleRoom battleRoom = BattleRoom.fromDocumentSnapshot(element);
         if (!battleRoom.readyToPlay!) {
           print("${battleRoom.roomId} deleted");
           _battleRoomRemoteDataSource.deleteBattleRoom(battleRoom.roomId, true, roomCode: battleRoom.roomCode);
         }
+      });
+      rooms['battle']!.forEach((element) {
+        print("${element.id} deleted");
+        _battleRoomRemoteDataSource.deleteBattleRoom(element.id, false);
       });
     } catch (e) {}
   }

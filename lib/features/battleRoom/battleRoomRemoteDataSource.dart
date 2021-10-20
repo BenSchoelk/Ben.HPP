@@ -151,13 +151,13 @@ class BattleRoomRemoteDataSource {
     }
   }
 
-  //readyToPlay
-
-  //get multi user battle room
-  Future<List<DocumentSnapshot>> getRoomCreatedByUser(String userId) async {
+  //get battle room
+  Future<Map<String, List<DocumentSnapshot>>> getRoomCreatedByUser(String userId) async {
     try {
-      QuerySnapshot querySnapshot = await _firebaseFirestore.collection(multiUserBattleRoomCollection).where("createdBy", isEqualTo: userId).get();
-      return querySnapshot.docs;
+      QuerySnapshot multiUserBattleQuerySnapshot = await _firebaseFirestore.collection(multiUserBattleRoomCollection).where("createdBy", isEqualTo: userId).get();
+      QuerySnapshot battleQuerySnapshot = await _firebaseFirestore.collection(battleRoomCollection).where("createdBy", isEqualTo: userId).get();
+
+      return {"battle": battleQuerySnapshot.docs, "groupBattle": multiUserBattleQuerySnapshot.docs};
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
     } on PlatformException catch (_) {

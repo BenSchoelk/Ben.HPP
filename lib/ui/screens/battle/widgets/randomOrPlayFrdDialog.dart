@@ -216,27 +216,8 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
             UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
             return;
           }
-          Navigator.of(context).pop();
           Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: selectedCategoryId).then((value) {
-            //need to delete room if user exit the process in between of finding opponent
-            //or instantly press exit button
-
-            Future.delayed(Duration(milliseconds: 3000)).then((value) {
-              //In battleRoomFindOpponent screen
-              //we are calling pushReplacement method so it will trigger this
-              //callback so we need to check if state is not battleUserFound then
-              //and then we need to call deleteBattleRoom
-
-              //when user press the backbutton and choose to exit the game and
-              //process of creating room(in firebase) is still running
-              //then state of battleRoomCubit will not be battleRoomUserFound
-              //deleteRoom call execute
-              if (mounted) {
-                if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-                  context.read<BattleRoomCubit>().deleteBattleRoom(false);
-                }
-              }
-            });
+            Navigator.of(context).pop(true); //need to pass this to fire room delete callback
           });
         },
         child: Text(
@@ -259,7 +240,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context).pop(false); //
           showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RoomDialog(quizType: QuizTypes.battle)));
         },
         child: Text(
