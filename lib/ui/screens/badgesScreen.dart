@@ -57,20 +57,6 @@ class BadgesScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            /*
-                            SizedBox(
-                              height: constraints.maxHeight * (0.035),
-                            ),
-                            Text(
-                              "Achieved",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontSize: 12.0,
-                                height: 1.0,
-                              ),
-                            ),
-                            */
                           ],
                         ),
                         height: constraints.maxHeight * (0.65),
@@ -133,29 +119,6 @@ class BadgesScreen extends StatelessWidget {
               title: AppLocalization.of(context)!.getTranslatedValues(badgesKey)!,
             ),
           ),
-
-          /*
-          Align(
-            alignment: Alignment.center,
-            child: CustomPaint(
-              painter: HexagonCustomPainter(color: Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
-              child: Container(
-                width: 150,
-                height: 175,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: CustomPaint(
-              painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke),
-              child: Container(
-                width: 125,
-                height: 150,
-              ),
-            ),
-          ),
-          */
         ],
       ),
     );

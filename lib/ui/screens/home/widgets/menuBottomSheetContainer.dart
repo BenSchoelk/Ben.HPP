@@ -44,6 +44,15 @@ class MenuBottomSheetContainer extends StatelessWidget {
               title: coinStoreKey,
               leadingIcon: "coin_store.svg",
             ),
+            MenuTile(
+              isSvgIcon: true,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.badges);
+              },
+              title: badgesKey,
+              leadingIcon: "badges.svg",
+            ),
 
             context.read<SystemConfigCubit>().getLanguageMode() == "1"
                 ? MenuTile(
