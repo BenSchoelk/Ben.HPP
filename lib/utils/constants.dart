@@ -119,7 +119,9 @@ final String getAppSettingsUrl = "${baseUrl}get_settings";
 final String reportQuestionUrl = "${baseUrl}report_question";
 final String getQuestionsByCategoryOrSubcategory = "${baseUrl}get_questions";
 final String updateFcmId = "${baseUrl}update_fcm_id";
-final String getAudioQuestionUrl = "${baseUrl}get_audio_questions";
+final String getAudioQuestionUrl = "${baseUrl}get_audio_questions"; //
+final String getUserBadgesUrl = "${baseUrl}get_user_badges";
+final String setUserBadgesUrl = "${baseUrl}set_badges";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;
@@ -171,7 +173,7 @@ final String videoIosId = 'ca-app-pub-3940256099942544/1712485313';
 final String bannerAndroidId = 'ca-app-pub-3940256099942544/6300978111';
 final String bannerIosId = 'ca-app-pub-3940256099942544/2934735716';
 // Fb Ads placementId
-final String placementId="IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047";
+final String placementId = "IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047";
 final String initialCountryCode = "IN"; // change your initialCountry Code
 
 //predefined messages for battle
@@ -185,9 +187,27 @@ final List<String> predefinedMessages = [
   "Thanks..",
   "Welcome..",
 ];
+
 //constants for badges and rewards
 final int guessTheWordQuestionMinimumTimeForBadge = 25;
 final int funNLearnQuestionMinimumTimeForBadge = 8;
+final List<String> badgeTypes = [
+  "dashing_debut",
+  "combat_winner",
+  "clash_winner",
+  "most_wanted_winner",
+  "ultimate_player",
+  "quiz_warrior",
+  "super_sonic",
+  "flashback",
+  "brainiac",
+  "big_thing",
+  "elite",
+  "thirsty",
+  "power_elite",
+  "sharing_caring",
+  "streak"
+];
 
 //
 const String roomCodeGenerateCharacters = "1234567890"; //Numeric 

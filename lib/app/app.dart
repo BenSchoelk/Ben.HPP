@@ -9,6 +9,8 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/auth/authRepository.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/badges/badgesRepository.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
@@ -31,10 +33,9 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
-
 Future<Widget> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
- /* FirebaseMessaging.onBackgroundMessage((message) {
+  /* FirebaseMessaging.onBackgroundMessage((message) {
     print("_messaging onBackgroundMessage: $message");
     return Future.value(false);
   });*/
@@ -91,6 +92,8 @@ class MyApp extends StatelessWidget {
 
         //system config
         BlocProvider<SystemConfigCubit>(create: (_) => SystemConfigCubit(SystemConfigRepository())),
+        //to configure badges
+        BlocProvider<BadgesCubit>(create: (_) => BadgesCubit(BadgesRepository())),
       ],
       child: Builder(
         builder: (context) {
