@@ -10,6 +10,7 @@ class RadialPercentageResultContainer extends StatefulWidget {
   final double arcStrokeWidth;
   final Color? circleColor;
   final Color? arcColor;
+  final int? timeTakenToCompleteQuizInSeconds;
   final double radiusPercentage; //respect to width
 
   const RadialPercentageResultContainer({
@@ -19,6 +20,7 @@ class RadialPercentageResultContainer extends StatefulWidget {
     required this.circleStrokeWidth,
     required this.arcStrokeWidth,
     required this.radiusPercentage,
+    this.timeTakenToCompleteQuizInSeconds,
     this.arcColor,
     this.circleColor,
   }) : super(key: key);
@@ -45,6 +47,17 @@ class _RadialPercentageResultContainerState extends State<RadialPercentageResult
     super.dispose();
   }
 
+  String _getTimeInMinutesAndSeconds() {
+    int totalTime = widget.timeTakenToCompleteQuizInSeconds ?? 0;
+    if (totalTime == 0) {
+      return "";
+    }
+    int seconds = totalTime % 60;
+    int minutes = totalTime ~/ 60;
+
+    return "${minutes < 10 ? 0 : ''}$minutes:${seconds < 10 ? 0 : ''}$seconds";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -66,11 +79,25 @@ class _RadialPercentageResultContainerState extends State<RadialPercentageResult
           child: AnimatedBuilder(
               builder: (context, _) {
                 return CustomPaint(
-                  child: Center(
-                      child: Text(
-                    "${widget.percentage.toStringAsFixed(0)}%",
-                    style: TextStyle(fontSize: 17.5, color: Theme.of(context).backgroundColor, fontWeight: FontWeight.w500),
-                  )),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Transform.translate(
+                        offset: Offset(0, 2.5),
+                        child: Text(
+                          "${widget.percentage.toStringAsFixed(0)}%",
+                          style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      _getTimeInMinutesAndSeconds().isNotEmpty
+                          ? Text(
+                              _getTimeInMinutesAndSeconds(),
+                              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w500),
+                            )
+                          : Container(),
+                    ],
+                  ),
                   willChange: false,
                   painter: ArcCustomPainter(sweepAngle: animation.value, color: Theme.of(context).backgroundColor, radiusPercentage: widget.radiusPercentage, strokeWidth: widget.arcStrokeWidth),
                 );

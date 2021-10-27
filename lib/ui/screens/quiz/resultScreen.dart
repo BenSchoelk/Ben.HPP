@@ -210,11 +210,12 @@ class _ResultScreenState extends State<ResultScreen> {
   void earnBadges() {
     Future.delayed(Duration.zero, () {
       if (widget.quizType == QuizTypes.battle) {
-        //
-        int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
-        print("Points in battle ${widget.myPoints}");
-        if (widget.myPoints! == badgeEarnPoints) {
-          print("Will earn badge related to battle");
+        if (context.read<BadgesCubit>().isBadgeLocked("ultimate_player")) {
+          int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
+          print("Points in battle ${widget.myPoints}");
+          if (widget.myPoints! == badgeEarnPoints) {
+            print("Will earn badge related to battle");
+          }
         }
       } else if (widget.quizType == QuizTypes.funAndLearn) {
         //funAndLearn is related to flashback
@@ -230,23 +231,27 @@ class _ResultScreenState extends State<ResultScreen> {
           }
         }
       } else if (widget.quizType == QuizTypes.quizZone) {
-        print(correctAnswer());
-        print("Has used any lifeline ${widget.hasUsedAnyLifeline!}");
-        //
-        if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
-          print("Will earn badge related to quizZone");
-        } else {
-          print("Will not earn badge related to quizZone");
+        if (context.read<BadgesCubit>().isBadgeLocked("brainiac")) {
+          print(correctAnswer());
+          print("Has used any lifeline ${widget.hasUsedAnyLifeline!}");
+          //
+          if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
+            print("Will earn badge related to quizZone");
+          } else {
+            print("Will not earn badge related to quizZone");
+          }
         }
       } else if (widget.quizType == QuizTypes.guessTheWord) {
-        print(correctAnswer());
-        print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
-        //if user has solved the quiz with in badgeEarnTime then they can earn badge
-        int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
-        if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-          print("Will earn badge related to guessTheWord");
-        } else {
-          print("Will not earn badge related to guessTheWord");
+        if (context.read<BadgesCubit>().isBadgeLocked("super_sonic")) {
+          print(correctAnswer());
+          print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+          //if user has solved the quiz with in badgeEarnTime then they can earn badge
+          int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
+          if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+            print("Will earn badge related to guessTheWord");
+          } else {
+            print("Will not earn badge related to guessTheWord");
+          }
         }
       }
     });
@@ -611,8 +616,9 @@ class _ResultScreenState extends State<ResultScreen> {
                 arcColor: Theme.of(context).backgroundColor,
                 arcStrokeWidth: 10.0,
                 circleStrokeWidth: 10.0,
-                radiusPercentage: 0.25,
+                radiusPercentage: 0.27,
                 percentage: winPercentage(),
+                timeTakenToCompleteQuizInSeconds: widget.timeTakenToCompleteQuiz?.toInt(),
                 size: Size(constraints.maxHeight * radialSizePercentage, constraints.maxHeight * radialSizePercentage), //150.0 , 150.0
               ),
             );

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,61 @@ class BadgesScreen extends StatelessWidget {
 
   static Route<BadgesScreen> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(builder: (_) => BadgesScreen());
+  }
+
+  void showBadgeDetails(BuildContext context, Badge badge) {
+    showModalBottomSheet(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        )),
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * (0.025),
+                ),
+                Text(
+                  "${badge.badgeLabel}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22.5,
+                  ),
+                ),
+                SizedBox(
+                  height: 2.5,
+                ),
+                Text(
+                  "${badge.badgeNote}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 18.0,
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * (0.03),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                ),
+                gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+          );
+        });
   }
 
   Widget _buildBadges(BuildContext context) {
@@ -61,75 +117,84 @@ class BadgesScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return LayoutBuilder(
                 builder: (context, constraints) {
-                  return Container(
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            width: constraints.maxWidth,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  height: constraints.maxHeight * (0.425),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    badges[index].badgeLabel,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, //
-                                      fontSize: 14,
-                                      height: 1.175,
-                                      fontWeight: FontWeight.bold,
+                  return GestureDetector(
+                    onTap: () {
+                      showBadgeDetails(context, badges[index]);
+                    },
+                    child: Container(
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: constraints.maxWidth,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: constraints.maxHeight * (0.425),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      badges[index].badgeLabel,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, //
+                                        fontSize: 14,
+                                        height: 1.175,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                              height: constraints.maxHeight * (0.65),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).backgroundColor,
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: constraints.maxHeight * (0.075),
+                              ),
+                              child: CustomPaint(
+                                painter: HexagonCustomPainter(color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
+                                child: Container(
+                                  width: constraints.maxWidth * (0.875),
+                                  height: constraints.maxHeight * (0.65),
                                 ),
-                              ],
-                            ),
-                            height: constraints.maxHeight * (0.65),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).backgroundColor,
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: constraints.maxHeight * (0.075),
-                            ),
-                            child: CustomPaint(
-                              painter: HexagonCustomPainter(color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
-                              child: Container(
-                                width: constraints.maxWidth * (0.875),
-                                height: constraints.maxHeight * (0.65),
                               ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
-                            ),
-                            child: CustomPaint(
-                              painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
-                              child: Container(
-                                width: constraints.maxWidth * (0.725),
-                                height: constraints.maxHeight * (0.55),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
+                              ),
+                              child: CustomPaint(
+                                painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.5),
+                                    child: CachedNetworkImage(imageUrl: badges[index].badgeIcon),
+                                  ),
+                                  width: constraints.maxWidth * (0.725),
+                                  height: constraints.maxHeight * (0.55),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
