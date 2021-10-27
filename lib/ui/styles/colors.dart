@@ -11,3 +11,6 @@ final Color darkSecondaryColor = Colors.white; //work as secondary color
 final Color darkBackgroundColor = Color(0xff393939);
 final Color darkPageBackgroundColor = Color(0xFF3D3D3D);
 final Color darkCanvasColor = Color(0xff5A5A5A);
+
+//it will be same for both light and dark theme
+final Color badgeLockedColor = Colors.grey;

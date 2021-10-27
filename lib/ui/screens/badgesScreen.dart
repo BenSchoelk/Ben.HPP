@@ -1,8 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
@@ -14,94 +22,121 @@ class BadgesScreen extends StatelessWidget {
   }
 
   Widget _buildBadges(BuildContext context) {
-    return GridView.builder(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025),
-          left: 15.0,
-          right: 15.0,
-          bottom: 20.0,
-        ),
-        itemCount: 14,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 7.5,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 0.575,
-        ),
-        itemBuilder: (context, index) {
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              return Container(
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: constraints.maxWidth,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              height: constraints.maxHeight * (0.425),
+    return BlocBuilder<BadgesCubit, BadgesState>(
+      bloc: context.read<BadgesCubit>(),
+      builder: (context, state) {
+        if (state is BadgesFetchInProgress || state is BadgesInitial) {
+          return Center(
+            child: CircularProgressContainer(
+              useWhiteLoader: false,
+            ),
+          );
+        }
+        if (state is BadgesFetchFailure) {
+          return Center(
+            child: ErrorContainer(
+              errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+              onTapRetry: () {
+                context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId());
+              },
+              showErrorImage: true,
+            ),
+          );
+        }
+        final List<Badge> badges = (state as BadgesFetchSuccess).badges;
+        return GridView.builder(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025),
+              left: 15.0,
+              right: 15.0,
+              bottom: 20.0,
+            ),
+            itemCount: badges.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 7.5,
+              mainAxisSpacing: 10.0,
+              childAspectRatio: 0.575,
+            ),
+            itemBuilder: (context, index) {
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  return Container(
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: constraints.maxWidth,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: constraints.maxHeight * (0.425),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    badges[index].badgeLabel,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, //
+                                      fontSize: 14,
+                                      height: 1.175,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              index % 2 == 0 ? "Sharing is caring" : "Super sonic",
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 13.5,
-                                height: 1.1,
-                                fontWeight: FontWeight.bold,
+                            height: constraints.maxHeight * (0.65),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).backgroundColor,
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: constraints.maxHeight * (0.075),
+                            ),
+                            child: CustomPaint(
+                              painter: HexagonCustomPainter(color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
+                              child: Container(
+                                width: constraints.maxWidth * (0.875),
+                                height: constraints.maxHeight * (0.65),
                               ),
                             ),
-                          ],
-                        ),
-                        height: constraints.maxHeight * (0.65),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).backgroundColor,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: constraints.maxHeight * (0.075),
-                        ),
-                        child: CustomPaint(
-                          painter: HexagonCustomPainter(color: Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
-                          child: Container(
-                            width: constraints.maxWidth * (0.875),
-                            height: constraints.maxHeight * (0.65),
                           ),
                         ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
-                        ),
-                        child: CustomPaint(
-                          painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke),
-                          child: Container(
-                            width: constraints.maxWidth * (0.725),
-                            height: constraints.maxHeight * (0.55),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
+                            ),
+                            child: CustomPaint(
+                              painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
+                              child: Container(
+                                width: constraints.maxWidth * (0.725),
+                                height: constraints.maxHeight * (0.55),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
-            },
-          );
-        });
+            });
+      },
+    );
   }
 
   @override

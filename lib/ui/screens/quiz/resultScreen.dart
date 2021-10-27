@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/quiz/cubits/setContestLeaderboardCubit.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
@@ -44,7 +45,7 @@ class ResultScreen extends StatefulWidget {
   final String? contestId;
   final String? comprehensionId; //will be use to set contest leaderboard
   final List<GuessTheWordQuestion>? guessTheWordQuestions; //questions when quiz type is guessTheWord
-  final int ?entryFee;
+  final int? entryFee;
   //if quizType is quizZone then it will be in use
   //to determine to show next level button
   //it will be in use if quizType is quizZone
@@ -72,7 +73,8 @@ class ResultScreen extends StatefulWidget {
       this.subcategoryMaxLevel,
       this.contestId,
       this.comprehensionId,
-      this.guessTheWordQuestions,this.entryFee})
+      this.guessTheWordQuestions,
+      this.entryFee})
       : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
@@ -105,18 +107,18 @@ class ResultScreen extends StatefulWidget {
                 ),
               ],
               child: ResultScreen(
-                  myPoints: arguments['myPoints'],
-                  numberOfPlayer: arguments['numberOfPlayer'],
-                  questions: arguments['questions'],
-                  battleRoom: arguments['battleRoom'],
-                  quizType: arguments['quizType'],
-                  subcategoryMaxLevel: arguments['subcategoryMaxLevel'],
-                  unlockedLevel: arguments['unlockedLevel'],
-                  guessTheWordQuestions: arguments['guessTheWordQuestions'], //
-                  hasUsedAnyLifeline: arguments['hasUsedAnyLifeline'],
-                  timeTakenToCompleteQuiz: arguments['timeTakenToCompleteQuiz'],
-                  contestId: arguments["contestId"],
-                  entryFee: arguments['entryFee'],
+                myPoints: arguments['myPoints'],
+                numberOfPlayer: arguments['numberOfPlayer'],
+                questions: arguments['questions'],
+                battleRoom: arguments['battleRoom'],
+                quizType: arguments['quizType'],
+                subcategoryMaxLevel: arguments['subcategoryMaxLevel'],
+                unlockedLevel: arguments['unlockedLevel'],
+                guessTheWordQuestions: arguments['guessTheWordQuestions'], //
+                hasUsedAnyLifeline: arguments['hasUsedAnyLifeline'],
+                timeTakenToCompleteQuiz: arguments['timeTakenToCompleteQuiz'],
+                contestId: arguments["contestId"],
+                entryFee: arguments['entryFee'],
               ),
             ));
   }
@@ -131,10 +133,10 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
-   late var winAmount;
+  late var winAmount;
 
   void decideWinnerForBattle() {
-     winAmount = widget.entryFee!*2;
+    winAmount = widget.entryFee! * 2;
     print("Winning Amount is :$winAmount");
     if (widget.numberOfPlayer == 2) {
       String winnerId = "";
@@ -151,7 +153,10 @@ class _ResultScreenState extends State<ResultScreen> {
           if (context.read<UserDetailsCubit>().getUserId() == winnerId) {
             _isWinner = true;
             context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), winAmount.toInt(), true);
-            context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: winAmount.toInt(),);
+            context.read<UserDetailsCubit>().updateCoins(
+                  addCoin: true,
+                  coins: winAmount.toInt(),
+                );
           } else {
             _isWinner = false;
           }
@@ -194,55 +199,58 @@ class _ResultScreenState extends State<ResultScreen> {
       } else {
         _isWinner = false;
       }
-      //earnBadges();
+      earnBadges();
       earnCoinsBasedOnWinPercentage();
       updateResultDetails();
       setContestLeaderboard();
     }
     _createInterstitialAd();
   }
-  
-  /*
+
   void earnBadges() {
-    if (widget.quizType == QuizTypes.battle) {
-      //
-      int badgeEarnPoints = (correctAnswerPointsForBattle + 10) * totalQuestions();
-      print("Points in battle ${widget.myPoints}");
-      if (widget.myPoints! == badgeEarnPoints) {
-        print("Will earn badge related to battle");
+    Future.delayed(Duration.zero, () {
+      if (widget.quizType == QuizTypes.battle) {
+        //
+        int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
+        print("Points in battle ${widget.myPoints}");
+        if (widget.myPoints! == badgeEarnPoints) {
+          print("Will earn badge related to battle");
+        }
+      } else if (widget.quizType == QuizTypes.funAndLearn) {
+        //funAndLearn is related to flashback
+        if (context.read<BadgesCubit>().isBadgeLocked("flashback")) {
+          print(correctAnswer());
+          print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+          int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
+          //
+          if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+            print("Will earn badge related to funNLearn");
+          } else {
+            print("Will not earn badge related to funNLearn");
+          }
+        }
+      } else if (widget.quizType == QuizTypes.quizZone) {
+        print(correctAnswer());
+        print("Has used any lifeline ${widget.hasUsedAnyLifeline!}");
+        //
+        if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
+          print("Will earn badge related to quizZone");
+        } else {
+          print("Will not earn badge related to quizZone");
+        }
+      } else if (widget.quizType == QuizTypes.guessTheWord) {
+        print(correctAnswer());
+        print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+        //if user has solved the quiz with in badgeEarnTime then they can earn badge
+        int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
+        if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+          print("Will earn badge related to guessTheWord");
+        } else {
+          print("Will not earn badge related to guessTheWord");
+        }
       }
-    } else if (widget.quizType == QuizTypes.funAndLearn) {
-      print(correctAnswer());
-      print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
-      int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
-      //
-      if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-        print("Will earn badge related to funNLearn");
-      } else {
-        print("Will not earn badge related to funNLearn");
-      }
-    } else if (widget.quizType == QuizTypes.quizZone) {
-      print(correctAnswer());
-      print("Has used any lifeline ${widget.hasUsedAnyLifeline!}");
-      //
-      if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
-        print("Will earn badge related to quizZone");
-      } else {
-        print("Will not earn badge related to quizZone");
-      }
-    } else if (widget.quizType == QuizTypes.guessTheWord) {
-      print(correctAnswer());
-      print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
-      //if user has solved the quiz with in badgeEarnTime then they can earn badge
-      int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
-      if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-        print("Will earn badge related to guessTheWord");
-      } else {
-        print("Will not earn badge related to guessTheWord");
-      }
-    }
+    });
   }
-  */
 
   void _createInterstitialAd() {
     InterstitialAd.load(
@@ -267,9 +275,9 @@ class _ResultScreenState extends State<ResultScreen> {
       return;
     }
     interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad){
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    },
+      },
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
         print('$ad onAdDismissedFullScreenContent');
@@ -648,9 +656,17 @@ class _ResultScreenState extends State<ResultScreen> {
                       : _isWinner
                           ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("victoryLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
                           : _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("defeatLbl")!, AppLocalization.of(context)!.getTranslatedValues("betterNextLbl")!),
-                  context.read<UserDetailsCubit>().getUserId() == _winnerId?Text(AppLocalization.of(context)!.getTranslatedValues("youWin")!+" ${widget.entryFee} "+ AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),):Text(AppLocalization.of(context)!.getTranslatedValues("youLossLbl")! +" ${widget.entryFee} "+ AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),),
+                  context.read<UserDetailsCubit>().getUserId() == _winnerId
+                      ? Text(
+                          AppLocalization.of(context)!.getTranslatedValues("youWin")! + " ${widget.entryFee} " + AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,
+                          style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),
+                        )
+                      : Text(
+                          AppLocalization.of(context)!.getTranslatedValues("youLossLbl")! + " ${widget.entryFee} " + AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,
+                          style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),
+                        ),
                   SizedBox(
-                    height: constraints.maxHeight * verticalSpacePercentage-10.2,
+                    height: constraints.maxHeight * verticalSpacePercentage - 10.2,
                   ),
                   _winnerId!.isEmpty
                       ? Padding(

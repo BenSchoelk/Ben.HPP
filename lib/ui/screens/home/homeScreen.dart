@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
@@ -792,6 +793,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               context.read<BookmarkCubit>().getBookmark(state.userProfile.userId);
               //delete any unused gruop battle room which is created by this user
               BattleRoomRepository().deleteUnusedBattleRoom(state.userProfile.userId!);
+            }
+
+            if (context.read<BadgesCubit>().state is! BadgesFetchSuccess) {
+              //get badges for given user
+              context.read<BadgesCubit>().getBadges(userId: state.userProfile.userId!);
             }
           }
         },

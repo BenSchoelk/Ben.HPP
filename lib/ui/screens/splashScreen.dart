@@ -81,6 +81,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     if (loadedSystemConfigDetails) {
       //Reading from settingsCubit means we are just reading current value of settingsCubit
       //if settingsCubit will change in future it will not rebuild it's child
+
       final currentSettings = context.read<SettingsCubit>().state.settingsModel;
       final currentAuthState = context.read<AuthCubit>().state;
 

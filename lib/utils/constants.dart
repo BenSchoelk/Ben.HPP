@@ -157,6 +157,11 @@ final int guessTheWordMaxWinningCoins = 6;
 //Coins to give winner of battle (1 vs 1)
 final int battleWinnerCoins = 5;
 final int randomBattleEntryCoins = 5;
+
+//if user give the answer of battle with in 1 or 2 seconds
+final int extraPointForQuickestAnswer = 2;
+//if user give the answer of battle with in 3 or 4 seconds
+final int extraPointForSecondQuickestAnswer = 1;
 //minimum coins for creating group battle
 final int minCoinsForGroupBattleCreation = 5;
 final int maxCoinsForGroupBattleCreation = 50;

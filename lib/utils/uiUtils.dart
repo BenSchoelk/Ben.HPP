@@ -185,9 +185,9 @@ class UiUtils {
 
     //improve points system here if needed
     if (secondsTakenToAnswer <= 2) {
-      return correctAnswerPointsForBattle + 10;
+      return correctAnswerPointsForBattle + extraPointForQuickestAnswer;
     } else if (secondsTakenToAnswer <= 4) {
-      return correctAnswerPointsForBattle + 5;
+      return correctAnswerPointsForBattle + extraPointForSecondQuickestAnswer;
     }
     return correctAnswerPointsForBattle;
   }
