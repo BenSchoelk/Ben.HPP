@@ -39,7 +39,10 @@ class _RoomDialogState extends State<RoomDialog> {
     Future.delayed(Duration.zero, () {
       //to get categories
       if (isCategoryEnabled()) {
-        context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+        context.read<QuizCategoryCubit>().getQuizCategory(
+              languageId: UiUtils.getCurrentQuestionLanguageId(context),
+              type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+            );
       }
     });
   }
@@ -362,7 +365,10 @@ class _RoomDialogState extends State<RoomDialog> {
                                 content: Text(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!),
                               )).then((value) {
                         if (value != null && value) {
-                          context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+                          context.read<QuizCategoryCubit>().getQuizCategory(
+                                languageId: UiUtils.getCurrentQuestionLanguageId(context),
+                                type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+                              );
                         }
                       });
                     }

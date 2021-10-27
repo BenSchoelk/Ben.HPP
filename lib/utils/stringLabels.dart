@@ -253,7 +253,7 @@ String guessTheWord = "guessTheWord";
 String funAndLearn = "funAndLearn";
 String trueAndFalse = "trueAndFalse";
 String mathManiaKey = "mathMania";
-String audioRoomKey = 'audioRoom';
+String audioQuestionsKey = 'audioQuestions';
 
 String desQuizZone = "desQuizZone";
 String desDailyQuiz = "desDailyQuiz";
@@ -264,7 +264,7 @@ String desGuessTheWord = "desGuessTheWord";
 String desFunAndLearn = "desFunAndLearn";
 String desTrueAndFalse = "desTrueAndFalse";
 String desMathManiaKey = "desMathMania";
-String desAudioRoomKey = "desAudioRoom";
+String desAudioQuestionsKey = "desAudioQuestions";
 
 String noCoinsMsg = "noCoinsMsg";
 

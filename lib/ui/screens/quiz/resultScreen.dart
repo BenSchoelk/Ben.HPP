@@ -309,7 +309,7 @@ class _ResultScreenState extends State<ResultScreen> {
           widget.quizType == QuizTypes.guessTheWord ||
           widget.quizType == QuizTypes.trueAndFalse ||
           widget.quizType == QuizTypes.funAndLearn ||
-          widget.quizType == QuizTypes.audioRoom) {
+          widget.quizType == QuizTypes.audioQuestions) {
         /*
         //update statistic for given user
         context.read<UpdateStatisticCubit>().updateStatistic(
@@ -947,7 +947,7 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget _buildPlayAgainButton() {
     if (widget.quizType == QuizTypes.selfChallenge) {
       return Container();
-    } else if (widget.quizType == QuizTypes.audioRoom) {
+    } else if (widget.quizType == QuizTypes.audioQuestions) {
       if (_isWinner) {
         return Container();
       }
@@ -955,7 +955,7 @@ class _ResultScreenState extends State<ResultScreen> {
       return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
         Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
           "numberOfPlayer": 1,
-          "quizType": QuizTypes.audioRoom,
+          "quizType": QuizTypes.audioQuestions,
           "subcategoryId": widget.questions!.first.subcategoryId == "0" ? "" : widget.questions!.first.subcategoryId,
           "categoryId": widget.questions!.first.subcategoryId == "0" ? widget.questions!.first.categoryId : "",
         });

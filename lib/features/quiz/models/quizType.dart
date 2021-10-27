@@ -15,7 +15,7 @@ enum QuizTypes {
   quizZone,
   bookmarkQuiz,
   mathMania,
-  audioRoom,
+  audioQuestions,
 }
 
 QuizTypes getQuizTypeEnumFromTitle(String? title) {
@@ -39,8 +39,8 @@ QuizTypes getQuizTypeEnumFromTitle(String? title) {
     return QuizTypes.quizZone;
   } else if (title == mathManiaKey) {
     return QuizTypes.mathMania;
-  } else if (title == audioRoomKey) {
-    return QuizTypes.audioRoom;
+  } else if (title == audioQuestionsKey) {
+    return QuizTypes.audioQuestions;
   }
   return QuizTypes.praticeSection;
 }

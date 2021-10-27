@@ -119,11 +119,11 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                               "type": "subcategory",
                               "typeId": subCategoryList[index].id,
                             });
-                          } else if (widget.quizType == QuizTypes.audioRoom) {
+                          } else if (widget.quizType == QuizTypes.audioQuestions) {
                             //
                             Navigator.of(context).pushNamed(Routes.quiz, arguments: {
                               "numberOfPlayer": 1,
-                              "quizType": QuizTypes.audioRoom,
+                              "quizType": QuizTypes.audioQuestions,
                               "subcategoryId": subCategoryList[index].id,
                             });
                           }

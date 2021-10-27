@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
@@ -11,7 +9,6 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
-import 'package:flutterquiz/ui/widgets/adMobBanner.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -22,12 +19,9 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class CategoryScreen extends StatefulWidget {
-  final QuizTypes? quizType;
-  final String? battleLabel;
-  final String? type;
-  final String? typeId;
+  final QuizTypes quizType;
 
-  CategoryScreen({this.quizType, this.type, this.typeId, this.battleLabel});
+  CategoryScreen({required this.quizType});
 
   @override
   _CategoryScreen createState() => _CategoryScreen();
@@ -38,9 +32,6 @@ class CategoryScreen extends StatefulWidget {
               create: (_) => QuizCategoryCubit(QuizRepository()),
               child: CategoryScreen(
                 quizType: arguments['quizType'] as QuizTypes,
-                type: arguments['type'],
-                typeId: arguments['typeId'],
-                battleLabel: arguments["battleLabel"],
               ),
             ));
   }
@@ -50,7 +41,10 @@ class _CategoryScreen extends State<CategoryScreen> {
   final ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), widget.type == "category" ? widget.typeId! : "");
+    context.read<QuizCategoryCubit>().getQuizCategory(
+          languageId: UiUtils.getCurrentQuestionLanguageId(context),
+          type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+        );
     super.initState();
   }
 
@@ -76,7 +70,6 @@ class _CategoryScreen extends State<CategoryScreen> {
             ),
             //AdMobBanner(),
           ),
-
         ],
       ),
     );
@@ -118,7 +111,10 @@ class _CategoryScreen extends State<CategoryScreen> {
                 convertErrorCodeToLanguageKey(state.errorMessage),
               ),
               onTapRetry: () {
-                context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), widget.type == "category" ? widget.typeId! : "");
+                context.read<QuizCategoryCubit>().getQuizCategory(
+                      languageId: UiUtils.getCurrentQuestionLanguageId(context),
+                      type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+                    );
               },
             );
           }
@@ -165,14 +161,14 @@ class _CategoryScreen extends State<CategoryScreen> {
                     } else {
                       Navigator.of(context).pushNamed(Routes.subcategoryAndLevel, arguments: categoryList[index].id);
                     }
-                  } else if (widget.quizType == QuizTypes.audioRoom) {
+                  } else if (widget.quizType == QuizTypes.audioQuestions) {
                     //noOf means how many subcategory it has
 
                     if (categoryList[index].noOf == "0") {
                       //
                       Navigator.of(context).pushNamed(Routes.quiz, arguments: {
                         "numberOfPlayer": 1,
-                        "quizType": QuizTypes.audioRoom,
+                        "quizType": QuizTypes.audioQuestions,
                         "categoryId": categoryList[index].id,
                       });
                     } else {

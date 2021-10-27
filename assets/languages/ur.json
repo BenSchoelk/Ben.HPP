@@ -315,6 +315,9 @@
 
     "failedToGetAppUrl" : "ایپ url حاصل کرنے میں ناکام۔",
     "youWin": "تم جیت گئے",
-    "letsPlay": "چلو کھیلتے ہیں"
+    "letsPlay": "چلو کھیلتے ہیں",
+    "audioQuestions" : "Audio Quesitons",
+
+    "desAudioQuestions" : "Quiz with audio"
 }
    

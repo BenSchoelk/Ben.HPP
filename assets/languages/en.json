@@ -313,8 +313,8 @@
     "emojis" : "Emojis",
     "badges" : "Badges",
     "mathMania" : "Math Mania",
-    "audioRoom" : "Audio Room",
-    "desAudioRoom" : "Quiz with audio",
+    "audioQuestions" : "Audio Questions",
+    "desAudioQuestions" : "Quiz with audio",
     "randomLbl": "Random Battle",
     "playWithFrdLbl": "Play With Friends",
     "desMathMania" : "It's math quiz",
@@ -329,6 +329,8 @@
     "failedToGetAppUrl" : "Failed to get app url, Please update manually",
     "youWin": "You win",
     "letsPlay": "Let's Play"
+    
+    
 
 }
 

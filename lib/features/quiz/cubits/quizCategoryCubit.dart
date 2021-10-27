@@ -24,10 +24,10 @@ class QuizCategoryCubit extends Cubit<QuizCategoryState> {
   final QuizRepository _quizRepository;
   QuizCategoryCubit(this._quizRepository) : super(QuizCategoryInitial());
 
-  void getQuizCategory(String languageId,String id) async {
+  void getQuizCategory({required String languageId, required String type}) async {
     emit(QuizCategoryProgress());
     _quizRepository
-        .getCategory(languageId,id)
+        .getCategory(languageId: languageId, type: type)
         .then(
           (val) => emit(QuizCategorySuccess(val)),
         )

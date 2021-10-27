@@ -25,10 +25,10 @@ class QuizRepository {
 
   QuizRepository._internal();
 
-  Future<List<Category>> getCategory(String languageId, String id) async {
+  Future<List<Category>> getCategory({required String languageId, required String type}) async {
     try {
       List<Category> categoryList = [];
-      List result = await _quizRemoteDataSource.getCategory(languageId, id);
+      List result = await _quizRemoteDataSource.getCategory(languageId: languageId, type: type);
       categoryList = result.map((category) => Category.fromJson(Map.from(category))).toList();
 
       return categoryList;
@@ -112,7 +112,7 @@ class QuizRepository {
       } else if (quizType == QuizTypes.funAndLearn) {
         result = await (_quizRemoteDataSource.getComprehensionQuestion(funAndLearnId) /*as Future<List<dynamic>?>*/);
         questions = result!.map((question) => Question.fromJson(Map.from(question))).toList();
-      } else if (quizType == QuizTypes.audioRoom) {
+      } else if (quizType == QuizTypes.audioQuestions) {
         String type = categoryId!.isNotEmpty ? "category" : "subcategory";
         String id = type == "category" ? categoryId : subcategoryId!;
         result = await _quizRemoteDataSource.getAudioQuestions(type: type, id: id);

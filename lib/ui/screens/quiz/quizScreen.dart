@@ -249,7 +249,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       "comprehensionId": widget.comprehensionId,
       "timeTakenToCompleteQuiz": totalSecondsToCompleteQuiz,
       "hasUsedAnyLifeline": checkHasUsedAnyLifeline(),
-      "entryFee":0
+      "entryFee": 0
     });
   }
 
@@ -334,7 +334,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         changeQuestion();
         //if quizType is not audio then start timer again
-        if (widget.quizType == QuizTypes.audioRoom) {
+        if (widget.quizType == QuizTypes.audioQuestions) {
           timerAnimationController.value = 0.0;
           showOptionAnimationController.forward();
         } else {
@@ -354,7 +354,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       print("User has left the question so submit answer as -1");
       submitAnswer("-1");
     } else if (status == AnimationStatus.forward) {
-      if (widget.quizType == QuizTypes.audioRoom) {
+      if (widget.quizType == QuizTypes.audioQuestions) {
         showOptionAnimationController.reverse();
       }
     }
@@ -370,7 +370,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildShowOptionButton() {
-    if (widget.quizType == QuizTypes.audioRoom) {
+    if (widget.quizType == QuizTypes.audioQuestions) {
       return Align(
         alignment: Alignment.bottomCenter,
         child: SlideTransition(
@@ -454,7 +454,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         actions: [
           CupertinoButton(
             onPressed: () {
-               timerAnimationController.stop();
+              timerAnimationController.stop();
               _showInterstitialAd();
               //interstitialAd.show();
               //user see full ads coins increment  6
@@ -509,7 +509,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       //dialog Show timer stop dialog close timer start
                       timerAnimationController.stop();
                       showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
-                        print("****************************************:"+value.toString());
+                        print("****************************************:" + value.toString());
                         if (value == null) {
                           timerAnimationController.forward(from: timerAnimationController.value);
                         }
@@ -651,7 +651,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 listener: (context, state) {
                   if (state is QuestionsFetchSuccess) {
                     if (currentQuestionIndex == 0 && !state.questions[currentQuestionIndex].attempted) {
-                      if (widget.quizType == QuizTypes.audioRoom) {
+                      if (widget.quizType == QuizTypes.audioQuestions) {
                         state.questions.forEach((element) {
                           audioQuestionContainerKeys.add(GlobalKey<AudioQuestionContainerState>());
                         });
@@ -696,7 +696,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       toggleSettingDialog: toggleSettingDialog,
                       showAnswerCorrectness: true,
                       lifeLines: getLifeLines(),
-                      timerAnimationController: widget.quizType == QuizTypes.audioRoom ? timerAnimationController : null,
+                      timerAnimationController: widget.quizType == QuizTypes.audioQuestions ? timerAnimationController : null,
                       bookmarkButton: _buildBookmarkButton(quesCubit),
                       topPadding: 30.0,
                       hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,

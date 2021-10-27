@@ -230,10 +230,10 @@ class QuizRemoteDataSource {
     }
   }
 
-  Future<dynamic> getCategory(String languageId, String id) async {
+  Future<dynamic> getCategory({required String languageId, required String type}) async {
     try {
       //body of post request
-      Map<String, String> body = {accessValueKey: accessValue, languageIdKey: languageId, idKey: id};
+      Map<String, String> body = {accessValueKey: accessValue, languageIdKey: languageId, typeKey: type};
       if (languageId.isEmpty) {
         body.remove(languageIdKey);
       }

@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.dailyQuiz);
       }
       if (systemCubit.getIsAudioQuestionAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.audioRoom);
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.audioQuestions);
       }
       if (systemCubit.getIsFunNLearnAvailable() == "0") {
         _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.funAndLearn);
@@ -315,8 +315,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       }
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.guessTheWord) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.guessTheWord});
-    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.audioRoom) {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioRoom});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.audioQuestions) {
+      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioQuestions});
     }
   }
 

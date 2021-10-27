@@ -139,6 +139,20 @@ class UiUtils {
     return earnedCoins;
   }
 
+  static String getCategoryTypeNumberFromQuizType(QuizTypes quizType) {
+    //quiz_zone=1, fun_n_learn=2, guess_the_word=3, audio_question=4
+    if (quizType == QuizTypes.audioQuestions) {
+      return "4";
+    }
+    if (quizType == QuizTypes.guessTheWord) {
+      return "3";
+    }
+    if (quizType == QuizTypes.funAndLearn) {
+      return "2";
+    }
+    return "1";
+  }
+
   static Future<bool> forceUpdate(String updatedVersion) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentVersion = "${packageInfo.version}+${packageInfo.buildNumber}";

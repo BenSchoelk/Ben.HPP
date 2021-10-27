@@ -5,6 +5,7 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 
@@ -60,8 +61,10 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      //to get categories
-      context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+      context.read<QuizCategoryCubit>().getQuizCategory(
+            languageId: UiUtils.getCurrentQuestionLanguageId(context),
+            type: UiUtils.getCategoryTypeNumberFromQuizType(QuizTypes.selfChallenge),
+          );
     });
   }
 
@@ -112,7 +115,10 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
 
               context.read<SubCategoryCubit>().fetchSubCategory(selectedCategoryId!);
             } else {
-              context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+              context.read<QuizCategoryCubit>().getQuizCategory(
+                    languageId: UiUtils.getCurrentQuestionLanguageId(context),
+                    type: UiUtils.getCategoryTypeNumberFromQuizType(QuizTypes.selfChallenge),
+                  );
             }
           }
         },
@@ -225,7 +231,10 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
                           if (state is QuizCategoryFailure) {
                             UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, true, duration: Duration(days: 365), onPressedAction: () {
                               //to get categories
-                              context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+                              context.read<QuizCategoryCubit>().getQuizCategory(
+                                    languageId: UiUtils.getCurrentQuestionLanguageId(context),
+                                    type: UiUtils.getCategoryTypeNumberFromQuizType(QuizTypes.selfChallenge),
+                                  );
                             });
                           }
                         },

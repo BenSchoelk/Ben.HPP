@@ -33,7 +33,10 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
   void initState() {
     Future.delayed(Duration.zero, () {
       if (context.read<SystemConfigCubit>().getIsCategoryEnableForBattle() == "1") {
-        context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+        context.read<QuizCategoryCubit>().getQuizCategory(
+              languageId: UiUtils.getCurrentQuestionLanguageId(context),
+              type: UiUtils.getCategoryTypeNumberFromQuizType(QuizTypes.battle),
+            );
       }
     });
     super.initState();
@@ -127,7 +130,10 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
                               content: Text(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!),
                             )).then((value) {
                       if (value != null && value) {
-                        context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
+                        context.read<QuizCategoryCubit>().getQuizCategory(
+                              languageId: UiUtils.getCurrentQuestionLanguageId(context),
+                              type: UiUtils.getCategoryTypeNumberFromQuizType(QuizTypes.battle),
+                            );
                       }
                     });
                   }
