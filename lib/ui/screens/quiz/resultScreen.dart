@@ -209,48 +209,41 @@ class _ResultScreenState extends State<ResultScreen> {
 
   void earnBadges() {
     Future.delayed(Duration.zero, () {
+      String userId = context.read<UserDetailsCubit>().getUserId();
+      BadgesCubit badgesCubit = context.read<BadgesCubit>();
       if (widget.quizType == QuizTypes.battle) {
-        if (context.read<BadgesCubit>().isBadgeLocked("ultimate_player")) {
+        //if badges is locekd
+        if (badgesCubit.isBadgeLocked("ultimate_player")) {
           int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
-          print("Points in battle ${widget.myPoints}");
+          //if user's points is same as highest points
           if (widget.myPoints! == badgeEarnPoints) {
-            print("Will earn badge related to battle");
+            badgesCubit.setBadge(badgeType: "ultimate_player", userId: userId);
           }
         }
       } else if (widget.quizType == QuizTypes.funAndLearn) {
         //funAndLearn is related to flashback
-        if (context.read<BadgesCubit>().isBadgeLocked("flashback")) {
-          print(correctAnswer());
-          print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+        if (badgesCubit.isBadgeLocked("flashback")) {
           int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
-          //
           if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-            print("Will earn badge related to funNLearn");
-          } else {
-            print("Will not earn badge related to funNLearn");
+            badgesCubit.setBadge(badgeType: "flashback", userId: userId);
           }
         }
       } else if (widget.quizType == QuizTypes.quizZone) {
-        if (context.read<BadgesCubit>().isBadgeLocked("brainiac")) {
-          print(correctAnswer());
-          print("Has used any lifeline ${widget.hasUsedAnyLifeline!}");
-          //
+        if (badgesCubit.isBadgeLocked("brainiac")) {
           if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
-            print("Will earn badge related to quizZone");
-          } else {
-            print("Will not earn badge related to quizZone");
+            badgesCubit.setBadge(badgeType: "brainiac", userId: userId);
           }
         }
+        if (badgesCubit.isBadgeLocked("dashing_debut")) {
+          print("Unlock dashing debut badge");
+          badgesCubit.setBadge(badgeType: "dashing_debut", userId: userId);
+        }
       } else if (widget.quizType == QuizTypes.guessTheWord) {
-        if (context.read<BadgesCubit>().isBadgeLocked("super_sonic")) {
-          print(correctAnswer());
-          print("Time taken to complete quiz : ${widget.timeTakenToCompleteQuiz}");
+        if (badgesCubit.isBadgeLocked("super_sonic")) {
           //if user has solved the quiz with in badgeEarnTime then they can earn badge
           int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
           if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-            print("Will earn badge related to guessTheWord");
-          } else {
-            print("Will not earn badge related to guessTheWord");
+            badgesCubit.setBadge(badgeType: "super_sonic", userId: userId);
           }
         }
       }

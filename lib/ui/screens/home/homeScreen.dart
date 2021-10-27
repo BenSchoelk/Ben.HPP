@@ -141,16 +141,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
     //handle foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.data != null) {
-        var data = message.data;
-        print("data notification*********************************$data");
-        var title = data['title'].toString();
-        var body = data['message'].toString();
-        var type = data['type'];
-        var image = data['image'];
-        String payload = "";
-        image != null ? generateImageNotification(title, body, image, payload, type) : generateSimpleNotification(title, body, payload, type);
+      var data = message.data;
+
+      var title = data['title'].toString();
+      var body = data['message'].toString();
+      var type = data['type'].toString();
+
+      var image = data['image'];
+      String payload = "";
+      //if notification type is badges then update badges in cubit list
+      if (type == "badges") {
+        print("Notificaiton for unlocking new badge");
+        String badgeType = data['badge_type'];
+        Future.delayed(Duration.zero, () {
+          context.read<BadgesCubit>().updateBadge(badgeType);
+        });
       }
+
+      image != null ? generateImageNotification(title, body, image, payload, type) : generateSimpleNotification(title, body, payload, type);
     });
   }
 
@@ -158,6 +166,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> _handleMessage(RemoteMessage message) async {
     if (message.data['type'] == 'category') {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
+    }
+    if (message.data['type'] == 'badges') {
+      Navigator.of(context).pushNamed(Routes.badges);
     }
   }
 
@@ -177,6 +188,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (type == 'category') {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
     }
+    if (type == 'badges') {
+      Navigator.of(context).pushNamed(Routes.badges);
+    }
   }
 
   Future<String> _downloadAndSaveFile(String url, String fileName) async {
@@ -190,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // notification on foreground
   Future<void> generateSimpleNotification(String title, String msg, String payloads, String type) async {
+    print("Trigger local notification");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'com.wrteam.flutterquiz', //channel id
       'flutterquiz', //channel name
@@ -204,13 +219,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (type == 'category') {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
     }
+    if (type == 'badges') {
+      Navigator.of(context).pushNamed(Routes.badges);
+    }
   }
 
   @override
   void dispose() {
     profileAnimationController.dispose();
     selfChallengeAnimationController.dispose();
-    print("Delete unused room");
+
     super.dispose();
   }
 
