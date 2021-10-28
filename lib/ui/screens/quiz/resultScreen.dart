@@ -270,13 +270,14 @@ class _ResultScreenState extends State<ResultScreen> {
         }
       }
     } else if (widget.quizType == QuizTypes.quizZone) {
+      if (badgesCubit.isBadgeLocked("dashing_debut")) {
+        updateDashingDebutBadge = true;
+      }
+      //
       if (badgesCubit.isBadgeLocked("brainiac")) {
         if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
           badgesCubit.setBadge(badgeType: "brainiac", userId: userId);
         }
-      }
-      if (badgesCubit.isBadgeLocked("dashing_debut")) {
-        updateDashingDebutBadge = true;
       }
     } else if (widget.quizType == QuizTypes.guessTheWord) {
       if (badgesCubit.isBadgeLocked("super_sonic")) {
@@ -285,6 +286,11 @@ class _ResultScreenState extends State<ResultScreen> {
         if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
           badgesCubit.setBadge(badgeType: "super_sonic", userId: userId);
         }
+      }
+    } else if (widget.quizType == QuizTypes.dailyQuiz) {
+      if (badgesCubit.isBadgeLocked("thirsty")) {
+        //
+        badgesCubit.setBadge(badgeType: "thirsty", userId: userId);
       }
     }
     return updateDashingDebutBadge;

@@ -54,10 +54,10 @@ class UiUtils {
   }
 
   static void updateBadgesLocally(BuildContext context) {
-    UiUtils.needToUpdateBadgesLocally.forEach((badgeType) {
+    needToUpdateBadgesLocally.forEach((badgeType) {
       context.read<BadgesCubit>().updateBadge(badgeType);
     });
-    UiUtils.needToUpdateBadgesLocally.clear();
+    needToUpdateBadgesLocally.clear();
   }
 
   static void setSnackbar(String msg, BuildContext context, bool showAction, {Function? onPressedAction, Duration? duration}) {

@@ -197,8 +197,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Future<void> _onTapLocalNotification(String? payload) async {
     //
-    print("User tapped on local notification");
-    print("$payload");
+    String type = payload ?? "";
+    if (type == "badges") {
+    } else if (type == "category") {
+      Navigator.of(context).pushNamed(
+        Routes.category,
+      );
+    }
   }
 
   Future<void> generateImageNotification(String title, String msg, String image, String payloads, String type) async {
