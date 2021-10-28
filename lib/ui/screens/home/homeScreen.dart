@@ -57,6 +57,11 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
+Future<void> onBackgroundMessage(RemoteMessage message) async {
+  print("Background message");
+  print(message.data);
+}
+
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final double quizTypeWidthPercentage = 0.4;
   final double quizTypeTopMargin = 0.425;
@@ -82,13 +87,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool? dragUP;
   int currentMenu = 1;
 
-  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   @override
   void initState() {
+    _initLocalNotification();
     checkForUpdates();
     setupInteractedMessage();
     setQuizMenu();
     super.initState();
+  }
+
+  void _initLocalNotification() async {
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: (int id, String? title, String? body, String? payLoad) {
+      //
+      return Future.value();
+    });
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: _onTapLocalNotification);
   }
 
   void setQuizMenu() {
@@ -139,6 +159,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
     // handle background notification
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
     //handle foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       var data = message.data;
@@ -148,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       var type = data['type'].toString();
 
       var image = data['image'];
-      String payload = "";
+
       //if notification type is badges then update badges in cubit list
       if (type == "badges") {
         print("Notificaiton for unlocking new badge");
@@ -157,19 +178,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           context.read<BadgesCubit>().updateBadge(badgeType);
         });
       }
-
-      image != null ? generateImageNotification(title, body, image, payload, type) : generateSimpleNotification(title, body, payload, type);
+      //payload is some data you want to pass in local notification
+      image != null ? generateImageNotification(title, body, image, type, type) : generateSimpleNotification(title, body, type);
     });
   }
 
-// notification type is category then move to category screen
+  // notification type is category then move to category screen
   Future<void> _handleMessage(RemoteMessage message) async {
+    print("User has opened the app by tapping on notification");
     if (message.data['type'] == 'category') {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
-    }
-    if (message.data['type'] == 'badges') {
+    } else if (message.data['type'] == 'badges') {
       Navigator.of(context).pushNamed(Routes.badges);
     }
+  }
+
+  Future<void> _onTapLocalNotification(String? payload) async {
+    //
+    print("User tapped on local notification");
+    print("$payload");
   }
 
   Future<void> generateImageNotification(String title, String msg, String image, String payloads, String type) async {
@@ -185,12 +212,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
-    if (type == 'category') {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
-    }
-    if (type == 'badges') {
-      Navigator.of(context).pushNamed(Routes.badges);
-    }
   }
 
   Future<String> _downloadAndSaveFile(String url, String fileName) async {
@@ -203,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // notification on foreground
-  Future<void> generateSimpleNotification(String title, String msg, String payloads, String type) async {
+  Future<void> generateSimpleNotification(String title, String body, String payloads) async {
     print("Trigger local notification");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'com.wrteam.flutterquiz', //channel id
@@ -213,15 +234,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       priority: Priority.high,
       ticker: 'ticker',
     );
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
-    // notification type is category then move to category screen
-    if (type == 'category') {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
-    }
-    if (type == 'badges') {
-      Navigator.of(context).pushNamed(Routes.badges);
-    }
+    const IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: payloads);
   }
 
   @override

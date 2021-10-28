@@ -133,7 +133,6 @@ class UiUtils {
       earnedCoins = (maxCoins - ((maxCoinsWinningPercentage - percentage) / 10)).toInt();
     }
     if (earnedCoins < 0) {
-      print(earnedCoins);
       earnedCoins = 0;
     }
     return earnedCoins;

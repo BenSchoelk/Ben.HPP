@@ -78,6 +78,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void navigateToNextScreen() async {
+    print("Navigate to next screen");
     if (loadedSystemConfigDetails) {
       //Reading from settingsCubit means we are just reading current value of settingsCubit
       //if settingsCubit will change in future it will not rebuild it's child

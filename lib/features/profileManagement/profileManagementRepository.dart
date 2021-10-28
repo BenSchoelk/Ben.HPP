@@ -77,34 +77,27 @@ class ProfileManagementRepository {
     }
   }
 
-  Future<Map> updateConinsAndScore({required String? userId, required int? score, required int coins, required bool addCoin}) async {
+  Future<Map> updateConinsAndScore({required String userId, required int? score, required int coins, required bool addCoin, String? type}) async {
     try {
-      final result = await _profileManagementRemoteDataSource.updateCoinsAndScore(
-        userId: userId,
-        coins: addCoin ? coins.toString() : (coins * -1).toString(),
-        score: score.toString(),
-      );
+      final result = await _profileManagementRemoteDataSource.updateCoinsAndScore(userId: userId, coins: addCoin ? coins.toString() : (coins * -1).toString(), score: score.toString(), type: type);
       return Map.from(result);
     } catch (e) {
       throw ProfileManagementException(errorMessageCode: e.toString());
     }
   }
 
-  Future<Map> updateConins({required String? userId, required int? coins, required bool addCoin}) async {
+  Future<Map> updateConins({required String userId, required int? coins, required bool addCoin, String? type}) async {
     try {
-      final result = await _profileManagementRemoteDataSource.updateCoins(
-        userId: userId,
-        coins: addCoin ? coins.toString() : (coins! * -1).toString(),
-      );
+      final result = await _profileManagementRemoteDataSource.updateCoins(userId: userId, coins: addCoin ? coins.toString() : (coins! * -1).toString(), type: type);
       return Map.from(result);
     } catch (e) {
       throw ProfileManagementException(errorMessageCode: e.toString());
     }
   }
 
-  Future<Map> updateScore({required String? userId, required int? score}) async {
+  Future<Map> updateScore({required String userId, required int? score, String? type}) async {
     try {
-      final result = await _profileManagementRemoteDataSource.updateScore(userId: userId, score: score.toString());
+      final result = await _profileManagementRemoteDataSource.updateScore(type: type, userId: userId, score: score.toString());
       return Map.from(result);
     } catch (e) {
       throw ProfileManagementException(errorMessageCode: e.toString());

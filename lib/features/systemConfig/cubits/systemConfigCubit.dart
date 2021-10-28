@@ -54,7 +54,6 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
         emojis: emojis,
       ));
     } catch (e) {
-      print(e.toString());
       emit(SystemConfigFetchFailure(e.toString()));
     }
   }

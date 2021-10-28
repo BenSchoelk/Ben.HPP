@@ -15,6 +15,7 @@ class SystemConfigRemoteDataSource {
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
+        print(responseJson);
         throw SystemConfigException(errorMessageCode: responseJson['message']);
       }
       return responseJson['data'];

@@ -6,6 +6,7 @@ import 'package:flutterquiz/utils/apiUtils.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
+
 class ProfileManagementRemoteDataSource {
   /*
   {id: 11, firebase_id: G1thaSiA43WYx29dOXmUd6jqUWS2,
@@ -104,13 +105,18 @@ class ProfileManagementRemoteDataSource {
     score:2
    */
   Future<dynamic> updateCoinsAndScore({
-    required String? userId,
+    required String userId,
     required String score,
     required String coins,
+    String? type,
   }) async {
     try {
       //body of post request
-      Map<String, String?> body = {accessValueKey: accessValue, userIdKey: userId, coinsKey: coins, scoreKey: score};
+      Map<String, String> body = {accessValueKey: accessValue, userIdKey: userId, coinsKey: coins, scoreKey: score, typeKey: type ?? ""};
+
+      if (body[typeKey]!.isEmpty) {
+        body.remove(typeKey);
+      }
       final response = await http.post(Uri.parse(updateUserCoinsAndScoreUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
@@ -135,11 +141,16 @@ class ProfileManagementRemoteDataSource {
     score:2
    */
   Future<dynamic> updateCoins({
-    required String? userId,
+    required String userId,
     required String coins,
+    String? type, //dashing_debut, clash_winner
   }) async {
     try {
-      Map<String, String?> body = {accessValueKey: accessValue, userIdKey: userId, coinsKey: coins};
+      Map<String, String> body = {accessValueKey: accessValue, userIdKey: userId, coinsKey: coins, typeKey: type ?? ""};
+      if (body[typeKey]!.isEmpty) {
+        body.remove(typeKey);
+      }
+
       final response = await http.post(Uri.parse(updateUserCoinsAndScoreUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
@@ -164,11 +175,15 @@ class ProfileManagementRemoteDataSource {
     score:2
    */
   Future<dynamic> updateScore({
-    required String? userId,
+    required String userId,
     required String score,
+    String? type,
   }) async {
     try {
-      Map<String, String?> body = {accessValueKey: accessValue, userIdKey: userId, scoreKey: score};
+      Map<String, String> body = {accessValueKey: accessValue, userIdKey: userId, scoreKey: score, typeKey: type ?? ""};
+      if (body[typeKey]!.isEmpty) {
+        body.remove(typeKey);
+      }
       final response = await http.post(Uri.parse(updateUserCoinsAndScoreUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 

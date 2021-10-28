@@ -133,48 +133,86 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
-  late var winAmount;
 
-  void decideWinnerForBattle() {
-    winAmount = widget.entryFee! * 2;
-    print("Winning Amount is :$winAmount");
-    if (widget.numberOfPlayer == 2) {
-      String winnerId = "";
-      if (widget.battleRoom!.user1!.points == widget.battleRoom!.user2!.points) {
+  InterstitialAd? interstitialAd;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _createInterstitialAd();
+    //
+    if (widget.quizType == QuizTypes.battle) {
+      battleConfiguration();
+    } else {
+      //decide winner
+      if (winPercentage() >= winPercentageBreakPoint) {
         _isWinner = true;
-        _winnerId = "";
       } else {
-        if (widget.battleRoom!.user1!.points > widget.battleRoom!.user2!.points) {
-          winnerId = widget.battleRoom!.user1!.uid;
-        } else {
-          winnerId = widget.battleRoom!.user2!.uid;
-        }
-        Future.delayed(Duration.zero, () {
-          if (context.read<UserDetailsCubit>().getUserId() == winnerId) {
-            _isWinner = true;
-            context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), winAmount.toInt(), true);
-            context.read<UserDetailsCubit>().updateCoins(
-                  addCoin: true,
-                  coins: winAmount.toInt(),
-                );
-          } else {
-            _isWinner = false;
-          }
-          _winnerId = winnerId;
-          setState(() {});
-        });
+        _isWinner = false;
       }
+      //earn coins based on percentage
+      earnCoinsBasedOnWinPercentage();
+      setContestLeaderboard();
+    }
+
+    //check for badges
+    //update score,coins and statistic related details
+
+    Future.delayed(Duration.zero, () {
+      //earnBadge will check the condition for unlocking badges and
+      //will return true or false
+      //we need to return bool value so we can pass this to
+      //updateScoreAndCoinsCubit since dashing_debut badge will unlock
+      //from set_user_coin_score api
+      _updateScoreAndCoinsDetails(updateDasingDebutBadge: _earnBadges());
+      //updateStatistic
+    });
+  }
+
+  //update stats related to battle, score of user and coins given to winner
+  void battleConfiguration() async {
+    String winnerId = "";
+
+    if (widget.battleRoom!.user1!.points == widget.battleRoom!.user2!.points) {
+      _isWinner = true;
+      _winnerId = "";
+      _updateCoinsAndScoreForBattle(widget.battleRoom!.entryFee!);
+    } else {
+      if (widget.battleRoom!.user1!.points > widget.battleRoom!.user2!.points) {
+        winnerId = widget.battleRoom!.user1!.uid;
+      } else {
+        winnerId = widget.battleRoom!.user2!.uid;
+      }
+      await Future.delayed(Duration.zero);
+      _isWinner = context.read<UserDetailsCubit>().getUserId() == winnerId;
+      _winnerId = winnerId;
+      _updateCoinsAndScoreForBattle(widget.battleRoom!.entryFee! * 2);
+      //update winner id and _isWinner in ui
+      setState(() {});
     }
   }
 
-  void updateCoinsForBattleWinner(int earnedCoins) {
+  void _updateCoinsAndScoreForBattle(int earnedCoins) {
     Future.delayed(Duration.zero, () {
-      //
-      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), earnedCoins, true);
-      context.read<UserDetailsCubit>().updateCoins(
-            addCoin: true,
-            coins: earnedCoins,
-          );
+      String currentUserId = context.read<UserDetailsCubit>().getUserId();
+      UserBattleRoomDetails currentUser = widget.battleRoom!.user1!.uid == currentUserId ? widget.battleRoom!.user1! : widget.battleRoom!.user2!;
+      if (_isWinner) {
+        //update score and coins for user
+        context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(
+              currentUserId,
+              currentUser.points,
+              true,
+              earnedCoins,
+            );
+        //update score locally and database
+        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: earnedCoins);
+        context.read<UserDetailsCubit>().updateScore(currentUser.points);
+      } else {
+        //if user is not winner then update only score
+        context.read<UpdateScoreAndCoinsCubit>().updateScore(currentUserId, currentUser.points);
+        context.read<UserDetailsCubit>().updateScore(currentUser.points);
+      }
     });
   }
 
@@ -188,66 +226,57 @@ class _ResultScreenState extends State<ResultScreen> {
     return null;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.quizType == QuizTypes.battle) {
-      decideWinnerForBattle();
-    } else {
-      if (winPercentage() >= winPercentageBreakPoint) {
-        _isWinner = true;
-      } else {
-        _isWinner = false;
-      }
-      earnBadges();
-      earnCoinsBasedOnWinPercentage();
-      updateResultDetails();
-      setContestLeaderboard();
-    }
-    _createInterstitialAd();
-  }
+  /*
+        //update statistic for given user
+        context.read<UpdateStatisticCubit>().updateStatistic(
+          answeredQuestion: attemptedQuestion(),
+          categoryId: widget.questions!.first.categoryId,
+          correctAnswers: correctAnswer(),
+          userId: context.read<UserDetailsCubit>().getUserId(),
+          winPercentage: winPercentage(),
+        );*/
 
-  void earnBadges() {
-    Future.delayed(Duration.zero, () {
-      String userId = context.read<UserDetailsCubit>().getUserId();
-      BadgesCubit badgesCubit = context.read<BadgesCubit>();
-      if (widget.quizType == QuizTypes.battle) {
-        //if badges is locekd
-        if (badgesCubit.isBadgeLocked("ultimate_player")) {
-          int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
-          //if user's points is same as highest points
-          if (widget.myPoints! == badgeEarnPoints) {
-            badgesCubit.setBadge(badgeType: "ultimate_player", userId: userId);
-          }
-        }
-      } else if (widget.quizType == QuizTypes.funAndLearn) {
-        //funAndLearn is related to flashback
-        if (badgesCubit.isBadgeLocked("flashback")) {
-          int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
-          if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-            badgesCubit.setBadge(badgeType: "flashback", userId: userId);
-          }
-        }
-      } else if (widget.quizType == QuizTypes.quizZone) {
-        if (badgesCubit.isBadgeLocked("brainiac")) {
-          if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
-            badgesCubit.setBadge(badgeType: "brainiac", userId: userId);
-          }
-        }
-        if (badgesCubit.isBadgeLocked("dashing_debut")) {
-          print("Unlock dashing debut badge");
-          badgesCubit.setBadge(badgeType: "dashing_debut", userId: userId);
-        }
-      } else if (widget.quizType == QuizTypes.guessTheWord) {
-        if (badgesCubit.isBadgeLocked("super_sonic")) {
-          //if user has solved the quiz with in badgeEarnTime then they can earn badge
-          int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
-          if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
-            badgesCubit.setBadge(badgeType: "super_sonic", userId: userId);
-          }
+  bool _earnBadges() {
+    bool updateDashingDebutBadge = false;
+
+    String userId = context.read<UserDetailsCubit>().getUserId();
+    BadgesCubit badgesCubit = context.read<BadgesCubit>();
+    if (widget.quizType == QuizTypes.battle) {
+      //if badges is locekd
+      if (badgesCubit.isBadgeLocked("ultimate_player")) {
+        int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
+        //if user's points is same as highest points
+        if (widget.myPoints! == badgeEarnPoints) {
+          badgesCubit.setBadge(badgeType: "ultimate_player", userId: userId);
         }
       }
-    });
+    } else if (widget.quizType == QuizTypes.funAndLearn) {
+      //funAndLearn is related to flashback
+      if (badgesCubit.isBadgeLocked("flashback")) {
+        int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
+        if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+          badgesCubit.setBadge(badgeType: "flashback", userId: userId);
+        }
+      }
+    } else if (widget.quizType == QuizTypes.quizZone) {
+      if (badgesCubit.isBadgeLocked("brainiac")) {
+        if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
+          badgesCubit.setBadge(badgeType: "brainiac", userId: userId);
+        }
+      }
+      if (badgesCubit.isBadgeLocked("dashing_debut")) {
+        updateDashingDebutBadge = true;
+      }
+    } else if (widget.quizType == QuizTypes.guessTheWord) {
+      if (badgesCubit.isBadgeLocked("super_sonic")) {
+        //if user has solved the quiz with in badgeEarnTime then they can earn badge
+        int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
+        if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+          badgesCubit.setBadge(badgeType: "super_sonic", userId: userId);
+        }
+      }
+    }
+    return updateDashingDebutBadge;
   }
 
   void _createInterstitialAd() {
@@ -266,7 +295,6 @@ class _ResultScreenState extends State<ResultScreen> {
         ));
   }
 
-  InterstitialAd? interstitialAd;
   void _showInterstitialAd() {
     if (interstitialAd == null) {
       print('Warning: attempt to show interstitial before loaded');
@@ -292,59 +320,54 @@ class _ResultScreenState extends State<ResultScreen> {
     interstitialAd = null;
   }
 
-  void setContestLeaderboard() {
+  void setContestLeaderboard() async {
+    await Future.delayed(Duration.zero);
     if (widget.quizType == QuizTypes.contest) {
       context.read<SetContestLeaderboardCubit>().setContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), questionAttended: attemptedQuestion(), correctAns: correctAnswer(), contestId: widget.contestId, score: widget.myPoints);
     }
   }
 
   //
-  void updateResultDetails() {
-    Future.delayed(Duration.zero, () {
-      //we need to update score and coins only for some type of quiz
-      if (widget.quizType == QuizTypes.quizZone ||
-          widget.quizType == QuizTypes.dailyQuiz ||
-          widget.quizType == QuizTypes.guessTheWord ||
-          widget.quizType == QuizTypes.trueAndFalse ||
-          widget.quizType == QuizTypes.funAndLearn ||
-          widget.quizType == QuizTypes.audioQuestions) {
-        /*
-        //update statistic for given user
-        context.read<UpdateStatisticCubit>().updateStatistic(
-          answeredQuestion: attemptedQuestion(),
-          categoryId: widget.questions!.first.categoryId,
-          correctAnswers: correctAnswer(),
-          userId: context.read<UserDetailsCubit>().getUserId(),
-          winPercentage: winPercentage(),
-        );*/
+  void _updateScoreAndCoinsDetails({required bool updateDasingDebutBadge}) {
+    //we need to update score and coins only when quiz type is not self challenge, battle and contest
+    if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.battle && widget.quizType != QuizTypes.contest) {
+      //if percentage is more than 30 then update socre and coins
+      if (_isWinner) {
+        //update score and coins for user
+        context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(
+              context.read<UserDetailsCubit>().getUserId(),
+              widget.myPoints!,
+              true,
+              _earnedCoins,
+              type: updateDasingDebutBadge ? "dashing_debut" : null,
+            );
+        //update score locally and database
+        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: _earnedCoins);
 
-        //if percentage is more than 30 then update socre and coins
-        if (_isWinner) {
-          //update score and coins for user
-          context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(context.read<UserDetailsCubit>().getUserId(), widget.myPoints ?? 0, true, _earnedCoins);
-          //update score locally and database
-          context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: _earnedCoins);
-          context.read<UserDetailsCubit>().updateScore(widget.myPoints);
+        context.read<UserDetailsCubit>().updateScore(widget.myPoints);
 
-          //if quizType is quizZone we need to update unlocked level
-          if (widget.quizType == QuizTypes.quizZone) {
-            //if this level is not last level then update level
-            if (widget.subcategoryMaxLevel != widget.questions!.first.level) {
-              //if given level is same as unlocked level then update level
-              if (int.parse(widget.questions!.first.level!) == widget.unlockedLevel) {
-                int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
-                //update level
-                context.read<UpdateLevelCubit>().updateLevel(context.read<UserDetailsCubit>().getUserId(), widget.questions!.first.categoryId, widget.questions!.first.subcategoryId, updatedLevel.toString());
-              }
+        //if quizType is quizZone we need to update unlocked level
+        if (widget.quizType == QuizTypes.quizZone) {
+          //if this level is not last level then update level
+          if (widget.subcategoryMaxLevel != widget.questions!.first.level) {
+            //if given level is same as unlocked level then update level
+            if (int.parse(widget.questions!.first.level!) == widget.unlockedLevel) {
+              int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
+              //update level
+              context.read<UpdateLevelCubit>().updateLevel(context.read<UserDetailsCubit>().getUserId(), widget.questions!.first.categoryId, widget.questions!.first.subcategoryId, updatedLevel.toString());
             }
           }
-        } else {
-          //update only score
-          context.read<UpdateScoreAndCoinsCubit>().updateScore(context.read<UserDetailsCubit>().getUserId(), widget.myPoints);
-          context.read<UserDetailsCubit>().updateScore(widget.myPoints);
         }
+      } else {
+        //update only score
+        context.read<UpdateScoreAndCoinsCubit>().updateScore(
+              context.read<UserDetailsCubit>().getUserId(),
+              widget.myPoints,
+              type: updateDasingDebutBadge ? "dashing_debut" : null,
+            );
+        context.read<UserDetailsCubit>().updateScore(widget.myPoints);
       }
-    });
+    }
   }
 
   void earnCoinsBasedOnWinPercentage() {

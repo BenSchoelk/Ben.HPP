@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 
@@ -74,7 +75,12 @@ class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomRes
       if (currentUser['rank'] == 1) {
         //add coins
         //update coins
-        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), winAmount.toInt(), true);
+        context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+              context.read<UserDetailsCubit>().getUserId(),
+              winAmount.toInt(),
+              true,
+              type: context.read<BadgesCubit>().isBadgeLocked("clash_winner") ? "clash_winner" : null,
+            );
         context.read<UserDetailsCubit>().updateCoins(
               addCoin: true,
               coins: winAmount.toInt(),

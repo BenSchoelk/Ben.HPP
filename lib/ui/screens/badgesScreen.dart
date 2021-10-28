@@ -77,6 +77,13 @@ class BadgesScreen extends StatelessWidget {
         });
   }
 
+  List<Badge> _organizedBadges(List<Badge> badges) {
+    List<Badge> lockedBadges = badges.where((element) => element.status == "0").toList();
+    List<Badge> unlockedBadges = badges.where((element) => element.status == "1").toList();
+    unlockedBadges.addAll(lockedBadges);
+    return unlockedBadges;
+  }
+
   Widget _buildBadges(BuildContext context) {
     return BlocBuilder<BadgesCubit, BadgesState>(
       bloc: context.read<BadgesCubit>(),
@@ -99,107 +106,114 @@ class BadgesScreen extends StatelessWidget {
             ),
           );
         }
-        final List<Badge> badges = (state as BadgesFetchSuccess).badges;
-        return GridView.builder(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025),
-              left: 15.0,
-              right: 15.0,
-              bottom: 20.0,
-            ),
-            itemCount: badges.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 7.5,
-              mainAxisSpacing: 10.0,
-              childAspectRatio: 0.575,
-            ),
-            itemBuilder: (context, index) {
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  return GestureDetector(
-                    onTap: () {
-                      showBadgeDetails(context, badges[index]);
-                    },
-                    child: Container(
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              width: constraints.maxWidth,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: constraints.maxHeight * (0.425),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(
-                                      badges[index].badgeLabel,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, //
-                                        fontSize: 14,
-                                        height: 1.175,
-                                        fontWeight: FontWeight.bold,
+        final List<Badge> badges = _organizedBadges((state as BadgesFetchSuccess).badges);
+        return RefreshIndicator(
+          color: Theme.of(context).primaryColor,
+          displacement: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025) + 20,
+          onRefresh: () async {
+            context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId());
+          },
+          child: GridView.builder(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025),
+                left: 15.0,
+                right: 15.0,
+                bottom: 20.0,
+              ),
+              itemCount: badges.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 7.5,
+                mainAxisSpacing: 10.0,
+                childAspectRatio: 0.575,
+              ),
+              itemBuilder: (context, index) {
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    return GestureDetector(
+                      onTap: () {
+                        showBadgeDetails(context, badges[index]);
+                      },
+                      child: Container(
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: constraints.maxWidth,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      height: constraints.maxHeight * (0.425),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Text(
+                                        badges[index].badgeLabel,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, //
+                                          fontSize: 14,
+                                          height: 1.175,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              height: constraints.maxHeight * (0.65),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).backgroundColor,
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: constraints.maxHeight * (0.075),
-                              ),
-                              child: CustomPaint(
-                                painter: HexagonCustomPainter(color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
-                                child: Container(
-                                  width: constraints.maxWidth * (0.875),
-                                  height: constraints.maxHeight * (0.65),
+                                  ],
+                                ),
+                                height: constraints.maxHeight * (0.65),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).backgroundColor,
+                                  borderRadius: BorderRadius.circular(15.0),
                                 ),
                               ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
-                              ),
-                              child: CustomPaint(
-                                painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
-                                child: Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.5),
-                                    child: CachedNetworkImage(imageUrl: badges[index].badgeIcon),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: constraints.maxHeight * (0.075),
+                                ),
+                                child: CustomPaint(
+                                  painter: HexagonCustomPainter(color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
+                                  child: Container(
+                                    width: constraints.maxWidth * (0.875),
+                                    height: constraints.maxHeight * (0.65),
                                   ),
-                                  width: constraints.maxWidth * (0.725),
-                                  height: constraints.maxHeight * (0.55),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
+                                ),
+                                child: CustomPaint(
+                                  painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
+                                  child: Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.5),
+                                      child: CachedNetworkImage(imageUrl: badges[index].badgeIcon),
+                                    ),
+                                    width: constraints.maxWidth * (0.725),
+                                    height: constraints.maxHeight * (0.55),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
-            });
+                    );
+                  },
+                );
+              }),
+        );
       },
     );
   }
