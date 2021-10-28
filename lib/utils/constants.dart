@@ -197,6 +197,9 @@ final List<String> predefinedMessages = [
 //constants for badges and rewards
 final int guessTheWordQuestionMinimumTimeForBadge = 25;
 final int funNLearnQuestionMinimumTimeForBadge = 8;
+final int minimumQuestionsForBadges = 5;
+
+//
 final List<String> badgeTypes = [
   "dashing_debut",
   "combat_winner",

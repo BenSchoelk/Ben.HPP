@@ -253,7 +253,7 @@ class _ResultScreenState extends State<ResultScreen> {
     String userId = context.read<UserDetailsCubit>().getUserId();
     BadgesCubit badgesCubit = context.read<BadgesCubit>();
     if (widget.quizType == QuizTypes.battle) {
-      //if badges is locekd
+      //if badges is locked
       if (badgesCubit.isBadgeLocked("ultimate_player")) {
         int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
         //if user's points is same as highest points
@@ -262,6 +262,12 @@ class _ResultScreenState extends State<ResultScreen> {
         }
       }
     } else if (widget.quizType == QuizTypes.funAndLearn) {
+      //
+      //if totalQuestion is less than minimum question then do not check for badges
+      if (totalQuestions() < minimumQuestionsForBadges) {
+        return false;
+      }
+
       //funAndLearn is related to flashback
       if (badgesCubit.isBadgeLocked("flashback")) {
         int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
@@ -274,12 +280,23 @@ class _ResultScreenState extends State<ResultScreen> {
         updateDashingDebutBadge = true;
       }
       //
+      //if totalQuestion is less than minimum question then do not check for badges
+
+      if (totalQuestions() < minimumQuestionsForBadges) {
+        return false;
+      }
+
       if (badgesCubit.isBadgeLocked("brainiac")) {
         if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
           badgesCubit.setBadge(badgeType: "brainiac", userId: userId);
         }
       }
     } else if (widget.quizType == QuizTypes.guessTheWord) {
+      //if totalQuestion is less than minimum question then do not check for badges
+      if (totalQuestions() < minimumQuestionsForBadges) {
+        return false;
+      }
+
       if (badgesCubit.isBadgeLocked("super_sonic")) {
         //if user has solved the quiz with in badgeEarnTime then they can earn badge
         int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
