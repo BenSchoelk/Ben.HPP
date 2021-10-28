@@ -166,8 +166,20 @@ class _ResultScreenState extends State<ResultScreen> {
       //updateScoreAndCoinsCubit since dashing_debut badge will unlock
       //from set_user_coin_score api
       _updateScoreAndCoinsDetails(updateDasingDebutBadge: _earnBadges());
-      //updateStatistic
+      _updateStatistics();
     });
+  }
+
+  void _updateStatistics() {
+    if (widget.quizType != QuizTypes.selfChallenge) {
+      context.read<UpdateStatisticCubit>().updateStatistic(
+            answeredQuestion: attemptedQuestion(),
+            categoryId: getCategoryIdOfQuestion(),
+            userId: context.read<UserDetailsCubit>().getUserId(),
+            correctAnswers: correctAnswer(),
+            winPercentage: winPercentage(),
+          );
+    }
   }
 
   //update stats related to battle, score of user and coins given to winner
@@ -176,8 +188,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
     if (widget.battleRoom!.user1!.points == widget.battleRoom!.user2!.points) {
       _isWinner = true;
-      _winnerId = "";
-      _updateCoinsAndScoreForBattle(widget.battleRoom!.entryFee!);
+      _winnerId = winnerId;
+      _updateCoinsAndScoreAndStatsiticForBattle(widget.battleRoom!.entryFee!);
     } else {
       if (widget.battleRoom!.user1!.points > widget.battleRoom!.user2!.points) {
         winnerId = widget.battleRoom!.user1!.uid;
@@ -187,14 +199,15 @@ class _ResultScreenState extends State<ResultScreen> {
       await Future.delayed(Duration.zero);
       _isWinner = context.read<UserDetailsCubit>().getUserId() == winnerId;
       _winnerId = winnerId;
-      _updateCoinsAndScoreForBattle(widget.battleRoom!.entryFee! * 2);
+      _updateCoinsAndScoreAndStatsiticForBattle(widget.battleRoom!.entryFee! * 2);
       //update winner id and _isWinner in ui
       setState(() {});
     }
   }
 
-  void _updateCoinsAndScoreForBattle(int earnedCoins) {
+  void _updateCoinsAndScoreAndStatsiticForBattle(int earnedCoins) {
     Future.delayed(Duration.zero, () {
+      //
       String currentUserId = context.read<UserDetailsCubit>().getUserId();
       UserBattleRoomDetails currentUser = widget.battleRoom!.user1!.uid == currentUserId ? widget.battleRoom!.user1! : widget.battleRoom!.user2!;
       if (_isWinner) {
@@ -213,6 +226,14 @@ class _ResultScreenState extends State<ResultScreen> {
         context.read<UpdateScoreAndCoinsCubit>().updateScore(currentUserId, currentUser.points);
         context.read<UserDetailsCubit>().updateScore(currentUser.points);
       }
+
+      //update battle stats
+      context.read<UpdateStatisticCubit>().updateBattleStatistic(
+            userId1: widget.battleRoom!.user1!.uid,
+            userId2: widget.battleRoom!.user2!.uid,
+            winnerId: _winnerId!,
+          );
+      //
     });
   }
 
@@ -225,16 +246,6 @@ class _ResultScreenState extends State<ResultScreen> {
     }
     return null;
   }
-
-  /*
-        //update statistic for given user
-        context.read<UpdateStatisticCubit>().updateStatistic(
-          answeredQuestion: attemptedQuestion(),
-          categoryId: widget.questions!.first.categoryId,
-          correctAnswers: correctAnswer(),
-          userId: context.read<UserDetailsCubit>().getUserId(),
-          winPercentage: winPercentage(),
-        );*/
 
   bool _earnBadges() {
     bool updateDashingDebutBadge = false;
@@ -377,6 +388,16 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
+  String getCategoryIdOfQuestion() {
+    if (widget.quizType == QuizTypes.battle) {
+      return widget.battleRoom!.categoryId!.isEmpty ? "0" : widget.battleRoom!.categoryId!;
+    }
+    if (widget.quizType == QuizTypes.guessTheWord) {
+      return widget.guessTheWordQuestions!.first.category;
+    }
+    return widget.questions!.first.categoryId!;
+  }
+
   int correctAnswer() {
     int correctAnswer = 0;
     if (widget.quizType == QuizTypes.guessTheWord) {
@@ -418,6 +439,8 @@ class _ResultScreenState extends State<ResultScreen> {
   double winPercentage() {
     if (widget.quizType == QuizTypes.guessTheWord) {
       return (correctAnswer() * 100.0) / widget.guessTheWordQuestions!.length;
+    } else if (widget.quizType == QuizTypes.battle) {
+      return 0.0;
     } else {
       return (correctAnswer() * 100.0) / widget.questions!.length;
     }

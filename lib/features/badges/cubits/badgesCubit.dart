@@ -24,11 +24,14 @@ class BadgesCubit extends Cubit<BadgesState> {
   final BadgesRepository badgesRepository;
   BadgesCubit(this.badgesRepository) : super(BadgesInitial());
 
-  void getBadges({required String userId}) async {
+  void getBadges({required String userId, bool? refreshBadges}) async {
+    bool callRefreshBadge = refreshBadges ?? false;
     emit(BadgesFetchInProgress());
     badgesRepository.getBadges(userId: userId).then((value) {
-      //TODO : call for streak badge
-
+      //call this
+      if (!callRefreshBadge) {
+        setBadge(badgeType: "streak", userId: userId);
+      }
       emit(BadgesFetchSuccess(value));
     }).catchError((e) {
       emit(BadgesFetchFailure(e.toString()));

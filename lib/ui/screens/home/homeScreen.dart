@@ -165,6 +165,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       var data = message.data;
 
       var title = data['title'].toString();
+      //TODO : change message key to body
       var body = data['message'].toString();
       var type = data['type'].toString();
 

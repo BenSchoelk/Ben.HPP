@@ -37,4 +37,21 @@ class StatisticRepository {
       throw StatisticException(errorMessageCode: e.toString());
     }
   }
+
+  Future<void> updateBattleStatistic({
+    required String userId1,
+    required String userId2,
+    required String winnerId,
+  }) async {
+    try {
+      await _statisticRemoteDataSource.updateBattleStatistic(
+        userId1: userId1,
+        userId2: userId2,
+        isDrawn: winnerId.isEmpty ? "1" : "0",
+        winnerId: winnerId.isEmpty ? userId1 : winnerId,
+      );
+    } catch (e) {
+      throw StatisticException(errorMessageCode: e.toString());
+    }
+  }
 }

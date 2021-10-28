@@ -79,4 +79,41 @@ class StatisticRemoteDataSource {
       throw StatisticException(errorMessageCode: defaultErrorMessageCode);
     }
   }
+
+  Future<void> updateBattleStatistic({
+    required String userId1,
+    required String userId2,
+    required String isDrawn,
+    required String winnerId,
+  }) async {
+    try {
+      //access_key:8525
+      // user_id1:709
+      // user_id2:710
+      // winner_id:710
+      // is_drawn:0 / 1 (0->no_drawn,1->drawn)
+      //body of post request
+      final body = {
+        accessValueKey: accessValue,
+        userId1Key: userId1,
+        userId2Key: userId2,
+        winnerIdKey: winnerId,
+        isDrawnKey: isDrawn,
+      };
+      final response = await http.post(Uri.parse(setBattleStatisticsUrl), body: body, headers: ApiUtils.getHeaders());
+      final responseJson = jsonDecode(response.body);
+
+      if (responseJson['error']) {
+        throw StatisticException(errorMessageCode: responseJson['message']);
+      }
+
+      return responseJson['data'];
+    } on SocketException catch (_) {
+      throw StatisticException(errorMessageCode: noInternetCode);
+    } on StatisticException catch (e) {
+      throw StatisticException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw StatisticException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
 }

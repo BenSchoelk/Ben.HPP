@@ -111,7 +111,7 @@ class BadgesScreen extends StatelessWidget {
           color: Theme.of(context).primaryColor,
           displacement: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025) + 20,
           onRefresh: () async {
-            context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId());
+            context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId(), refreshBadges: true);
           },
           child: GridView.builder(
               padding: EdgeInsets.only(

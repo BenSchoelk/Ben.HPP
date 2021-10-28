@@ -37,4 +37,17 @@ class UpdateStatisticCubit extends Cubit<UpdateStatisticState> {
       emit(UpdateStatisticFetchFailure(e.toString()));
     }
   }
+
+  void updateBattleStatistic({
+    required String userId1,
+    required String userId2,
+    required String winnerId,
+  }) {
+    emit(UpdateStatisticFetchInProgress());
+    _statisticRepository.updateBattleStatistic(userId1: userId1, userId2: userId2, winnerId: winnerId).then((value) {
+      emit(UpdateStatisticFetchSuccess());
+    }).catchError((e) {
+      emit(UpdateStatisticFetchFailure(e.toString()));
+    });
+  }
 }

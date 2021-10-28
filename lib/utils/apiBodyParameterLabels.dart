@@ -30,3 +30,7 @@ final String questionIdKey = 'question_id';
 final String messageKey = 'message';
 final String friendCodeKey = 'friends_code';
 final String typeIdKey = 'type_id';
+final String userId1Key = 'user_id1';
+final String userId2Key = 'user_id2';
+final String winnerIdKey = 'winner_id';
+final String isDrawnKey = 'is_drawn';
