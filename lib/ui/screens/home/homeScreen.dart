@@ -57,11 +57,6 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
-Future<void> onBackgroundMessage(RemoteMessage message) async {
-  print("Background message");
-  print(message.data);
-}
-
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final double quizTypeWidthPercentage = 0.4;
   final double quizTypeTopMargin = 0.425;
@@ -159,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
     // handle background notification
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+    FirebaseMessaging.onBackgroundMessage(UiUtils.onBackgroundMessage);
     //handle foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       var data = message.data;
@@ -187,10 +182,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // notification type is category then move to category screen
   Future<void> _handleMessage(RemoteMessage message) async {
     print("User has opened the app by tapping on notification");
-    if (message.data['type'] == 'category') {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
-    } else if (message.data['type'] == 'badges') {
-      Navigator.of(context).pushNamed(Routes.badges);
+    try {
+      if (message.data['type'] == 'category') {
+        Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
+      } else if (message.data['type'] == 'badges') {
+        //if user open app by tapping
+        UiUtils.updateBadgesLocally(context);
+        Navigator.of(context).pushNamed(Routes.badges);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

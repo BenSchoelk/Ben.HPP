@@ -1,8 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
@@ -32,6 +34,8 @@ class UiUtils {
   static double dailogRadius = 40.0;
   static double appBarHeightPercentage = 0.16;
 
+  static List<String> needToUpdateBadgesLocally = [];
+
   static String buildGuessTheWordQuestionAnswer(List<String> submittedAnswer) {
     String answer = "";
     submittedAnswer.forEach((element) {
@@ -40,6 +44,20 @@ class UiUtils {
       }
     });
     return answer;
+  }
+
+  static Future<void> onBackgroundMessage(RemoteMessage message) async {
+    if (message.data['type'].toString() == "badges") {
+      needToUpdateBadgesLocally.add(message.data['badge_type'].toString());
+    }
+    print(message.data);
+  }
+
+  static void updateBadgesLocally(BuildContext context) {
+    UiUtils.needToUpdateBadgesLocally.forEach((badgeType) {
+      context.read<BadgesCubit>().updateBadge(badgeType);
+    });
+    UiUtils.needToUpdateBadgesLocally.clear();
   }
 
   static void setSnackbar(String msg, BuildContext context, bool showAction, {Function? onPressedAction, Duration? duration}) {

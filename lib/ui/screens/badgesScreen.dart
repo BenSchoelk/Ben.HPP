@@ -15,11 +15,24 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
-class BadgesScreen extends StatelessWidget {
+class BadgesScreen extends StatefulWidget {
   const BadgesScreen({Key? key}) : super(key: key);
 
   static Route<BadgesScreen> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(builder: (_) => BadgesScreen());
+  }
+
+  @override
+  State<BadgesScreen> createState() => _BadgesScreenState();
+}
+
+class _BadgesScreenState extends State<BadgesScreen> {
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      UiUtils.updateBadgesLocally(context);
+    });
+    super.initState();
   }
 
   void showBadgeDetails(BuildContext context, Badge badge) {
