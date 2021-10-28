@@ -198,6 +198,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     //
     String type = payload ?? "";
     if (type == "badges") {
+      Navigator.of(context).pushNamed(Routes.badges);
     } else if (type == "category") {
       Navigator.of(context).pushNamed(
         Routes.category,
