@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -15,6 +16,7 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
+//TODO : Add localization for badges screen
 class BadgesScreen extends StatefulWidget {
   const BadgesScreen({Key? key}) : super(key: key);
 
@@ -51,33 +53,62 @@ class _BadgesScreenState extends State<BadgesScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                //
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * (0.025),
-                ),
-                Text(
-                  "${badge.badgeLabel}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22.5,
+                // badge.status == "1"
+                //     ? Text(
+                //         "Congrats, You have unlocked the badge",
+                //         style: TextStyle(
+                //           color: Theme.of(context).colorScheme.secondary,
+                //           fontSize: 18.0,
+                //         ),
+                //       )
+                //     : Container(),
+                Container(
+                    height: MediaQuery.of(context).size.height * (0.25),
+                    width: MediaQuery.of(context).size.width * (0.3),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return _buildBadgeIcon(constraints, badge);
+                    })),
+                Transform.translate(
+                  offset: Offset(0, MediaQuery.of(context).size.height * (-0.05)),
+                  child: Column(
+                    children: [
+                      Text(
+                        "${badge.badgeLabel}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: badge.status == "0" ? badgeLockedColor : Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22.5,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.5,
+                      ),
+                      Text(
+                        "${badge.badgeNote}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.5,
+                      ),
+                      Text(
+                        "Get ${badge.badgeReward} coin(s) by unlocking this badge",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * (0.025),
+                      // ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 2.5,
-                ),
-                Text(
-                  "${badge.badgeNote}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 18.0,
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * (0.03),
-                ),
+                )
               ],
             ),
             decoration: BoxDecoration(
@@ -95,6 +126,47 @@ class _BadgesScreenState extends State<BadgesScreen> {
     List<Badge> unlockedBadges = badges.where((element) => element.status == "1").toList();
     unlockedBadges.addAll(lockedBadges);
     return unlockedBadges;
+  }
+
+  Widget _buildBadgeIcon(BoxConstraints constraints, Badge badge) {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: constraints.maxHeight * (0.075),
+            ),
+            child: CustomPaint(
+              painter: HexagonCustomPainter(color: badge.status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
+              child: Container(
+                width: constraints.maxWidth * (0.875),
+                height: constraints.maxHeight * (0.65),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
+            ),
+            child: CustomPaint(
+              painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.5),
+                  child: CachedNetworkImage(imageUrl: badge.badgeIcon),
+                ),
+                width: constraints.maxWidth * (0.725),
+                height: constraints.maxHeight * (0.55),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildBadges(BuildContext context) {
@@ -185,40 +257,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                 ),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  top: constraints.maxHeight * (0.075),
-                                ),
-                                child: CustomPaint(
-                                  painter: HexagonCustomPainter(color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
-                                  child: Container(
-                                    width: constraints.maxWidth * (0.875),
-                                    height: constraints.maxHeight * (0.65),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
-                                ),
-                                child: CustomPaint(
-                                  painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
-                                  child: Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.5),
-                                      child: CachedNetworkImage(imageUrl: badges[index].badgeIcon),
-                                    ),
-                                    width: constraints.maxWidth * (0.725),
-                                    height: constraints.maxHeight * (0.55),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            _buildBadgeIcon(constraints, badges[index]),
                           ],
                         ),
                       ),
