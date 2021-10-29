@@ -1,8 +1,6 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/adIds.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -25,20 +23,11 @@ class _AdMobBanner extends State<AdMobBanner> {
     super.dispose();
   }
 
-  String getBannerAdUnitId() {
-    if (Platform.isIOS && !kIsWeb) {
-      return bannerIosId;
-    } else if (Platform.isAndroid && !kIsWeb) {
-      return bannerAndroidId;
-    }
-    return "";
-  }
-
   BannerAd? _anchoredBanner;
   Future<void> _createAnchoredBanner() async {
     final BannerAd banner = BannerAd(
       request: AdRequest(),
-      adUnitId: getBannerAdUnitId(),
+      adUnitId: AdIds.bannerId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$BannerAd loaded');

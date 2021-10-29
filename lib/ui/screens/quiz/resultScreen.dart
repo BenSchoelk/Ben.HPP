@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -16,6 +15,7 @@ import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/adIds.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -136,10 +136,40 @@ class _ResultScreenState extends State<ResultScreen> {
 
   InterstitialAd? interstitialAd;
 
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: AdIds.interstitialId,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print("InterstitialAd Ad loaded successfully");
+            interstitialAd = ad;
+            _showInterstitialAd();
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print(error);
+          },
+        ));
+  }
+
+  void _showInterstitialAd() {
+    if (interstitialAd == null) {
+    } else {
+      interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (InterstitialAd ad) {},
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {},
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          print('$ad onAdFailedToShowFullScreenContent: $error');
+          ad.dispose();
+        },
+      );
+      interstitialAd!.show();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-
     _createInterstitialAd();
     //
     if (widget.quizType == QuizTypes.battle) {
@@ -168,6 +198,12 @@ class _ResultScreenState extends State<ResultScreen> {
       _updateScoreAndCoinsDetails(updateDasingDebutBadge: _earnBadges());
       _updateStatistics();
     });
+  }
+
+  @override
+  void dispose() {
+    interstitialAd?.dispose();
+    super.dispose();
   }
 
   void _updateStatistics() {
@@ -239,16 +275,6 @@ class _ResultScreenState extends State<ResultScreen> {
     });
   }
 
-  //AddMob ads Ids
-  String? getRewardBasedVideoAdUnitId() {
-    if (Platform.isIOS) {
-      return videoIosId;
-    } else if (Platform.isAndroid) {
-      return videoAndroidId;
-    }
-    return null;
-  }
-
   bool _earnBadges() {
     bool updateDashingDebutBadge = false;
 
@@ -313,47 +339,6 @@ class _ResultScreenState extends State<ResultScreen> {
       }
     }
     return updateDashingDebutBadge;
-  }
-
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: getRewardBasedVideoAdUnitId()!,
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            interstitialAd = ad;
-            print('$ad loaded');
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error.');
-            _createInterstitialAd();
-          },
-        ));
-  }
-
-  void _showInterstitialAd() {
-    if (interstitialAd == null) {
-      print('Warning: attempt to show interstitial before loaded');
-      return;
-    }
-    interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-      },
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
-        print('$ad onAdDismissedFullScreenContent');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-    );
-    interstitialAd!.show();
-    interstitialAd = null;
   }
 
   void setContestLeaderboard() async {
@@ -500,7 +485,6 @@ class _ResultScreenState extends State<ResultScreen> {
                     alignment: Alignment.topLeft,
                     child: InkWell(
                         onTap: () {
-                          _showInterstitialAd();
                           Navigator.pop(context);
                         },
                         child: Container(
@@ -1143,8 +1127,6 @@ class _ResultScreenState extends State<ResultScreen> {
             height: betweenButoonSpace,
           ),
           _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
-            //interstitialAd.show();
-            _showInterstitialAd();
             Navigator.of(context).popUntil((route) => route.isFirst);
           }, context),
         ],
@@ -1172,9 +1154,6 @@ class _ResultScreenState extends State<ResultScreen> {
           height: betweenButoonSpace,
         ),
         _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
-          //interstitialAd.show();
-          _showInterstitialAd();
-
           Navigator.of(context).popUntil((route) => route.isFirst);
         }, context),
       ],
@@ -1183,37 +1162,30 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          _showInterstitialAd();
-          //interstitialAd.show();
-          Navigator.pop(context);
-          return Future.value(false);
-        },
-        child: Scaffold(
-          body: Stack(
-            children: [
-              PageBackgroundGradientContainer(),
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 50.0,
-                    ),
-                    Center(child: _buildResultContainer(context)),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    _buildResultButtons(context),
-                    SizedBox(
-                      height: 50.0,
-                    ),
-                  ],
+    return Scaffold(
+      body: Stack(
+        children: [
+          PageBackgroundGradientContainer(),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50.0,
                 ),
-              ),
-            ],
+                Center(child: _buildResultContainer(context)),
+                SizedBox(
+                  height: 30.0,
+                ),
+                _buildResultButtons(context),
+                SizedBox(
+                  height: 50.0,
+                ),
+              ],
+            ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

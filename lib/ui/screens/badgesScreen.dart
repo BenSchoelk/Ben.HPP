@@ -9,7 +9,7 @@ import 'package:flutterquiz/features/badges/badge.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
-import 'package:flutterquiz/features/statistic/statisticRepository.dart';
+
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';

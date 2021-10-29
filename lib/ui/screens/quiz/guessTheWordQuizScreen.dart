@@ -21,9 +21,11 @@ import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/utils/adIds.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GuessTheWordQuizScreen extends StatefulWidget {
   final String type; //category or subcategory
@@ -95,6 +97,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
     timerAnimationController.dispose();
     questionContentAnimationController.dispose();
     questionAnimationController.dispose();
+
     super.dispose();
   }
 
@@ -119,6 +122,20 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
     }
   }
 
+  void navigateToResultScreen() {
+    if (isSettingDialogOpen) {
+      Navigator.of(context).pop();
+    }
+
+    Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {
+      "myPoints": context.read<GuessTheWordQuizCubit>().getCurrentPoints(),
+      "quizType": QuizTypes.guessTheWord,
+      "numberOfPlayer": 1,
+      "timeTakenToCompleteQuiz": timeTakenToCompleteQuiz,
+      "guessTheWordQuestions": context.read<GuessTheWordQuizCubit>().getQuestions(),
+    });
+  }
+
   void submitAnswer(List<String> submittedAnswer) async {
     timerAnimationController.stop();
     updateTimeTakenToCompleteQuiz();
@@ -131,17 +148,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
       //if currentQuestion is last then move user to result screen
       if (_currentQuestionIndex == (guessTheWordQuizCubit.getQuestions().length - 1)) {
-        if (isSettingDialogOpen) {
-          Navigator.of(context).pop();
-        }
-
-        Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {
-          "myPoints": guessTheWordQuizCubit.getCurrentPoints(),
-          "quizType": QuizTypes.guessTheWord,
-          "numberOfPlayer": 1,
-          "timeTakenToCompleteQuiz": timeTakenToCompleteQuiz,
-          "guessTheWordQuestions": guessTheWordQuizCubit.getQuestions(),
-        });
+        navigateToResultScreen();
       } else {
         //change question
         changeQuestion();

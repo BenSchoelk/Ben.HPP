@@ -30,6 +30,7 @@ import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/utils/adIds.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -148,17 +149,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     );
   }
 
-  //AddMob ads Ids
-  String? getRewardBasedVideoAdUnitId() {
-    if (Platform.isIOS) {
-      return videoIosId;
-    } else if (Platform.isAndroid) {
-      return videoAndroidId;
-    }
-    return null;
-  }
-
-  InterstitialAd? interstitialAd;
   @override
   void initState() {
     super.initState();
@@ -166,46 +156,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _getQuestions();
-    _createInterstitialAd();
-  }
-
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: getRewardBasedVideoAdUnitId()!,
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            setState(() {
-              interstitialAd = ad;
-            });
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print(error);
-          },
-        ));
-  }
-
-  void _showInterstitialAd() {
-    if (interstitialAd == null) {
-      return;
-    }
-    interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) {
-        timerAnimationController.stop();
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-      },
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
-        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: lifeLineDeductCoins);
-        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, true);
-        timerAnimationController.forward(from: timerAnimationController.value);
-        _createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-      },
-    );
-    interstitialAd!.show();
   }
 
   void initializeAnimation() {
@@ -223,7 +173,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
-    interstitialAd?.dispose();
+
     super.dispose();
   }
 
@@ -454,8 +404,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         actions: [
           CupertinoButton(
             onPressed: () {
+              //TODO : ad reward video
               timerAnimationController.stop();
-              _showInterstitialAd();
+
               //interstitialAd.show();
               //user see full ads coins increment  6
               /* setState(() {
@@ -715,6 +666,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     ),
                   );
                 }),
+
             BlocBuilder<QuestionsCubit, QuestionsState>(
               bloc: quesCubit,
               builder: (context, state) {
@@ -724,6 +676,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 return Container();
               },
             ),
+
             BlocBuilder<QuestionsCubit, QuestionsState>(
               bloc: quesCubit,
               builder: (context, state) {

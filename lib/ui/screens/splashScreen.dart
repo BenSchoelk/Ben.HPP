@@ -1,3 +1,4 @@
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -50,7 +51,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   void loadSystemConfig() async {
     await MobileAds.instance.initialize();
+    await FacebookAudienceNetwork.init();
     print("Ads loaded successfully");
+
     context.read<SystemConfigCubit>().getSystemConfig();
   }
 

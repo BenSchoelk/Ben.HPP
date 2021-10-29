@@ -172,12 +172,6 @@ final String defaultQuestionLanguageId = "";
 //Group battle invite message
 final String groupBattleInviteMessage = "Hello, Join a group battle in $appName app. Go to group battle in the app and join using the code : ";
 
-// AdMob Ads Ids For video add here interstitial ad Id
-final String videoAndroidId = 'ca-app-pub-3940256099942544/5224354917';
-final String videoIosId = 'ca-app-pub-3940256099942544/1712485313';
-// AdMob Id for banner show
-final String bannerAndroidId = 'ca-app-pub-3940256099942544/6300978111';
-final String bannerIosId = 'ca-app-pub-3940256099942544/2934735716';
 // Fb Ads placementId
 final String placementId = "IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047";
 final String initialCountryCode = "IN"; // change your initialCountry Code
