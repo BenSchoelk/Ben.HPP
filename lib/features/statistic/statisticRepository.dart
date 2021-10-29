@@ -31,7 +31,7 @@ class StatisticRepository {
         categoryId: categoryId,
         correctAnswers: correctAnswers.toString(),
         userId: userId,
-        winPercentage: winPercentage.toString(),
+        winPercentage: winPercentage!.toInt().toString(),
       );
     } catch (e) {
       throw StatisticException(errorMessageCode: e.toString());
