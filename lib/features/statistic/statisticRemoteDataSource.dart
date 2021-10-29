@@ -32,7 +32,7 @@ class StatisticRemoteDataSource {
     try {
       //body of post request
       final body = {accessValueKey: accessValue, userIdKey: userId};
-
+      print(body);
       final response = await http.post(Uri.parse(getStatisticUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print("response of statistic $responseJson");
@@ -60,12 +60,13 @@ class StatisticRemoteDataSource {
 
   Future<dynamic> updateStatistic({String? userId, String? answeredQuestion, String? correctAnswers, String? winPercentage, String? categoryId}) async {
     try {
-      print(categoryId);
       //body of post request
       final body = {accessValueKey: accessValue, userIdKey: userId, "questions_answered": answeredQuestion, correctAnswersKey: correctAnswers, "category_id": categoryId, "ratio": winPercentage};
+
+      print(body);
       final response = await http.post(Uri.parse(updateStatisticUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
-
+      print("Response : $responseJson");
       if (responseJson['error']) {
         throw StatisticException(errorMessageCode: responseJson['message']);
       }

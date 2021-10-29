@@ -172,6 +172,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
   void _updateStatistics() {
     if (widget.quizType != QuizTypes.selfChallenge) {
+      print("Update statistic");
+      print("correctAnswer : ${correctAnswer()}");
       context.read<UpdateStatisticCubit>().updateStatistic(
             answeredQuestion: attemptedQuestion(),
             categoryId: getCategoryIdOfQuestion(),

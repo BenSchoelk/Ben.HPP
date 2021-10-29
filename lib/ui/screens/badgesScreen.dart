@@ -8,6 +8,8 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/badges/badge.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
+import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
@@ -21,7 +23,9 @@ class BadgesScreen extends StatefulWidget {
   const BadgesScreen({Key? key}) : super(key: key);
 
   static Route<BadgesScreen> route(RouteSettings routeSettings) {
-    return CupertinoPageRoute(builder: (_) => BadgesScreen());
+    return CupertinoPageRoute(
+      builder: (_) => BadgesScreen(),
+    );
   }
 
   @override
@@ -33,7 +37,10 @@ class _BadgesScreenState extends State<BadgesScreen> {
   void initState() {
     Future.delayed(Duration.zero, () {
       UiUtils.updateBadgesLocally(context);
+      //
+      context.read<StatisticCubit>().getStatistic(context.read<UserDetailsCubit>().getUserId());
     });
+
     super.initState();
   }
 
@@ -53,15 +60,6 @@ class _BadgesScreenState extends State<BadgesScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // badge.status == "1"
-                //     ? Text(
-                //         "Congrats, You have unlocked the badge",
-                //         style: TextStyle(
-                //           color: Theme.of(context).colorScheme.secondary,
-                //           fontSize: 18.0,
-                //         ),
-                //       )
-                //     : Container(),
                 Container(
                     height: MediaQuery.of(context).size.height * (0.25),
                     width: MediaQuery.of(context).size.width * (0.3),
@@ -95,6 +93,47 @@ class _BadgesScreenState extends State<BadgesScreen> {
                       SizedBox(
                         height: 2.5,
                       ),
+                      //
+                      badge.type == "big_thing" && badge.status == "0"
+                          ? BlocBuilder<StatisticCubit, StatisticState>(
+                              bloc: context.read<StatisticCubit>(),
+                              builder: (context, state) {
+                                if (state is StatisticInitial || state is StatisticFetchInProgress) {
+                                  return Center(
+                                    child: Container(
+                                      height: 15.0,
+                                      width: 15.0,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (state is StatisticFetchFailure) {
+                                  return Container();
+                                }
+                                final statisticDetails = (state as StatisticFetchSuccess).statisticModel;
+                                final answerToGo = int.parse(badge.badgeCounter) - int.parse(statisticDetails.correctAnswers!);
+                                return Column(
+                                  children: [
+                                    Text(
+                                      "Need more $answerToGo correct ansewer to unlock",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.secondary,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                  ],
+                                );
+                              },
+                            )
+                          : Container(),
+
                       Text(
                         "Get ${badge.badgeReward} coin(s) by unlocking this badge",
                         textAlign: TextAlign.center,

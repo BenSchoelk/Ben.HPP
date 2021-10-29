@@ -23,6 +23,8 @@ import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/settings/settingsLocalDataSource.dart';
 import 'package:flutterquiz/features/settings/settingsRepository.dart';
+import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
+import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/features/systemConfig/systemConfigRepository.dart';
 import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
@@ -92,6 +94,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<SystemConfigCubit>(create: (_) => SystemConfigCubit(SystemConfigRepository())),
         //to configure badges
         BlocProvider<BadgesCubit>(create: (_) => BadgesCubit(BadgesRepository())),
+        //statistic cubit
+        BlocProvider<StatisticCubit>(create: (_) => StatisticCubit(StatisticRepository()))
       ],
       child: Builder(
         builder: (context) {
