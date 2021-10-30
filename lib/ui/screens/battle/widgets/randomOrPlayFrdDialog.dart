@@ -4,14 +4,18 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
 import 'package:flutterquiz/utils/constants.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
@@ -214,7 +218,24 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
         ),
         onPressed: () {
           if (int.parse(userProfile.coins!) < randomBattleEntryCoins) {
-            UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode)));
+            showDialog(
+                context: context,
+                builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
+                      //showAd
+                      context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
+                        //ad rewards here
+                        //once user sees app then add coins to user wallet
+                        context.read<UserDetailsCubit>().updateCoins(
+                              addCoin: true,
+                              coins: lifeLineDeductCoins,
+                            );
+                        context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                              context.read<UserDetailsCubit>().getUserId(),
+                              lifeLineDeductCoins,
+                              true,
+                            );
+                      });
+                    }));
             return;
           }
           if (selectedCategory == _defaultSelectedCategoryValue && context.read<SystemConfigCubit>().getIsCategoryEnableForBattle() == "1") {
@@ -245,7 +266,13 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
         ),
         onPressed: () {
           Navigator.of(context).pop();
-          showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RoomDialog(quizType: QuizTypes.battle)));
+          showDialog(
+            context: context,
+            builder: (context) => MultiBlocProvider(providers: [
+              BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository())),
+              BlocProvider<UpdateScoreAndCoinsCubit>(create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
+            ], child: RoomDialog(quizType: QuizTypes.battle)),
+          );
         },
         child: Text(
           AppLocalization.of(context)!.getTranslatedValues("playWithFrdLbl")!,

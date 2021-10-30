@@ -1,14 +1,18 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/playGround.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -91,13 +95,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     checkForUpdates();
     setupInteractedMessage();
     setQuizMenu();
-    createInterstitialAd();
+    createAds();
     super.initState();
   }
 
-  void createInterstitialAd() {
+  void createAds() {
     Future.delayed(Duration.zero, () {
       context.read<InterstitialAdCubit>().createInterstitialAd();
+      context.read<RewardedAdCubit>().createRewardedAd();
     });
   }
 
@@ -347,16 +352,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(Routes.selfChallenge);
     } //
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
+      //
       context.read<BattleRoomCubit>().emit(BattleRoomInitial());
 
-      showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RandomOrPlayFrdDialog()));
+      showDialog(
+        context: context,
+        builder: (context) => MultiBlocProvider(providers: [
+          BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository())),
+          BlocProvider<UpdateScoreAndCoinsCubit>(create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
+        ], child: RandomOrPlayFrdDialog()),
+      );
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.trueAndFalse) {
       Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.trueAndFalse, "numberOfPlayer": 1, "quizName": "True & False"});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
       context.read<MultiUserBattleRoomCubit>().emit(MultiUserBattleRoomInitial());
-      showDialog(context: context, builder: (context) => BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository()), child: RoomDialog(quizType: QuizTypes.groupPlay)));
+      //
+      showDialog(
+          context: context,
+          builder: (context) => MultiBlocProvider(providers: [
+                BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository())),
+                BlocProvider<UpdateScoreAndCoinsCubit>(create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
+              ], child: RoomDialog(quizType: QuizTypes.groupPlay)));
+      //
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.contest) {
       if (context.read<SystemConfigCubit>().getIsContestAvailable() == "1") {
         Navigator.of(context).pushNamed(Routes.contest);
@@ -464,7 +483,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.selfChallenge);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => PlayGround()));
+        //Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
         alignment: Alignment.topCenter,

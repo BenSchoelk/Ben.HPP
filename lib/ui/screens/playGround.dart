@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/ui/widgets/adMobBanner.dart';
+import 'package:flutterquiz/utils/adIds.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -11,56 +12,89 @@ class PlayGround extends StatefulWidget {
 }
 
 class _PlayGroundState extends State<PlayGround> {
-  InterstitialAd? interstitialAd;
-
+  // InterstitialAd? interstitialAd;
+  RewardedAd? rewardedAd;
   @override
   void initState() {
-    initInterstitialAd();
     super.initState();
+    initRewardedAd();
   }
 
-  void initInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: "ca-app-pub-3940256099942544/1033173712",
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print("Interstital Ad loaded successfully");
-            interstitialAd = ad;
-            showInterstitialAd();
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error.');
-            //
-          },
-        ));
+  void initRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdIds.rewardedId,
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(onAdFailedToLoad: (error) {
+        print("Rewarded ad failed to load");
+      }, onAdLoaded: (ad) {
+        rewardedAd = ad;
+        print("Rewarded ad loaded successfully");
+      }),
+    );
   }
 
-  void showInterstitialAd() {
-    if (interstitialAd == null) {
+  void showRewardedAd() {
+    if (rewardedAd == null) {
       return;
     }
-
-    interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
+    rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        print("Give rewards here");
       },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
+      onAdFailedToShowFullScreenContent: (ad, _) {
         ad.dispose();
       },
     );
-    interstitialAd!.show();
-    interstitialAd = null;
+    rewardedAd?.show(onUserEarnedReward: (ad, rewarededItem) {
+      print("Rewards will ad automatically");
+      print(rewarededItem.amount);
+    });
   }
+
+  // void initInterstitialAd() {
+  //   InterstitialAd.load(
+  //       adUnitId: "ca-app-pub-3940256099942544/1033173712",
+  //       request: AdRequest(),
+  //       adLoadCallback: InterstitialAdLoadCallback(
+  //         onAdLoaded: (InterstitialAd ad) {
+  //           print("Interstital Ad loaded successfully");
+  //           interstitialAd = ad;
+  //           showInterstitialAd();
+  //         },
+  //         onAdFailedToLoad: (LoadAdError error) {
+  //           print('InterstitialAd failed to load: $error.');
+  //           //
+  //         },
+  //       ));
+  // }
+
+  // void showInterstitialAd() {
+  //   if (interstitialAd == null) {
+  //     return;
+  //   }
+
+  //   interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+  //     onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent.'),
+  //     onAdDismissedFullScreenContent: (InterstitialAd ad) {
+  //       print('$ad onAdDismissedFullScreenContent.');
+  //       ad.dispose();
+  //     },
+  //     onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+  //       print('$ad onAdFailedToShowFullScreenContent: $error');
+  //       ad.dispose();
+  //     },
+  //   );
+  //   interstitialAd!.show();
+  //   interstitialAd = null;
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      floatingActionButton: FloatingActionButton(onPressed: () {}),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        showRewardedAd();
+      }),
       body: Center(
         child: AdMobBanner(),
       ),

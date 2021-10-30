@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
@@ -29,6 +30,7 @@ import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
 
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
@@ -394,39 +396,26 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget showAdsDialog() {
-    return AlertDialog(
-        content: Text(
-          AppLocalization.of(context)!.getTranslatedValues("showAdsLbl")!,
-        ),
-        actions: [
-          CupertinoButton(
-            onPressed: () {
-              //TODO : ad reward video
-              timerAnimationController.stop();
-
-              //interstitialAd.show();
-              //user see full ads coins increment  6
-              /* setState(() {
-                context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: 6);
-              });*/
-              Navigator.pop(context);
-            },
-            child: Text(
-              AppLocalization.of(context)!.getTranslatedValues("yesBtn")!,
-              style: TextStyle(color: primaryColor),
-            ),
-          ),
-          CupertinoButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              AppLocalization.of(context)!.getTranslatedValues("noBtn")!,
-              style: TextStyle(color: primaryColor),
-            ),
-          ),
-        ]);
+  void showAdDialog() {
+    //stop timer
+    timerAnimationController.stop();
+    showDialog(
+        context: context,
+        builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
+              //on tap of yes button show ad
+              context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
+                //once user sees app then add coins to user wallet
+                context.read<UserDetailsCubit>().updateCoins(
+                      addCoin: true,
+                      coins: lifeLineDeductCoins,
+                    );
+                context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                      context.read<UserDetailsCubit>().getUserId(),
+                      lifeLineDeductCoins,
+                      true,
+                    );
+              });
+            })).then((value) => timerAnimationController.forward(from: timerAnimationController.value));
   }
 
   Widget _buildLifeLines() {
@@ -455,16 +444,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         });
                       }
                     } else {
-                      //dialog Show timer stop dialog close timer start
-                      timerAnimationController.stop();
-                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
-                        print("****************************************:" + value.toString());
-                        if (value == null) {
-                          timerAnimationController.forward(from: timerAnimationController.value);
-                        }
-                      });
-
-                      // UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+                      showAdDialog();
                     }
                   } else {
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
@@ -481,14 +461,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         lifelines[audiencePoll] = LifelineStatus.using;
                       });
                     } else {
-                      timerAnimationController.stop();
-                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
-                        print(value);
-                        if (value == null) {
-                          timerAnimationController.forward(from: timerAnimationController.value);
-                        }
-                      });
-                      //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+                      showAdDialog();
                     }
                   } else {
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
@@ -509,14 +482,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       timerAnimationController.stop();
                       timerAnimationController.forward(from: 0.0);
                     } else {
-                      timerAnimationController.stop();
-                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
-                        print(value);
-                        if (value == null) {
-                          timerAnimationController.forward(from: timerAnimationController.value);
-                        }
-                      });
-                      //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+                      showAdDialog();
                     }
                   } else {
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
@@ -534,14 +500,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       });
                       submitAnswer("0");
                     } else {
-                      timerAnimationController.stop();
-                      showDialog(context: context, builder: (_) => showAdsDialog()).then((value) {
-                        print(value);
-                        if (value == null) {
-                          timerAnimationController.forward(from: timerAnimationController.value);
-                        }
-                      });
-                      //UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+                      showAdDialog();
                     }
                   } else {
                     UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);

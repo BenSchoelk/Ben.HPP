@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
@@ -10,6 +12,7 @@ import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart'
 import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/waitingForPlayersDialog.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -45,6 +48,27 @@ class _RoomDialogState extends State<RoomDialog> {
             );
       }
     });
+  }
+
+  void showAdDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
+              //showAd
+              context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
+                //ad rewards here
+                //once user sees app then add coins to user wallet
+                context.read<UserDetailsCubit>().updateCoins(
+                      addCoin: true,
+                      coins: lifeLineDeductCoins,
+                    );
+                context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                      context.read<UserDetailsCubit>().getUserId(),
+                      lifeLineDeductCoins,
+                      true,
+                    );
+              });
+            }));
   }
 
   InputBorder _getInputBorder(BuildContext buildContext) {
@@ -456,7 +480,7 @@ class _RoomDialogState extends State<RoomDialog> {
                               return;
                             }
                             if (entryFee < 0) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey));
+                              showAdDialog();
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
@@ -514,7 +538,7 @@ class _RoomDialogState extends State<RoomDialog> {
                               return;
                             }
                             if (entryFee < 0) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey));
+                              showAdDialog();
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
