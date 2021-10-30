@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/quiz/cubits/setContestLeaderboardCubit.dart';
@@ -15,10 +16,8 @@ import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/adIds.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:flutterquiz/app/routes.dart';
@@ -134,44 +133,12 @@ class _ResultScreenState extends State<ResultScreen> {
   int _earnedCoins = 0;
   String? _winnerId;
 
-  InterstitialAd? interstitialAd;
-
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: AdIds.interstitialId,
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print("InterstitialAd Ad loaded successfully");
-            interstitialAd = ad;
-            _showInterstitialAd();
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print(error);
-          },
-        ));
-  }
-
-  void _showInterstitialAd() {
-    if (interstitialAd == null) {
-    } else {
-      interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (InterstitialAd ad) {},
-        onAdDismissedFullScreenContent: (InterstitialAd ad) {},
-        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-          print('$ad onAdFailedToShowFullScreenContent: $error');
-          ad.dispose();
-        },
-      );
-      interstitialAd!.show();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _createInterstitialAd();
-    //
+    Future.delayed(Duration.zero, () {
+      context.read<InterstitialAdCubit>().showAd();
+    });
     if (widget.quizType == QuizTypes.battle) {
       battleConfiguration();
     } else {
@@ -202,7 +169,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   void dispose() {
-    interstitialAd?.dispose();
+    //interstitialAd?.dispose();
     super.dispose();
   }
 

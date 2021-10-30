@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -30,12 +29,11 @@ import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
-import 'package:flutterquiz/utils/adIds.dart';
+
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 enum LifelineStatus { unused, using, used }
 

@@ -21,11 +21,9 @@ import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
-import 'package:flutterquiz/utils/adIds.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GuessTheWordQuizScreen extends StatefulWidget {
   final String type; //category or subcategory

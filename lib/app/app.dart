@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
 import 'package:flutterquiz/features/auth/authRepository.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 import 'package:flutterquiz/features/badges/badgesRepository.dart';
@@ -94,7 +95,9 @@ class MyApp extends StatelessWidget {
         //to configure badges
         BlocProvider<BadgesCubit>(create: (_) => BadgesCubit(BadgesRepository())),
         //statistic cubit
-        BlocProvider<StatisticCubit>(create: (_) => StatisticCubit(StatisticRepository()))
+        BlocProvider<StatisticCubit>(create: (_) => StatisticCubit(StatisticRepository())),
+        //
+        BlocProvider<InterstitialAdCubit>(create: (_) => InterstitialAdCubit())
       ],
       child: Builder(
         builder: (context) {

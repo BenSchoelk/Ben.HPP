@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/ui/widgets/adMobBanner.dart';
-import 'package:flutterquiz/utils/constants.dart';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class PlayGround extends StatefulWidget {
