@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
@@ -43,6 +44,9 @@ class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomRes
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () {
+      context.read<InterstitialAdCubit>().showAd();
+    });
     getResultAndUpdateCoins();
     super.initState();
   }
