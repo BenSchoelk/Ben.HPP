@@ -51,6 +51,10 @@ class _RoomDialogState extends State<RoomDialog> {
   }
 
   void showAdDialog() {
+    if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
+      UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!);
+      return;
+    }
     showDialog(
         context: context,
         builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
@@ -443,13 +447,21 @@ class _RoomDialogState extends State<RoomDialog> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Text(
-                context.read<UserDetailsCubit>().getCoins()!,
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              BlocBuilder<UserDetailsCubit, UserDetailsState>(
+                bloc: context.read<UserDetailsCubit>(),
+                builder: (context, state) {
+                  if (state is UserDetailsFetchSuccess) {
+                    return Text(
+                      state.userProfile.coins!,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
             ],
           ),
@@ -480,13 +492,14 @@ class _RoomDialogState extends State<RoomDialog> {
                               return;
                             }
                             if (entryFee < 0) {
-                              showAdDialog();
+                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey)!);
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
 
                             if (int.parse(userProfile.coins!) < entryFee) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode)));
+                              showAdDialog();
+                              //UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode)));
                               return;
                             }
                             context.read<BattleRoomCubit>().createRoom(
@@ -538,13 +551,14 @@ class _RoomDialogState extends State<RoomDialog> {
                               return;
                             }
                             if (entryFee < 0) {
-                              showAdDialog();
+                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey)!);
+
                               return;
                             }
                             UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
 
                             if (int.parse(userProfile.coins!) < entryFee) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode)));
+                              showAdDialog();
                               return;
                             }
                             context.read<MultiUserBattleRoomCubit>().createRoom(

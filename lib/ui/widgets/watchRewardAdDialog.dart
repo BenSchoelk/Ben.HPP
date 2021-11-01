@@ -5,7 +5,8 @@ import 'package:flutterquiz/app/appLocalization.dart';
 //TODO : decide how many coins shoud give to user once user sees ad successfully
 class WatchRewardAdDialog extends StatelessWidget {
   final Function onTapYesButton;
-  const WatchRewardAdDialog({Key? key, required this.onTapYesButton}) : super(key: key);
+  final Function? onTapNoButton;
+  const WatchRewardAdDialog({Key? key, required this.onTapYesButton, this.onTapNoButton}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,10 @@ class WatchRewardAdDialog extends StatelessWidget {
           ),
           CupertinoButton(
             onPressed: () {
+              if (onTapNoButton != null) {
+                onTapNoButton!();
+                return;
+              }
               Navigator.pop(context);
             },
             child: Text(

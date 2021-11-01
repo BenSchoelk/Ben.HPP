@@ -397,25 +397,41 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   void showAdDialog() {
+    if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
+      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+      return;
+    }
     //stop timer
     timerAnimationController.stop();
-    showDialog(
+    showDialog<bool>(
         context: context,
-        builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
-              //on tap of yes button show ad
-              context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
-                //once user sees app then add coins to user wallet
-                context.read<UserDetailsCubit>().updateCoins(
-                      addCoin: true,
-                      coins: lifeLineDeductCoins,
-                    );
-                context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                      context.read<UserDetailsCubit>().getUserId(),
-                      lifeLineDeductCoins,
-                      true,
-                    );
-              });
-            })).then((value) => timerAnimationController.forward(from: timerAnimationController.value));
+        builder: (_) => WatchRewardAdDialog(
+              onTapYesButton: () {
+                //on tap of yes button show ad
+                context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
+                  //once user sees app then add coins to user wallet
+                  context.read<UserDetailsCubit>().updateCoins(
+                        addCoin: true,
+                        coins: lifeLineDeductCoins,
+                      );
+                  context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                        context.read<UserDetailsCubit>().getUserId(),
+                        lifeLineDeductCoins,
+                        true,
+                      );
+                  timerAnimationController.forward(from: timerAnimationController.value);
+                });
+              },
+              onTapNoButton: () {
+                //pass true to start timer
+                Navigator.of(context).pop(true);
+              },
+            )).then((startTimer) {
+      //if user do not want to see ad
+      if (startTimer != null && startTimer) {
+        timerAnimationController.forward(from: timerAnimationController.value);
+      }
+    });
   }
 
   Widget _buildLifeLines() {

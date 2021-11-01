@@ -190,13 +190,22 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
-            context.read<UserDetailsCubit>().getCoins()!,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
+          BlocBuilder<UserDetailsCubit, UserDetailsState>(
+            bloc: context.read<UserDetailsCubit>(),
+            builder: (context, state) {
+              if (state is UserDetailsFetchSuccess) {
+                return Text(
+                  context.read<UserDetailsCubit>().getCoins()!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }
+
+              return Container();
+            },
           ),
         ],
       ),
@@ -218,13 +227,19 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
         ),
         onPressed: () {
           if (int.parse(userProfile.coins!) < randomBattleEntryCoins) {
+            //if ad not loaded than show not enough coins
+            if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
+              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!);
+              return;
+            }
+
             showDialog(
                 context: context,
                 builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
                       //showAd
                       context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
                         //ad rewards here
-                        //once user sees app then add coins to user wallet
+                        //once user sees ad then add coins to user wallet
                         context.read<UserDetailsCubit>().updateCoins(
                               addCoin: true,
                               coins: lifeLineDeductCoins,
