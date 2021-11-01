@@ -18,7 +18,6 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
-//TODO : Add localization for badges screen
 class BadgesScreen extends StatefulWidget {
   const BadgesScreen({Key? key}) : super(key: key);
 
@@ -118,7 +117,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                 return Column(
                                   children: [
                                     Text(
-                                      "Need more $answerToGo correct ansewer to unlock",
+                                      "${AppLocalization.of(context)!.getTranslatedValues(needMoreKey)!} $answerToGo ${AppLocalization.of(context)!.getTranslatedValues(correctAnswerToUnlockKey)!}",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Theme.of(context).colorScheme.secondary,
@@ -135,16 +134,13 @@ class _BadgesScreenState extends State<BadgesScreen> {
                           : Container(),
 
                       Text(
-                        "Get ${badge.badgeReward} coin(s) by unlocking this badge",
+                        "${AppLocalization.of(context)!.getTranslatedValues(getKey)!} ${badge.badgeReward} ${AppLocalization.of(context)!.getTranslatedValues(coinsUnlockingByBadgeKey)!}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                           fontSize: 14.0,
                         ),
                       ),
-                      // SizedBox(
-                      //   height: MediaQuery.of(context).size.height * (0.025),
-                      // ),
                     ],
                   ),
                 )

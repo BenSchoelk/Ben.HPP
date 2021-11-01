@@ -328,7 +328,11 @@
     "warning" : "Warning",
     "failedToGetAppUrl" : "Failed to get app url, Please update manually",
     "youWin": "You win",
-    "letsPlay": "Let's Play"
+    "letsPlay": "Let's Play",
+    "needMore" : "Need more",
+    "correctAnswerToUnlock" : "correct ansewer to unlock",
+    "get" : "Get",
+    "coinsUnlockingByBadge" : "coin(s) by unlocking this badge"
     
     
 

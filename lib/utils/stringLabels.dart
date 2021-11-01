@@ -315,3 +315,9 @@ String updateApplicationKey = "updateApplication";
 String updateKey = "update";
 String warningKey = "warning";
 String failedToGetAppUrlKey = "failedToGetAppUrl";
+
+String needMoreKey = "needMore";
+String correctAnswerToUnlockKey = "correctAnswerToUnlock";
+
+String getKey = "get";
+String coinsUnlockingByBadgeKey = "coinsUnlockingByBadge";
