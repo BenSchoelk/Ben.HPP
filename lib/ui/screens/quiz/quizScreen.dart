@@ -376,9 +376,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildLifelineContainer(VoidCallback onTap, String lifelineTitle, String lifelineIcon) {
-    print(context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length);
     return GestureDetector(
-      onTap: onTap,
+      onTap: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2 ? () {} : onTap,
       child: Container(
           decoration: BoxDecoration(
               color: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2 ? Theme.of(context).backgroundColor.withOpacity(0.7) : Theme.of(context).backgroundColor,

@@ -112,7 +112,7 @@ class Routes {
       case coinStore:
         return CoinStoreScreen.route(routeSettings);
       case rewards:
-        return CupertinoPageRoute(builder: (_) => RewardsScreen());
+        return RewardsScreen.route(routeSettings);
 
       case referAndEarn:
         return CupertinoPageRoute(builder: (_) => ReferAndEarnScreen());

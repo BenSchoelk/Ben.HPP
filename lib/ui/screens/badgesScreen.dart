@@ -158,7 +158,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
 
   List<Badge> _organizedBadges(List<Badge> badges) {
     List<Badge> lockedBadges = badges.where((element) => element.status == "0").toList();
-    List<Badge> unlockedBadges = badges.where((element) => element.status == "1").toList();
+    List<Badge> unlockedBadges = badges.where((element) => element.status == "1" || element.status == "2").toList();
     unlockedBadges.addAll(lockedBadges);
     return unlockedBadges;
   }

@@ -21,6 +21,7 @@ class BadgesRepository {
 
       //get badges
       badgeTypes.forEach((element) {
+        print(badgesResult[element]);
         badges.add(Badge.fromJson(Map.from(badgesResult[element])));
       });
 

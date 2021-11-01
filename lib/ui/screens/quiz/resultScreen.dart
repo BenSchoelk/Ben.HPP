@@ -317,6 +317,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   //
   void _updateScoreAndCoinsDetails({required bool updateDasingDebutBadge}) {
+    print("Update badge $updateDasingDebutBadge");
     //we need to update score and coins only when quiz type is not self challenge, battle and contest
     if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.battle && widget.quizType != QuizTypes.contest) {
       //if percentage is more than 30 then update socre and coins

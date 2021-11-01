@@ -54,6 +54,16 @@ class MenuBottomSheetContainer extends StatelessWidget {
               leadingIcon: "badges.svg",
             ),
 
+            MenuTile(
+              isSvgIcon: true,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.rewards);
+              },
+              title: rewardsLbl,
+              leadingIcon: "badges.svg",
+            ),
+
             context.read<SystemConfigCubit>().getLanguageMode() == "1"
                 ? MenuTile(
                     isSvgIcon: true,
