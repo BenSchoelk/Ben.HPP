@@ -144,6 +144,9 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   String getAppVersion() {
     if (state is SystemConfigFetchSuccess) {
+      if (Platform.isIOS) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.appVersionIos!;
+      }
       return (state as SystemConfigFetchSuccess).systemConfigModel.appVersion!;
     }
     return "1.0.0+1";

@@ -25,12 +25,14 @@ class SystemConfigModel {
   String? funNLearnMode;
   String? audioQuestionMode;
   String? guessTheWordMode;
+  String? appVersionIos;
 
   SystemConfigModel({
     this.systemTimezone,
     this.systemTimezoneGmt,
     this.appLink,
     this.moreApps,
+    this.appVersionIos,
     this.iosAppLink,
     this.iosMoreApps,
     this.referCoin,
@@ -82,6 +84,7 @@ class SystemConfigModel {
     funNLearnMode = json['fun_n_learn_question'];
     guessTheWordMode = json['guess_the_word_question'];
     audioQuestionMode = json['audio_mode_question'];
+    appVersionIos = json['app_version_ios'];
   }
 
   Map<String, dynamic> toJson() {
