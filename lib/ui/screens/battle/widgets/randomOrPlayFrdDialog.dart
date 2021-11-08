@@ -237,19 +237,21 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
                 context: context,
                 builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
                       //showAd
-                      context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
-                        //ad rewards here
-                        //once user sees ad then add coins to user wallet
-                        context.read<UserDetailsCubit>().updateCoins(
-                              addCoin: true,
-                              coins: lifeLineDeductCoins,
-                            );
-                        context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                              context.read<UserDetailsCubit>().getUserId(),
-                              lifeLineDeductCoins,
-                              true,
-                            );
-                      });
+                      context.read<RewardedAdCubit>().showAd(
+                          context: context,
+                          onAdDismissedCallback: () {
+                            //ad rewards here
+                            //once user sees ad then add coins to user wallet
+                            context.read<UserDetailsCubit>().updateCoins(
+                                  addCoin: true,
+                                  coins: lifeLineDeductCoins,
+                                );
+                            context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                                  context.read<UserDetailsCubit>().getUserId(),
+                                  lifeLineDeductCoins,
+                                  true,
+                                );
+                          });
                     }));
             return;
           }

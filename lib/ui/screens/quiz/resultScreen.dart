@@ -137,7 +137,7 @@ class _ResultScreenState extends State<ResultScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      context.read<InterstitialAdCubit>().showAd();
+      context.read<InterstitialAdCubit>().showAd(context);
     });
     if (widget.quizType == QuizTypes.battle) {
       battleConfiguration();
@@ -516,7 +516,7 @@ class _ResultScreenState extends State<ResultScreen> {
         Align(
           alignment: Alignment.center,
           child: SvgPicture.asset(
-            _isWinner ? UiUtils.getImagePath("celebration_win.svg") : UiUtils.getImagePath("celebration_loss.svg"),
+            _isWinner ? UiUtils.getImagePath("celebration.svg") : UiUtils.getImagePath("celebration_loss.svg"),
           ),
         ),
         Align(

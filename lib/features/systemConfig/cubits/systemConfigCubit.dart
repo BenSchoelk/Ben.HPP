@@ -180,6 +180,14 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     return "$fbBannerAndInterstitialAdPrefix${facebookPlacementId()}";
   }
 
+  String faceBookInterstitialAdId() {
+    return "$fbBannerAndInterstitialAdPrefix${facebookPlacementId()}";
+  }
+
+  String faceBookRewardedAdId() {
+    return "$fbRewardedAdPrefix${facebookPlacementId()}";
+  }
+
   String googleBannerId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
@@ -187,6 +195,30 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
       }
       if (Platform.isIOS) {
         return (state as SystemConfigFetchSuccess).systemConfigModel.iosBannerId!;
+      }
+    }
+    return "";
+  }
+
+  String googleInterstitialAdId() {
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidInterstitialId!;
+      }
+      if (Platform.isIOS) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosInterstitialId!;
+      }
+    }
+    return "";
+  }
+
+  String googleRewardedAdId() {
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidRewardedId!;
+      }
+      if (Platform.isIOS) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosRewardedId!;
       }
     }
     return "";

@@ -101,8 +101,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void createAds() {
     Future.delayed(Duration.zero, () {
-      context.read<InterstitialAdCubit>().createInterstitialAd();
-      context.read<RewardedAdCubit>().createRewardedAd();
+      context.read<InterstitialAdCubit>().createInterstitialAd(context);
+      context.read<RewardedAdCubit>().createRewardedAd(context);
     });
   }
 

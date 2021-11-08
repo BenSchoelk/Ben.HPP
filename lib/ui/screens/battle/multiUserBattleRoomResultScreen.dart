@@ -45,7 +45,7 @@ class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomRes
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      context.read<InterstitialAdCubit>().showAd();
+      context.read<InterstitialAdCubit>().showAd(context);
     });
     getResultAndUpdateCoins();
     super.initState();

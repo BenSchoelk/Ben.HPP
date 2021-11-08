@@ -1,5 +1,8 @@
+import 'package:facebook_audience_network/ad/ad_interstitial.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/utils/adIds.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 abstract class InterstitialAdState {}
@@ -19,10 +22,9 @@ class InterstitialAdCubit extends Cubit<InterstitialAdState> {
 
   InterstitialAd? get interstitialAd => _interstitialAd;
 
-  void createInterstitialAd() {
-    emit(InterstitialAdLoadInProgress());
+  void _createGoogleInterstitialAd(BuildContext context) {
     InterstitialAd.load(
-        adUnitId: AdIds.interstitialId,
+        adUnitId: context.read<SystemConfigCubit>().googleInterstitialAdId(),
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -37,23 +39,66 @@ class InterstitialAdCubit extends Cubit<InterstitialAdState> {
         ));
   }
 
-  void showAd() {
-    if (state is InterstitialAdLoaded) {
-      interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (InterstitialAd ad) {},
-        onAdDismissedFullScreenContent: (InterstitialAd ad) {
-          ad.dispose();
-          createInterstitialAd();
-        },
-        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-          print('$ad onAdFailedToShowFullScreenContent: $error');
-          ad.dispose();
-          createInterstitialAd();
-        },
-      );
-      interstitialAd?.show();
-    } else {
-      createInterstitialAd();
+  void _createFacebookInterstitialAd(BuildContext context) {
+    FacebookInterstitialAd.loadInterstitialAd(
+        placementId: context.read<SystemConfigCubit>().faceBookInterstitialAdId(),
+        listener: (result, value) {
+          if (result == InterstitialAdResult.LOADED) {
+            print("Facebook ad loaded");
+            emit(InterstitialAdLoaded());
+          }
+          if (result == InterstitialAdResult.ERROR) {
+            print("Facebook ad error : $value");
+            print("---------------------");
+            emit(InterstitialAdFailToLoad());
+          }
+          //if ad dismissed and becomes invalidate
+          if (result == InterstitialAdResult.DISMISSED && value["invalidated"] == true) {
+            print("Add callbacks here for updating coins");
+            createInterstitialAd(context);
+          }
+        });
+  }
+
+  void createInterstitialAd(BuildContext context) {
+    if (context.read<SystemConfigCubit>().isAdsEnable()) {
+      emit(InterstitialAdLoadInProgress());
+      if (context.read<SystemConfigCubit>().isGoogleAdEnable()) {
+        _createGoogleInterstitialAd(context);
+      } else {
+        _createFacebookInterstitialAd(context);
+      }
+    }
+  }
+
+  void showAd(BuildContext context) {
+    //if ad is enable
+    if (context.read<SystemConfigCubit>().isAdsEnable()) {
+      //if ad loaded succesfully
+      if (state is InterstitialAdLoaded) {
+        //show google interstitial ad
+        if (context.read<SystemConfigCubit>().isGoogleAdEnable()) {
+          interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (InterstitialAd ad) {},
+            onAdDismissedFullScreenContent: (InterstitialAd ad) {
+              ad.dispose();
+              createInterstitialAd(context);
+            },
+            onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+              print('$ad onAdFailedToShowFullScreenContent: $error');
+              ad.dispose();
+              createInterstitialAd(context);
+            },
+          );
+          interstitialAd?.show();
+        } else {
+          print("Show facebook ad");
+          //show facebook interstitial ad
+          FacebookInterstitialAd.showInterstitialAd();
+        }
+      } else if (state is InterstitialAdFailToLoad) {
+        createInterstitialAd(context);
+      }
     }
   }
 

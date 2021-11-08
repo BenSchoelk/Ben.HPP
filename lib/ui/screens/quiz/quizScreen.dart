@@ -407,19 +407,21 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         builder: (_) => WatchRewardAdDialog(
               onTapYesButton: () {
                 //on tap of yes button show ad
-                context.read<RewardedAdCubit>().showAd(onAdDismissedCallback: () {
-                  //once user sees app then add coins to user wallet
-                  context.read<UserDetailsCubit>().updateCoins(
-                        addCoin: true,
-                        coins: lifeLineDeductCoins,
-                      );
-                  context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                        context.read<UserDetailsCubit>().getUserId(),
-                        lifeLineDeductCoins,
-                        true,
-                      );
-                  timerAnimationController.forward(from: timerAnimationController.value);
-                });
+                context.read<RewardedAdCubit>().showAd(
+                    context: context,
+                    onAdDismissedCallback: () {
+                      //once user sees app then add coins to user wallet
+                      context.read<UserDetailsCubit>().updateCoins(
+                            addCoin: true,
+                            coins: lifeLineDeductCoins,
+                          );
+                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                            context.read<UserDetailsCubit>().getUserId(),
+                            lifeLineDeductCoins,
+                            true,
+                          );
+                      timerAnimationController.forward(from: timerAnimationController.value);
+                    });
               },
               onTapNoButton: () {
                 //pass true to start timer

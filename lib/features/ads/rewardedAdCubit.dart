@@ -1,5 +1,7 @@
+import 'package:facebook_audience_network/ad/ad_rewarded.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/utils/adIds.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 //TODO : add reason for ad load failure and shows to user
@@ -20,10 +22,9 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
 
   RewardedAd? get rewardedAd => _rewardedAd;
 
-  void createRewardedAd() {
-    emit(RewardedAdLoadInProgress());
+  void _createGoogleRewardedAd(BuildContext context) {
     RewardedAd.load(
-      adUnitId: AdIds.rewardedId,
+      adUnitId: context.read<SystemConfigCubit>().googleRewardedAdId(),
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(onAdFailedToLoad: (error) {
         print("Rewarded ad failed to load");
@@ -36,25 +37,71 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
     );
   }
 
-  void showAd({required Function onAdDismissedCallback}) {
-    if (state is RewardedAdLoaded) {
-      _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (ad) {
-          ad.dispose();
-          onAdDismissedCallback();
-          createRewardedAd();
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) {
-          print('$ad onAdFailedToShowFullScreenContent: $error');
-          ad.dispose();
-          //need to show this reason to user
+  void _createFacebookRewardedAd(BuildContext context) {
+    FacebookRewardedVideoAd.loadRewardedVideoAd(
+      placementId: context.read<SystemConfigCubit>().faceBookRewardedAdId(),
+      listener: (result, value) {
+        print("Rewarded Ad: $result --> $value");
+        if (result == RewardedVideoAdResult.LOADED) {
+          emit(RewardedAdLoaded());
+        }
+
+        if (result == RewardedVideoAdResult.ERROR) {
           emit(RewardedAdFailure());
-          createRewardedAd();
-        },
-      );
-      rewardedAd?.show(onUserEarnedReward: (_, __) => {});
-    } else if (state is RewardedAdFailure) {
-      createRewardedAd();
+        }
+        //if (result == RewardedVideoAdResult.VIDEO_COMPLETE)
+
+        /// Once a Rewarded Ad has been closed and becomes invalidated,
+        /// load a fresh Ad by calling this function.
+        if (result == RewardedVideoAdResult.VIDEO_CLOSED && (value == true || value["invalidated"] == true)) {
+          //ad callback here to
+          print("Add coins here");
+          createRewardedAd(context);
+        }
+      },
+    );
+  }
+
+  void createRewardedAd(BuildContext context) {
+    emit(RewardedAdLoadInProgress());
+
+    if (context.read<SystemConfigCubit>().isAdsEnable()) {
+      if (context.read<SystemConfigCubit>().isGoogleAdEnable()) {
+        _createGoogleRewardedAd(context);
+      } else {
+        _createFacebookRewardedAd(context);
+      }
+    }
+  }
+
+  void showAd({required Function onAdDismissedCallback, required BuildContext context}) {
+    //if ads is enable
+    if (context.read<SystemConfigCubit>().isAdsEnable()) {
+      if (state is RewardedAdLoaded) {
+        //if google ad is enable
+        if (context.read<SystemConfigCubit>().isGoogleAdEnable()) {
+          _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              onAdDismissedCallback();
+              createRewardedAd(context);
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              print('$ad onAdFailedToShowFullScreenContent: $error');
+              ad.dispose();
+              //need to show this reason to user
+              emit(RewardedAdFailure());
+              createRewardedAd(context);
+            },
+          );
+          rewardedAd?.show(onUserEarnedReward: (_, __) => {});
+        } else {
+          //show facebook ad
+          FacebookRewardedVideoAd.showRewardedVideoAd();
+        }
+      } else if (state is RewardedAdFailure) {
+        createRewardedAd(context);
+      }
     }
   }
 
