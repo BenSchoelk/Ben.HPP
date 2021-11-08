@@ -162,7 +162,8 @@ class _ResultScreenState extends State<ResultScreen> {
       //we need to return bool value so we can pass this to
       //updateScoreAndCoinsCubit since dashing_debut badge will unlock
       //from set_user_coin_score api
-      _updateScoreAndCoinsDetails(updateDasingDebutBadge: _earnBadges());
+      _earnBadges();
+      _updateScoreAndCoinsDetails();
       _updateStatistics();
     });
   }
@@ -242,9 +243,7 @@ class _ResultScreenState extends State<ResultScreen> {
     });
   }
 
-  bool _earnBadges() {
-    bool updateDashingDebutBadge = false;
-
+  _earnBadges() {
     String userId = context.read<UserDetailsCubit>().getUserId();
     BadgesCubit badgesCubit = context.read<BadgesCubit>();
     if (widget.quizType == QuizTypes.battle) {
@@ -272,7 +271,8 @@ class _ResultScreenState extends State<ResultScreen> {
       }
     } else if (widget.quizType == QuizTypes.quizZone) {
       if (badgesCubit.isBadgeLocked("dashing_debut")) {
-        updateDashingDebutBadge = true;
+        print("Unlock dashing debut badge");
+        badgesCubit.setBadge(badgeType: "dashing_debut", userId: userId);
       }
       //
       //if totalQuestion is less than minimum question then do not check for badges
@@ -305,7 +305,6 @@ class _ResultScreenState extends State<ResultScreen> {
         badgesCubit.setBadge(badgeType: "thirsty", userId: userId);
       }
     }
-    return updateDashingDebutBadge;
   }
 
   void setContestLeaderboard() async {
@@ -316,8 +315,7 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   //
-  void _updateScoreAndCoinsDetails({required bool updateDasingDebutBadge}) {
-    print("Update badge $updateDasingDebutBadge");
+  void _updateScoreAndCoinsDetails() {
     //we need to update score and coins only when quiz type is not self challenge, battle and contest
     if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.battle && widget.quizType != QuizTypes.contest) {
       //if percentage is more than 30 then update socre and coins
@@ -328,7 +326,6 @@ class _ResultScreenState extends State<ResultScreen> {
               widget.myPoints!,
               true,
               _earnedCoins,
-              type: updateDasingDebutBadge ? "dashing_debut" : null,
             );
         //update score locally and database
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: _earnedCoins);
@@ -352,7 +349,6 @@ class _ResultScreenState extends State<ResultScreen> {
         context.read<UpdateScoreAndCoinsCubit>().updateScore(
               context.read<UserDetailsCubit>().getUserId(),
               widget.myPoints,
-              type: updateDasingDebutBadge ? "dashing_debut" : null,
             );
         context.read<UserDetailsCubit>().updateScore(widget.myPoints);
       }

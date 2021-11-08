@@ -77,13 +77,17 @@ class _MultiUserBattleRoomResultScreenState extends State<MultiUserBattleRoomRes
       final winAmount = widget.entryFee * (widget.users.length / totalWinner);
 
       if (currentUser['rank'] == 1) {
+        //update badge if locked
+        if (context.read<BadgesCubit>().isBadgeLocked("clash_winner")) {
+          context.read<BadgesCubit>().setBadge(badgeType: "clash_winner", userId: context.read<UserDetailsCubit>().getUserId());
+        }
+
         //add coins
         //update coins
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(
               context.read<UserDetailsCubit>().getUserId(),
               winAmount.toInt(),
               true,
-              type: context.read<BadgesCubit>().isBadgeLocked("clash_winner") ? "clash_winner" : null,
             );
         context.read<UserDetailsCubit>().updateCoins(
               addCoin: true,

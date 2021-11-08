@@ -17,6 +17,7 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
+//TODO : Add localization in rewards screen
 class RewardsScreen extends StatefulWidget {
   RewardsScreen({
     Key? key,
@@ -40,7 +41,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
       onTap: () {
         if (reward.status == "1") {
           Navigator.of(context).push(PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 500),
+            transitionDuration: Duration(milliseconds: 400),
             opaque: false,
             pageBuilder: (context, firstAnimation, secondAnimation) {
               return FadeTransition(
@@ -61,7 +62,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
           color: Theme.of(context).primaryColor,
         ),
         child: reward.status == "2"
-            ? UnlockedRewardContent(reward: reward)
+            ? UnlockedRewardContent(
+                reward: reward,
+                increaseFont: false,
+              )
             : Stack(
                 children: [
                   Image.asset(

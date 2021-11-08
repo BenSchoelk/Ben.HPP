@@ -17,8 +17,10 @@ class ScratchRewardScreen extends StatefulWidget {
   _ScratchRewardScreenState createState() => _ScratchRewardScreenState();
 }
 
+//TODO : Add localization in rewards
 class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
   GlobalKey<ScratcherState> scratcherKey = GlobalKey<ScratcherState>();
+  bool _showScratchHere = true;
 
   bool _goBack() {
     bool isFinished = scratcherKey.currentState?.isFinished ?? false;
@@ -88,6 +90,12 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                     ),
                     child: Scratcher(
                         onChange: (value) {
+                          if (value > 0.0 && _showScratchHere) {
+                            setState(() {
+                              _showScratchHere = false;
+                            });
+                          }
+
                           if (value == 100.0) {
                             unlockReward();
                           }
@@ -98,13 +106,37 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                         accuracy: ScratchAccuracy.low,
                         color: Theme.of(context).primaryColor,
                         image: Image.asset(UiUtils.getImagePath("doodle.png")),
-                        child: UnlockedRewardContent(reward: widget.reward)),
+                        child: UnlockedRewardContent(
+                          reward: widget.reward,
+                          increaseFont: true,
+                        )),
                     height: MediaQuery.of(context).size.height * (0.4),
                     width: MediaQuery.of(context).size.width * (0.8),
                   ),
                 ),
               ),
-            )
+            ),
+            _showScratchHere
+                ? Align(
+                    alignment: Alignment.center,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Container(
+                        child: Center(
+                          child: Text(
+                            "Scratch here!",
+                            style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 18.0),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                        ),
+                        height: MediaQuery.of(context).size.height * (0.075),
+                        width: MediaQuery.of(context).size.width * (0.8),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
