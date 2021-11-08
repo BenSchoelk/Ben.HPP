@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
     precacheImage(AssetImage(UiUtils.getImagePath("splash_logo.png")), context);
     precacheImage(AssetImage(UiUtils.getImagePath("map_finded.png")), context);
     precacheImage(AssetImage(UiUtils.getImagePath("map_finding.png")), context);
+    precacheImage(AssetImage(UiUtils.getImagePath("doodle.png")), context);
 
     return MultiBlocProvider(
       //providing global providers

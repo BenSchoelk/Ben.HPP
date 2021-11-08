@@ -39,14 +39,22 @@ class BadgesCubit extends Cubit<BadgesState> {
   }
 
   //update badges
-  void updateBadge(String badgeType) {
+  void _updateBadge(String badgeType, String status) {
     if (state is BadgesFetchSuccess) {
       List<Badge> currentBadges = (state as BadgesFetchSuccess).badges;
       List<Badge> updatedBadges = List.from(currentBadges);
       int badgeIndex = currentBadges.indexWhere((element) => element.type == badgeType);
-      updatedBadges[badgeIndex] = currentBadges[badgeIndex].copyWith(updatedStatus: "1");
+      updatedBadges[badgeIndex] = currentBadges[badgeIndex].copyWith(updatedStatus: status);
       emit(BadgesFetchSuccess(updatedBadges));
     }
+  }
+
+  void unlockBadge(String badgeType) {
+    _updateBadge(badgeType, "1");
+  }
+
+  void unlockReward(String badgeType) {
+    _updateBadge(badgeType, "2");
   }
 
   //
@@ -54,6 +62,14 @@ class BadgesCubit extends Cubit<BadgesState> {
     if (state is BadgesFetchSuccess) {
       final badge = (state as BadgesFetchSuccess).badges.where((element) => element.type == badgeType).toList().first;
       return badge.status == "0";
+    }
+    return true;
+  }
+
+  bool isRewardUnlocked(String badgeType) {
+    if (state is BadgesFetchSuccess) {
+      final badge = (state as BadgesFetchSuccess).badges.where((element) => element.type == badgeType).toList().first;
+      return badge.status == "2";
     }
     return true;
   }
@@ -75,5 +91,17 @@ class BadgesCubit extends Cubit<BadgesState> {
     List<Badge> unscratchedRewards = rewards.where((element) => element.status == "1").toList();
     unscratchedRewards.addAll(scratchedRewards);
     return unscratchedRewards;
+  }
+
+  int getRewardedCoins() {
+    final rewards = getRewards();
+    int totalCoins = 0;
+    rewards.forEach((element) {
+      if (element.status == "2") {
+        totalCoins = int.parse(element.badgeReward) + totalCoins;
+      }
+    });
+
+    return totalCoins;
   }
 }

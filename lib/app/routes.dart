@@ -35,7 +35,7 @@ import 'package:flutterquiz/ui/screens/quiz/resultScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/subCategoryScreen.dart';
 
 import 'package:flutterquiz/ui/screens/referAndEarnScreen.dart';
-import 'package:flutterquiz/ui/screens/rewardsScreen.dart';
+import 'package:flutterquiz/ui/screens/rewards/rewardsScreen.dart';
 import 'package:flutterquiz/ui/screens/profile/selectProfilePictureScreen.dart';
 
 import 'package:flutterquiz/ui/screens/splashScreen.dart';

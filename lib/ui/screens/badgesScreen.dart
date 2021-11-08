@@ -220,7 +220,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
             child: ErrorContainer(
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
               onTapRetry: () {
-                context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId());
+                context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId(), refreshBadges: true);
               },
               showErrorImage: true,
             ),

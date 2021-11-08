@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         print("Notificaiton for unlocking new badge");
         String badgeType = data['badge_type'];
         Future.delayed(Duration.zero, () {
-          context.read<BadgesCubit>().updateBadge(badgeType);
+          context.read<BadgesCubit>().unlockBadge(badgeType);
         });
       }
       //payload is some data you want to pass in local notification

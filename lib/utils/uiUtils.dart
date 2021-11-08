@@ -55,7 +55,7 @@ class UiUtils {
 
   static void updateBadgesLocally(BuildContext context) {
     needToUpdateBadgesLocally.forEach((badgeType) {
-      context.read<BadgesCubit>().updateBadge(badgeType);
+      context.read<BadgesCubit>().unlockBadge(badgeType);
     });
     needToUpdateBadgesLocally.clear();
   }

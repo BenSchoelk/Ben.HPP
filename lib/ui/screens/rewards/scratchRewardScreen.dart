@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/screens/rewards/widgets/unlockedRewardContent.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:scratcher/widgets.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class ScratchRewardScreen extends StatefulWidget {
+  final Badge reward;
+  ScratchRewardScreen({Key? key, required this.reward}) : super(key: key);
+
+  @override
+  _ScratchRewardScreenState createState() => _ScratchRewardScreenState();
+}
+
+class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
+  GlobalKey<ScratcherState> scratcherKey = GlobalKey<ScratcherState>();
+
+  bool _goBack() {
+    bool isFinished = scratcherKey.currentState?.isFinished ?? false;
+    if (scratcherKey.currentState?.progress != 0.0 && !isFinished) {
+      scratcherKey.currentState?.reveal(duration: Duration(milliseconds: 250));
+
+      return false;
+    }
+    return true;
+  }
+
+  void unlockReward() {
+    if (context.read<BadgesCubit>().isRewardUnlocked(widget.reward.type)) {
+      return;
+    }
+    context.read<BadgesCubit>().unlockReward(widget.reward.type);
+    context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+          context.read<UserDetailsCubit>().getUserId(),
+          int.parse(widget.reward.badgeReward),
+          true,
+          type: widget.reward.type,
+        );
+    context.read<UserDetailsCubit>().updateCoins(
+          addCoin: true,
+          coins: int.parse(widget.reward.badgeReward),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(_goBack());
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.45),
+        body: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * (0.05),
+                  left: MediaQuery.of(context).size.width * (0.05),
+                ),
+                child: IconButton(
+                  iconSize: 30,
+                  color: Theme.of(context).backgroundColor,
+                  onPressed: () {
+                    if (_goBack()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  icon: Icon(Icons.close),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Hero(
+                tag: widget.reward.type,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: Scratcher(
+                        onChange: (value) {
+                          if (value == 100.0) {
+                            unlockReward();
+                          }
+                        },
+                        key: scratcherKey,
+                        brushSize: 25,
+                        threshold: 50,
+                        accuracy: ScratchAccuracy.low,
+                        color: Theme.of(context).primaryColor,
+                        image: Image.asset(UiUtils.getImagePath("doodle.png")),
+                        child: UnlockedRewardContent(reward: widget.reward)),
+                    height: MediaQuery.of(context).size.height * (0.4),
+                    width: MediaQuery.of(context).size.width * (0.8),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

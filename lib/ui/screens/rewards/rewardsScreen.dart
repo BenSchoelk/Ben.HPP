@@ -1,22 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/badges/badge.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/ui/screens/rewards/scratchRewardScreen.dart';
+import 'package:flutterquiz/ui/screens/rewards/widgets/unlockedRewardContent.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
-import 'package:scratcher/scratcher.dart';
 
 class RewardsScreen extends StatefulWidget {
-  RewardsScreen({Key? key}) : super(key: key);
+  RewardsScreen({
+    Key? key,
+  }) : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
@@ -31,38 +35,48 @@ class RewardsScreen extends StatefulWidget {
 }
 
 class _RewardsScreenState extends State<RewardsScreen> {
-  Map<String, GlobalKey<ScratcherState>> _scratchKeys = {};
-
-  bool _rewardsLoading = true;
-  @override
-  void initState() {
-    loadRewards();
-    super.initState();
-  }
-
-  void loadRewards() {
-    Future.delayed(Duration.zero, () {
-      context.read<BadgesCubit>().getRewards().forEach((element) {
-        print(element.status);
-        if (element.status == "1") {
-          _scratchKeys.addAll({element.type: GlobalKey<ScratcherState>()});
+  Widget _buildRewardContainer(Badge reward) {
+    return GestureDetector(
+      onTap: () {
+        if (reward.status == "1") {
+          Navigator.of(context).push(PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 500),
+            opaque: false,
+            pageBuilder: (context, firstAnimation, secondAnimation) {
+              return FadeTransition(
+                opacity: firstAnimation,
+                child: BlocProvider<UpdateScoreAndCoinsCubit>(
+                  create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  child: ScratchRewardScreen(
+                    reward: reward,
+                  ),
+                ),
+              );
+            },
+          ));
         }
-      });
-
-      _rewardsLoading = false;
-      setState(() {});
-    });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+        ),
+        child: reward.status == "2"
+            ? UnlockedRewardContent(reward: reward)
+            : Stack(
+                children: [
+                  Image.asset(
+                    UiUtils.getImagePath("doodle.png"),
+                    fit: BoxFit.cover,
+                  ),
+                ],
+              ),
+      ),
+    );
   }
 
   Widget _buildRewards() {
     return CustomScrollView(
-      // padding: EdgeInsets.only(
-      //   left: MediaQuery.of(context).size.width * (0.075),
-      //   right: MediaQuery.of(context).size.width * (0.075),
-      //   top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 25.0,
-      // ),
       slivers: [
-        //MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 25.0
         SliverToBoxAdapter(
           child: SizedBox(
             height: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 25.0,
@@ -76,22 +90,38 @@ class _RewardsScreenState extends State<RewardsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("107 Coins"),
-                  Text("Total Rewards Earned"),
+                  BlocBuilder<BadgesCubit, BadgesState>(
+                    bloc: context.read<BadgesCubit>(),
+                    builder: (context, state) {
+                      return Text(
+                        "${context.read<BadgesCubit>().getRewardedCoins()} coins",
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20,
+                        ),
+                      );
+                    },
+                  ),
+                  Text(
+                    "Total Rewards Earned",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
                 ],
               ),
               Spacer(),
               Container(
-                color: Colors.orange,
-                height: 50.0,
-                width: 50.0,
+                height: 55.0,
+                width: 55.0,
+                child: SvgPicture.asset(UiUtils.getImagePath("giftbox.svg")),
               )
             ],
           ),
         ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             child: Divider(
               color: Theme.of(context).primaryColor,
               height: 5,
@@ -107,7 +137,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   child: ErrorContainer(
                       errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
                       onTapRetry: () {
-                        context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId());
+                        context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId(), refreshBadges: true);
                       },
                       showErrorImage: true),
                 ),
@@ -125,24 +155,15 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
               //create grid count
               return SliverGrid.count(
+                mainAxisSpacing: 15.0,
+                crossAxisSpacing: 15.0,
                 children: [
                   ...rewards
-                      .map((reward) => ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Scratcher(
-                              key: _scratchKeys[reward.type],
-                              brushSize: 25,
-                              threshold: 50,
-                              accuracy: ScratchAccuracy.low,
-                              color: Colors.red,
-                              onChange: (value) => print("Scratch progress: $value%"),
-                              onThreshold: () => print("Threshold reached, you won!"),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.amberAccent,
-                                ),
-                                child: Center(child: Text("Aeeee safed kapda")),
-                              ),
+                      .map((reward) => Hero(
+                            tag: reward.type,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15.0),
+                              child: _buildRewardContainer(reward),
                             ),
                           ))
                       .toList(),
@@ -167,22 +188,14 @@ class _RewardsScreenState extends State<RewardsScreen> {
     return Scaffold(
       body: BlocListener<BadgesCubit, BadgesState>(
         listener: (context, state) {
-          if (state is BadgesFetchSuccess) {
-            setState(() {});
-          }
+          //
         },
         child: Stack(
           children: [
-            _rewardsLoading
-                ? Center(
-                    child: CircularProgressContainer(
-                      useWhiteLoader: false,
-                    ),
-                  )
-                : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.075)),
-                    child: _buildRewards(),
-                  ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.075)),
+              child: _buildRewards(),
+            ),
             Align(
               alignment: Alignment.topCenter,
               child: RoundedAppbar(
@@ -195,22 +208,3 @@ class _RewardsScreenState extends State<RewardsScreen> {
     );
   }
 }
-
-/*
-Scratcher(
-              key: scratchKey,
-              brushSize: 25,
-              threshold: 50,
-              accuracy: ScratchAccuracy.low,
-              color: Colors.red,
-              onChange: (value) => print("Scratch progress: $value%"),
-              onThreshold: () => print("Threshold reached, you won!"),
-              child: Container(
-                height: 300,
-                width: 300,
-                child: Center(child: Text("Aeeee safed kapda")),
-                color: Colors.blue,
-              ),
-            ),
-
- */
