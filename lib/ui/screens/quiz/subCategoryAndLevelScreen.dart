@@ -10,7 +10,7 @@ import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/subcategory.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
-import 'package:flutterquiz/ui/widgets/adMobBanner.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 
@@ -239,7 +239,7 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: AdMobBanner(),
+            child: BannerAdContainer(),
           ),
         ],
       ),

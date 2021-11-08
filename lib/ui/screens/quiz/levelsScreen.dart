@@ -7,6 +7,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/quiz/cubits/unlockedLevelCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
@@ -56,7 +57,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 30, start: 20, end: 20),
       child: CustomBackButton(
-        iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+        iconColor: Theme.of(context).primaryColor,
+        isShowDialog: false,
       ),
     );
   }
@@ -141,6 +143,13 @@ class _LevelsScreenState extends State<LevelsScreen> {
     );
   }
 
+  Widget _buildBannerAd() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: BannerAdContainer(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,6 +158,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
           PageBackgroundGradientContainer(),
           _buildBackButton(),
           _buildLevels(),
+          _buildBannerAd(),
         ],
       ),
     );

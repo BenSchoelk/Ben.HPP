@@ -26,8 +26,28 @@ class SystemConfigModel {
   String? audioQuestionMode;
   String? guessTheWordMode;
   String? appVersionIos;
+  String? adsEnabled;
+  String? adsType;
+  String? androidBannerId;
+  String? androidInterstitialId;
+  String? androidRewardedId;
+  String? androidFaceBookPlacementId;
+  String? iosBannerId;
+  String? iosInterstitialId;
+  String? iosRewardedId;
+  String? iosFaceBookPlacementId;
 
   SystemConfigModel({
+    this.adsEnabled,
+    this.adsType,
+    this.androidBannerId,
+    this.androidFaceBookPlacementId,
+    this.androidInterstitialId,
+    this.androidRewardedId,
+    this.iosBannerId,
+    this.iosInterstitialId,
+    this.iosRewardedId,
+    this.iosFaceBookPlacementId,
     this.systemTimezone,
     this.systemTimezoneGmt,
     this.appLink,
@@ -85,37 +105,15 @@ class SystemConfigModel {
     guessTheWordMode = json['guess_the_word_question'];
     audioQuestionMode = json['audio_mode_question'];
     appVersionIos = json['app_version_ios'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['system_timezone'] = this.systemTimezone;
-    data['system_timezone_gmt'] = this.systemTimezoneGmt;
-    data['app_link'] = this.appLink;
-    data['more_apps'] = this.moreApps;
-    data['ios_app_link'] = this.iosAppLink;
-    data['ios_more_apps'] = this.iosMoreApps;
-    data['refer_coin'] = this.referCoin;
-    data['earn_coin'] = this.earnCoin;
-    data['reward_coin'] = this.rewardCoin;
-    data['app_version'] = this.appVersion;
-    data['true_value'] = this.trueValue;
-    data['false_value'] = this.falseValue;
-    data['answer_mode'] = this.answerMode;
-    data['language_mode'] = this.languageMode;
-    data['option_e_mode'] = this.optionEMode;
-    data['force_update'] = this.forceUpdate;
-    data['daily_quiz_mode'] = this.dailyQuizMode;
-    data['contest_mode'] = this.contestMode;
-    data['fix_question'] = this.fixQuestion;
-    data['total_question'] = this.totalQuestion;
-    data['shareapp_text'] = this.shareappText;
-    data['battle_random_category_mode'] = this.battleRandomCategoryMode;
-    data['battle_group_category_mode'] = this.battleGroupCategoryMode;
-    data['fun_n_learn_question'] = this.funNLearnMode;
-    data['guess_the_word_question'] = this.guessTheWordMode;
-    data['audio_mode_question'] = this.audioQuestionMode;
-
-    return data;
+    adsEnabled = json['in_app_ads_mode'];
+    adsType = json['ads_type'];
+    androidBannerId = json['android_banner_id'];
+    androidInterstitialId = json['android_interstitial_id'];
+    androidRewardedId = json['android_rewarded_id'];
+    androidFaceBookPlacementId = json['android_fb_placement_id'];
+    iosBannerId = json['ios_banner_id'];
+    iosInterstitialId = json['ios_interstitial_id'];
+    iosRewardedId = json['ios_rewarded_id'];
+    iosFaceBookPlacementId = json['ios_fb_placement_id'];
   }
 }

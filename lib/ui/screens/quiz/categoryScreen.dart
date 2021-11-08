@@ -9,6 +9,7 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -60,15 +61,7 @@ class _CategoryScreen extends State<CategoryScreen> {
           ]),
           Align(
             alignment: Alignment.bottomCenter,
-            child: FacebookBannerAd(
-              // placementId: "YOUR_PLACEMENT_ID",
-              placementId: placementId,
-              bannerSize: BannerSize.STANDARD,
-              listener: (result, value) {
-                print("Banner Ad: $result -->  $value");
-              },
-            ),
-            //AdMobBanner(),
+            child: BannerAdContainer(),
           ),
         ],
       ),

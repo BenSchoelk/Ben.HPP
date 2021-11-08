@@ -164,9 +164,51 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     return "";
   }
 
+  String facebookPlacementId() {
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidFaceBookPlacementId!;
+      }
+      if (Platform.isIOS) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosFaceBookPlacementId!;
+      }
+    }
+    return "";
+  }
+
+  String faceBookBannerId() {
+    return "$fbBannerAndInterstitialAdPrefix${facebookPlacementId()}";
+  }
+
+  String googleBannerId() {
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidBannerId!;
+      }
+      if (Platform.isIOS) {
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosBannerId!;
+      }
+    }
+    return "";
+  }
+
   bool isForceUpdateEnable() {
     if (state is SystemConfigFetchSuccess) {
       return (state as SystemConfigFetchSuccess).systemConfigModel.forceUpdate! == "1";
+    }
+    return false;
+  }
+
+  bool isAdsEnable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.adsEnabled! == "1";
+    }
+    return false;
+  }
+
+  bool isGoogleAdEnable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.adsType! == "1";
     }
     return false;
   }

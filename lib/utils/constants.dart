@@ -175,7 +175,7 @@ final String groupBattleInviteMessage = "Hello, Join a group battle in $appName 
 // Fb Ads placementId
 final String fbBannerAndInterstitialAdPrefix = "IMG_16_9_APP_INSTALL#";
 final String fbRewardedAdPrefix = "VID_HD_16_9_15S_LINK#";
-final String placementId = "IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047";
+final String placementId = "2312433698835503_2964944860251047";
 final String initialCountryCode = "IN"; // change your initialCountry Code
 
 //predefined messages for battle
