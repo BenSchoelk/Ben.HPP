@@ -1,6 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:facebook_audience_network/ad/ad_banner.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +13,7 @@ import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/constants.dart';
+
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
