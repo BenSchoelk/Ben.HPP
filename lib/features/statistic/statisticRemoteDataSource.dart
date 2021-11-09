@@ -101,6 +101,8 @@ class StatisticRemoteDataSource {
         winnerIdKey: winnerId,
         isDrawnKey: isDrawn,
       };
+      print(body);
+      print("--------------");
       final response = await http.post(Uri.parse(setBattleStatisticsUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 

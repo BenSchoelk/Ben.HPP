@@ -228,7 +228,6 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
   }
 
   Widget letsGoButton(BoxConstraints boxConstraints) {
-    UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
     return Container(
       alignment: Alignment.center,
       child: ElevatedButton(
@@ -241,6 +240,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         onPressed: () {
+          UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
           if (int.parse(userProfile.coins!) < randomBattleEntryCoins) {
             //if ad not loaded than show not enough coins
             if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {

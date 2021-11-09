@@ -186,7 +186,8 @@ class _RoomDialogState extends State<RoomDialog> {
             ? TextField(
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
-                  entryFee = int.parse(value);
+                  print("Entry fee : $value");
+                  entryFee = int.parse(value.trim());
                   setState(() {});
                 },
                 textAlign: TextAlign.center,
