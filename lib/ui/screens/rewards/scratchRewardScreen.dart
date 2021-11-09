@@ -105,7 +105,7 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                         threshold: 50,
                         accuracy: ScratchAccuracy.low,
                         color: Theme.of(context).primaryColor,
-                        image: Image.asset(UiUtils.getImagePath("doodle.png")),
+                        image: Image.asset(UiUtils.getImagePath("doodle-new.png")),
                         child: UnlockedRewardContent(
                           reward: widget.reward,
                           increaseFont: true,
