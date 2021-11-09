@@ -58,7 +58,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         child: reward.status == "2"
             ? UnlockedRewardContent(

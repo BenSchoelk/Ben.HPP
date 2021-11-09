@@ -15,7 +15,7 @@ class UnlockedRewardContent extends StatelessWidget {
     return Stack(
       children: [
         Opacity(
-          opacity: 0.825,
+          opacity: 0.85,
           child: SvgPicture.asset(
             UiUtils.getImagePath("celebration.svg"),
             color: Theme.of(context).backgroundColor,

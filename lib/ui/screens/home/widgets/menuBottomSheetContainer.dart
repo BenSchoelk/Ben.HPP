@@ -61,7 +61,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pushNamed(Routes.rewards);
               },
               title: rewardsLbl,
-              leadingIcon: "badges.svg",
+              leadingIcon: "rewards.svg",
             ),
 
             context.read<SystemConfigCubit>().getLanguageMode() == "1"
