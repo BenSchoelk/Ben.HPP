@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-//TODO : add reason for ad load failure and shows to user
 abstract class RewardedAdState {}
 
 class RewardedAdInitial extends RewardedAdState {}

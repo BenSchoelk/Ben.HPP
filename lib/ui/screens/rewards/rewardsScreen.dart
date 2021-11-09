@@ -17,7 +17,6 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
-//TODO : Add localization in rewards screen
 class RewardsScreen extends StatefulWidget {
   RewardsScreen({
     Key? key,
@@ -98,7 +97,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                     bloc: context.read<BadgesCubit>(),
                     builder: (context, state) {
                       return Text(
-                        "${context.read<BadgesCubit>().getRewardedCoins()} coins",
+                        "${context.read<BadgesCubit>().getRewardedCoins()} ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!}",
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 20,
@@ -107,7 +106,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                     },
                   ),
                   Text(
-                    "Total Rewards Earned",
+                    AppLocalization.of(context)!.getTranslatedValues(totalRewardsEarnedKey)!,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
@@ -153,7 +152,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
               //ifthere is no rewards
               if (rewards.isEmpty) {
                 return SliverToBoxAdapter(
-                  child: Text("No rewards"),
+                  child: Text(AppLocalization.of(context)!.getTranslatedValues(noRewardsKey)!),
                 );
               }
 

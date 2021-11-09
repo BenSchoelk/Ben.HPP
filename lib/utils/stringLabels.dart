@@ -321,3 +321,7 @@ String correctAnswerToUnlockKey = "correctAnswerToUnlock";
 
 String getKey = "get";
 String coinsUnlockingByBadgeKey = "coinsUnlockingByBadge";
+String totalRewardsEarnedKey = "totalRewardsEarned"; //
+String byUnlockingKey = "byUnlocking";
+String scratchHereKey = "scratchHere";
+String noRewardsKey = "noRewards";

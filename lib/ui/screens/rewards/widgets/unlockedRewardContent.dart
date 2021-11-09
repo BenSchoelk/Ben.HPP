@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
-//TODO : Add localization in rewards
 class UnlockedRewardContent extends StatelessWidget {
   final Badge reward;
   final bool increaseFont;
@@ -29,7 +30,7 @@ class UnlockedRewardContent extends StatelessWidget {
               Material(
                 type: MaterialType.transparency,
                 child: Text(
-                  "${reward.badgeReward} coins",
+                  "${reward.badgeReward} ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).backgroundColor,
@@ -40,7 +41,7 @@ class UnlockedRewardContent extends StatelessWidget {
               Material(
                 type: MaterialType.transparency,
                 child: Text(
-                  "By unlocking ${reward.badgeLabel}",
+                  "${AppLocalization.of(context)!.getTranslatedValues(byUnlockingKey)!} ${reward.badgeLabel}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).backgroundColor,

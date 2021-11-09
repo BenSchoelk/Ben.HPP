@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/badges/badge.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/ui/screens/rewards/widgets/unlockedRewardContent.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:scratcher/widgets.dart';
 
@@ -17,7 +19,6 @@ class ScratchRewardScreen extends StatefulWidget {
   _ScratchRewardScreenState createState() => _ScratchRewardScreenState();
 }
 
-//TODO : Add localization in rewards
 class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
   GlobalKey<ScratcherState> scratcherKey = GlobalKey<ScratcherState>();
   bool _showScratchHere = true;
@@ -124,7 +125,7 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                       child: Container(
                         child: Center(
                           child: Text(
-                            "Scratch here!",
+                            AppLocalization.of(context)!.getTranslatedValues(scratchHereKey)!,
                             style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 18.0),
                           ),
                         ),
