@@ -26,8 +26,6 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/auth/authRepository.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 import 'package:flutterquiz/features/auth/cubits/referAndEarnCubit.dart';
-import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
-import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
@@ -108,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void _initLocalNotification() async {
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: (int id, String? title, String? body, String? payLoad) {
-      //
+      //TODO :test for ios version <= 9
+      print("For ios version <= 9 notification will be shown here");
       return Future.value();
     });
 
@@ -117,6 +116,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       iOS: initializationSettingsIOS,
     );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: _onTapLocalNotification);
+    _requestPermissionsForIos();
+  }
+
+  Future<void> _requestPermissionsForIos() async {
+    if (Platform.isIOS) {
+      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions();
+    }
   }
 
   void setQuizMenu() {
@@ -858,7 +864,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: BlocConsumer<UserDetailsCubit, UserDetailsState>(
         listener: (context, state) {
           if (state is UserDetailsFetchSuccess) {
-            //TODO : call for fetch bookmark and badges
             UiUtils.fetchBookmarkAndBadges(context: context, userId: state.userProfile.userId!);
           }
         },

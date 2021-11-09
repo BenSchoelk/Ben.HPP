@@ -63,6 +63,7 @@ class AuthRepository {
           );
         } else {
           print("Update fcm id");
+          await _authRemoteDataSource.updateFcmId(firebaseId: user.uid, userLoggingOut: false);
         }
       } else {
         if (isNewUser) {
@@ -76,7 +77,7 @@ class AuthRepository {
           );
         } else {
           print("Update fcm id");
-          //await _authRemoteDataSource.updateFcmId(uid: user., userLoggingOut: false);
+          await _authRemoteDataSource.updateFcmId(firebaseId: user.uid, userLoggingOut: false);
         }
       }
       //getFcm id update token

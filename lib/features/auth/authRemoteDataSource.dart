@@ -78,10 +78,11 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<void> updateFcmId({required String uid, required bool userLoggingOut}) async {
+  Future<void> updateFcmId({required String firebaseId, required bool userLoggingOut}) async {
     try {
       final String fcmId = userLoggingOut ? "" : await fcm.FirebaseMessaging.instance.getToken() ?? "";
-      final body = {accessValueKey: accessValue, fcmIdKey: fcmId, userIdKey: uid};
+      final body = {accessValueKey: accessValue, fcmIdKey: fcmId, firebaseIdKey: firebaseId};
+      print(body);
       final response = await http.post(Uri.parse(updateFcmIdUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
