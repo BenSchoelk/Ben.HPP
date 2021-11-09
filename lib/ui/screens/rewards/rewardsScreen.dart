@@ -69,7 +69,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
             : Stack(
                 children: [
                   Image.asset(
-                    UiUtils.getImagePath("doodle-new.png"),
+                    UiUtils.getImagePath("scratchCardCover.png"),
                     fit: BoxFit.cover,
                   ),
                 ],
