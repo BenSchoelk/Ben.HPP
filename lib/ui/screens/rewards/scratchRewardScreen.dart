@@ -57,7 +57,7 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
         return Future.value(_goBack());
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.45),
+        backgroundColor: Theme.of(context).backgroundColor.withOpacity(0.45),
         body: Stack(
           children: [
             Align(
@@ -69,7 +69,7 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                 ),
                 child: IconButton(
                   iconSize: 30,
-                  color: Theme.of(context).backgroundColor,
+                  color: Theme.of(context).colorScheme.secondary,
                   onPressed: () {
                     if (_goBack()) {
                       Navigator.of(context).pop();
@@ -87,7 +87,7 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                   borderRadius: BorderRadius.circular(15.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     child: Scratcher(
                         onChange: (value) {

@@ -23,34 +23,37 @@ class UnlockedRewardContent extends StatelessWidget {
           ),
         ),
         Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Material(
-                type: MaterialType.transparency,
-                child: Text(
-                  "${reward.badgeReward} ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).backgroundColor,
-                    fontSize: increaseFont ? 29 : 25,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    "${reward.badgeReward} ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).backgroundColor,
+                      fontSize: increaseFont ? 29 : 25,
+                    ),
                   ),
                 ),
-              ),
-              Material(
-                type: MaterialType.transparency,
-                child: Text(
-                  "${AppLocalization.of(context)!.getTranslatedValues(byUnlockingKey)!} ${reward.badgeLabel}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).backgroundColor,
-                    fontSize: increaseFont ? 18 : 14,
-                    height: 1.25,
+                Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    "${AppLocalization.of(context)!.getTranslatedValues(byUnlockingKey)!} ${reward.badgeLabel}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).backgroundColor,
+                      fontSize: increaseFont ? 18 : 14,
+                      height: 1.25,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

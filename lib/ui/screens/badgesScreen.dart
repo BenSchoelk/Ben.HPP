@@ -170,13 +170,13 @@ class _BadgesScreenState extends State<BadgesScreen> {
           alignment: Alignment.topCenter,
           child: Padding(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * (0.075),
+              top: constraints.maxHeight * (0.085),
             ),
             child: CustomPaint(
               painter: HexagonCustomPainter(color: badge.status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
               child: Container(
                 width: constraints.maxWidth * (0.875),
-                height: constraints.maxHeight * (0.65),
+                height: constraints.maxHeight * (0.6), //65
               ),
             ),
           ),
@@ -185,7 +185,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
           alignment: Alignment.topCenter,
           child: Padding(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * (0.125), //outer hexagon top padding + differnce of inner and outer height
+              top: constraints.maxHeight * (0.135), //outer hexagon top padding + differnce of inner and outer height
             ),
             child: CustomPaint(
               painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
@@ -195,7 +195,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                   child: CachedNetworkImage(imageUrl: badge.badgeIcon),
                 ),
                 width: constraints.maxWidth * (0.725),
-                height: constraints.maxHeight * (0.55),
+                height: constraints.maxHeight * (0.5), //55
               ),
             ),
           ),
@@ -267,7 +267,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     SizedBox(
-                                      height: constraints.maxHeight * (0.425),
+                                      height: constraints.maxHeight * (0.4),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
