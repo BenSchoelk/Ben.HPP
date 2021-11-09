@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
@@ -207,6 +209,22 @@ class UiUtils {
   static void vibrate() {
     HapticFeedback.heavyImpact();
     HapticFeedback.vibrate();
+  }
+
+  static void fetchBookmarkAndBadges({required BuildContext context, required String userId}) {
+    //fetch bookmark
+    if (context.read<BookmarkCubit>().state is! BookmarkFetchSuccess) {
+      print("Fetch bookmark details");
+      context.read<BookmarkCubit>().getBookmark(userId);
+      //delete any unused gruop battle room which is created by this user
+      BattleRoomRepository().deleteUnusedBattleRoom(userId);
+    }
+
+    if (context.read<BadgesCubit>().state is! BadgesFetchSuccess) {
+      print("Fetch badges details");
+      //get badges for given user
+      context.read<BadgesCubit>().getBadges(userId: userId);
+    }
   }
 
   static int determineBattleCorrectAnswerPoints(double animationControllerValue) {

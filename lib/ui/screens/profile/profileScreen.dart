@@ -200,7 +200,6 @@ class ProfileScreen extends StatelessWidget {
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).pushNamed(Routes.selectProfile, arguments: false);
-                                        //showDialog(barrierDismissible: false, context: context, builder: (_) => ChooseProfileDialog(id: context.read<UserDetailsCubit>().getUserId(), bloc: context.read<UploadProfileCubit>()));
                                       },
                                       child: Container(
                                         alignment: Alignment.center,

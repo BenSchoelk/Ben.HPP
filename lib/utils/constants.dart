@@ -85,6 +85,7 @@ final String updateBookmarkUrl = "${baseUrl}set_bookmark";
 final String getNotificationUrl = "${baseUrl}get_notifications";
 
 final String getUserDetailsByIdUrl = "${baseUrl}get_user_by_id";
+
 final String uploadProfileUrl = "${baseUrl}upload_profile_image";
 final String updateUserCoinsAndScoreUrl = "${baseUrl}set_user_coin_score";
 final String updateProfileUrl = "${baseUrl}update_profile";
@@ -118,7 +119,7 @@ final String getGuessTheWordQuestionUrl = "${baseUrl}get_guess_the_word";
 final String getAppSettingsUrl = "${baseUrl}get_settings";
 final String reportQuestionUrl = "${baseUrl}report_question";
 final String getQuestionsByCategoryOrSubcategory = "${baseUrl}get_questions";
-final String updateFcmId = "${baseUrl}update_fcm_id";
+final String updateFcmIdUrl = "${baseUrl}update_fcm_id";
 final String getAudioQuestionUrl = "${baseUrl}get_audio_questions"; //
 final String getUserBadgesUrl = "${baseUrl}get_user_badges";
 final String setUserBadgesUrl = "${baseUrl}set_badges";

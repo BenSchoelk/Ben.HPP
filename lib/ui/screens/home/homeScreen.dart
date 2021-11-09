@@ -45,8 +45,9 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  final bool isNewUser;
-  HomeScreen({Key? key, required this.isNewUser}) : super(key: key);
+  HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -54,9 +55,7 @@ class HomeScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (context) => BlocProvider<ReferAndEarnCubit>(
               create: (_) => ReferAndEarnCubit(AuthRepository()),
-              child: HomeScreen(
-                isNewUser: routeSettings.arguments as bool,
-              ),
+              child: HomeScreen(),
             ));
   }
 }
@@ -107,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _initLocalNotification() async {
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: (int id, String? title, String? body, String? payLoad) {
       //
       return Future.value();
@@ -171,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     FirebaseMessaging.onBackgroundMessage(UiUtils.onBackgroundMessage);
     //handle foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Notification arrvied");
       var data = message.data;
 
       var title = data['title'].toString();
@@ -225,12 +225,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     var bigPicturePath = await _downloadAndSaveFile(image, 'bigPicture');
     var bigPictureStyleInformation = BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath), hideExpandedLargeIcon: true, contentTitle: title, htmlFormatContentTitle: true, summaryText: msg, htmlFormatSummaryText: true);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'com.wrteam.flutterquiz', //channel id
-      'flutterquiz', //channel name
-      'flutterquiz', //channel description
-      largeIcon: FilePathAndroidBitmap(largeIconPath),
-      styleInformation: bigPictureStyleInformation,
-    );
+        'com.wrteam.flutterquiz', //channel id
+        'flutterquiz', //channel name
+        'flutterquiz', //channel description
+        largeIcon: FilePathAndroidBitmap(largeIconPath),
+        styleInformation: bigPictureStyleInformation,
+        icon: "app_icon");
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
   }
@@ -248,13 +248,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> generateSimpleNotification(String title, String body, String payloads) async {
     print("Trigger local notification");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'com.wrteam.flutterquiz', //channel id
-      'flutterquiz', //channel name
-      'flutterquiz', //channel description
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
+        'com.wrteam.flutterquiz', //channel id
+        'flutterquiz', //channel name
+        'flutterquiz', //channel description
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker',
+        icon: "app_icon");
     const IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
@@ -483,7 +483,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.selfChallenge);
+        FirebaseMessaging.instance.getToken().then((value) => print(value));
+        //Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
         alignment: Alignment.topCenter,
@@ -857,17 +858,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: BlocConsumer<UserDetailsCubit, UserDetailsState>(
         listener: (context, state) {
           if (state is UserDetailsFetchSuccess) {
-            //fetch bookmark
-            if (context.read<BookmarkCubit>().state is! BookmarkFetchSuccess) {
-              context.read<BookmarkCubit>().getBookmark(state.userProfile.userId);
-              //delete any unused gruop battle room which is created by this user
-              BattleRoomRepository().deleteUnusedBattleRoom(state.userProfile.userId!);
-            }
-
-            if (context.read<BadgesCubit>().state is! BadgesFetchSuccess) {
-              //get badges for given user
-              context.read<BadgesCubit>().getBadges(userId: state.userProfile.userId!);
-            }
+            //TODO : call for fetch bookmark and badges
+            UiUtils.fetchBookmarkAndBadges(context: context, userId: state.userProfile.userId!);
           }
         },
         bloc: context.read<UserDetailsCubit>(),

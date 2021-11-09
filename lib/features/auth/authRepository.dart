@@ -61,6 +61,8 @@ class AuthRepository {
             type: getAuthTypeString(authProvider),
             profile: user.photoURL ?? "",
           );
+        } else {
+          print("Update fcm id");
         }
       } else {
         if (isNewUser) {
@@ -72,6 +74,9 @@ class AuthRepository {
             type: getAuthTypeString(authProvider),
             profile: user.photoURL ?? "",
           );
+        } else {
+          print("Update fcm id");
+          //await _authRemoteDataSource.updateFcmId(uid: user., userLoggingOut: false);
         }
       }
       //getFcm id update token

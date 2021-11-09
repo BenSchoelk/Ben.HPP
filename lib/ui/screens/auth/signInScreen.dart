@@ -188,6 +188,7 @@ class SignInScreenState extends State<SignInScreen> {
             if (state.isNewUser) {
               context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
               //navigate to select profile screen
+
               Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
             } else {
               //get user detials of signed in user
@@ -263,22 +264,20 @@ class SignInScreenState extends State<SignInScreen> {
               showModalBottomSheet(
                   isScrollControlled: true,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                   ),
                   context: context,
                   builder: (context) => Padding(
                       padding: MediaQuery.of(context).viewInsets,
-                      child:Container(
-                      decoration: BoxDecoration(
-                          gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter),
-                          color: Theme.of(context).backgroundColor,
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.4)),
-                      child: Form(
-                        key: _formKeyDialog,
-                        child: Column(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter),
+                            color: Theme.of(context).backgroundColor,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.4)),
+                        child: Form(
+                          key: _formKeyDialog,
+                          child: Column(
                             children: [
                               Text(
                                 AppLocalization.of(context)!.getTranslatedValues('resetPwdLbl')!,
@@ -291,9 +290,7 @@ class SignInScreenState extends State<SignInScreen> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                                   )),
-                              Padding(
-                                  padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .08, end: MediaQuery.of(context).size.width * .08, top: 20),
-                                  child: showEmailForForgotPwd()),
+                              Padding(padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .08, end: MediaQuery.of(context).size.width * .08, top: 20), child: showEmailForForgotPwd()),
                               SizedBox(
                                 height: 20,
                               ),

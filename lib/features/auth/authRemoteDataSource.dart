@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart' as fcm;
@@ -68,6 +69,25 @@ class AuthRemoteDataSource {
       }
 
       return true;
+    } on SocketException catch (_) {
+      throw AuthException(errorMessageCode: noInternetCode);
+    } on AuthException catch (e) {
+      throw AuthException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw AuthException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
+
+  Future<void> updateFcmId({required String uid, required bool userLoggingOut}) async {
+    try {
+      final String fcmId = userLoggingOut ? "" : await fcm.FirebaseMessaging.instance.getToken() ?? "";
+      final body = {accessValueKey: accessValue, fcmIdKey: fcmId, userIdKey: uid};
+      final response = await http.post(Uri.parse(updateFcmIdUrl), body: body, headers: ApiUtils.getHeaders());
+      final responseJson = jsonDecode(response.body);
+
+      if (responseJson['error']) {
+        throw AuthException(errorMessageCode: responseJson['message']);
+      }
     } on SocketException catch (_) {
       throw AuthException(errorMessageCode: noInternetCode);
     } on AuthException catch (e) {

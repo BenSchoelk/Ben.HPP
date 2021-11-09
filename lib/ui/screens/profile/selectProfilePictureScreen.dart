@@ -445,7 +445,13 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
       body: Stack(
         children: <Widget>[
           PageBackgroundGradientContainer(),
-          BlocBuilder<UserDetailsCubit, UserDetailsState>(
+          BlocConsumer<UserDetailsCubit, UserDetailsState>(
+            listener: (context, state) {
+              //when user register first time then set this listener
+              if (state is UserDetailsFetchSuccess && widget.updateProfileAndName) {
+                UiUtils.fetchBookmarkAndBadges(context: context, userId: state.userProfile.userId!);
+              }
+            },
             bloc: context.read<UserDetailsCubit>(),
             builder: (context, state) {
               if (state is UserDetailsFetchInProgress || state is UserDetailsInitial) {
@@ -456,7 +462,8 @@ class _SelectProfilePictureScreen extends State<SelectProfilePictureScreen> {
                 );
               }
               if (state is UserDetailsFetchFailure) {
-                return ErrorContainer(showBackButton: true,
+                return ErrorContainer(
+                  showBackButton: true,
                   errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                   onTapRetry: () {
                     context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
