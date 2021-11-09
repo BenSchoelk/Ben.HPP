@@ -40,6 +40,7 @@ class _RoomDialogState extends State<RoomDialog> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
+      context.read<RewardedAdCubit>().createRewardedAd(context, onFbRewardAdCompleted: _addCoinsAfterRewardAd);
       //to get categories
       if (isCategoryEnabled()) {
         context.read<QuizCategoryCubit>().getQuizCategory(
@@ -48,6 +49,20 @@ class _RoomDialogState extends State<RoomDialog> {
             );
       }
     });
+  }
+
+  void _addCoinsAfterRewardAd() {
+    //ad rewards here
+    //once user sees ad then add coins to user wallet
+    context.read<UserDetailsCubit>().updateCoins(
+          addCoin: true,
+          coins: lifeLineDeductCoins,
+        );
+    context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+          context.read<UserDetailsCubit>().getUserId(),
+          lifeLineDeductCoins,
+          true,
+        );
   }
 
   void showAdDialog() {
@@ -59,21 +74,7 @@ class _RoomDialogState extends State<RoomDialog> {
         context: context,
         builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
               //showAd
-              context.read<RewardedAdCubit>().showAd(
-                  context: context,
-                  onAdDismissedCallback: () {
-                    //ad rewards here
-                    //once user sees app then add coins to user wallet
-                    context.read<UserDetailsCubit>().updateCoins(
-                          addCoin: true,
-                          coins: lifeLineDeductCoins,
-                        );
-                    context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                          context.read<UserDetailsCubit>().getUserId(),
-                          lifeLineDeductCoins,
-                          true,
-                        );
-                  });
+              context.read<RewardedAdCubit>().showAd(context: context, onAdDismissedCallback: _addCoinsAfterRewardAd);
             }));
   }
 

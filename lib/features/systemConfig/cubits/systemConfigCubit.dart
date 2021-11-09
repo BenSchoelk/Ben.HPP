@@ -164,28 +164,41 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     return "";
   }
 
-  String facebookPlacementId() {
+  String faceBookBannerId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidFaceBookPlacementId!;
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbBannerId!}";
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosFaceBookPlacementId!;
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbBannerId!}";
       }
     }
     return "";
   }
 
-  String faceBookBannerId() {
-    return "$fbBannerAndInterstitialAdPrefix${facebookPlacementId()}";
-  }
-
   String faceBookInterstitialAdId() {
-    return "$fbBannerAndInterstitialAdPrefix${facebookPlacementId()}";
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbInterstitialId!}";
+      }
+      if (Platform.isIOS) {
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbInterstitialId!}";
+      }
+    }
+
+    return "";
   }
 
   String faceBookRewardedAdId() {
-    return "$fbRewardedAdPrefix${facebookPlacementId()}";
+    if (state is SystemConfigFetchSuccess) {
+      if (Platform.isAndroid) {
+        return "$fbRewardedAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbRewardedId!}";
+      }
+      if (Platform.isIOS) {
+        return "$fbRewardedAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbRewardedId!}";
+      }
+    }
+    return "";
   }
 
   String googleBannerId() {

@@ -31,23 +31,25 @@ class SystemConfigModel {
   String? androidBannerId;
   String? androidInterstitialId;
   String? androidRewardedId;
-  String? androidFaceBookPlacementId;
   String? iosBannerId;
   String? iosInterstitialId;
   String? iosRewardedId;
-  String? iosFaceBookPlacementId;
+  String? androidFbBannerId;
+  String? androidFbInterstitialId;
+  String? androidFbRewardedId;
+  String? iosFbBannerId;
+  String? iosFbInterstitialId;
+  String? iosFbRewardedId;
 
   SystemConfigModel({
     this.adsEnabled,
     this.adsType,
     this.androidBannerId,
-    this.androidFaceBookPlacementId,
     this.androidInterstitialId,
     this.androidRewardedId,
     this.iosBannerId,
     this.iosInterstitialId,
     this.iosRewardedId,
-    this.iosFaceBookPlacementId,
     this.systemTimezone,
     this.systemTimezoneGmt,
     this.appLink,
@@ -75,6 +77,12 @@ class SystemConfigModel {
     this.audioQuestionMode,
     this.funNLearnMode,
     this.guessTheWordMode,
+    this.androidFbBannerId,
+    this.androidFbInterstitialId,
+    this.androidFbRewardedId,
+    this.iosFbBannerId,
+    this.iosFbInterstitialId,
+    this.iosFbRewardedId,
   });
 
   SystemConfigModel.fromJson(Map<String, dynamic> json) {
@@ -110,10 +118,15 @@ class SystemConfigModel {
     androidBannerId = json['android_banner_id'];
     androidInterstitialId = json['android_interstitial_id'];
     androidRewardedId = json['android_rewarded_id'];
-    androidFaceBookPlacementId = json['android_fb_placement_id'];
     iosBannerId = json['ios_banner_id'];
     iosInterstitialId = json['ios_interstitial_id'];
     iosRewardedId = json['ios_rewarded_id'];
-    iosFaceBookPlacementId = json['ios_fb_placement_id'];
+    //
+    androidFbBannerId = json['android_fb_banner_id'];
+    androidFbInterstitialId = json['android_fb_interstitial_id'];
+    androidFbRewardedId = json['android_fb_rewarded_id'];
+    iosFbBannerId = json['ios_fb_banner_id'];
+    iosFbInterstitialId = json['ios_fb_interstitial_id'];
+    iosFbRewardedId = json['ios_fb_rewarded_id'];
   }
 }

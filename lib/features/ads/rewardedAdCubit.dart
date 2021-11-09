@@ -37,7 +37,8 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
     );
   }
 
-  void _createFacebookRewardedAd(BuildContext context) {
+  Future<void> _createFacebookRewardedAd(BuildContext context, {required Function onFbRewardAdCompleted}) async {
+    await FacebookRewardedVideoAd.destroyRewardedVideoAd();
     FacebookRewardedVideoAd.loadRewardedVideoAd(
       placementId: context.read<SystemConfigCubit>().faceBookRewardedAdId(),
       listener: (result, value) {
@@ -47,6 +48,7 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
         }
 
         if (result == RewardedVideoAdResult.ERROR) {
+          print(value);
           emit(RewardedAdFailure());
         }
         //if (result == RewardedVideoAdResult.VIDEO_COMPLETE)
@@ -56,20 +58,21 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
         if (result == RewardedVideoAdResult.VIDEO_CLOSED && (value == true || value["invalidated"] == true)) {
           //ad callback here to
           print("Add coins here");
-          createRewardedAd(context);
+          onFbRewardAdCompleted();
+          //createRewardedAd(context);
         }
       },
     );
   }
 
-  void createRewardedAd(BuildContext context) {
+  void createRewardedAd(BuildContext context, {required Function onFbRewardAdCompleted}) {
     emit(RewardedAdLoadInProgress());
 
     if (context.read<SystemConfigCubit>().isAdsEnable()) {
       if (context.read<SystemConfigCubit>().isGoogleAdEnable()) {
         _createGoogleRewardedAd(context);
       } else {
-        _createFacebookRewardedAd(context);
+        _createFacebookRewardedAd(context, onFbRewardAdCompleted: onFbRewardAdCompleted);
       }
     }
   }
@@ -84,14 +87,14 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
               onAdDismissedCallback();
-              createRewardedAd(context);
+              createRewardedAd(context, onFbRewardAdCompleted: () {});
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
               print('$ad onAdFailedToShowFullScreenContent: $error');
               ad.dispose();
               //need to show this reason to user
               emit(RewardedAdFailure());
-              createRewardedAd(context);
+              createRewardedAd(context, onFbRewardAdCompleted: () {});
             },
           );
           rewardedAd?.show(onUserEarnedReward: (_, __) => {});
@@ -100,7 +103,8 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
           FacebookRewardedVideoAd.showRewardedVideoAd();
         }
       } else if (state is RewardedAdFailure) {
-        createRewardedAd(context);
+        //create reward ad if ad is not loaded successfully
+        createRewardedAd(context, onFbRewardAdCompleted: onAdDismissedCallback);
       }
     }
   }

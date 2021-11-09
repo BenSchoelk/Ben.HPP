@@ -152,9 +152,15 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    //init reward ad
+    Future.delayed(Duration.zero, () {
+      context.read<RewardedAdCubit>().createRewardedAd(context, onFbRewardAdCompleted: _addCoinsAfterRewardAd);
+    });
+    //init animations
     initializeAnimation();
     animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    //
     _getQuestions();
   }
 
@@ -395,6 +401,20 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     );
   }
 
+  void _addCoinsAfterRewardAd() {
+    //once user sees app then add coins to user wallet
+    context.read<UserDetailsCubit>().updateCoins(
+          addCoin: true,
+          coins: lifeLineDeductCoins,
+        );
+    context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+          context.read<UserDetailsCubit>().getUserId(),
+          lifeLineDeductCoins,
+          true,
+        );
+    timerAnimationController.forward(from: timerAnimationController.value);
+  }
+
   void showAdDialog() {
     if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
       UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
@@ -407,21 +427,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         builder: (_) => WatchRewardAdDialog(
               onTapYesButton: () {
                 //on tap of yes button show ad
-                context.read<RewardedAdCubit>().showAd(
-                    context: context,
-                    onAdDismissedCallback: () {
-                      //once user sees app then add coins to user wallet
-                      context.read<UserDetailsCubit>().updateCoins(
-                            addCoin: true,
-                            coins: lifeLineDeductCoins,
-                          );
-                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                            context.read<UserDetailsCubit>().getUserId(),
-                            lifeLineDeductCoins,
-                            true,
-                          );
-                      timerAnimationController.forward(from: timerAnimationController.value);
-                    });
+                context.read<RewardedAdCubit>().showAd(context: context, onAdDismissedCallback: _addCoinsAfterRewardAd);
               },
               onTapNoButton: () {
                 //pass true to start timer

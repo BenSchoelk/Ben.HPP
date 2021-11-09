@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
-import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
@@ -102,7 +101,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void createAds() {
     Future.delayed(Duration.zero, () {
       context.read<InterstitialAdCubit>().createInterstitialAd(context);
-      context.read<RewardedAdCubit>().createRewardedAd(context);
+
+      //context.read<RewardedAdCubit>().createRewardedAd(context);
     });
   }
 

@@ -39,7 +39,8 @@ class InterstitialAdCubit extends Cubit<InterstitialAdState> {
         ));
   }
 
-  void _createFacebookInterstitialAd(BuildContext context) {
+  void _createFacebookInterstitialAd(BuildContext context) async {
+    await FacebookInterstitialAd.destroyInterstitialAd();
     FacebookInterstitialAd.loadInterstitialAd(
         placementId: context.read<SystemConfigCubit>().faceBookInterstitialAdId(),
         listener: (result, value) {
@@ -54,7 +55,6 @@ class InterstitialAdCubit extends Cubit<InterstitialAdState> {
           }
           //if ad dismissed and becomes invalidate
           if (result == InterstitialAdResult.DISMISSED && value["invalidated"] == true) {
-            print("Add callbacks here for updating coins");
             createInterstitialAd(context);
           }
         });
@@ -92,7 +92,6 @@ class InterstitialAdCubit extends Cubit<InterstitialAdState> {
           );
           interstitialAd?.show();
         } else {
-          print("Show facebook ad");
           //show facebook interstitial ad
           FacebookInterstitialAd.showInterstitialAd();
         }

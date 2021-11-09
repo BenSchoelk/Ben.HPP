@@ -36,6 +36,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      context.read<RewardedAdCubit>().createRewardedAd(context, onFbRewardAdCompleted: _addCoinsAfterRewardAd);
       if (context.read<SystemConfigCubit>().getIsCategoryEnableForBattle() == "1") {
         context.read<QuizCategoryCubit>().getQuizCategory(
               languageId: UiUtils.getCurrentQuestionLanguageId(context),
@@ -212,6 +213,20 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
     );
   }
 
+  void _addCoinsAfterRewardAd() {
+    //ad rewards here
+    //once user sees ad then add coins to user wallet
+    context.read<UserDetailsCubit>().updateCoins(
+          addCoin: true,
+          coins: lifeLineDeductCoins,
+        );
+    context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+          context.read<UserDetailsCubit>().getUserId(),
+          lifeLineDeductCoins,
+          true,
+        );
+  }
+
   Widget letsGoButton(BoxConstraints boxConstraints) {
     UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
     return Container(
@@ -237,21 +252,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
                 context: context,
                 builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
                       //showAd
-                      context.read<RewardedAdCubit>().showAd(
-                          context: context,
-                          onAdDismissedCallback: () {
-                            //ad rewards here
-                            //once user sees ad then add coins to user wallet
-                            context.read<UserDetailsCubit>().updateCoins(
-                                  addCoin: true,
-                                  coins: lifeLineDeductCoins,
-                                );
-                            context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                                  context.read<UserDetailsCubit>().getUserId(),
-                                  lifeLineDeductCoins,
-                                  true,
-                                );
-                          });
+                      context.read<RewardedAdCubit>().showAd(context: context, onAdDismissedCallback: _addCoinsAfterRewardAd);
                     }));
             return;
           }
