@@ -54,6 +54,7 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
+//TODO : update to production url
 final String databaseUrl = 'http://flutterquiz.thewrteam.in'; // https://elitequiz.wrteam.in ;
 final String baseUrl = databaseUrl + '/Api/';
 //
@@ -192,8 +193,6 @@ final List<String> predefinedMessages = [
 ];
 
 //constants for badges and rewards
-final int guessTheWordQuestionMinimumTimeForBadge = 25;
-final int funNLearnQuestionMinimumTimeForBadge = 8;
 final int minimumQuestionsForBadges = 5;
 
 //
