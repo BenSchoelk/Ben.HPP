@@ -103,6 +103,8 @@ class AuthRepository {
   }
 
   Future<void> signOut(AuthProvider? authProvider) async {
+    //remove fcm token when user logout
+    _authRemoteDataSource.updateFcmId(firebaseId: _authLocalDataSource.getUserFirebaseId()!, userLoggingOut: true);
     _authRemoteDataSource.signOut(authProvider);
     setLocalAuthDetails(authStatus: false, authType: "", jwtToken: "", firebaseId: "", isNewUser: false);
   }
