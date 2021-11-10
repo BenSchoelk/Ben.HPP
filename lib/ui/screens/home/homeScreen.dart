@@ -489,8 +489,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        FirebaseMessaging.instance.getToken().then((value) => print(value));
-        //Navigator.of(context).pushNamed(Routes.selfChallenge);
+        Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
         alignment: Alignment.topCenter,

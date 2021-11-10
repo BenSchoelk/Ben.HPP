@@ -383,7 +383,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   Widget _buildLifelineContainer(VoidCallback onTap, String lifelineTitle, String lifelineIcon) {
     return GestureDetector(
-      onTap: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2 ? () {} : onTap,
+      onTap: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2
+          ? () {
+              UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
+            }
+          : onTap,
       child: Container(
           decoration: BoxDecoration(
               color: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2 ? Theme.of(context).backgroundColor.withOpacity(0.7) : Theme.of(context).backgroundColor,

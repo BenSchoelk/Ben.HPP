@@ -166,6 +166,7 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    textSpan = TextSpan(text: widget.answerOption.title, style: TextStyle(color: Theme.of(context).backgroundColor, height: 1.0, fontSize: 17.0));
     return GestureDetector(
       onTapCancel: () {
         animationController.reverse();
