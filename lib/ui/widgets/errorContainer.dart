@@ -12,7 +12,7 @@ class ErrorContainer extends StatelessWidget {
   final bool showErrorImage;
   final double topMargin;
   final Color? errorMessageColor;
-  final bool ? showBackButton;
+  final bool? showBackButton;
   const ErrorContainer({Key? key, this.errorMessageColor, required this.errorMessage, required this.onTapRetry, required this.showErrorImage, this.topMargin = 0.1, this.showBackButton}) : super(key: key);
 
   @override
@@ -49,42 +49,47 @@ class ErrorContainer extends StatelessWidget {
           SizedBox(
             height: 25.0,
           ),
-          Platform.isIOS && showBackButton!?Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomRoundedButton(
-                widthPercentage: 0.375,
-                backgroundColor: Theme.of(context).backgroundColor,
-                buttonTitle: AppLocalization.of(context)!.getTranslatedValues(retryLbl)!,
-                radius: 5,
-                showBorder: false,
-                height: 40,
-                titleColor: Theme.of(context).colorScheme.secondary,
-                elevation: 5.0,
-                onTap: onTapRetry,
-              ),
-              CustomRoundedButton(
-                widthPercentage: 0.375,
-                backgroundColor: Theme.of(context).backgroundColor,
-                buttonTitle: "Back",
-                radius: 5,
-                showBorder: false,
-                height: 40,
-                titleColor: Theme.of(context).colorScheme.secondary,
-                elevation: 5.0,
-                onTap: (){Navigator.pop(context);},
-              ),
-            ],
-          ):  CustomRoundedButton(
-            widthPercentage: 0.375,
-            backgroundColor: Theme.of(context).backgroundColor,
-            buttonTitle: AppLocalization.of(context)!.getTranslatedValues(retryLbl)!,
-            radius: 5,
-            showBorder: false,
-            height: 40,
-            titleColor: Theme.of(context).colorScheme.secondary,
-            elevation: 5.0,
-            onTap: onTapRetry,
-          ),
+          Platform.isIOS && (showBackButton ?? true)
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomRoundedButton(
+                      widthPercentage: 0.375,
+                      backgroundColor: Theme.of(context).backgroundColor,
+                      buttonTitle: AppLocalization.of(context)!.getTranslatedValues(retryLbl)!,
+                      radius: 5,
+                      showBorder: false,
+                      height: 40,
+                      titleColor: Theme.of(context).colorScheme.secondary,
+                      elevation: 5.0,
+                      onTap: onTapRetry,
+                    ),
+                    CustomRoundedButton(
+                      widthPercentage: 0.375,
+                      backgroundColor: Theme.of(context).backgroundColor,
+                      buttonTitle: "Back",
+                      radius: 5,
+                      showBorder: false,
+                      height: 40,
+                      titleColor: Theme.of(context).colorScheme.secondary,
+                      elevation: 5.0,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                )
+              : CustomRoundedButton(
+                  widthPercentage: 0.375,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  buttonTitle: AppLocalization.of(context)!.getTranslatedValues(retryLbl)!,
+                  radius: 5,
+                  showBorder: false,
+                  height: 40,
+                  titleColor: Theme.of(context).colorScheme.secondary,
+                  elevation: 5.0,
+                  onTap: onTapRetry,
+                ),
         ],
       ),
     );
