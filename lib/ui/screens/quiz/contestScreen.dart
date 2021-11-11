@@ -51,7 +51,8 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
             appBar: AppBar(
                 backgroundColor: Theme.of(context).backgroundColor,
                 leading: CustomBackButton(
-                  iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+                  iconColor: Theme.of(context).primaryColor,
+                  isShowDialog: false,
                 ),
                 centerTitle: true,
                 title: Padding(
@@ -111,6 +112,7 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
   Widget past(Contest data) {
     return data.errorMessage.isNotEmpty
         ? ErrorContainer(
+            showBackButton: false,
             errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(data.errorMessage))!,
             errorMessageColor: Theme.of(context).primaryColor,
             onTapRetry: () {
@@ -139,6 +141,7 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
   Widget live(Contest data) {
     return data.errorMessage.isNotEmpty
         ? ErrorContainer(
+            showBackButton: false,
             errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(data.errorMessage))!,
             errorMessageColor: Theme.of(context).primaryColor,
             onTapRetry: () {
@@ -167,6 +170,7 @@ class _ContestScreen extends State<ContestScreen> with SingleTickerProviderState
   Widget future(Contest data) {
     return data.errorMessage.isNotEmpty
         ? ErrorContainer(
+            showBackButton: false,
             errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(data.errorMessage))!,
             errorMessageColor: Theme.of(context).primaryColor,
             onTapRetry: () {
