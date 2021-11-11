@@ -60,7 +60,7 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   String getLanguageMode() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.languageMode!;
+      return (state as SystemConfigFetchSuccess).systemConfigModel.languageMode;
     }
     return defaultQuestionLanguageId;
   }
@@ -83,7 +83,7 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     if (state is SystemConfigFetchSuccess) {
       return (state as SystemConfigFetchSuccess).systemConfigModel;
     }
-    return SystemConfigModel();
+    return SystemConfigModel.fromJson({});
   }
 
   String? getIsCategoryEnableForBattle() {
@@ -145,9 +145,9 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String getAppVersion() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.appVersionIos!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.appVersionIos;
       }
-      return (state as SystemConfigFetchSuccess).systemConfigModel.appVersion!;
+      return (state as SystemConfigFetchSuccess).systemConfigModel.appVersion;
     }
     return "1.0.0+1";
   }
@@ -155,10 +155,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String getAppUrl() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.appLink!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.appLink;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosAppLink!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosAppLink;
       }
     }
     return "";
@@ -167,10 +167,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String faceBookBannerId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbBannerId!}";
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbBannerId}";
       }
       if (Platform.isIOS) {
-        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbBannerId!}";
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbBannerId}";
       }
     }
     return "";
@@ -179,10 +179,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String faceBookInterstitialAdId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbInterstitialId!}";
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbInterstitialId}";
       }
       if (Platform.isIOS) {
-        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbInterstitialId!}";
+        return "$fbBannerAndInterstitialAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbInterstitialId}";
       }
     }
 
@@ -192,10 +192,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String faceBookRewardedAdId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return "$fbRewardedAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbRewardedId!}";
+        return "$fbRewardedAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.androidFbRewardedId}";
       }
       if (Platform.isIOS) {
-        return "$fbRewardedAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbRewardedId!}";
+        return "$fbRewardedAdPrefix${(state as SystemConfigFetchSuccess).systemConfigModel.iosFbRewardedId}";
       }
     }
     return "";
@@ -204,10 +204,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String googleBannerId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidBannerId!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidBannerId;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosBannerId!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosBannerId;
       }
     }
     return "";
@@ -216,10 +216,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String googleInterstitialAdId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidInterstitialId!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidInterstitialId;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosInterstitialId!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosInterstitialId;
       }
     }
     return "";
@@ -228,10 +228,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String googleRewardedAdId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidRewardedId!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.androidRewardedId;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosRewardedId!;
+        return (state as SystemConfigFetchSuccess).systemConfigModel.iosRewardedId;
       }
     }
     return "";
@@ -239,21 +239,21 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   bool isForceUpdateEnable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.forceUpdate! == "1";
+      return (state as SystemConfigFetchSuccess).systemConfigModel.forceUpdate == "1";
     }
     return false;
   }
 
   bool isAdsEnable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.adsEnabled! == "1";
+      return (state as SystemConfigFetchSuccess).systemConfigModel.adsEnabled == "1";
     }
     return false;
   }
 
   bool isGoogleAdEnable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.adsType! == "1";
+      return (state as SystemConfigFetchSuccess).systemConfigModel.adsType == "1";
     }
     return false;
   }

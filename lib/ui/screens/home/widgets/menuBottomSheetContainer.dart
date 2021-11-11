@@ -149,9 +149,9 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pop();
                 try {
                   if (Platform.isAndroid) {
-                    Share.share(appName + " \nhttps://play.google.com/store/apps/details?id=" + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText!);
+                    Share.share(appName + " \nhttps://play.google.com/store/apps/details?id=" + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText);
                   } else {
-                    Share.share(appName + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText!);
+                    Share.share(appName + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText);
                   }
                 } catch (e) {
                   UiUtils.setSnackbar(e.toString(), context, false);
