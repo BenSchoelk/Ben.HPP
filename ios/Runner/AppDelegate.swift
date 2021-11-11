@@ -15,13 +15,18 @@ import Photos
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
     GeneratedPluginRegistrant.register(with: self)
+      
+    NotificationCenter.default.addObserver(self, selector: #selector(alertPreventScreenCapture(notification:)), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
+      
+    NotificationCenter.default.addObserver(self, selector: #selector(hideScreen(notification:)), name: UIScreen.capturedDidChangeNotification, object: nil)
+      
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-    override func applicationWillEnterForeground(_ application: UIApplication) {
-        NotificationCenter.default.addObserver(self, selector: #selector(alertPreventScreenCapture(notification:)), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(hideScreen(notification:)), name: UIScreen.capturedDidChangeNotification, object: nil)
-    }
+//    override func applicationWillEnterForeground(_ application: UIApplication) {
+//        NotificationCenter.default.addObserver(self, selector: #selector(alertPreventScreenCapture(notification:)), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
+//
+//        NotificationCenter.default.addObserver(self, selector: #selector(hideScreen(notification:)), name: UIScreen.capturedDidChangeNotification, object: nil)
+//    }
     @objc private func hideScreen(notification:Notification) -> Void {
       configurePreventView()
       if UIScreen.main.isCaptured {
@@ -76,6 +81,7 @@ import Photos
     @objc private func alertPreventScreenCapture(notification:Notification) -> Void {
      // let preventCaptureAlert = UIAlertController(title: "caution", message: "📵 Can't record screen", preferredStyle: .alert)
       //preventCaptureAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self] _ in
+        sleep(2) //sleep until new screenshot added in photos otherwise it asks to delete previous one  and not current ss
         didTakeScreenshot()
 //      }))
 //      preventCaptureAlert.addAction(UIAlertAction(title: "no", style: .destructive, handler: { [self] _ in
