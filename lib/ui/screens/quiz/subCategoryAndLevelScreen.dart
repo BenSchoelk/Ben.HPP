@@ -18,6 +18,7 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class SubCategoryAndLevelScreen extends StatefulWidget {
@@ -312,7 +313,7 @@ class _SubcategoryContainerState extends State<SubcategoryContainer> with Single
                   ),
                 ),
                 Text(
-                  "Questions : ${widget.subcategory.noOfQue!}",
+                  "${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!} : ${widget.subcategory.noOfQue!}",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 18.0,

@@ -325,3 +325,4 @@ String totalRewardsEarnedKey = "totalRewardsEarned"; //
 String byUnlockingKey = "byUnlocking";
 String scratchHereKey = "scratchHere";
 String noRewardsKey = "noRewards";
+String questionsKey = "questions";
