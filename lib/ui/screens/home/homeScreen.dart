@@ -106,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void _initLocalNotification() async {
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: (int id, String? title, String? body, String? payLoad) {
-      //TODO :test for ios version <= 9
       print("For ios version <= 9 notification will be shown here");
       return Future.value();
     });

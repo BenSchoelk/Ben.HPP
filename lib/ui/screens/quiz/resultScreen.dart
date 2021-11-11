@@ -243,7 +243,7 @@ class _ResultScreenState extends State<ResultScreen> {
     });
   }
 
-  _earnBadges() {
+  void _earnBadges() {
     String userId = context.read<UserDetailsCubit>().getUserId();
     BadgesCubit badgesCubit = context.read<BadgesCubit>();
     if (widget.quizType == QuizTypes.battle) {
@@ -259,11 +259,16 @@ class _ResultScreenState extends State<ResultScreen> {
       //
       //if totalQuestion is less than minimum question then do not check for badges
       if (totalQuestions() < minimumQuestionsForBadges) {
-        return false;
+        return;
       }
 
       //funAndLearn is related to flashback
       if (badgesCubit.isBadgeLocked("flashback")) {
+        int funNLearnQuestionMinimumTimeForBadge = badgesCubit.getBadgeCounterByType("flashback");
+        //if badges not loaded some how
+        if (funNLearnQuestionMinimumTimeForBadge == -1) {
+          return;
+        }
         int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
         if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
           badgesCubit.setBadge(badgeType: "flashback", userId: userId);
@@ -278,7 +283,7 @@ class _ResultScreenState extends State<ResultScreen> {
       //if totalQuestion is less than minimum question then do not check for badges
 
       if (totalQuestions() < minimumQuestionsForBadges) {
-        return false;
+        return;
       }
 
       if (badgesCubit.isBadgeLocked("brainiac")) {
@@ -289,10 +294,17 @@ class _ResultScreenState extends State<ResultScreen> {
     } else if (widget.quizType == QuizTypes.guessTheWord) {
       //if totalQuestion is less than minimum question then do not check for badges
       if (totalQuestions() < minimumQuestionsForBadges) {
-        return false;
+        return;
       }
 
       if (badgesCubit.isBadgeLocked("super_sonic")) {
+        int guessTheWordQuestionMinimumTimeForBadge = badgesCubit.getBadgeCounterByType("super_sonic");
+
+        //if badges not loaded some how
+        if (guessTheWordQuestionMinimumTimeForBadge == -1) {
+          return;
+        }
+
         //if user has solved the quiz with in badgeEarnTime then they can earn badge
         int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
         if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {

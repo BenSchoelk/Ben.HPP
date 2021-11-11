@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 
-//TODO : decide how many coins shoud give to user once user sees ad successfully
 class WatchRewardAdDialog extends StatelessWidget {
   final Function onTapYesButton;
   final Function? onTapNoButton;

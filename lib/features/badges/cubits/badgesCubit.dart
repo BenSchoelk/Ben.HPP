@@ -85,6 +85,14 @@ class BadgesCubit extends Cubit<BadgesState> {
     return [];
   }
 
+  int getBadgeCounterByType(String type) {
+    if (state is BadgesFetchSuccess) {
+      final badges = (state as BadgesFetchSuccess).badges;
+      return int.parse(badges[badges.indexWhere((element) => element.type == type)].badgeCounter);
+    }
+    return -1;
+  }
+
   List<Badge> getRewards() {
     List<Badge> rewards = getAllBadges().where((element) => element.status != "0").toList();
     List<Badge> scratchedRewards = rewards.where((element) => element.status == "2").toList();
