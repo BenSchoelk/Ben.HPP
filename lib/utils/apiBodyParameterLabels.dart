@@ -34,3 +34,4 @@ final String userId1Key = 'user_id1';
 final String userId2Key = 'user_id2';
 final String winnerIdKey = 'winner_id';
 final String isDrawnKey = 'is_drawn';
+final String destroyRoomKey = "destroy_match";

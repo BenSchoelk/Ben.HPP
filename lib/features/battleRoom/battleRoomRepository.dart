@@ -85,7 +85,15 @@ class BattleRoomRepository {
       }
 
       //fetch questions for quiz
-      final questions = await getQuestions(categoryId: "", matchId: roomCode!, forMultiUser: false, roomCreater: false, roomDocumentId: querySnapshot.docs.first.id, languageId: defaultQuestionLanguageId);
+      final questions = await getQuestions(
+        categoryId: "",
+        matchId: roomCode!,
+        forMultiUser: false,
+        roomCreater: false,
+        roomDocumentId: querySnapshot.docs.first.id,
+        languageId: defaultQuestionLanguageId,
+        destroyBattleRoom: "0",
+      );
 
       //get roomRef
       DocumentReference documentReference = querySnapshot.docs.first.reference;
@@ -227,13 +235,13 @@ class BattleRoomRepository {
   }
 
   //get quesitons for battle
-  Future<List<Question>> getQuestions({required String languageId, required String categoryId, required String matchId, required bool forMultiUser, required bool roomCreater, required String roomDocumentId}) async {
+  Future<List<Question>> getQuestions({required String languageId, required String categoryId, required String matchId, required bool forMultiUser, required bool roomCreater, required String roomDocumentId, String? destroyBattleRoom}) async {
     try {
       List? quesions;
       if (forMultiUser) {
         quesions = await _battleRoomRemoteDataSource.getMultiUserBattleQuestions(matchId);
       } else {
-        quesions = await _battleRoomRemoteDataSource.getQuestions(categoryId: categoryId, languageId: languageId, matchId: matchId);
+        quesions = await _battleRoomRemoteDataSource.getQuestions(destroyRoom: destroyBattleRoom ?? "1", categoryId: categoryId, languageId: languageId, matchId: matchId);
       }
 
       return quesions!.map((e) => Question.fromJson(Map.from(e))).toList();
@@ -243,6 +251,14 @@ class BattleRoomRepository {
         deleteBattleRoom(roomDocumentId, forMultiUser);
       }
       throw BattleRoomException(errorMessageCode: e.toString());
+    }
+  }
+
+  Future<void> destroyBattleRoomInDatabase({required String languageId, required String categoryId, required String matchId}) async {
+    try {
+      await _battleRoomRemoteDataSource.getQuestions(languageId: languageId, categoryId: categoryId, matchId: matchId, destroyRoom: "1");
+    } catch (e) {
+      print(e.toString());
     }
   }
 

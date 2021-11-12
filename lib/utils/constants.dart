@@ -54,7 +54,7 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "https://elitequiz.wrteam.in"; //'http://flutterquiz.thewrteam.in'
+final String databaseUrl = "http://flutterquiz.thewrteam.in"; //"https://elitequiz.wrteam.in";
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
@@ -214,6 +214,6 @@ final List<String> badgeTypes = [
 ];
 
 //
-const String roomCodeGenerateCharacters = "1234567890"; //Numeric 
+const String roomCodeGenerateCharacters = "1234567890"; //Numeric
 //to make roomCode alpha numeric use below string in roomCodeGenerateCharacters
 //AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890

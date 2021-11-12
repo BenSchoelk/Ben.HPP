@@ -116,6 +116,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
           roomDocumentId: room.id,
           languageId: questionLanguageId,
           roomCreater: false,
+          destroyBattleRoom: "0",
         );
         final searchAgain = await _battleRoomRepository.joinBattleRoom(battleRoomDocumentId: room.id, name: name, profileUrl: profileUrl, uid: uid);
         if (searchAgain) {
@@ -160,6 +161,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
         roomDocumentId: documentSnapshot.id,
         roomCreater: true,
         languageId: questionLanguageId,
+        destroyBattleRoom: "0",
       );
       subscribeToBattleRoom(documentSnapshot.id, questions, false);
     } catch (e) {
@@ -167,7 +169,7 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
     }
   }
 
-  //to join multi user battle room
+  //to join battle room
   void joinRoom({String? name, String? profileUrl, String? uid, String? roomCode, required String currentCoin}) async {
     emit(BattleRoomJoining());
     try {
@@ -205,10 +207,25 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
   //delete room after qutting the game or finishing the game
   void deleteBattleRoom(bool type) {
     if (state is BattleRoomUserFound) {
-      _battleRoomRepository.deleteBattleRoom((state as BattleRoomUserFound).battleRoom.roomId, type);
+      final battleRoom = (state as BattleRoomUserFound).battleRoom;
+      _battleRoomRepository.destroyBattleRoomInDatabase(
+        languageId: battleRoom.languageId!,
+        categoryId: battleRoom.categoryId!,
+        matchId: battleRoom.roomCode!.isEmpty ? battleRoom.roomId! : battleRoom.roomCode!,
+      );
+      //
+      _battleRoomRepository.deleteBattleRoom(battleRoom.roomId, type);
       emit(BattleRoomDeleted());
     } else if (state is BattleRoomCreated) {
-      _battleRoomRepository.deleteBattleRoom((state as BattleRoomCreated).battleRoom.roomId, type);
+      //
+
+      final battleRoom = (state as BattleRoomCreated).battleRoom;
+      _battleRoomRepository.destroyBattleRoomInDatabase(
+        languageId: battleRoom.languageId!,
+        categoryId: battleRoom.categoryId!,
+        matchId: battleRoom.roomCode!.isEmpty ? battleRoom.roomId! : battleRoom.roomCode!,
+      );
+      _battleRoomRepository.deleteBattleRoom(battleRoom.roomId, type);
       emit(BattleRoomDeleted());
     }
   }

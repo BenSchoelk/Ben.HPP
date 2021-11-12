@@ -232,7 +232,7 @@ class _ResultScreenState extends State<ResultScreen> {
         context.read<UpdateScoreAndCoinsCubit>().updateScore(currentUserId, currentUser.points);
         context.read<UserDetailsCubit>().updateScore(currentUser.points);
       }
-
+      //TODO : call only for winner
       //update battle stats
       context.read<UpdateStatisticCubit>().updateBattleStatistic(
             userId1: widget.battleRoom!.user1!.uid,

@@ -29,13 +29,14 @@ class BattleRoomRemoteDataSource {
   category:1 
   */
 
-  Future<List?> getQuestions({required String languageId, required String categoryId, required String matchId}) async {
+  Future<List?> getQuestions({required String languageId, required String categoryId, required String matchId, required String destroyRoom}) async {
     try {
       Map<String, String> body = {
         accessValueKey: accessValue,
         languageIdKey: languageId,
         matchIdKey: matchId,
         categoryKey: categoryId,
+        destroyRoomKey: destroyRoom, //0 do not destroy and 1 destroy
       };
       if (categoryId.isEmpty) {
         body.remove(categoryKey);
@@ -43,9 +44,10 @@ class BattleRoomRemoteDataSource {
       if (languageId.isEmpty) {
         body.remove(languageIdKey);
       }
-      print(body);
+
       final response = await http.post(Uri.parse(getQuestionForOneToOneBattle), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
+
       if (responseJson['error']) {
         throw BattleRoomException(errorMessageCode: responseJson['message']); //error
       }
