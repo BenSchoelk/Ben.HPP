@@ -121,12 +121,11 @@ class SystemConfigModel {
     iosBannerId = json['ios_banner_id'] ?? "";
     iosInterstitialId = json['ios_interstitial_id'] ?? "";
     iosRewardedId = json['ios_rewarded_id'] ?? "";
-    //
-    androidFbBannerId = json['android_fb_banner_id'];
-    androidFbInterstitialId = json['android_fb_interstitial_id'];
-    androidFbRewardedId = json['android_fb_rewarded_id'];
-    iosFbBannerId = json['ios_fb_banner_id'];
-    iosFbInterstitialId = json['ios_fb_interstitial_id'];
-    iosFbRewardedId = json['ios_fb_rewarded_id'];
+    androidFbBannerId = json['android_fb_banner_id'] ?? "";
+    androidFbInterstitialId = json['android_fb_interstitial_id'] ?? "";
+    androidFbRewardedId = json['android_fb_rewarded_id'] ?? "";
+    iosFbBannerId = json['ios_fb_banner_id'] ?? "";
+    iosFbInterstitialId = json['ios_fb_interstitial_id'] ?? "";
+    iosFbRewardedId = json['ios_fb_rewarded_id'] ?? "";
   }
 }
