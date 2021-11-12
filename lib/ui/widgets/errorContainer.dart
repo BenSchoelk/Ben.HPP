@@ -67,7 +67,7 @@ class ErrorContainer extends StatelessWidget {
                     CustomRoundedButton(
                       widthPercentage: 0.375,
                       backgroundColor: Theme.of(context).backgroundColor,
-                      buttonTitle: "Back",
+                      buttonTitle: AppLocalization.of(context)!.getTranslatedValues(backKey)!,
                       radius: 5,
                       showBorder: false,
                       height: 40,
