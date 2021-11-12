@@ -227,19 +227,18 @@ class _ResultScreenState extends State<ResultScreen> {
         //update score locally and database
         context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: earnedCoins);
         context.read<UserDetailsCubit>().updateScore(currentUser.points);
+
+        //update battle stats
+        context.read<UpdateStatisticCubit>().updateBattleStatistic(
+              userId1: widget.battleRoom!.user1!.uid,
+              userId2: widget.battleRoom!.user2!.uid,
+              winnerId: _winnerId!,
+            );
       } else {
         //if user is not winner then update only score
         context.read<UpdateScoreAndCoinsCubit>().updateScore(currentUserId, currentUser.points);
         context.read<UserDetailsCubit>().updateScore(currentUser.points);
       }
-      //TODO : call only for winner
-      //update battle stats
-      context.read<UpdateStatisticCubit>().updateBattleStatistic(
-            userId1: widget.battleRoom!.user1!.uid,
-            userId2: widget.battleRoom!.user2!.uid,
-            winnerId: _winnerId!,
-          );
-      //
     });
   }
 
