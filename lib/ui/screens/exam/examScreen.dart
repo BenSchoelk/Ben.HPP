@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutterquiz/ui/screens/exam/widgets/examQuestionStatusBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:wakelock/wakelock.dart';
 
 class ExamScreen extends StatefulWidget {
   ExamScreen({Key? key}) : super(key: key);
@@ -19,15 +23,53 @@ class ExamScreen extends StatefulWidget {
   }
 }
 
-class _ExamScreenState extends State<ExamScreen> {
+class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   final GlobalKey<ExamTimerContainerState> timerKey = GlobalKey<ExamTimerContainerState>();
+
+  Timer? canGiveExamAgainTimer;
+  bool canGiveExamAgain = true;
+
+  int canGiveExamAgainTimeInSeconds = 5;
 
   @override
   void initState() {
     super.initState();
+    Wakelock.enable();
+
+    WidgetsBinding.instance?.addObserver(this);
     Future.delayed(Duration.zero, () {
       timerKey.currentState?.startTimer();
     });
+  }
+
+  void setCanGiveExamTimer() {
+    canGiveExamAgainTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (canGiveExamAgainTimeInSeconds == 0) {
+        timer.cancel();
+        print("You left the exam");
+      } else {
+        canGiveExamAgainTimeInSeconds--;
+      }
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(appState) {
+    if (appState == AppLifecycleState.paused) {
+      setCanGiveExamTimer();
+    } else if (appState == AppLifecycleState.resumed) {
+      canGiveExamAgainTimer?.cancel();
+      canGiveExamAgain = true;
+      canGiveExamAgainTimeInSeconds = 5;
+    }
+  }
+
+  @override
+  void dispose() {
+    canGiveExamAgainTimer?.cancel();
+    WidgetsBinding.instance?.removeObserver(this);
+    Wakelock.disable();
+    super.dispose();
   }
 
   Widget _buildBottomMenu() {
@@ -52,7 +94,9 @@ class _ExamScreenState extends State<ExamScreen> {
           ),
           Spacer(),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showExamQuestionStatusBottomSheet();
+            },
             child: CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
               radius: 20,
@@ -75,6 +119,22 @@ class _ExamScreenState extends State<ExamScreen> {
         ],
       ),
     );
+  }
+
+  void showExamQuestionStatusBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        elevation: 5.0,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
+        builder: (context) {
+          return ExamQuestionStatusBottomSheetContainer();
+        });
   }
 
   Widget _buildAppBar() {
@@ -154,7 +214,7 @@ class _ExamScreenState extends State<ExamScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: _buildBottomMenu(),
-          )
+          ),
         ],
       ),
     );
