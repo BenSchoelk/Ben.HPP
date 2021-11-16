@@ -12,4 +12,5 @@ final List<QuizType> quizTypes = [
   QuizType(title: trueAndFalse, image: "true_false_icon.svg", active: true, description: desTrueAndFalse),
   QuizType(title: dailyQuiz, image: "daily_quiz.svg", active: true, description: desDailyQuiz),
   QuizType(title: audioQuestionsKey, image: "audio_questions.svg", active: true, description: desAudioQuestionsKey),
+  QuizType(title: examKey, image: "audio_questions.svg", active: true, description: desExamKey),
 ];

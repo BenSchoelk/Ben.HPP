@@ -8,6 +8,7 @@ import 'package:flutterquiz/ui/screens/badgesScreen.dart';
 import 'package:flutterquiz/ui/screens/battle/battleRoomFindOpponentScreen.dart';
 import 'package:flutterquiz/ui/screens/bookmarkScreen.dart';
 import 'package:flutterquiz/ui/screens/coinStoreScreen.dart';
+import 'package:flutterquiz/ui/screens/exam/examsScreen.dart';
 import 'package:flutterquiz/ui/screens/home/homeScreen.dart';
 import 'package:flutterquiz/ui/screens/introSliderScreen.dart';
 import 'package:flutterquiz/ui/screens/leaderBoardScreen.dart';
@@ -83,13 +84,13 @@ class Routes {
   static const levels = "/levels";
   static const aboutApp = "/aboutApp";
   static const badges = "/badges";
+  static const exam = "/exam";
   static String currentRoute = splash;
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
     //to track current route
     //this will only track pushed route on top of previous route
     currentRoute = routeSettings.name ?? "";
-    print("Current route is : $currentRoute");
     switch (routeSettings.name) {
       case splash:
         return CupertinoPageRoute(builder: (context) => SplashScreen());
@@ -139,8 +140,7 @@ class Routes {
 
       case notification:
         return NotificationScreen.route(routeSettings);
-      /*case trueFalse:
-        return TrueFalseScreen.route(routeSettings);*/
+
       case funAndLearnTitle:
         return FunAndLearnTitleScreen.route(routeSettings);
       case funAndLearn:
@@ -175,6 +175,9 @@ class Routes {
         return SubCategoryScreen.route(routeSettings);
       case badges:
         return BadgesScreen.route(routeSettings);
+
+      case exam:
+        return ExamsScreen.route(routeSettings);
 
       default:
         return CupertinoPageRoute(builder: (context) => Scaffold());

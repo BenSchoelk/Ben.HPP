@@ -340,6 +340,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _onQuizTypeContainerTap(9);
           print("Navigate to _quizTypes : ${_quizTypes[9].title}");
         }
+      } else if (containerNumber == 3) {
+        if (_quizTypes.length >= 11) {
+          _onQuizTypeContainerTap(10);
+          print("Navigate to _quizTypes : ${_quizTypes[10].title}");
+        }
       }
     }
   }
@@ -391,6 +396,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.guessTheWord});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.audioQuestions) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioQuestions});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.exam) {
+      Navigator.of(context).pushNamed(Routes.exam);
     }
   }
 
