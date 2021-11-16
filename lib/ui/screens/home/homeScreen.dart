@@ -397,7 +397,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.audioQuestions) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioQuestions});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.exam) {
-      Navigator.of(context).pushNamed(Routes.exam);
+      Navigator.of(context).pushNamed(Routes.exams);
     }
   }
 

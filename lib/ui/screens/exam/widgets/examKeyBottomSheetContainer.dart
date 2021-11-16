@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -151,7 +152,10 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                     buttonTitle: AppLocalization.of(context)!.getTranslatedValues(submitBtn)!,
                     radius: 10.0,
                     showBorder: false,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed(Routes.exam);
+                    },
                     fontWeight: FontWeight.bold,
                     titleColor: Theme.of(context).backgroundColor,
                     height: 40.0,
