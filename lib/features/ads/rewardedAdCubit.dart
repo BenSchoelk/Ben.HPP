@@ -22,6 +22,8 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
   RewardedAd? get rewardedAd => _rewardedAd;
 
   void _createGoogleRewardedAd(BuildContext context) {
+    //dispose ad and then load
+    _rewardedAd?.dispose();
     RewardedAd.load(
       adUnitId: context.read<SystemConfigCubit>().googleRewardedAdId(),
       request: AdRequest(),
@@ -58,7 +60,7 @@ class RewardedAdCubit extends Cubit<RewardedAdState> {
           //ad callback here to
           print("Add coins here");
           onFbRewardAdCompleted();
-          //createRewardedAd(context);
+          createRewardedAd(context, onFbRewardAdCompleted: onFbRewardAdCompleted);
         }
       },
     );

@@ -145,6 +145,7 @@ final String clickEventSoundTrack = "assets/sounds/click.mp3";
 
 //coins and answer points and win percentage
 final int lifeLineDeductCoins = 5;
+final int numberOfHintsPerGuessTheWordQuestion = 2;
 final int correctAnswerPoints = 4;
 final int wrongAnswerDeductPoints = 2;
 //points for correct answer in battle

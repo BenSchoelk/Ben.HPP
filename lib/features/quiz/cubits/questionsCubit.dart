@@ -33,6 +33,10 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   final QuizRepository _quizRepository;
   QuestionsCubit(this._quizRepository) : super(QuestionsIntial());
 
+  void updateState(QuestionsState newState) {
+    emit(newState);
+  }
+
   getQuestions(QuizTypes quizType,
       {String? userId, //will be in use for dailyQuiz
       String? languageId, //

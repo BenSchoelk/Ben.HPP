@@ -337,5 +337,6 @@
   "questions": "Questions",
   "back": "Back",
   "exam": "Exam",
-  "desExam": "Give exam"
+  "desExam": "Give exam",
+  "hint" : "Hint"
 }

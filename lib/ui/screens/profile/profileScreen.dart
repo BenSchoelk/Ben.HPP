@@ -57,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
         builder: (context) {
           return EditProfileFieldBottomSheetContainer(fieldTitle: fieldTitle, fieldValue: fieldValue, numericKeyboardEnable: isNumericKeyboardEnable, updateUserDetailCubit: updateUserDetailCubit);
         }).then((value) {
-      context.read<UpdateUserDetailCubit>().emit(UpdateUserDetailInitial());
+      context.read<UpdateUserDetailCubit>().updateState(UpdateUserDetailInitial());
     });
   }
 

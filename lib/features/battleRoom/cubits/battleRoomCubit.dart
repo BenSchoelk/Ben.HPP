@@ -51,6 +51,11 @@ class BattleRoomCubit extends Cubit<BattleRoomState> {
 
   StreamSubscription<DocumentSnapshot>? _battleRoomStreamSubscription;
   Random _rnd = Random.secure();
+
+  void updateState(BattleRoomState newState) {
+    emit(newState);
+  }
+
   //subscribe battle room
   void subscribeToBattleRoom(String battleRoomDocumentId, List<Question> questions, bool type) {
     //for realtimeness

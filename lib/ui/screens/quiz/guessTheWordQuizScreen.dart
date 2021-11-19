@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/guessTheWordQuizCubit.dart';
 
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
@@ -37,7 +39,12 @@ class GuessTheWordQuizScreen extends StatefulWidget {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
         builder: (context) => MultiBlocProvider(
-              providers: [BlocProvider<GuessTheWordQuizCubit>(create: (_) => GuessTheWordQuizCubit(QuizRepository()))],
+              providers: [
+                BlocProvider<UpdateScoreAndCoinsCubit>(
+                  create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                ),
+                BlocProvider<GuessTheWordQuizCubit>(create: (_) => GuessTheWordQuizCubit(QuizRepository()))
+              ],
               child: GuessTheWordQuizScreen(
                 type: arguments['type'],
                 typeId: arguments['typeId'],
@@ -189,6 +196,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
         return Align(
           alignment: Alignment.topCenter,
           child: QuestionsContainer(
+            timerAnimationController: timerAnimationController,
             quizType: QuizTypes.guessTheWord,
             toggleSettingDialog: toggleSettingDialog,
             showAnswerCorrectness: true,

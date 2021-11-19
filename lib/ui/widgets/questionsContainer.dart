@@ -228,6 +228,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     Widget child = LayoutBuilder(builder: (context, constraints) {
       if (widget.questions.isEmpty) {
         return GuessTheWordQuestionContainer(
+          timerAnimationController: widget.timerAnimationController!,
           key: showContent ? widget.guessTheWordQuestionContainerKeys[widget.currentQuestionIndex] : null,
           submitAnswer: widget.submitAnswer,
           constraints: constraints,

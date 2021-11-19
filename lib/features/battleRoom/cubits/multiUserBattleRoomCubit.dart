@@ -41,6 +41,10 @@ class MultiUserBattleRoomCubit extends Cubit<MultiUserBattleRoomState> {
 
   Random _rnd = Random.secure();
 
+  void updateState(MultiUserBattleRoomState newState) {
+    emit(newState);
+  }
+
   //subscribe battle room
   void subscribeToMultiUserBattleRoom(String battleRoomDocumentId, List<Question> questions) {
     //for realtimeness

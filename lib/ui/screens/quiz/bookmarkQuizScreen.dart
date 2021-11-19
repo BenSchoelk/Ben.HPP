@@ -67,13 +67,13 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
-  _getQuestions() {
+  void _getQuestions() {
     Future.delayed(Duration.zero, () {
-      //emitting success as we do not need tofetch questios from cloud and here only questions is important
+      //emitting success as we do not need to fetch questios from cloud and here only questions is important
       //other parameters can be ignored
       //other parameters need to pass so cubit functionlity does not break
 
-      context.read<QuestionsCubit>().emit(QuestionsFetchSuccess(questions: List.from(context.read<BookmarkCubit>().questions()), currentPoints: 0, quizType: QuizTypes.bookmarkQuiz));
+      context.read<QuestionsCubit>().updateState(QuestionsFetchSuccess(questions: List.from(context.read<BookmarkCubit>().questions()), currentPoints: 0, quizType: QuizTypes.bookmarkQuiz));
 
       //start timer
     });
@@ -81,9 +81,8 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
 
   @override
   void initState() {
-    context.read<QuestionsCubit>().emit(QuestionsFetchSuccess(questions: List.from(context.read<BookmarkCubit>().questions()), currentPoints: 0, quizType: QuizTypes.bookmarkQuiz));
     initializeAnimation();
-    //_getQuestions();
+    _getQuestions();
     super.initState();
   }
 

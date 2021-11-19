@@ -1,11 +1,20 @@
+import 'dart:math';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +23,8 @@ class GuessTheWordQuestionContainer extends StatefulWidget {
   final int currentQuestionIndex;
   final List<GuessTheWordQuestion> questions;
   final Function submitAnswer;
-  GuessTheWordQuestionContainer({Key? key, required this.currentQuestionIndex, required this.questions, required this.constraints, required this.submitAnswer}) : super(key: key);
+  final AnimationController timerAnimationController;
+  GuessTheWordQuestionContainer({Key? key, required this.currentQuestionIndex, required this.questions, required this.constraints, required this.submitAnswer, required this.timerAnimationController}) : super(key: key);
 
   @override
   GuessTheWordQuestionContainerState createState() => GuessTheWordQuestionContainerState();
@@ -25,6 +35,8 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
   double textSize = 14;
   //contains ontionIndex.. stroing index so we can lower down the opacity of selected index
   late List<int> submittedAnswer = [];
+  late List<String> correctAnswerLetterList = [];
+
   //to controll the answer text
   late List<AnimationController> controllers = [];
   late List<Animation<double>> animations = [];
@@ -40,11 +52,14 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
   late int currentSelectedIndex = 0;
 
   late AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+  //total how many times user can see hint per question
+  late int hintsCounter = numberOfHintsPerGuessTheWordQuestion;
 
   @override
   void initState() {
     super.initState();
     initializeAnimation();
+    initAds();
   }
 
   @override
@@ -60,6 +75,13 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
     });
     assetsAudioPlayer.dispose();
     super.dispose();
+  }
+
+  void initAds() {
+    Future.delayed(Duration.zero, () {
+      print("Load ads ${widget.currentQuestionIndex}");
+      context.read<RewardedAdCubit>().createRewardedAd(context, onFbRewardAdCompleted: _addCoinsAfterRewardAd);
+    });
   }
 
   List<String> getSubmittedAnswer() {
@@ -107,6 +129,55 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
     if (context.read<SettingsCubit>().getSettings().vibration) {
       UiUtils.vibrate();
     }
+  }
+
+  void _addCoinsAfterRewardAd() {
+    //once user sees ad then add coins to user wallet
+    context.read<UserDetailsCubit>().updateCoins(
+          addCoin: true,
+          coins: lifeLineDeductCoins,
+        );
+    context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+          context.read<UserDetailsCubit>().getUserId(),
+          lifeLineDeductCoins,
+          true,
+        );
+    widget.timerAnimationController.forward(from: widget.timerAnimationController.value);
+  }
+
+  void showAdDialog() {
+    if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
+      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+      return;
+    }
+    //stop timer
+    widget.timerAnimationController.stop();
+    showDialog<bool>(
+        context: context,
+        builder: (_) => WatchRewardAdDialog(
+              onTapYesButton: () {
+                //on tap of yes button show ad
+                context.read<RewardedAdCubit>().showAd(context: context, onAdDismissedCallback: _addCoinsAfterRewardAd);
+              },
+              onTapNoButton: () {
+                //pass true to start timer
+                Navigator.of(context).pop(true);
+              },
+            )).then((startTimer) {
+      //if user do not want to see ad
+      if (startTimer != null && startTimer) {
+        widget.timerAnimationController.forward(from: widget.timerAnimationController.value);
+      }
+    });
+  }
+
+  bool hasEnoughCoinsForLifeline(BuildContext context) {
+    int currentCoins = int.parse(context.read<UserDetailsCubit>().getCoins()!);
+    //cost of using lifeline is 5 coins
+    if (currentCoins < lifeLineDeductCoins) {
+      return false;
+    }
+    return true;
   }
 
   Widget _buildAnswerBox(int answerBoxIndex) {
@@ -248,8 +319,101 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
       listOfWidgets.add(_optionContainer(answerOptions[i], i));
     }
 
+    listOfWidgets.add(_buildHintButton());
+
     return Wrap(
       children: listOfWidgets,
+    );
+  }
+
+  int _getRandomIndexForHint() {
+    //need to find all empty cells where user have not given answer yet
+    List<int> emptyAnswerBoxIndexes = [];
+    for (var i = 0; i < submittedAnswer.length; i++) {
+      if (submittedAnswer[i] == -1) {
+        emptyAnswerBoxIndexes.add(i);
+      }
+    }
+    if (emptyAnswerBoxIndexes.isEmpty) {
+      return -1;
+    }
+    //show hint on any empty answer box
+    return emptyAnswerBoxIndexes[Random.secure().nextInt(emptyAnswerBoxIndexes.length)];
+  }
+
+  Widget _buildHintButton() {
+    return GestureDetector(
+      onTap: hintsCounter == 0 || !submittedAnswer.contains(-1)
+          ? () {}
+          : () async {
+              if (hasEnoughCoinsForLifeline(context)) {
+                //show hints
+                String correctAnswer = widget.questions[widget.currentQuestionIndex].answer;
+
+                //build correct answer letter list
+                if (correctAnswerLetterList.isEmpty) {
+                  for (int i = 0; i < correctAnswer.length; i++) {
+                    correctAnswerLetterList.add(correctAnswer.substring(i, i + 1));
+                  }
+                }
+
+                //get random index
+                int hintIndex = _getRandomIndexForHint();
+
+                //deduct coins for using hints
+                context.read<UserDetailsCubit>().updateCoins(
+                      addCoin: false,
+                      coins: lifeLineDeductCoins,
+                    );
+                context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                      context.read<UserDetailsCubit>().getUserId(),
+                      lifeLineDeductCoins,
+                      false,
+                    );
+
+                //change current selected answer box
+                changeCurrentSelectedAnswerBox(hintIndex);
+
+                //need to find index
+                int indexToAdd = -1;
+                for (var i = 0; i < widget.questions[widget.currentQuestionIndex].options.length; i++) {
+                  //need to check this condition to get index for every letter
+                  //ex. Cricket if first c is in submit answer list then index of second c will be consider
+                  if (widget.questions[widget.currentQuestionIndex].options[i] == correctAnswer[hintIndex] && !submittedAnswer.contains(i)) {
+                    indexToAdd = i;
+                  }
+                }
+
+                //update submitted answer
+                setState(() {
+                  submittedAnswer[currentSelectedIndex] = indexToAdd;
+                  hintsCounter--;
+                });
+                //start animation
+
+                await controllers[currentSelectedIndex].forward();
+                await topContainerAnimationControllers[currentSelectedIndex].forward();
+              } else {
+                showAdDialog();
+              }
+            },
+      child: Opacity(
+        opacity: hintsCounter == 0 || !submittedAnswer.contains(-1) ? 0.5 : 1.0,
+        child: Container(
+          height: optionBoxContainerHeight,
+          width: optionBoxContainerHeight * 2,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), color: Theme.of(context).primaryColor),
+          margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+          child: Text(
+            AppLocalization.of(context)!.getTranslatedValues(hintKey)!,
+            style: TextStyle(
+              color: Theme.of(context).backgroundColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -286,6 +450,28 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
     );
   }
 
+  Widget _buildCurrentCoins() {
+    return BlocBuilder<UserDetailsCubit, UserDetailsState>(
+        bloc: context.read<UserDetailsCubit>(),
+        builder: (context, state) {
+          if (state is UserDetailsFetchSuccess) {
+            return Align(
+              alignment: AlignmentDirectional.center,
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(
+                  end: MediaQuery.of(context).size.width * (0.175),
+                ),
+                child: Text(
+                  AppLocalization.of(context)!.getTranslatedValues("coinsLbl")! + ":${state.userProfile.coins}",
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                ),
+              ),
+            );
+          }
+          return Container();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = widget.questions[widget.currentQuestionIndex];
@@ -307,9 +493,18 @@ class GuessTheWordQuestionContainerState extends State<GuessTheWordQuestionConta
                   children: [
                     Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
-                        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                      child: _buildCurrentCoins(),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          start: MediaQuery.of(context).size.width * (0.175),
+                        ),
+                        child: Text(
+                          "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
+                          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                        ),
                       ),
                     ),
                     Align(

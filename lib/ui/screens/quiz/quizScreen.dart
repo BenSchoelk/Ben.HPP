@@ -319,7 +319,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   bool hasEnoughCoinsForLifeline(BuildContext context) {
     int currentCoins = int.parse(context.read<UserDetailsCubit>().getCoins()!);
     //cost of using lifeline is 5 coins
-    if (currentCoins < 5) {
+    if (currentCoins < lifeLineDeductCoins) {
       return false;
     }
     return true;

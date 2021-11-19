@@ -363,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } //
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
       //
-      context.read<BattleRoomCubit>().emit(BattleRoomInitial());
+      context.read<BattleRoomCubit>().updateState(BattleRoomInitial());
 
       showDialog(
         context: context,
@@ -377,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
-      context.read<MultiUserBattleRoomCubit>().emit(MultiUserBattleRoomInitial());
+      context.read<MultiUserBattleRoomCubit>().updateState(MultiUserBattleRoomInitial());
       //
       showDialog(
           context: context,

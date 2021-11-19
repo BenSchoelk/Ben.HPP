@@ -22,6 +22,10 @@ class UpdateUserDetailCubit extends Cubit<UpdateUserDetailState> {
 
   UpdateUserDetailCubit(this._profileManagementRepository) : super(UpdateUserDetailInitial());
 
+  void updateState(UpdateUserDetailState newState) {
+    emit(newState);
+  }
+
   void updateProfile({required String userId, required String email, required String name, required String mobile}) async {
     emit(UpdateUserDetailInProgress());
     _profileManagementRepository

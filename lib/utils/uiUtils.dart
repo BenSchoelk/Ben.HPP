@@ -3,10 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
@@ -250,35 +248,6 @@ class UiUtils {
       secondsTakenToAnswer = (questionDurationInSeconds * animationControllerValue);
     }
     return secondsTakenToAnswer;
-  }
-
-  //navigate to battle screen
-  static void navigateToOneVSOneBattleScreen(BuildContext context) {
-    //reset state of battle room to initial
-    context.read<BattleRoomCubit>().emit(BattleRoomInitial());
-    if (context.read<SystemConfigCubit>().getIsCategoryEnableForBattle() == "1") {
-      //go to category page
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.battle});
-    } else {
-      Navigator.of(context).pushNamed(Routes.battleRoomFindOpponent, arguments: "").then((value) {
-        //need to delete room if user exit the process in between of finding opponent
-        //or instantly press exit button
-        Future.delayed(Duration(milliseconds: 3000)).then((value) {
-          //In battleRoomFindOpponent screen
-          //we are calling pushReplacement method so it will trigger this
-          //callback so we need to check if state is not battleUserFound then
-          //and then we need to call deleteBattleRoom
-
-          //when user press the backbutton and choose to exit the game and
-          //process of creating room(in firebase) is still running
-          //then state of battleRoomCubit will not be battleRoomUserFound
-          //deleteRoom call execute
-          if (context.read<BattleRoomCubit>().state is! BattleRoomUserFound) {
-            context.read<BattleRoomCubit>().deleteBattleRoom(false);
-          }
-        });
-      });
-    }
   }
 
   static String getThemeLabelFromAppTheme(AppTheme appTheme) {
