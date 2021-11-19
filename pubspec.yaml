@@ -33,7 +33,7 @@ dependencies:
   firebase_messaging: ^10.0.7
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.3.3
+  flutter_bloc: ^8.0.0
   flutter_exif_rotation: ^0.4.1
   flutter_html: ^2.1.1
   flutter_local_notifications: ^8.1.1+2
