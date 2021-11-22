@@ -255,6 +255,7 @@ String trueAndFalse = "trueAndFalse";
 String mathManiaKey = "mathMania";
 String audioQuestionsKey = 'audioQuestions';
 String examKey = "exam";
+String tournamentKey = "tournament";
 
 String desQuizZone = "desQuizZone";
 String desDailyQuiz = "desDailyQuiz";
@@ -267,6 +268,7 @@ String desTrueAndFalse = "desTrueAndFalse";
 String desMathManiaKey = "desMathMania";
 String desAudioQuestionsKey = "desAudioQuestions";
 String desExamKey = "desExam";
+String desTournamentKey = "desTournament";
 
 String noCoinsMsg = "noCoinsMsg";
 

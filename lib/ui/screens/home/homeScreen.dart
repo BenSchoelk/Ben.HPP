@@ -398,6 +398,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioQuestions});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.exam) {
       Navigator.of(context).pushNamed(Routes.exams);
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.tournament) {
+      Navigator.of(context).pushNamed(Routes.tournamentDetails);
     }
   }
 
@@ -639,7 +641,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               double topPositionPercentage = 0.0;
 
               topPositionPercentage = firstAnimation.drive<double>(Tween(begin: topMarginPercentage, end: firstEndMarginPercentage)).value;
-              topPositionPercentage = topPositionPercentage - (firstEndMarginPercentage - quizTypeTopMargin) * (secondAnimation.drive<double>(Tween(begin: 0.0, end: 1.0)).value);
+
+              double previousTopQuizTypeHeight = 0;
+              if (quizTypeIndex == 10 || quizTypeIndex == 11) {
+                previousTopQuizTypeHeight = maxHeightQuizTypeIndexes.contains(quizTypeIndex - 2) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage;
+                previousTopQuizTypeHeight = quizTypeBetweenVerticalSpacing + previousTopQuizTypeHeight;
+              }
+              topPositionPercentage = topPositionPercentage - (firstEndMarginPercentage - quizTypeTopMargin - previousTopQuizTypeHeight) * (secondAnimation.drive<double>(Tween(begin: 0.0, end: 1.0)).value);
 
               return Positioned(
                 top: (MediaQuery.of(context).size.height * topPositionPercentage) + statusBarPadding,

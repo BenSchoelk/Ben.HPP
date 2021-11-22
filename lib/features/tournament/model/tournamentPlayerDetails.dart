@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class TournamentPlayerDetails {
   final String name;
   final String uid;
@@ -15,8 +13,7 @@ class TournamentPlayerDetails {
     required this.profileUrl,
   });
 
-  static TournamentPlayerDetails fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    final data = documentSnapshot.data() as Map<String, dynamic>;
+  static TournamentPlayerDetails fromDocumentSnapshot(Map<String, dynamic> data) {
     return TournamentPlayerDetails(
       answers: data['answers'] == null ? [] : data['answers'] as List,
       uid: data['uid'] ?? "",

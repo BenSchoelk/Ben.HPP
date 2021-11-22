@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
 import 'package:flutterquiz/ui/screens/aboutAppScreen.dart';
 import 'package:flutterquiz/ui/screens/appSettingsScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signInScreen.dart';
@@ -41,6 +42,8 @@ import 'package:flutterquiz/ui/screens/rewards/rewardsScreen.dart';
 import 'package:flutterquiz/ui/screens/profile/selectProfilePictureScreen.dart';
 
 import 'package:flutterquiz/ui/screens/splashScreen.dart';
+import 'package:flutterquiz/ui/screens/tournament/tournamentDetailsScreen.dart';
+import 'package:flutterquiz/ui/screens/tournament/tournamentScreen.dart';
 
 class Routes {
   static const home = "/";
@@ -87,6 +90,9 @@ class Routes {
   static const badges = "/badges";
   static const exams = "/exams";
   static const exam = "/exam";
+  static const tournament = "/tournament";
+  static const tournamentDetails = "/tournamentDetails";
+
   static String currentRoute = splash;
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
@@ -183,6 +189,12 @@ class Routes {
 
       case exam:
         return ExamScreen.route(routeSettings);
+
+      case tournament:
+        return TournamentScreen.route(routeSettings);
+
+      case tournamentDetails:
+        return TournamentDetailsScreen.route(routeSettings);
 
       default:
         return CupertinoPageRoute(builder: (context) => Scaffold());

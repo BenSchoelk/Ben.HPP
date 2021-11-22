@@ -338,5 +338,7 @@
   "back": "Back",
   "exam": "Exam",
   "desExam": "Give exam",
-  "hint" : "Hint"
+  "hint" : "Hint",
+  "tournament" : "Tournament",
+  "desTournament" : "Play exiciting tournament"
 }
