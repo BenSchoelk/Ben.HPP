@@ -70,6 +70,8 @@ final String resetTime = "resetTime";
 final String battleRoomCollection = "battleRoom"; //  testBattleRoom
 final String multiUserBattleRoomCollection = "multiUserBattleRoom"; // "testMultiUserBattleRoom";
 final String messagesCollection = "messages"; //"testMessages";
+final String tournamentsCollection = "testTournaments"; // "tournaments";
+final String tournamentBattlesCollection = "testTournamentBattles"; // "tournamentBattles";
 
 //api end points
 final String addUserUrl = "${baseUrl}user_signup";
@@ -230,3 +232,8 @@ const List<String> examRules = [
   "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
   "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
 ];
+//
+//Please do not change this if you do torunament will not work as expected.
+//This ensure that torunament will start only if there is 8 users are ready to play
+//
+const int numberOfPlayerForTournament = 8;

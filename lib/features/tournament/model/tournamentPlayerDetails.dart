@@ -13,7 +13,7 @@ class TournamentPlayerDetails {
     required this.profileUrl,
   });
 
-  static TournamentPlayerDetails fromDocumentSnapshot(Map<String, dynamic> data) {
+  static TournamentPlayerDetails fromJson(Map<String, dynamic> data) {
     return TournamentPlayerDetails(
       answers: data['answers'] == null ? [] : data['answers'] as List,
       uid: data['uid'] ?? "",
