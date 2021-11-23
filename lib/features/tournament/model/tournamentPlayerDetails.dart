@@ -22,4 +22,22 @@ class TournamentPlayerDetails {
       profileUrl: data['profileUrl'] ?? "",
     );
   }
+
+  static Map<String, dynamic> toJson(TournamentPlayerDetails tournamentPlayerDetails) {
+    return {
+      "answers": tournamentPlayerDetails.answers,
+      "uid": tournamentPlayerDetails.uid,
+      "profileUrl": tournamentPlayerDetails.profileUrl,
+      "name": tournamentPlayerDetails.name,
+      "points": tournamentPlayerDetails.points,
+    };
+  }
+
+  static Map<String, dynamic> toTournamentPlayerDetailsJson(TournamentPlayerDetails tournamentPlayerDetails) {
+    return {
+      "uid": tournamentPlayerDetails.uid,
+      "profileUrl": tournamentPlayerDetails.profileUrl,
+      "name": tournamentPlayerDetails.name,
+    };
+  }
 }

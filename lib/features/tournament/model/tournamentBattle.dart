@@ -4,33 +4,42 @@ import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.da
 enum TournamentBattleType { quaterFinal, semiFinal, finalBattle }
 
 class TournamentBattle {
+  final String tournamentBattleId;
   final String tournamentId;
   final TournamentBattleType battleType;
   final String createdBy;
-  final TournamentPlayerDetails player1;
-  final TournamentPlayerDetails player2;
+  final TournamentPlayerDetails user1;
+  final TournamentPlayerDetails user2;
   final String createdAt;
+  final List questions;
+  final bool readyToPlay;
 
   //
   TournamentBattle({
     required this.battleType,
     required this.createdAt,
     required this.createdBy,
-    required this.player1,
-    required this.player2,
+    required this.user1,
+    required this.user2,
+    required this.tournamentBattleId,
     required this.tournamentId,
+    required this.questions,
+    required this.readyToPlay,
   });
   //
 
   static TournamentBattle fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     final data = documentSnapshot.data() as Map<String, dynamic>;
     return TournamentBattle(
+      readyToPlay: data['readyToPlay'] ?? false,
+      questions: data['questions'] ?? [],
+      tournamentBattleId: documentSnapshot.id,
       battleType: convertTournamentBattleTypeFromStringToEnum(data['battleType']),
       createdAt: data['createdAt'],
       createdBy: data['createdBy'],
-      player1: TournamentPlayerDetails.fromJson(Map.from(data['player1'])),
-      player2: TournamentPlayerDetails.fromJson(Map.from(data['player2'])),
-      tournamentId: documentSnapshot.id,
+      user1: TournamentPlayerDetails.fromJson(Map.from(data['user1'])),
+      user2: TournamentPlayerDetails.fromJson(Map.from(data['user2'])),
+      tournamentId: data['tournamentId'],
     );
   }
 

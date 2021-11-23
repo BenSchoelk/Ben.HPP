@@ -28,6 +28,9 @@ import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
 import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/features/systemConfig/systemConfigRepository.dart';
+import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
+import 'package:flutterquiz/features/tournament/cubits/tournamentCubit.dart';
+import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
 import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
 import 'package:flutterquiz/ui/styles/theme/themeCubit.dart';
 import 'package:flutterquiz/utils/constants.dart';
@@ -101,7 +104,11 @@ class MyApp extends StatelessWidget {
         //Interstitial ad cubit
         BlocProvider<InterstitialAdCubit>(create: (_) => InterstitialAdCubit()),
         //Rewarded ad cubit
-        BlocProvider<RewardedAdCubit>(create: (_) => RewardedAdCubit())
+        BlocProvider<RewardedAdCubit>(create: (_) => RewardedAdCubit()),
+        //tournament cubit
+        BlocProvider<TournamentCubit>(create: (_) => TournamentCubit(TournamentRepository())),
+        //tournament battle cubit
+        BlocProvider<TournamentBattleCubit>(create: (_) => TournamentBattleCubit(TournamentRepository())),
       ],
       child: Builder(
         builder: (context) {

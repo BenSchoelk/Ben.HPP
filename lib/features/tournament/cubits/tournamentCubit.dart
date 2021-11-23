@@ -56,21 +56,13 @@ class TournamentCubit extends Cubit<TournamentState> {
 
   void _subscribeTournament({required String tournamentId, required String uid}) {
     _tournamentSubscription = _tournamentRepository.listenToTournamentUpdates(tournamentId).listen((event) {
+      //TODO handle case of user left the tournament while tournament is in process of creation
       if (event.exists) {
+        print("Updates from listener");
         Tournament tournament = Tournament.fromDocumentSnapshot(event);
 
         //check if tournament is started or not
         if (tournament.status == TournamentStatus.started) {
-          //update state to tournament started
-          if (state is! TournamentStarted) {
-            //create quater finals
-            int userIndex = tournament.players.indexWhere((element) => element.uid == uid);
-            if (userIndex == 0 || userIndex == 2 || userIndex == 4 || userIndex == 6) {
-              //create quater final room
-
-            }
-          }
-
           emit(TournamentStarted(tournament));
         } else {
           //update state
@@ -187,11 +179,29 @@ class TournamentCubit extends Cubit<TournamentState> {
     }
   }
 
-  void startTournament() {
-    //start tournament by createdUser it will create four quater finals
+  Tournament getTournament() {
+    if (state is TournamentStarted) {
+      return (state as TournamentStarted).tournament;
+    }
+
+    return Tournament.fromJson({});
   }
 
-  void createQuaterFinal({required Tournament tournament, required int userIndex}) {}
+  //remove user when tournament is not started
+  void removeUserFromTournament({required String userId}) {
+    if (state is TournamentJoined) {
+      //
+      _tournamentRepository.removeUserFromTournament(uid: userId, tournament: (state as TournamentJoined).tournament);
+    } else if (state is TournamentCreated) {
+      //
+      _tournamentRepository.removeUserFromTournament(uid: userId, tournament: (state as TournamentCreated).tournament);
+    }
+  }
+
+  void resetTournamentResource() {
+    _cancelTournamentSubscription();
+    emit(TournamentInitial());
+  }
 
   void createFinal() {}
 
@@ -200,6 +210,53 @@ class TournamentCubit extends Cubit<TournamentState> {
   void joinFinal() {}
 
   void joinSemiFinal() {}
+
+  int getUserIndex(String uid) {
+    //
+    if (state is TournamentStarted) {
+      return (state as TournamentStarted).tournament.players.indexWhere((element) => element.uid == uid);
+    }
+    return -1;
+  }
+
+  int determineQuaterFinalNumber(int userIndex) {
+    if (userIndex == 0 || userIndex == 1) {
+      return 1;
+    }
+    if (userIndex == 2 || userIndex == 3) {
+      return 2;
+    }
+    if (userIndex == 4 || userIndex == 5) {
+      return 3;
+    }
+    return 4;
+  }
+
+  int determineSemiFinalNumber(int quaterFinalNumber) {
+    if (quaterFinalNumber == 1 || quaterFinalNumber == 2) {
+      return 1;
+    }
+    return 2;
+  }
+
+  void _cancelTournamentSubscription() {
+    _tournamentSubscription?.cancel();
+  }
+
+  String getQuaterFinalBattleId(String uid) {
+    if (state is TournamentStarted) {
+      String quaterFinalBattleId = "";
+
+      for (var quaterFinalDetails in (state as TournamentStarted).tournament.quaterFinals) {
+        if (quaterFinalDetails['user2'] == uid) {
+          quaterFinalBattleId = quaterFinalDetails['id'].toString();
+          break;
+        }
+      }
+      return quaterFinalBattleId;
+    }
+    return "";
+  }
 
   @override
   Future<void> close() async {

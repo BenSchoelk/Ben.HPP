@@ -48,9 +48,9 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
     }
   }
 
-  String? getUserName() {
+  String getUserName() {
     if (state is UserDetailsFetchSuccess) {
-      return (state as UserDetailsFetchSuccess).userProfile.name;
+      return (state as UserDetailsFetchSuccess).userProfile.name!;
     }
     return "";
   }

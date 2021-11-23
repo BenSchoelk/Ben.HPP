@@ -3,7 +3,6 @@ import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.da
 
 enum TournamentStatus { notStarted, started, completed }
 
-//TODO : add quater finals , semi finals and final
 class Tournament {
   final String title;
   final int entryFee;
@@ -15,6 +14,18 @@ class Tournament {
   final int totalPlayers;
   final String languageId;
 
+  //
+  //ids of quaterfinals,user1 and user2
+  // {"id" : battle document id,"user1" : uid, "user2" : uid}
+  final List quaterFinals;
+  //
+  //ids of semifinals,user1 and user2
+  //{"id" : battle document id,"user1" : uid, "user2" : uid}
+  final List semiFinals;
+  //
+  //{"id" : battle document id,"user1" : uid, "user2" : uid}
+  final Map<String, dynamic> finalBattle; //id of final battle,user1 and user2
+
   Tournament({
     required this.createdAt,
     required this.entryFee,
@@ -25,14 +36,37 @@ class Tournament {
     required this.players,
     required this.totalPlayers,
     required this.languageId,
+    required this.finalBattle,
+    required this.quaterFinals,
+    required this.semiFinals,
   });
+
+  static Tournament fromJson(Map<String, dynamic> data) {
+    return Tournament(
+      createdAt: data['createdAt'] ?? "",
+      entryFee: int.parse(data['entryFee'] ?? "0"),
+      totalPlayers: data['totalPlayers'] ?? 1,
+      title: data['title'] ?? "",
+      id: data['id'] ?? "",
+      finalBattle: Map.from(data['finalBattle'] ?? {}),
+      quaterFinals: data['quaterFinals'] ?? [],
+      semiFinals: data['semiFinals'] ?? [],
+      createdBy: data['createdBy'] ?? "",
+      status: convertStatusFromStringToEnum(data['status'] ?? ""),
+      languageId: data['languageId'] ?? "",
+      players: data['players'] == null ? ([] as List<TournamentPlayerDetails>) : (data['players'] as List).map((e) => TournamentPlayerDetails.fromJson(Map.from(e))).toList(),
+    );
+  }
 
   static Tournament fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     final data = documentSnapshot.data() as Map<String, dynamic>;
 
     return Tournament(
-      createdAt: data['createdAt'] ?? "",
-      entryFee: data['entryFee'] ?? 0,
+      finalBattle: Map.from(data['finalBattle'] ?? {}),
+      quaterFinals: data['quaterFinals'] ?? [],
+      semiFinals: data['semiFinals'] ?? [],
+      createdAt: data['createdAt'] == null ? "" : data['createdAt'].toString(),
+      entryFee: int.parse(data['entryFee'] ?? "0"),
       totalPlayers: data['totalPlayers'] ?? 1,
       title: data['title'] ?? "",
       id: documentSnapshot.id,
