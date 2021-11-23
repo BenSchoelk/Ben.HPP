@@ -58,7 +58,6 @@ class TournamentCubit extends Cubit<TournamentState> {
     _tournamentSubscription = _tournamentRepository.listenToTournamentUpdates(tournamentId).listen((event) {
       //TODO handle case of user left the tournament while tournament is in process of creation
       if (event.exists) {
-        print("Updates from listener");
         Tournament tournament = Tournament.fromDocumentSnapshot(event);
 
         //check if tournament is started or not
@@ -76,6 +75,7 @@ class TournamentCubit extends Cubit<TournamentState> {
           //
           if (tournament.totalPlayers == numberOfPlayerForTournament) {
             if (tournament.createdBy == uid) {
+              print("Start tournament");
               //or if state is TournamentCreated
               //start tournament
               _tournamentRepository.startTournament(tournamentId);
@@ -255,6 +255,7 @@ class TournamentCubit extends Cubit<TournamentState> {
       }
       return quaterFinalBattleId;
     }
+
     return "";
   }
 

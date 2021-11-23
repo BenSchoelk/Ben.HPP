@@ -99,8 +99,13 @@ class TournamentBattleCubit extends Cubit<TournamentBattleState> {
     _subscribeTournamentBattle(tournamentBattleId: tournamentBattleId, uid: uid);
   }
 
-  void cancelTournamentBattleSubscription() {
+  void _cancelTournamentBattleSubscription() {
     _tournamentBattleSubscription?.cancel();
+  }
+
+  void resetTournamentBattleResource() {
+    _cancelTournamentBattleSubscription();
+    emit(TournamentBattleInitial());
   }
 
   @override

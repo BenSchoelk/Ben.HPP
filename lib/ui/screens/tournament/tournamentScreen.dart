@@ -50,7 +50,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
   @override
   Widget build(BuildContext context) {
     final tournamentCubit = context.read<TournamentCubit>();
-    final tournamentBattleCubit = context.read<TournamentBattleCubit>();
+
     return MultiBlocListener(
         listeners: [
           BlocListener<TournamentCubit, TournamentState>(
@@ -63,6 +63,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
                   ///
                   //
                   if (state.tournament.semiFinals.isEmpty) {
+                    final tournamentBattleCubit = context.read<TournamentBattleCubit>();
                     int userIndex = tournamentCubit.getUserIndex(context.read<UserDetailsCubit>().getUserId());
                     if (userIndex == 0 || userIndex == 2 || userIndex == 4 || userIndex == 6) {
                       //this will determine that quater finals created only once
@@ -84,8 +85,11 @@ class _TournamentScreenState extends State<TournamentScreen> {
                         // && state.tournament.quaterFinals.length <= 4
 
                         //user2 uid will be the user who will join or will not created the quater final battle
-                        tournamentBattleCubit.joinTournamentBattle(
-                            tournamentBattleType: TournamentBattleType.quaterFinal, tournamentBattleId: tournamentCubit.getQuaterFinalBattleId(state.tournament.players[userIndex].uid), uid: state.tournament.players[userIndex].uid);
+                        String tournamentBattleId = tournamentCubit.getQuaterFinalBattleId(state.tournament.players[userIndex].uid);
+                        //if tournament battle
+                        if (tournamentBattleId.isNotEmpty) {
+                          tournamentBattleCubit.joinTournamentBattle(tournamentBattleType: TournamentBattleType.quaterFinal, tournamentBattleId: tournamentBattleId, uid: state.tournament.players[userIndex].uid);
+                        }
                       }
                     }
                   }
@@ -95,7 +99,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
             listener: (context, state) {
               print("Tournament Battle state is ${state.toString()}");
             },
-            bloc: tournamentBattleCubit,
+            bloc: context.read<TournamentBattleCubit>(),
           )
         ],
         child: WillPopScope(
@@ -105,6 +109,8 @@ class _TournamentScreenState extends State<TournamentScreen> {
                 builder: (_) {
                   return ExitGameDailog(
                     onTapYes: () {
+                      //resrt tournament battle resource
+                      context.read<TournamentBattleCubit>().resetTournamentBattleResource();
                       //reset tournament resource
                       context.read<TournamentCubit>().removeUserFromTournament(userId: context.read<UserDetailsCubit>().getUserId());
                       context.read<TournamentCubit>().resetTournamentResource();
@@ -121,7 +127,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
               children: [
                 PageBackgroundGradientContainer(),
                 BlocBuilder(
-                  bloc: tournamentBattleCubit,
+                  bloc: context.read<TournamentBattleCubit>(),
                   builder: (context, state) {
                     if (state is TournamentBattleStarted) {
                       return Container(

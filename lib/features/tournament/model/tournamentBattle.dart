@@ -35,7 +35,7 @@ class TournamentBattle {
       questions: data['questions'] ?? [],
       tournamentBattleId: documentSnapshot.id,
       battleType: convertTournamentBattleTypeFromStringToEnum(data['battleType']),
-      createdAt: data['createdAt'],
+      createdAt: data['createdAt'] == null ? "" : data['createdAt'].toString(),
       createdBy: data['createdBy'],
       user1: TournamentPlayerDetails.fromJson(Map.from(data['user1'])),
       user2: TournamentPlayerDetails.fromJson(Map.from(data['user2'])),

@@ -234,6 +234,6 @@ const List<String> examRules = [
 ];
 //
 //Please do not change this if you do torunament will not work as expected.
-//This ensure that torunament will start only if there is 8 users are ready to play
+//This ensure that torunament will start only if 8 users are ready to play
 //
-const int numberOfPlayerForTournament = 8;
+const int numberOfPlayerForTournament = 2;
