@@ -7,6 +7,7 @@ import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.
 import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'dart:ui' as ui;
 
@@ -34,6 +35,17 @@ class MessageContainer extends StatelessWidget {
         } else {
           //get opponent user's latest message
           message = context.read<MessageCubit>().getUserLatestMessage(battleRoomCubit.getOpponentUserDetails(currentUserId).uid);
+        }
+      }
+      //if quizType is tournament
+      else if (quizType == QuizTypes.tournament) {
+        TournamentBattleCubit tournamentBattleCubit = context.read<TournamentBattleCubit>();
+        if (isCurrentUser) {
+          //get current user's latest message
+          message = context.read<MessageCubit>().getUserLatestMessage(tournamentBattleCubit.getCurrentUserDetails(currentUserId).uid);
+        } else {
+          //get opponent user's latest message
+          message = context.read<MessageCubit>().getUserLatestMessage(tournamentBattleCubit.getOpponentUserDetails(currentUserId).uid);
         }
       } else {
         MultiUserBattleRoomCubit battleRoomCubit = context.read<MultiUserBattleRoomCubit>();
@@ -94,7 +106,7 @@ class MessageContainer extends StatelessWidget {
         maxWidth: MediaQuery.of(context).size.width * (0.425),
       ),
       child: CustomPaint(
-        painter: quizType == QuizTypes.battle
+        painter: quizType == QuizTypes.battle || quizType == QuizTypes.tournament
             ? MessageCustomPainter(
                 triangleIsLeft: isCurrentUser,
                 firstGradientColor: Theme.of(context).scaffoldBackgroundColor,

@@ -554,7 +554,7 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
               waitForOpponentTimer?.cancel();
               await Future.delayed(Duration(milliseconds: 500));
               await quizCountDownAnimationController.forward();
-              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": ""});
+              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": "", "isTournamentBattle": false});
             }
           },
           child: Stack(

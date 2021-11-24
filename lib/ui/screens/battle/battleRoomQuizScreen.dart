@@ -16,6 +16,10 @@ import 'package:flutterquiz/features/profileManagement/profileManagementReposito
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
+import 'package:flutterquiz/features/tournament/cubits/tournamentCubit.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
@@ -29,7 +33,8 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BattleRoomQuizScreen extends StatefulWidget {
   final String? battleLbl;
-  BattleRoomQuizScreen({Key? key, this.battleLbl}) : super(key: key);
+  final bool isTournamentBattle;
+  BattleRoomQuizScreen({Key? key, this.battleLbl, required this.isTournamentBattle}) : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
@@ -44,6 +49,7 @@ class BattleRoomQuizScreen extends StatefulWidget {
                 ],
                 child: BattleRoomQuizScreen(
                   battleLbl: arguments['battleLbl'],
+                  isTournamentBattle: arguments['isTournamentBattle'],
                 )));
   }
 
@@ -99,10 +105,13 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<BattleRoomCubit>().getEntryFee(), false);
-      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: context.read<BattleRoomCubit>().getEntryFee());
-    });
+    //if battle is not from tournament then deduct coins
+    if (!widget.isTournamentBattle) {
+      Future.delayed(Duration.zero, () {
+        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<BattleRoomCubit>().getEntryFee(), false);
+        context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: context.read<BattleRoomCubit>().getEntryFee());
+      });
+    }
     initializeAnimation();
     initMessageListener();
     questionContentAnimationController.forward();
@@ -130,20 +139,39 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     super.didChangeAppLifecycleState(state);
     //delete battle room
     if (state == AppLifecycleState.paused) {
-      if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
-        //delete all messages entered by current user
-        deleteMessages(context.read<BattleRoomCubit>());
-        //delete battle room
-        context.read<BattleRoomCubit>().deleteBattleRoom(false);
+      //if user minimize or change the app
+      if (widget.isTournamentBattle) {
+        if (!context.read<TournamentBattleCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+          //delete all messages entered by current user
+          deleteMessages(context.read<TournamentBattleCubit>().getRoomId());
+          //TODO : remove user from battle
+        }
+      } else {
+        if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+          //delete all messages entered by current user
+          deleteMessages(context.read<BattleRoomCubit>().getRoomId());
+          //delete battle room
+          context.read<BattleRoomCubit>().deleteBattleRoom(false);
+        }
       }
     }
     //show you left the game
     if (state == AppLifecycleState.resumed) {
-      print(context.read<BattleRoomCubit>().getUsers().length);
-      if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
-        setState(() {
-          showYouLeftQuiz = true;
-        });
+      //
+      if (widget.isTournamentBattle) {
+        //
+        if (!context.read<TournamentBattleCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+          setState(() {
+            showYouLeftQuiz = true;
+          });
+        }
+      } else {
+        //
+        if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+          setState(() {
+            showYouLeftQuiz = true;
+          });
+        }
       }
 
       timerAnimationController.stop();
@@ -154,8 +182,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   void initMessageListener() {
     //to set listener for opponent message
     Future.delayed(Duration.zero, () {
-      BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
-      context.read<MessageCubit>().subscribeToMessages(battleRoomCubit.getRoomId());
+      String roomId = widget.isTournamentBattle ? context.read<TournamentBattleCubit>().getRoomId() : context.read<BattleRoomCubit>().getRoomId();
+      context.read<MessageCubit>().subscribeToMessages(roomId);
     });
   }
 
@@ -192,29 +220,53 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   void submitAnswer(String submittedAnswer) async {
     timerAnimationController.stop();
 
-    //submitted answer will be id of the answerOption
-    final battleRoomCubit = context.read<BattleRoomCubit>();
-    if (!battleRoomCubit.getQuestions()[currentQuestionIndex].attempted) {
-      //update answer locally
-      context.read<BattleRoomCubit>().updateQuestionAnswer(battleRoomCubit.getQuestions()[currentQuestionIndex].id, submittedAnswer);
-      updateSubmittedAnswerForBookmark(battleRoomCubit.getQuestions()[currentQuestionIndex]);
+    //if battle is from tournament
+    if (widget.isTournamentBattle) {
+      //submitted answer will be id of the answerOption
+      final tournamentBattleCubit = context.read<TournamentBattleCubit>();
+      if (!tournamentBattleCubit.getQuestions()[currentQuestionIndex].attempted) {
+        //update answer locally
+        tournamentBattleCubit.updateQuestionAnswer(tournamentBattleCubit.getQuestions()[currentQuestionIndex].id!, submittedAnswer);
+        updateSubmittedAnswerForBookmark(tournamentBattleCubit.getQuestions()[currentQuestionIndex]);
 
-      //need to give the delay so user can see the correct answer or incorrect
-      await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
-      //update answer and current points in database
+        //need to give the delay so user can see the correct answer or incorrect
+        await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
+        //update answer and current points in database
 
-      battleRoomCubit.submitAnswer(
-        context.read<UserDetailsCubit>().getUserId(),
-        submittedAnswer,
-        battleRoomCubit.getQuestions()[currentQuestionIndex].correctAnswerOptionId == submittedAnswer,
-        UiUtils.determineBattleCorrectAnswerPoints(timerAnimationController.value), //
-      );
+        tournamentBattleCubit.submitAnswer(
+          context.read<UserDetailsCubit>().getUserId(),
+          submittedAnswer,
+          tournamentBattleCubit.getQuestions()[currentQuestionIndex].correctAnswerOptionId == submittedAnswer,
+          UiUtils.determineBattleCorrectAnswerPoints(timerAnimationController.value), //
+        );
+      }
+    } else {
+      //if battle is not from tournament
+
+      //submitted answer will be id of the answerOption
+      final battleRoomCubit = context.read<BattleRoomCubit>();
+      if (!battleRoomCubit.getQuestions()[currentQuestionIndex].attempted) {
+        //update answer locally
+        context.read<BattleRoomCubit>().updateQuestionAnswer(battleRoomCubit.getQuestions()[currentQuestionIndex].id, submittedAnswer);
+        updateSubmittedAnswerForBookmark(battleRoomCubit.getQuestions()[currentQuestionIndex]);
+
+        //need to give the delay so user can see the correct answer or incorrect
+        await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
+        //update answer and current points in database
+
+        battleRoomCubit.submitAnswer(
+          context.read<UserDetailsCubit>().getUserId(),
+          submittedAnswer,
+          battleRoomCubit.getQuestions()[currentQuestionIndex].correctAnswerOptionId == submittedAnswer,
+          UiUtils.determineBattleCorrectAnswerPoints(timerAnimationController.value), //
+        );
+      }
     }
   }
 
   //if user has submitted the answer for current question
   bool hasSubmittedAnswerForCurrentQuestion() {
-    return context.read<BattleRoomCubit>().getQuestions()[currentQuestionIndex].attempted;
+    return widget.isTournamentBattle ? context.read<TournamentBattleCubit>().getQuestions()[currentQuestionIndex].attempted : context.read<BattleRoomCubit>().getQuestions()[currentQuestionIndex].attempted;
   }
 
   //next question
@@ -233,9 +285,104 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
     });
   }
 
-  void deleteMessages(BattleRoomCubit battleRoomCubit) {
+  void deleteMessages(String battleRoomId) {
     //to delete messages by given user
-    context.read<MessageCubit>().deleteMessages(battleRoomCubit.getRoomId(), context.read<UserDetailsCubit>().getUserId());
+    context.read<MessageCubit>().deleteMessages(battleRoomId, context.read<UserDetailsCubit>().getUserId());
+  }
+
+  //tournament battle listener
+  void tournamentBattleListener(BuildContext context, TournamentBattleState state, TournamentBattleCubit tournamentBattleCubit) {
+    if (state is TournamentBattleStarted) {
+      TournamentPlayerDetails opponentUserDetails = tournamentBattleCubit.getOpponentUserDetails(context.read<UserDetailsCubit>().getUserId());
+      TournamentPlayerDetails currentUserDetails = tournamentBattleCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
+
+      //if user has left the game
+      if (state.hasLeft) {
+        timerAnimationController.stop();
+        opponentUserTimerAnimationController.stop();
+      } else {
+        //check if opponent user has submitted the answer
+        if (opponentUserDetails.answers.length == (currentQuestionIndex + 1)) {
+          opponentUserTimerAnimationController.stop();
+        }
+        //if both users submitted the answer then change question
+        if (state.tournamentBattle.user1.answers.length == state.tournamentBattle.user2.answers.length) {
+          //
+          //if user has not submitted the answers for all questions then move to next question
+          //
+          if (state.tournamentBattle.user1.answers.length != state.questions.length) {
+            //
+            //since submitting answer locally will change the cubit state
+            //to avoid calling changeQuestion() called twice
+            //need to add this condition
+            //
+            if (!state.questions[currentUserDetails.answers.length].attempted) {
+              //stop any timer
+              timerAnimationController.stop();
+              opponentUserTimerAnimationController.stop();
+              //change the question
+              changeQuestion();
+              //run timer again
+              timerAnimationController.forward(from: 0.0);
+              opponentUserTimerAnimationController.forward(from: 0.0);
+            }
+          }
+          //else move to result screen
+          else {
+            //stop timers if any running
+            timerAnimationController.stop();
+            opponentUserTimerAnimationController.stop();
+
+            //delete messages by current user
+            deleteMessages(tournamentBattleCubit.getRoomId());
+
+            //update tournament battles result
+            String winnerId = state.tournamentBattle.user1.points > state.tournamentBattle.user2.points ? state.tournamentBattle.user1.uid : state.tournamentBattle.user2.uid;
+            context.read<TournamentCubit>().updateTournamentBattlesResult(tournamentBattleId: state.tournamentBattle.tournamentBattleId, winnerId: winnerId);
+
+            //
+            //delete room
+            tournamentBattleCubit.deleteRoom();
+
+            //TODO : create semi-final and final
+            //create semi final or final
+            if (winnerId == context.read<UserDetailsCubit>().getUserId()) {
+              //if user is playing quater-final
+              if (state.tournamentBattle.battleType == TournamentBattleType.quaterFinal) {
+                //search for semi
+                String semiFinalId = context.read<TournamentCubit>().getSemiFinalBattleId();
+                if (semiFinalId.isEmpty) {
+                  //TODO : create semi final
+                } else {
+                  //TODO : join semi final
+                }
+              } else if (state.tournamentBattle.battleType == TournamentBattleType.semiFinal) {
+                //create final
+              }
+            }
+
+            //navigate to result
+            if (isSettingDialogOpen) {
+              Navigator.of(context).pop();
+            }
+            //TODO : show result dialog
+            Navigator.of(context).pop();
+
+            // Navigator.of(context).pushReplacementNamed(
+            //   Routes.result,
+            //   arguments: {
+            //     "questions": state.questions,
+            //     "battleRoom": state.battleRoom,
+            //     "numberOfPlayer": 2,
+            //     "quizType": QuizTypes.battle,
+            //     "entryFee": state.battleRoom.entryFee,
+            //   },
+            // );
+
+          }
+        }
+      }
+    }
   }
 
   //for changing ui and other trigger other actions based on realtime changes that occured in game
@@ -282,7 +429,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             opponentUserTimerAnimationController.stop();
 
             //delete messages by current user
-            deleteMessages(battleRoomCubit);
+            deleteMessages(battleRoomCubit.getRoomId());
             //delete room
             battleRoomCubit.deleteBattleRoom(widget.battleLbl == "playFrd" ? true : false);
             //navigate to result
@@ -376,7 +523,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       child: ScaleTransition(
         scale: messageAnimation,
         child: MessageContainer(
-          quizType: QuizTypes.battle,
+          quizType: widget.isTournamentBattle ? QuizTypes.tournament : QuizTypes.battle,
           isCurrentUser: true,
         ),
         alignment: Alignment(-0.5, 1.0), //-0.5 left side nad 0.5 is right side,
@@ -391,7 +538,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       child: ScaleTransition(
         scale: opponentMessageAnimation,
         child: MessageContainer(
-          quizType: QuizTypes.battle,
+          quizType: widget.isTournamentBattle ? QuizTypes.tournament : QuizTypes.battle,
           isCurrentUser: false,
         ),
         alignment: Alignment(0.5, 1.0), //-0.5 left side nad 0.5 is right side,
@@ -402,6 +549,29 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   }
 
   Widget _buildCurrentUserDetailsContainer() {
+    if (widget.isTournamentBattle) {
+      TournamentBattleCubit tournamentBattleCubit = context.read<TournamentBattleCubit>();
+      return PositionedDirectional(
+          bottom: bottomPadding,
+          start: 10,
+          child: BlocBuilder<TournamentBattleCubit, TournamentBattleState>(
+            bloc: tournamentBattleCubit,
+            builder: (context, state) {
+              if (state is TournamentBattleStarted) {
+                TournamentPlayerDetails curretUserDetails = tournamentBattleCubit.getCurrentUserDetails(context.read<UserDetailsCubit>().getUserId());
+                //it contains correct answer by respective user and user name
+                return UserDetailsWithTimerContainer(
+                  points: curretUserDetails.points.toString(),
+                  isCurrentUser: true,
+                  name: curretUserDetails.name,
+                  timerAnimationController: timerAnimationController,
+                  profileUrl: curretUserDetails.profileUrl,
+                );
+              }
+              return Container();
+            },
+          ));
+    }
     BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
     return PositionedDirectional(
         bottom: bottomPadding,
@@ -426,6 +596,30 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   }
 
   Widget _buildOpponentUserDetailsContainer() {
+    if (widget.isTournamentBattle) {
+      TournamentBattleCubit tournamentBattleCubit = context.read<TournamentBattleCubit>();
+      return PositionedDirectional(
+          bottom: bottomPadding,
+          start: 10,
+          child: BlocBuilder<TournamentBattleCubit, TournamentBattleState>(
+            bloc: tournamentBattleCubit,
+            builder: (context, state) {
+              if (state is TournamentBattleStarted) {
+                TournamentPlayerDetails opponentUserDetails = tournamentBattleCubit.getOpponentUserDetails(context.read<UserDetailsCubit>().getUserId());
+                //it contains correct answer by respective user and user name
+                return UserDetailsWithTimerContainer(
+                  points: opponentUserDetails.points.toString(),
+                  isCurrentUser: true,
+                  name: opponentUserDetails.name,
+                  timerAnimationController: timerAnimationController,
+                  profileUrl: opponentUserDetails.profileUrl,
+                );
+              }
+              return Container();
+            },
+          ));
+    }
+
     BattleRoomCubit battleRoomCubit = context.read<BattleRoomCubit>();
     return PositionedDirectional(
         bottom: bottomPadding,
@@ -449,54 +643,77 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         ));
   }
 
+  Widget _buildYouWonContainer(Function onPressed) {
+    return Container(
+      alignment: Alignment.center,
+      color: Theme.of(context).backgroundColor.withOpacity(0.1),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: AlertDialog(
+        title: Text(
+          AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+        content: Text(
+          AppLocalization.of(context)!.getTranslatedValues('opponentLeftLbl')!,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+        actions: [
+          CupertinoButton(
+              child: Text(
+                AppLocalization.of(context)!.getTranslatedValues('okayLbl')!,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+              onPressed: () {
+                onPressed();
+              }),
+        ],
+      ),
+    );
+  }
+
   //if opponent user has left the game this dialog will be shown
-  Widget _buildYouWonGameDailog(BattleRoomCubit battleRoomCubit) {
+  Widget _buildYouWonGameDailog() {
     return showYouLeftQuiz
         ? Container()
-        : BlocBuilder<BattleRoomCubit, BattleRoomState>(
-            bloc: battleRoomCubit,
-            builder: (context, state) {
-              if (state is BattleRoomUserFound) {
-                //show you won game only opponent user has left the game
-                if (battleRoomCubit.opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Theme.of(context).backgroundColor.withOpacity(0.1),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: AlertDialog(
-                      title: Text(
-                        AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      content: Text(
-                        AppLocalization.of(context)!.getTranslatedValues('opponentLeftLbl')!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      actions: [
-                        CupertinoButton(
-                            child: Text(
-                              AppLocalization.of(context)!.getTranslatedValues('okayLbl')!,
-                              style: TextStyle(color: Theme.of(context).primaryColor),
-                            ),
-                            onPressed: () {
-                              deleteMessages(battleRoomCubit);
-                              context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<BattleRoomCubit>().getEntryFee() * 2, true);
-                              context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: context.read<BattleRoomCubit>().getEntryFee() * 2);
-                              Navigator.of(context).pop();
-                            }),
-                      ],
-                    ),
-                  );
-                }
-              }
-              return Container();
-            },
-          );
+        : widget.isTournamentBattle
+            ? BlocBuilder<TournamentBattleCubit, TournamentBattleState>(
+                bloc: context.read<TournamentBattleCubit>(),
+                builder: (context, state) {
+                  if (state is TournamentBattleStarted) {
+                    //show you won game only opponent user has left the game
+                    if (context.read<TournamentBattleCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+                      return _buildYouWonContainer(() {
+                        deleteMessages(context.read<TournamentBattleCubit>().getRoomId());
+                        Navigator.of(context).pop();
+                        //TODO : add enter semi-final and final logic here
+                      });
+                    }
+                  }
+                  return Container();
+                },
+              )
+            : BlocBuilder<BattleRoomCubit, BattleRoomState>(
+                bloc: context.read<BattleRoomCubit>(),
+                builder: (context, state) {
+                  if (state is BattleRoomUserFound) {
+                    //show you won game only opponent user has left the game
+                    if (context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
+                      return _buildYouWonContainer(() {
+                        deleteMessages(context.read<BattleRoomCubit>().getRoomId());
+                        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<BattleRoomCubit>().getEntryFee() * 2, true);
+                        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: context.read<BattleRoomCubit>().getEntryFee() * 2);
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  }
+                  return Container();
+                },
+              );
   }
 
   //if currentUser has left the game
@@ -573,7 +790,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
       child: SlideTransition(
         position: messageBoxAnimation.drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
-          quizType: QuizTypes.battle,
+          battleRoomId: widget.isTournamentBattle ? context.read<TournamentBattleCubit>().getRoomId() : context.read<BattleRoomCubit>().getRoomId(),
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
           },
@@ -605,7 +822,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                   timerAnimationController.stop();
                   opponentUserTimerAnimationController.stop();
                   //delete messages
-                  deleteMessages(battleRoomCubit);
+                  deleteMessages(battleRoomCubit.getRoomId());
                   //delete battle room
                   battleRoomCubit.deleteBattleRoom(false);
                   Navigator.of(context).pop();
@@ -621,9 +838,21 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             BlocListener<BattleRoomCubit, BattleRoomState>(
               bloc: battleRoomCubit,
               listener: (context, state) {
-                //since this listener will be call everytime if any changes occurred
-                //in battleRoomCubit
-                battleRoomListener(context, state, battleRoomCubit);
+                if (!widget.isTournamentBattle) {
+                  //since this listener will be call everytime if any changes occurred
+                  //in battleRoomCubit
+                  battleRoomListener(context, state, battleRoomCubit);
+                }
+              },
+            ),
+            BlocListener<TournamentBattleCubit, TournamentBattleState>(
+              bloc: context.read<TournamentBattleCubit>(),
+              listener: (context, state) {
+                if (widget.isTournamentBattle) {
+                  //since this listener will be call everytime if any changes occurred
+                  //in battleRoomCubit
+                  tournamentBattleListener(context, state, context.read<TournamentBattleCubit>());
+                }
               },
             ),
             BlocListener<MessageCubit, MessageState>(
@@ -672,7 +901,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
               _buildOpponentUserDetailsContainer(),
               _buildOpponentUserMessageContainer(),
               _buildMessageButton(),
-              _buildYouWonGameDailog(battleRoomCubit),
+              _buildYouWonGameDailog(),
               _buildCurrentUserLeftTheGame(),
             ],
           ),

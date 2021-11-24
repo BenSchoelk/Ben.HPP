@@ -67,11 +67,10 @@ final String skip = "skip";
 final String resetTime = "resetTime";
 
 //firestore collection names
-final String battleRoomCollection = "battleRoom"; //  testBattleRoom
+final String battleRoomCollection = "testBattleRoom"; // "battleRoom";
 final String multiUserBattleRoomCollection = "multiUserBattleRoom"; // "testMultiUserBattleRoom";
 final String messagesCollection = "messages"; //"testMessages";
 final String tournamentsCollection = "testTournaments"; // "tournaments";
-final String tournamentBattlesCollection = "testTournamentBattles"; // "tournamentBattles";
 
 //api end points
 final String addUserUrl = "${baseUrl}user_signup";

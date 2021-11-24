@@ -22,6 +22,16 @@ class Tournament {
   //ids of semifinals,user1 and user2
   //{"id" : battle document id,"user1" : uid, "user2" : uid}
   final List semiFinals;
+
+  //[{"id" : battle document id,"winnerId" : uid}]
+  final List quaterFinalsResult;
+
+  //[{"id" : battle document id,"winnerId" : uid}]
+  final List semiFinalsResult;
+
+  //{"id" : battle document id,"winnerId" : uid}
+  final Map<String, dynamic> finalBattleResult;
+
   //
   //{"id" : battle document id,"user1" : uid, "user2" : uid}
   final Map<String, dynamic> finalBattle; //id of final battle,user1 and user2
@@ -29,6 +39,9 @@ class Tournament {
   Tournament({
     required this.createdAt,
     required this.entryFee,
+    required this.finalBattleResult,
+    required this.quaterFinalsResult,
+    required this.semiFinalsResult,
     required this.title,
     required this.id,
     required this.createdBy,
@@ -48,6 +61,9 @@ class Tournament {
       totalPlayers: data['totalPlayers'] ?? 1,
       title: data['title'] ?? "",
       id: data['id'] ?? "",
+      finalBattleResult: data['finalBattleResult'] ?? {},
+      quaterFinalsResult: data['quaterFinalsResult'] ?? [],
+      semiFinalsResult: data['semiFinalsResult'] ?? [],
       finalBattle: Map.from(data['finalBattle'] ?? {}),
       quaterFinals: data['quaterFinals'] ?? [],
       semiFinals: data['semiFinals'] ?? [],
@@ -62,6 +78,9 @@ class Tournament {
     final data = documentSnapshot.data() as Map<String, dynamic>;
 
     return Tournament(
+      finalBattleResult: data['finalBattleResult'] ?? {},
+      quaterFinalsResult: data['quaterFinalsResult'] ?? [],
+      semiFinalsResult: data['semiFinalsResult'] ?? [],
       finalBattle: Map.from(data['finalBattle'] ?? {}),
       quaterFinals: data['quaterFinals'] ?? [],
       semiFinals: data['semiFinals'] ?? [],

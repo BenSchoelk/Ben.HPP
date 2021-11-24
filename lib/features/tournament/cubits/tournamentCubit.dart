@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/tournament/model/tournament.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
 import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
 import 'package:flutterquiz/utils/constants.dart';
 
@@ -198,18 +199,40 @@ class TournamentCubit extends Cubit<TournamentState> {
     }
   }
 
+  void updateTournamentBattlesResult({required String tournamentBattleId, required String winnerId}) {
+    if (state is TournamentStarted) {
+      _tournamentRepository.updateTournamentBattlesResult(tournamentId: (state as TournamentStarted).tournament.id, winnerId: winnerId, tournamentBattleId: tournamentBattleId);
+    }
+  }
+
   void resetTournamentResource() {
     _cancelTournamentSubscription();
     emit(TournamentInitial());
   }
 
-  void createFinal() {}
-
-  void createSemiFinal() {}
-
   void joinFinal() {}
 
-  void joinSemiFinal() {}
+  String getSemiFinalBattleId() {
+    //TODO : determine how to create semifinal
+    if (state is TournamentStarted) {
+      final semiFinals = (state as TournamentStarted).tournament.semiFinals;
+      //if there is no any semi final then create semi final
+      if (semiFinals.isEmpty) {
+        return "";
+      }
+      if (semiFinals.length == 1) {
+        //if one semi final is created and user2 is presenetd then create semi final
+        return semiFinals.first['user2'].toString().isEmpty ? semiFinals.first['id'].toString() : "";
+      }
+      //if second semi final is there then return id of that
+      if (semiFinals.length == 2) {
+        return semiFinals[1]['id'].toString();
+      }
+      //if
+      return "";
+    }
+    return "";
+  }
 
   int getUserIndex(String uid) {
     //

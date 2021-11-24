@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/message.dart';
@@ -18,8 +17,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MessageBoxContainer extends StatefulWidget {
   final VoidCallback closeMessageBox;
   final double? topPadding;
-  final QuizTypes quizType;
-  MessageBoxContainer({Key? key, required this.closeMessageBox, this.topPadding, required this.quizType}) : super(key: key);
+  final String battleRoomId;
+
+  MessageBoxContainer({
+    Key? key,
+    required this.closeMessageBox,
+    this.topPadding,
+    required this.battleRoomId,
+  }) : super(key: key);
 
   @override
   _MessageBoxContainerState createState() => _MessageBoxContainerState();
@@ -69,17 +74,15 @@ class _MessageBoxContainerState extends State<MessageBoxContainer> {
 
   Widget _buildTabBarView() {
     if (_currentSelectedIndex == 0) {
-      return ChatContainer(
-        quizType: widget.quizType,
-      );
+      return Container();
     } else if (_currentSelectedIndex == 1) {
       return MessagesContainer(
-        quizType: widget.quizType,
+        battleRoomId: widget.battleRoomId,
         closeMessageBox: widget.closeMessageBox,
       );
     }
     return EmojisContainer(
-      quizType: widget.quizType,
+      battleRoomId: widget.battleRoomId,
       closeMessageBox: widget.closeMessageBox,
     );
   }
@@ -253,9 +256,9 @@ class ChatContainer extends StatelessWidget {
 }
 
 class MessagesContainer extends StatefulWidget {
-  final QuizTypes quizType;
+  final String battleRoomId;
   final VoidCallback closeMessageBox;
-  MessagesContainer({Key? key, required this.closeMessageBox, required this.quizType}) : super(key: key);
+  MessagesContainer({Key? key, required this.closeMessageBox, required this.battleRoomId}) : super(key: key);
 
   @override
   _MessagesContainerState createState() => _MessagesContainerState();
@@ -280,12 +283,12 @@ class _MessagesContainerState extends State<MessagesContainer> {
             child: CustomRoundedButton(
               onTap: () {
                 MessageCubit messageCubit = context.read<MessageCubit>();
-                String roomId = widget.quizType == QuizTypes.battle ? context.read<BattleRoomCubit>().getRoomId() : context.read<MultiUserBattleRoomCubit>().getRoomId();
+
                 UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
                 messageCubit.addMessage(
                   message: predefinedMessages[index],
                   by: userDetailsCubit.getUserId(),
-                  roomId: roomId,
+                  roomId: widget.battleRoomId,
                   isTextMessage: true,
                 );
                 widget.closeMessageBox();
@@ -333,8 +336,8 @@ class _MessagesContainerState extends State<MessagesContainer> {
 
 class EmojisContainer extends StatefulWidget {
   final VoidCallback closeMessageBox;
-  final QuizTypes quizType;
-  EmojisContainer({Key? key, required this.closeMessageBox, required this.quizType}) : super(key: key);
+  final String battleRoomId;
+  EmojisContainer({Key? key, required this.closeMessageBox, required this.battleRoomId}) : super(key: key);
 
   @override
   _EmojisContainerState createState() => _EmojisContainerState();
@@ -362,12 +365,12 @@ class _EmojisContainerState extends State<EmojisContainer> {
           return InkWell(
             onTap: () {
               MessageCubit messageCubit = context.read<MessageCubit>();
-              String roomId = widget.quizType == QuizTypes.battle ? context.read<BattleRoomCubit>().getRoomId() : context.read<MultiUserBattleRoomCubit>().getRoomId();
+
               UserDetailsCubit userDetailsCubit = context.read<UserDetailsCubit>();
               messageCubit.addMessage(
                 message: emojis[index],
                 by: userDetailsCubit.getUserId(),
-                roomId: roomId,
+                roomId: widget.battleRoomId,
                 isTextMessage: false,
               );
               widget.closeMessageBox();

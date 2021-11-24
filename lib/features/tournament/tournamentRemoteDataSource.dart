@@ -47,7 +47,7 @@ class TournamentRemoteDataSource {
   }
 
   Stream<DocumentSnapshot> listenToTournamentBattleUpdates(String tournamentBattleId) {
-    return _firebaseFirestore.collection(tournamentBattlesCollection).doc(tournamentBattleId).snapshots();
+    return _firebaseFirestore.collection(battleRoomCollection).doc(tournamentBattleId).snapshots();
   }
 
   Future<String> createTournamentBattle({required Map<String, dynamic> data}) async {
@@ -55,7 +55,23 @@ class TournamentRemoteDataSource {
       if (await InternetConnectivity.isUserOffline()) {
         throw SocketException("");
       }
-      return (await _firebaseFirestore.collection(tournamentBattlesCollection).add(data)).id;
+      return (await _firebaseFirestore.collection(battleRoomCollection).add(data)).id;
+    } on SocketException catch (_) {
+      throw TournamentException(errorMessageCode: noInternetCode);
+    } on PlatformException catch (_) {
+      throw TournamentException(errorMessageCode: unableToFindRoomCode);
+    } catch (_) {
+      throw TournamentException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
+
+  Future<void> removeTournamentBattle(String tournamentBattleId) async {
+    try {
+      if (await InternetConnectivity.isUserOffline()) {
+        throw SocketException("");
+      }
+
+      await _firebaseFirestore.collection(battleRoomCollection).doc(tournamentBattleId).delete();
     } on SocketException catch (_) {
       throw TournamentException(errorMessageCode: noInternetCode);
     } on PlatformException catch (_) {
@@ -109,7 +125,7 @@ class TournamentRemoteDataSource {
         throw SocketException("");
       }
 
-      await _firebaseFirestore.collection(tournamentBattlesCollection).doc(tournamentBattleId).update(data);
+      await _firebaseFirestore.collection(battleRoomCollection).doc(tournamentBattleId).update(data);
     } on SocketException catch (_) {
       throw TournamentException(errorMessageCode: noInternetCode);
     } on PlatformException catch (_) {

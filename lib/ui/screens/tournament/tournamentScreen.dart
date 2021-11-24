@@ -1,13 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
 import 'package:flutterquiz/features/tournament/cubits/tournamentCubit.dart';
+import 'package:flutterquiz/features/tournament/model/tournament.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class TournamentScreen extends StatefulWidget {
@@ -47,6 +54,45 @@ class _TournamentScreenState extends State<TournamentScreen> {
     });
   }
 
+  Widget _buildQuaterFinalContainer(TournamentPlayerDetails user1, TournamentPlayerDetails user2) {
+    //
+    return Row(
+      children: [
+        CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(user1.profileUrl),
+        ),
+        SizedBox(
+          width: 25.0,
+        ),
+        CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(user2.profileUrl),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuaterFinalsContainer(Tournament tournament) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            //
+            tournament.quaterFinals.length >= 1
+                ? _buildQuaterFinalContainer(
+                    tournament.players[context.read<TournamentCubit>().getUserIndex(tournament.quaterFinals.first['user1'])], tournament.players[context.read<TournamentCubit>().getUserIndex(tournament.quaterFinals.first['user2'])])
+                : Container(),
+          ],
+        ),
+        Row(
+          children: [],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final tournamentCubit = context.read<TournamentCubit>();
@@ -57,18 +103,17 @@ class _TournamentScreenState extends State<TournamentScreen> {
               bloc: tournamentCubit,
               listener: (context, state) {
                 print("Tournament state is ${state.toString()}");
+
                 //if tournament started
                 if (state is TournamentStarted) {
-                  //
-                  ///
-                  //
-                  if (state.tournament.semiFinals.isEmpty) {
-                    final tournamentBattleCubit = context.read<TournamentBattleCubit>();
+                  final tournamentBattleCubit = context.read<TournamentBattleCubit>();
+
+                  if (state.tournament.quaterFinalsResult.isEmpty) {
+                    //if quater finals result is empty then create or quater finals
                     int userIndex = tournamentCubit.getUserIndex(context.read<UserDetailsCubit>().getUserId());
                     if (userIndex == 0 || userIndex == 2 || userIndex == 4 || userIndex == 6) {
                       //this will determine that quater finals created only once
                       if (tournamentBattleCubit.state is TournamentBattleInitial) {
-                        // && state.tournament.quaterFinals.length != 4
                         //
                         //then create quater final
                         tournamentBattleCubit.createTournamentBattle(
@@ -92,12 +137,23 @@ class _TournamentScreenState extends State<TournamentScreen> {
                         }
                       }
                     }
+                  } else {
+                    //means one user has entered into semis
                   }
                 }
               }),
           BlocListener<TournamentBattleCubit, TournamentBattleState>(
             listener: (context, state) {
               print("Tournament Battle state is ${state.toString()}");
+              if (state is TournamentBattleStarted) {
+                if (state.tournamentBattle.battleType == TournamentBattleType.quaterFinal) {
+                  //if tournament is ready to play and both users have not submitted the any answer
+                  if (state.tournamentBattle.readyToPlay && state.tournamentBattle.user1.answers.isEmpty && state.tournamentBattle.user2.answers.isEmpty) {
+                    //
+                    print("Navigate to tournament quater final");
+                  }
+                }
+              }
             },
             bloc: context.read<TournamentBattleCubit>(),
           )
@@ -109,7 +165,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
                 builder: (_) {
                   return ExitGameDailog(
                     onTapYes: () {
-                      //resrt tournament battle resource
+                      //reset tournament battle resource
                       context.read<TournamentBattleCubit>().resetTournamentBattleResource();
                       //reset tournament resource
                       context.read<TournamentCubit>().removeUserFromTournament(userId: context.read<UserDetailsCubit>().getUserId());
@@ -127,17 +183,49 @@ class _TournamentScreenState extends State<TournamentScreen> {
               children: [
                 PageBackgroundGradientContainer(),
                 BlocBuilder(
-                  bloc: context.read<TournamentBattleCubit>(),
-                  builder: (context, state) {
-                    if (state is TournamentBattleStarted) {
-                      return Container(
-                        color: Colors.black26,
-                        child: Center(child: Text("Quater final started")),
+                    bloc: tournamentCubit,
+                    builder: (context, state) {
+                      if (state is TournamentStarted) {
+                        return Center(child: _buildQuaterFinalsContainer(state.tournament));
+                      }
+                      if (state is TournamentCreated) {
+                        return Center(
+                          child: Text("Waiting for players"),
+                        );
+                      }
+                      if (state is TournamentJoined) {
+                        return Center(
+                          child: Text("Waiting for players"),
+                        );
+                      }
+
+                      if (state is TournamentCreationFailure) {
+                        return Center(
+                          child: ErrorContainer(
+                            errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode))!,
+                            onTapRetry: () {
+                              searchTournament();
+                            },
+                            showErrorImage: true,
+                          ),
+                        );
+                      }
+                      if (state is TournamentJoiningFailure) {
+                        return Center(
+                          child: ErrorContainer(
+                            errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode))!,
+                            onTapRetry: () {
+                              searchTournament();
+                            },
+                            showErrorImage: true,
+                          ),
+                        );
+                      }
+
+                      return Center(
+                        child: CircularProgressContainer(useWhiteLoader: false),
                       );
-                    }
-                    return Container();
-                  },
-                ),
+                    }),
               ],
             ),
           ),

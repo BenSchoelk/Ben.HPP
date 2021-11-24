@@ -567,7 +567,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       child: SlideTransition(
         position: messageBoxAnimation.drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
-          quizType: QuizTypes.groupPlay,
+          battleRoomId: context.read<MultiUserBattleRoomCubit>().getRoomId(),
           topPadding: MediaQuery.of(context).size.height * (0.095) + MediaQuery.of(context).padding.top + 15,
           closeMessageBox: () {
             messageBoxAnimationController.reverse();

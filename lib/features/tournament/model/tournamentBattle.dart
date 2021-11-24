@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
 
 enum TournamentBattleType { quaterFinal, semiFinal, finalBattle }
@@ -11,7 +12,7 @@ class TournamentBattle {
   final TournamentPlayerDetails user1;
   final TournamentPlayerDetails user2;
   final String createdAt;
-  final List questions;
+  final List<Question> questions;
   final bool readyToPlay;
 
   //
@@ -32,7 +33,7 @@ class TournamentBattle {
     final data = documentSnapshot.data() as Map<String, dynamic>;
     return TournamentBattle(
       readyToPlay: data['readyToPlay'] ?? false,
-      questions: data['questions'] ?? [],
+      questions: data['questions'] == null ? [] as List<Question> : (data['questions'] as List).map((e) => Question.fromJson(Map.from(e))).toList(),
       tournamentBattleId: documentSnapshot.id,
       battleType: convertTournamentBattleTypeFromStringToEnum(data['battleType']),
       createdAt: data['createdAt'] == null ? "" : data['createdAt'].toString(),

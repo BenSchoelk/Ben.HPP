@@ -169,7 +169,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                     if (state.battleRoom.readyToPlay!) {
                       //if user has joined room then navigate to quiz screen
                       if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                        Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl});
+                        Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false});
                       }
                     }
 
@@ -339,7 +339,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                   context.read<BattleRoomCubit>().startGame();
                                   await Future.delayed(Duration(milliseconds: 500));
                                   //navigate to quiz screen
-                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl});
+                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false});
                                 }
                               },
                               child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
@@ -360,7 +360,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                   context.read<BattleRoomCubit>().startGame();
                                   await Future.delayed(Duration(milliseconds: 500));
                                   //navigate to quiz screen
-                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl});
+                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false});
                                 }
                               },
                               child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
@@ -561,7 +561,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                   /*    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().startGame():*/ context.read<MultiUserBattleRoomCubit>().startGame();
                                   //navigate to quiz screen
                                   widget.quizType == QuizTypes.battle
-                                      ? Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl})
+                                      ? Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false})
                                       : Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
                                 }
                               },

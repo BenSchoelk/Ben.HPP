@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/tournament/cubits/tournamentCubit.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
 import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
@@ -33,7 +33,9 @@ class TournamentBattleCreationFailure extends TournamentBattleState {
 
 class TournamentBattleStarted extends TournamentBattleState {
   final TournamentBattle tournamentBattle;
-  TournamentBattleStarted(this.tournamentBattle);
+  final bool hasLeft;
+  final List<Question> questions;
+  TournamentBattleStarted({required this.tournamentBattle, required this.hasLeft, required this.questions});
 }
 
 class TournamentBattleCubit extends Cubit<TournamentBattleState> {
@@ -66,7 +68,18 @@ class TournamentBattleCubit extends Cubit<TournamentBattleState> {
                 _tournamentRepository.startTournamentBattle(tournamentBattleId);
               }
             } else {
-              emit(TournamentBattleStarted(tournamentBattle));
+              //
+
+              emit(TournamentBattleStarted(
+                hasLeft: false,
+                tournamentBattle: tournamentBattle,
+                //Since we are storing questions in firebase document so only assign
+                //question first time
+
+                //if state is TournamentBattleStarted means questions already been assigned
+                //else assign question from tournament battle (from firebase document)
+                questions: state is TournamentBattleStarted ? (state as TournamentBattleStarted).questions : tournamentBattle.questions,
+              ));
             }
           }
         } else if (tournamentBattle.battleType == TournamentBattleType.semiFinal) {
@@ -92,6 +105,110 @@ class TournamentBattleCubit extends Cubit<TournamentBattleState> {
     }).catchError((e) {
       emit(TournamentBattleCreationFailure(e.toString()));
     });
+  }
+
+  //this will be call when user submit answer and marked questions attempted
+  //if time expired for given question then default "-1" answer will be submitted
+  void updateQuestionAnswer(String questionId, String submittedAnswerId) {
+    if (state is TournamentBattleStarted) {
+      List<Question> updatedQuestions = (state as TournamentBattleStarted).questions;
+      //fetching index of question that need to update with submittedAnswer
+      int questionIndex = updatedQuestions.indexWhere((element) => element.id == questionId);
+      //update question at given questionIndex with submittedAnswerId
+      updatedQuestions[questionIndex] = updatedQuestions[questionIndex].updateQuestionWithAnswer(submittedAnswerId: submittedAnswerId);
+      emit(TournamentBattleStarted(
+        hasLeft: (state as TournamentBattleStarted).hasLeft,
+        tournamentBattle: (state as TournamentBattleStarted).tournamentBattle,
+        questions: updatedQuestions,
+      ));
+    }
+  }
+
+  //submit anser
+  void submitAnswer(String currentUserId, String submittedAnswer, bool isCorrectAnswer, int points) {
+    if (state is TournamentBattleStarted) {
+      TournamentBattle tournamentBattle = (state as TournamentBattleStarted).tournamentBattle;
+      List<Question> questions = (state as TournamentBattleStarted).questions;
+
+      //need to check submitting answer for user1 or user2
+
+      if (currentUserId == tournamentBattle.user1.uid) {
+        if (tournamentBattle.user1.answers.length != questions.length) {
+          _tournamentRepository.submitAnswer(
+            tournamentBattleId: tournamentBattle.tournamentBattleId,
+            points: isCorrectAnswer ? (tournamentBattle.user1.points + points) : tournamentBattle.user1.points,
+            forUser1: true,
+            submittedAnswer: List.from(tournamentBattle.user1.answers)..add(submittedAnswer),
+          );
+        }
+      } else {
+        //submit answer for user2
+        if (tournamentBattle.user2.answers.length != questions.length) {
+          _tournamentRepository.submitAnswer(
+            submittedAnswer: List.from(tournamentBattle.user2.answers)..add(submittedAnswer),
+            tournamentBattleId: tournamentBattle.tournamentBattleId,
+            points: isCorrectAnswer ? (tournamentBattle.user2.points + points) : tournamentBattle.user2.points,
+            forUser1: false,
+          );
+        }
+      }
+    }
+  }
+
+  void deleteRoom() {
+    if (state is TournamentBattleStarted) {
+      //delete tournament battle room
+      _tournamentRepository.removeTournamentBattle(
+        tournamentBattleId: (state as TournamentBattleStarted).tournamentBattle.tournamentBattleId,
+      );
+    }
+  }
+
+  bool opponentLeftTheGame(String userId) {
+    if (state is TournamentBattleStarted) {
+      print((state as TournamentBattleStarted).hasLeft);
+      print("User submitted answer ${getCurrentUserDetails(userId).answers.length}");
+      return (state as TournamentBattleStarted).hasLeft && getCurrentUserDetails(userId).answers.length != (state as TournamentBattleStarted).questions.length;
+    }
+    return false;
+  }
+
+  String getRoomId() {
+    if (state is TournamentBattleStarted) {
+      return (state as TournamentBattleStarted).tournamentBattle.tournamentBattleId;
+    }
+
+    return "";
+  }
+
+  //get questions in quiz battle
+  List<Question> getQuestions() {
+    if (state is TournamentBattleStarted) {
+      return (state as TournamentBattleStarted).questions;
+    }
+    return [];
+  }
+
+  TournamentPlayerDetails getCurrentUserDetails(String currentUserId) {
+    if (state is TournamentBattleStarted) {
+      if (currentUserId == (state as TournamentBattleStarted).tournamentBattle.user1.uid) {
+        return (state as TournamentBattleStarted).tournamentBattle.user1;
+      } else {
+        return (state as TournamentBattleStarted).tournamentBattle.user2;
+      }
+    }
+    return TournamentPlayerDetails.fromJson({});
+  }
+
+  TournamentPlayerDetails getOpponentUserDetails(String currentUserId) {
+    if (state is TournamentBattleStarted) {
+      if (currentUserId == (state as TournamentBattleStarted).tournamentBattle.user1.uid) {
+        return (state as TournamentBattleStarted).tournamentBattle.user2;
+      } else {
+        return (state as TournamentBattleStarted).tournamentBattle.user1;
+      }
+    }
+    return TournamentPlayerDetails.fromJson({});
   }
 
   void joinTournamentBattle({required TournamentBattleType tournamentBattleType, required String tournamentBattleId, required String uid}) {

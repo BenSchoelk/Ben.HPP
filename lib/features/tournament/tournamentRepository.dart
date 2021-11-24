@@ -60,6 +60,23 @@ class TournamentRepository {
     return _tournamentRemoteDataSource.listenToTournamentBattleUpdates(tournamentBattleId);
   }
 
+  Future<void> removeTournamentBattle({required String tournamentBattleId}) async {
+    try {
+      await _tournamentRemoteDataSource.removeTournamentBattle(tournamentBattleId);
+    } catch (e) {}
+  }
+
+  Future<void> updateTournamentBattlesResult({required String tournamentId, required String winnerId, required String tournamentBattleId}) async {
+    _tournamentRemoteDataSource.updateTournament(tournamentId: tournamentId, data: {
+      "battlesResult": FieldValue.arrayUnion([
+        {
+          "id": tournamentBattleId,
+          "winnerId": winnerId,
+        }
+      ]),
+    });
+  }
+
   Future<bool> joinTournament({
     required String name,
     required String uid,
@@ -149,6 +166,9 @@ class TournamentRepository {
         "finalBattle": {},
         "quaterFinals": [],
         "semiFinals": [],
+        "finalBattleResult": [],
+        "quaterFinalsResult": [],
+        "semiFinalsResult": [],
         "players": [
           {
             "name": name,
@@ -160,5 +180,18 @@ class TournamentRepository {
     } catch (e) {
       throw TournamentException(errorMessageCode: e.toString());
     }
+  }
+
+  //submit answer and update correct answer count and points
+  Future<void> submitAnswer({required bool forUser1, required List submittedAnswer, required String tournamentBattleId, required int points}) async {
+    try {
+      Map<String, dynamic> submitAnswer = {};
+      if (forUser1) {
+        submitAnswer.addAll({"user1.answers": submittedAnswer, "user1.points": points});
+      } else {
+        submitAnswer.addAll({"user2.answers": submittedAnswer, "user2.points": points});
+      }
+      await _tournamentRemoteDataSource.updateTournamentBattle(tournamentBattleId: tournamentBattleId, data: submitAnswer);
+    } catch (e) {}
   }
 }
