@@ -51,10 +51,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         elevation: 5.0,
         context: context,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
+          borderRadius: UiUtils.getBottomSheetRadius(),
         ),
         builder: (context) {
           return ExamResultBottomSheetContainer();

@@ -33,6 +33,7 @@ class UiUtils {
   static double dailogBlurSigma = 6.0;
   static double dailogRadius = 40.0;
   static double appBarHeightPercentage = 0.16;
+  static double bottomSheetRadius = 20;
 
   static List<String> needToUpdateBadgesLocally = [];
 
@@ -44,6 +45,13 @@ class UiUtils {
       }
     });
     return answer;
+  }
+
+  static BorderRadius getBottomSheetRadius() {
+    return BorderRadius.only(
+      topLeft: Radius.circular(bottomSheetRadius),
+      topRight: Radius.circular(bottomSheetRadius),
+    );
   }
 
   static Future<void> onBackgroundMessage(RemoteMessage message) async {
