@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
 import 'package:flutterquiz/features/tournament/cubits/tournamentCubit.dart';
@@ -150,8 +151,9 @@ class _TournamentScreenState extends State<TournamentScreen> {
                 if (state.tournamentBattle.battleType == TournamentBattleType.quaterFinal) {
                   //if tournament is ready to play and both users have not submitted the any answer
                   if (state.tournamentBattle.readyToPlay && state.tournamentBattle.user1.answers.isEmpty && state.tournamentBattle.user2.answers.isEmpty) {
-                    //
-                    print("Navigate to tournament quater final");
+                    Navigator.of(context).pushNamed(Routes.battleRoomQuiz, arguments: {
+                      "isTournamentBattle": true,
+                    });
                   }
                 }
               }

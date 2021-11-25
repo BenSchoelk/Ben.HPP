@@ -58,9 +58,8 @@ class BattleRoomQuizScreen extends StatefulWidget {
 }
 
 class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
-  late AnimationController timerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: questionDurationInSeconds))
-    ..addStatusListener(currentUserTimerAnimationStatusListener)
-    ..forward();
+  late AnimationController timerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: questionDurationInSeconds))..addStatusListener(currentUserTimerAnimationStatusListener);
+  //..forward();
   late AnimationController opponentUserTimerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: questionDurationInSeconds))..forward();
 
   //to animate the question container
@@ -594,21 +593,23 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
   Widget _buildOpponentUserDetailsContainer() {
     if (widget.isTournamentBattle) {
+      print("Fetch opponent details");
       TournamentBattleCubit tournamentBattleCubit = context.read<TournamentBattleCubit>();
       return PositionedDirectional(
           bottom: bottomPadding,
-          start: 10,
+          end: 10,
           child: BlocBuilder<TournamentBattleCubit, TournamentBattleState>(
             bloc: tournamentBattleCubit,
             builder: (context, state) {
               if (state is TournamentBattleStarted) {
                 TournamentPlayerDetails opponentUserDetails = tournamentBattleCubit.getOpponentUserDetails(context.read<UserDetailsCubit>().getUserId());
+                print("Opponent user name ${opponentUserDetails.name}");
                 //it contains correct answer by respective user and user name
                 return UserDetailsWithTimerContainer(
                   points: opponentUserDetails.points.toString(),
-                  isCurrentUser: true,
+                  isCurrentUser: false,
                   name: opponentUserDetails.name,
-                  timerAnimationController: timerAnimationController,
+                  timerAnimationController: opponentUserTimerAnimationController,
                   profileUrl: opponentUserDetails.profileUrl,
                 );
               }
