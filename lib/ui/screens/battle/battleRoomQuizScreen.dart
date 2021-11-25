@@ -344,19 +344,16 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             //delete room
             tournamentBattleCubit.deleteRoom();
 
-            //TODO : create semi-final and final
-            //create semi final or final
+            //create semi final
             if (winnerId == context.read<UserDetailsCubit>().getUserId()) {
+              //TODO : create semi-final
               //if user is playing quater-final
               if (state.tournamentBattle.battleType == TournamentBattleType.quaterFinal) {
-                //search for semi
-                String semiFinalId = context.read<TournamentCubit>().getSemiFinalBattleId();
-                if (semiFinalId.isEmpty) {
-                  //TODO : create semi final
-                } else {
-                  //TODO : join semi final
-                }
-              } else if (state.tournamentBattle.battleType == TournamentBattleType.semiFinal) {
+                tournamentBattleCubit.resetTournamentBattleResource();
+              }
+              //TODO : create final
+
+              else if (state.tournamentBattle.battleType == TournamentBattleType.semiFinal) {
                 //create final
               }
             }

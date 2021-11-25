@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/tournament/model/tournament.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
@@ -124,18 +125,54 @@ class TournamentRepository {
     }
   }
 
-  Future<String> createQuaterFinal({
+  Future<void> addSemiFinalDetails({required String tournamentId, required String semiFinalBattleId, required String user1Uid, required String user2Uid}) async {
+    try {
+      await _tournamentRemoteDataSource.updateTournament(tournamentId: tournamentId, data: {
+        "semiFinals": FieldValue.arrayUnion([
+          {
+            "id": semiFinalBattleId,
+            "user1": user1Uid,
+            "user2": user2Uid,
+          }
+        ])
+      });
+    } catch (e) {
+      throw TournamentException(errorMessageCode: e.toString());
+    }
+  }
+
+  Future<List<TournamentBattle>> searchSemiFinals({required String tournamentId}) async {
+    try {
+      return (await _tournamentRemoteDataSource.searchSemiFinal(tournamentId: tournamentId)).map((e) => TournamentBattle.fromDocumentSnapshot(e)).toList();
+    } catch (e) {
+      throw TournamentException(errorMessageCode: e.toString());
+    }
+  }
+
+  Future<bool> joinTournamentBattle({required String tournamentBattleId, required TournamentPlayerDetails tournamentPlayerDetails}) async {
+    try {
+      //join again
+      return await _tournamentRemoteDataSource.joinTournamentBattle(tournamentBattleId: tournamentBattleId, tournamentPlayerDetails: tournamentPlayerDetails);
+    } catch (e) {
+      throw TournamentException(errorMessageCode: e.toString());
+    }
+  }
+
+  Future<String> createTournamentBattle({
     required TournamentBattleType tournamentBattleType,
     required String tournamentId,
     required TournamentPlayerDetails user1,
     required TournamentPlayerDetails user2,
   }) async {
     try {
+      //
+      final questions = []; //fetch mix questions for tournament battle
+
       return await _tournamentRemoteDataSource.createTournamentBattle(data: {
         "createdBy": user1.uid,
         "createdAt": Timestamp.now(),
         "tournamentId": tournamentId,
-        "questions": [],
+        "questions": questions,
         "readyToPlay": false,
         "battleType": TournamentBattle.convertTournamentBattleTypeFromEnumToString(tournamentBattleType),
         "user1": TournamentPlayerDetails.toJson(user1),
@@ -166,7 +203,7 @@ class TournamentRepository {
         "finalBattle": {},
         "quaterFinals": [],
         "semiFinals": [],
-        "finalBattleResult": [],
+        "finalBattleResult": {},
         "quaterFinalsResult": [],
         "semiFinalsResult": [],
         "players": [

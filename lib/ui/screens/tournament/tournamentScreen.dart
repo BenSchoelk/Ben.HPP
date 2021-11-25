@@ -108,7 +108,8 @@ class _TournamentScreenState extends State<TournamentScreen> {
                 if (state is TournamentStarted) {
                   final tournamentBattleCubit = context.read<TournamentBattleCubit>();
 
-                  if (state.tournament.quaterFinalsResult.isEmpty) {
+                  //TODO : test more of this case or optimize
+                  if (state.tournament.quaterFinalsResult.isEmpty && state.tournament.semiFinals.isEmpty) {
                     //if quater finals result is empty then create or quater finals
                     int userIndex = tournamentCubit.getUserIndex(context.read<UserDetailsCubit>().getUserId());
                     if (userIndex == 0 || userIndex == 2 || userIndex == 4 || userIndex == 6) {
@@ -133,12 +134,12 @@ class _TournamentScreenState extends State<TournamentScreen> {
                         String tournamentBattleId = tournamentCubit.getQuaterFinalBattleId(state.tournament.players[userIndex].uid);
                         //if tournament battle
                         if (tournamentBattleId.isNotEmpty) {
-                          tournamentBattleCubit.joinTournamentBattle(tournamentBattleType: TournamentBattleType.quaterFinal, tournamentBattleId: tournamentBattleId, uid: state.tournament.players[userIndex].uid);
+                          tournamentBattleCubit.joinTournamentBattle(tournamentBattleType: TournamentBattleType.quaterFinal, tournamentBattleId: tournamentBattleId, tournamentPlayerDetails: state.tournament.players[userIndex]);
                         }
                       }
                     }
                   } else {
-                    //means one user has entered into semis
+                    //do not create quater final
                   }
                 }
               }),

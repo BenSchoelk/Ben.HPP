@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/tournament/model/tournament.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
 import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
 import 'package:flutterquiz/utils/constants.dart';
 
@@ -213,9 +214,10 @@ class TournamentCubit extends Cubit<TournamentState> {
   void joinFinal() {}
 
   String getSemiFinalBattleId() {
-    //TODO : determine how to create semifinal
+    //
     if (state is TournamentStarted) {
       final semiFinals = (state as TournamentStarted).tournament.semiFinals;
+
       //if there is no any semi final then create semi final
       if (semiFinals.isEmpty) {
         return "";
@@ -228,7 +230,6 @@ class TournamentCubit extends Cubit<TournamentState> {
       if (semiFinals.length == 2) {
         return semiFinals[1]['id'].toString();
       }
-      //if
       return "";
     }
     return "";
@@ -240,6 +241,16 @@ class TournamentCubit extends Cubit<TournamentState> {
       return (state as TournamentStarted).tournament.players.indexWhere((element) => element.uid == uid);
     }
     return -1;
+  }
+
+  //get tournament player details
+  TournamentPlayerDetails getTournamentPlayerDetails(String uid) {
+    if (getUserIndex(uid) != -1) {
+      if (state is TournamentStarted) {
+        return (state as TournamentStarted).tournament.players[getUserIndex(uid)];
+      }
+    }
+    return TournamentPlayerDetails.fromJson({});
   }
 
   int determineQuaterFinalNumber(int userIndex) {
