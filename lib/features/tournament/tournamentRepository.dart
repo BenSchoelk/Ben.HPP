@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/tournament/model/tournament.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
