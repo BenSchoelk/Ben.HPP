@@ -18,7 +18,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Theme.of(context).primaryColor.withOpacity(0.7),
+                color: Theme.of(context).primaryColor,
                 fontSize: 17.0,
               ),
             ),
@@ -61,7 +61,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
             child: Text(
               "Total Questions",
               style: TextStyle(
-                color: Theme.of(context).primaryColor.withOpacity(0.7),
+                color: Theme.of(context).primaryColor,
                 fontSize: 20.0,
               ),
             ),
