@@ -6,8 +6,6 @@ import 'package:flutterquiz/ui/widgets/optionContainer.dart';
 import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:just_audio/just_audio.dart';
 
-
-
 class AudioQuestionContainer extends StatefulWidget {
   final BoxConstraints constraints;
   final int currentQuestionIndex;

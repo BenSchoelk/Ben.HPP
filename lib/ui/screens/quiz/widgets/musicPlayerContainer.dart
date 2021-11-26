@@ -4,8 +4,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/musicPlayer/musicPlayerCubit.dart';
 import 'package:just_audio/just_audio.dart';
 
-class MusicPlayerContainer extends StatelessWidget {
-  const MusicPlayerContainer({Key? key}) : super(key: key);
+class MusicPlayerContainer extends StatefulWidget {
+  final String url;
+  final int index;
+  final int currentIndex;
+  const MusicPlayerContainer({
+    Key? key,
+    required this.currentIndex,
+    required this.index,
+    required this.url,
+  }) : super(key: key);
+
+  @override
+  State<MusicPlayerContainer> createState() => MusicPlayerContainerState();
+}
+
+class MusicPlayerContainerState extends State<MusicPlayerContainer> {
+  @override
+  void initState() {
+    super.initState();
+    print("Question index is ${widget.url}");
+    Future.delayed(Duration.zero, () {
+      context.read<MusicPlayerCubit>().initPlayer(widget.url);
+    });
+  }
+
+  void playAudio() {
+    context.read<MusicPlayerCubit>().audioPlayer.play();
+  }
+
+  void stopAudio() {
+    context.read<MusicPlayerCubit>().audioPlayer.stop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +59,15 @@ class MusicPlayerContainer extends StatelessWidget {
             children: [
               CurrentDurationContainer(),
               Spacer(),
-              PlayerControlContainer(),
+              PlayerControlContainer(
+                currentIndex: widget.currentIndex,
+                index: widget.index,
+              ),
               Spacer(),
               BlocBuilder<MusicPlayerCubit, MusicPlayerState>(
                 bloc: context.read<MusicPlayerCubit>(),
                 builder: (context, state) {
-                  if (state is MusicPlayerSuccess) {
+                  if (state is MusicPlayerLoaded) {
                     String time = "";
 
                     final audioDuration = state.audioDuration;
@@ -86,7 +119,9 @@ class MusicPlayerContainer extends StatelessWidget {
 }
 
 class PlayerControlContainer extends StatefulWidget {
-  PlayerControlContainer({Key? key}) : super(key: key);
+  final int index;
+  final int currentIndex;
+  PlayerControlContainer({Key? key, required this.currentIndex, required this.index}) : super(key: key);
 
   @override
   _PlayerControlContainerState createState() => _PlayerControlContainerState();
@@ -107,14 +142,18 @@ class _PlayerControlContainerState extends State<PlayerControlContainer> {
   }
 
   void processingStateListener(ProcessingState event) {
-    print(event.toString());
     if (event == ProcessingState.ready) {
       //set loading to false once audio loaded
       if (_isLoading) {
         _isLoading = false;
       }
-      (context.read<MusicPlayerCubit>().state as MusicPlayerSuccess).audioPlayer.play();
-      _isPlaying = true;
+
+      if (widget.index == widget.currentIndex) {
+        _isPlaying = true;
+        context.read<MusicPlayerCubit>().audioPlayer.play();
+      }
+
+      //
       _isBuffering = false;
       _hasCompleted = false;
     } else if (event == ProcessingState.buffering) {
@@ -137,72 +176,76 @@ class _PlayerControlContainerState extends State<PlayerControlContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MusicPlayerCubit, MusicPlayerState>(builder: (context, state) {
-      if (state is MusicPlayerInitial || state is MusicPlayerLoading) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        );
-      }
-      if (state is MusicPlayerFailure) {
-        return _buildButton(onPressed: () {}, icon: Icons.error);
-      }
+    final musicPlayerCubit = context.read<MusicPlayerCubit>();
+    return BlocConsumer<MusicPlayerCubit, MusicPlayerState>(
+        bloc: musicPlayerCubit,
+        builder: (context, state) {
+          if (state is MusicPlayerInitial || state is MusicPlayerLoading) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+            );
+          }
+          if (state is MusicPlayerFailure) {
+            return _buildButton(onPressed: () {}, icon: Icons.error);
+          }
 
-      if (_isLoading || _isBuffering) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        );
-      }
-      if (_hasCompleted) {
-        return _buildButton(
-            onPressed: () {
-              (context.read<MusicPlayerCubit>().state as MusicPlayerSuccess).audioPlayer.seek(Duration.zero);
-            },
-            icon: Icons.restart_alt);
-      }
+          if (_isLoading || _isBuffering) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+            );
+          }
+          if (_hasCompleted) {
+            return _buildButton(
+                onPressed: () {
+                  context.read<MusicPlayerCubit>().audioPlayer.seek(Duration.zero);
+                },
+                icon: Icons.restart_alt);
+          }
 
-      if (_isPlaying) {
-        return _buildButton(
-            onPressed: () {
-              (state as MusicPlayerSuccess).audioPlayer.pause();
-              setState(() {
-                _isPlaying = false;
-              });
-            },
-            icon: Icons.pause);
-      }
+          if (_isPlaying) {
+            return _buildButton(
+                onPressed: () {
+                  musicPlayerCubit.audioPlayer.pause();
+                  setState(() {
+                    _isPlaying = false;
+                  });
+                },
+                icon: Icons.pause);
+          }
 
-      return _buildButton(
-          onPressed: () {
-            (state as MusicPlayerSuccess).audioPlayer.play();
-            setState(() {
-              _isPlaying = true;
-            });
-          },
-          icon: Icons.play_arrow);
-    }, listener: (context, state) {
-      if (state is MusicPlayerSuccess) {
-        if (!_isLoading) {
-          _isLoading = true;
-          setState(() {});
-        }
-        _processingStateStreamSubscription?.cancel();
-        _processingStateStreamSubscription = state.audioPlayer.processingStateStream.listen(processingStateListener);
-      }
-    });
+          return _buildButton(
+              onPressed: () {
+                musicPlayerCubit.audioPlayer.play();
+                setState(() {
+                  _isPlaying = true;
+                });
+              },
+              icon: Icons.play_arrow);
+        },
+        listener: (context, state) {
+          if (state is MusicPlayerLoaded) {
+            if (!_isLoading) {
+              _isLoading = true;
+              setState(() {});
+            }
+            _processingStateStreamSubscription?.cancel();
+            _processingStateStreamSubscription = musicPlayerCubit.audioPlayer.processingStateStream.listen(processingStateListener);
+          }
+        });
   }
 }
 
@@ -235,11 +278,11 @@ class _CurrentDurationSliderContainerState extends State<CurrentDurationSliderCo
     return BlocListener<MusicPlayerCubit, MusicPlayerState>(
       bloc: context.read<MusicPlayerCubit>(),
       listener: (context, state) {
-        if (state is MusicPlayerSuccess) {
+        if (state is MusicPlayerLoaded) {
           currentValue = 0.0;
           max = state.audioDuration.inSeconds.toDouble();
           streamSubscription?.cancel();
-          streamSubscription = state.audioPlayer.positionStream.listen(currentDurationListener);
+          streamSubscription = context.read<MusicPlayerCubit>().audioPlayer.positionStream.listen(currentDurationListener);
           setState(() {});
         }
       },
@@ -263,11 +306,11 @@ class _CurrentDurationSliderContainerState extends State<CurrentDurationSliderCo
               value: currentValue,
               thumbColor: Theme.of(context).colorScheme.secondary,
               onChanged: (value) {
-                if (context.read<MusicPlayerCubit>().state is MusicPlayerSuccess) {
+                if (context.read<MusicPlayerCubit>().state is MusicPlayerLoaded) {
                   setState(() {
                     currentValue = value;
                   });
-                  (context.read<MusicPlayerCubit>().state as MusicPlayerSuccess).audioPlayer.seek(Duration(seconds: value.toInt()));
+                  context.read<MusicPlayerCubit>().audioPlayer.seek(Duration(seconds: value.toInt()));
                 }
               }),
         ),
@@ -289,8 +332,8 @@ class _BufferedDurationContainerState extends State<BufferedDurationContainer> {
   StreamSubscription<Duration>? streamSubscription;
 
   void bufferedDurationListener(Duration duration) {
-    if (context.read<MusicPlayerCubit>().state is MusicPlayerSuccess) {
-      bufferedPercentage = (duration.inSeconds / ((context.read<MusicPlayerCubit>().state as MusicPlayerSuccess).audioDuration.inSeconds));
+    if (context.read<MusicPlayerCubit>().state is MusicPlayerLoaded) {
+      bufferedPercentage = (duration.inSeconds / ((context.read<MusicPlayerCubit>().state as MusicPlayerLoaded).audioDuration.inSeconds));
       setState(() {});
     }
   }
@@ -306,14 +349,14 @@ class _BufferedDurationContainerState extends State<BufferedDurationContainer> {
     return BlocListener<MusicPlayerCubit, MusicPlayerState>(
       bloc: context.read<MusicPlayerCubit>(),
       listener: (context, state) {
-        if (state is MusicPlayerSuccess) {
+        if (state is MusicPlayerLoaded) {
           if (bufferedPercentage != 0) {
             bufferedPercentage = 0.0;
             setState(() {});
           }
           streamSubscription?.cancel();
 
-          streamSubscription = state.audioPlayer.bufferedPositionStream.listen(bufferedDurationListener);
+          streamSubscription = context.read<MusicPlayerCubit>().audioPlayer.bufferedPositionStream.listen(bufferedDurationListener);
         }
       },
       child: Container(
@@ -356,13 +399,13 @@ class _CurrentDurationContainerState extends State<CurrentDurationContainer> {
     return BlocListener<MusicPlayerCubit, MusicPlayerState>(
       bloc: context.read<MusicPlayerCubit>(),
       listener: (context, state) {
-        if (state is MusicPlayerSuccess) {
+        if (state is MusicPlayerLoaded) {
           if (currentDuration.inSeconds != 0) {
             currentDuration = Duration.zero;
             setState(() {});
           }
           currentAudioDurationStreamSubscription?.cancel();
-          currentAudioDurationStreamSubscription = state.audioPlayer.positionStream.listen(currentDurationListener);
+          currentAudioDurationStreamSubscription = context.read<MusicPlayerCubit>().audioPlayer.positionStream.listen(currentDurationListener);
         }
       },
       child: Text(

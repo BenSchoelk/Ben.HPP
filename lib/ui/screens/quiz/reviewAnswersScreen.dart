@@ -38,7 +38,6 @@ class ReviewAnswersScreen extends StatefulWidget {
                     create: (context) => UpdateBookmarkCubit(BookmarkRepository()),
                   ),
                   BlocProvider<ReportQuestionCubit>(create: (_) => ReportQuestionCubit(ReportQuestionRepository())),
-                  BlocProvider<MusicPlayerCubit>(create: (_) => MusicPlayerCubit())
                 ],
                 child: ReviewAnswersScreen(
                   guessTheWordQuestions: arguments!['guessTheWordQuestions'] ?? List<GuessTheWordQuestion>.from([]),
@@ -53,13 +52,14 @@ class ReviewAnswersScreen extends StatefulWidget {
 class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
   PageController? _pageController;
   int _currentIndex = 0;
+  List<GlobalKey<MusicPlayerContainerState>> musicPlayerContainerKeys = [];
 
   @override
   void initState() {
     _pageController = PageController();
     if (_hasAudioQuestion()) {
-      Future.delayed(Duration.zero, () {
-        context.read<MusicPlayerCubit>().initPlayer(widget.questions.first.audio!);
+      widget.questions.forEach((element) {
+        musicPlayerContainerKeys.add(GlobalKey<MusicPlayerContainerState>());
       });
     }
 
@@ -206,10 +206,6 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
               onPressed: () {
                 if (_currentIndex != 0) {
                   _pageController!.animateToPage(_currentIndex - 1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                  if (_hasAudioQuestion()) {
-                    //
-                    context.read<MusicPlayerCubit>().initPlayer(widget.questions[_currentIndex - 1].audio!);
-                  }
                 }
               },
               icon: Icon(
@@ -226,10 +222,6 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
               onPressed: () {
                 if (_currentIndex != (getQuestionsLength() - 1)) {
                   _pageController!.animateToPage(_currentIndex + 1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                  if (_hasAudioQuestion()) {
-                    //
-                    context.read<MusicPlayerCubit>().initPlayer(widget.questions[_currentIndex + 1].audio!);
-                  }
                 }
               },
               icon: Icon(
@@ -318,7 +310,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           );
   }
 
-  Widget _buildQuestionAndOptions(Question question) {
+  Widget _buildQuestionAndOptions(Question question, int index) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 35.0, bottom: MediaQuery.of(context).size.height * UiUtils.bottomMenuPercentage + 25),
       child: Column(
@@ -328,7 +320,16 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           QuestionContainer(
             question: question,
           ),
-          _hasAudioQuestion() ? MusicPlayerContainer() : Container(),
+          _hasAudioQuestion()
+              ? BlocProvider<MusicPlayerCubit>(
+                  create: (_) => MusicPlayerCubit(),
+                  child: MusicPlayerContainer(
+                    currentIndex: _currentIndex,
+                    index: index,
+                    url: question.audio!,
+                    key: musicPlayerContainerKeys[index],
+                  ))
+              : Container(),
 
           //build options
           _buildOptions(question),
@@ -364,11 +365,14 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
       height: MediaQuery.of(context).size.height * (0.85),
       child: PageView.builder(
           onPageChanged: (index) {
+            if (_hasAudioQuestion()) {
+              musicPlayerContainerKeys[_currentIndex].currentState?.stopAudio();
+            }
             setState(() {
               _currentIndex = index;
             });
             if (_hasAudioQuestion()) {
-              context.read<MusicPlayerCubit>().initPlayer(widget.questions[_currentIndex].audio!);
+              musicPlayerContainerKeys[_currentIndex].currentState?.playAudio();
             }
           },
           controller: _pageController,
@@ -377,7 +381,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
             if (widget.questions.isEmpty) {
               return _buildGuessTheWordQuestionAndOptions(widget.guessTheWordQuestions[index]);
             }
-            return _buildQuestionAndOptions(widget.questions[index]);
+            return _buildQuestionAndOptions(widget.questions[index], index);
           }),
     );
   }
