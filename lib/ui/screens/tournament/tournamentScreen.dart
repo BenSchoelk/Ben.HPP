@@ -109,7 +109,6 @@ class _TournamentScreenState extends State<TournamentScreen> {
                 if (state is TournamentStarted) {
                   final tournamentBattleCubit = context.read<TournamentBattleCubit>();
 
-                  //TODO : test more of this case or optimize
                   if (state.tournament.quaterFinalsResult.isEmpty && state.tournament.semiFinals.isEmpty) {
                     //if quater finals result is empty then create or quater finals
                     int userIndex = tournamentCubit.getUserIndex(context.read<UserDetailsCubit>().getUserId());

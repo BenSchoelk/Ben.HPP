@@ -57,7 +57,6 @@ class TournamentCubit extends Cubit<TournamentState> {
 
   void _subscribeTournament({required String tournamentId, required String uid}) {
     _tournamentSubscription = _tournamentRepository.listenToTournamentUpdates(tournamentId).listen((event) {
-      //TODO handle case of user left the tournament while tournament is in process of creation
       if (event.exists) {
         Tournament tournament = Tournament.fromDocumentSnapshot(event);
 
@@ -99,7 +98,6 @@ class TournamentCubit extends Cubit<TournamentState> {
 
     try {
       List<Tournament> tournaments = await _tournamentRepository.searchTournament(questionLanguageId: languageId, title: tournamentTitle);
-      //TODO : Ensure that user does not join the tournament which is created by him/her self
       //remove any previously created tournament by user
       //tournaments.removeWhere((element) => element.createdBy == uid);
 

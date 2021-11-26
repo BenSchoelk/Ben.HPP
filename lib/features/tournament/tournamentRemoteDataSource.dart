@@ -10,8 +10,6 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/internetConnectivity.dart';
 
-//TODO : add error code for tournament
-
 class TournamentRemoteDataSource {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 

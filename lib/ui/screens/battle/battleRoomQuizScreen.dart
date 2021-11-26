@@ -143,7 +143,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         if (!context.read<TournamentBattleCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
           //delete all messages entered by current user
           deleteMessages(context.read<TournamentBattleCubit>().getRoomId());
-          //TODO : remove user from battle
         }
       } else {
         if (!context.read<BattleRoomCubit>().opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
@@ -345,14 +344,10 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
 
             //create semi final
             if (winnerId == context.read<UserDetailsCubit>().getUserId()) {
-              //TODO : create semi-final
               //if user is playing quater-final
               if (state.tournamentBattle.battleType == TournamentBattleType.quaterFinal) {
                 tournamentBattleCubit.resetTournamentBattleResource();
-              }
-              //TODO : create final
-
-              else if (state.tournamentBattle.battleType == TournamentBattleType.semiFinal) {
+              } else if (state.tournamentBattle.battleType == TournamentBattleType.semiFinal) {
                 //create final
               }
             }
@@ -361,7 +356,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             if (isSettingDialogOpen) {
               Navigator.of(context).pop();
             }
-            //TODO : show result dialog
             Navigator.of(context).pop();
 
             // Navigator.of(context).pushReplacementNamed(
@@ -688,7 +682,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                       return _buildYouWonContainer(() {
                         deleteMessages(context.read<TournamentBattleCubit>().getRoomId());
                         Navigator.of(context).pop();
-                        //TODO : add enter semi-final and final logic here
                       });
                     }
                   }
