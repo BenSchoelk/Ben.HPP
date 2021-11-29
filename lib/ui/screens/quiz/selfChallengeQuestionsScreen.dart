@@ -77,6 +77,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
+  bool isExitDialogOpen = false;
+
   void _getQuestions() {
     Future.delayed(Duration.zero, () {
       context.read<QuestionsCubit>().getQuestions(
@@ -178,7 +180,12 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
     if (isSettingDialogOpen) {
       Navigator.of(context).pop();
     }
-    Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {"numberOfPlayer": 1, "myPoints": context.read<QuestionsCubit>().currentPoints(), "quizType": QuizTypes.selfChallenge, "questions": context.read<QuestionsCubit>().questions(),"entryFee":0});
+    if (isExitDialogOpen) {
+      Navigator.of(context).pop();
+    }
+
+    Navigator.of(context)
+        .pushReplacementNamed(Routes.result, arguments: {"numberOfPlayer": 1, "myPoints": context.read<QuestionsCubit>().currentPoints(), "quizType": QuizTypes.selfChallenge, "questions": context.read<QuestionsCubit>().questions(), "entryFee": 0});
   }
 
   Widget hasQuestionAttemptedContainer(int questionIndex, bool attempted) {
@@ -405,7 +412,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
     final quesCubit = context.read<QuestionsCubit>();
     return WillPopScope(
       onWillPop: () {
-        showDialog(context: context, builder: (context) => ExitGameDailog());
+        isExitDialogOpen = true;
+        showDialog(context: context, builder: (context) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
         return Future.value(false);
       },
       child: Scaffold(

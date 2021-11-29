@@ -92,6 +92,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
+  bool isExitDialogOpen = false;
+
   final double bottomPadding = 15;
 
   //current user message timer
@@ -356,6 +358,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             if (isSettingDialogOpen) {
               Navigator.of(context).pop();
             }
+
             Navigator.of(context).pop();
 
             // Navigator.of(context).pushReplacementNamed(
@@ -424,6 +427,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
             battleRoomCubit.deleteBattleRoom(widget.battleLbl == "playFrd" ? true : false);
             //navigate to result
             if (isSettingDialogOpen) {
+              Navigator.of(context).pop();
+            }
+            if (isExitDialogOpen) {
               Navigator.of(context).pop();
             }
             Navigator.of(context).pushReplacementNamed(
@@ -803,6 +809,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
         if (battleRoomCubit.opponentLeftTheGame(context.read<UserDetailsCubit>().getUserId())) {
           return Future.value(false);
         }
+
+        isExitDialogOpen = true;
         //show warning
         showDialog(
             context: context,
@@ -820,7 +828,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen> with Ticker
                   Navigator.of(context).pop();
                 },
               );
-            });
+            }).then((value) => isExitDialogOpen = false);
         return Future.value(false);
       },
       child: Scaffold(

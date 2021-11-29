@@ -132,6 +132,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
+  bool isExitDialogOpen = false;
   _getQuestions() {
     Future.delayed(
       Duration.zero,
@@ -191,6 +192,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     if (isSettingDialogOpen) {
       Navigator.of(context).pop();
     }
+    if (isExitDialogOpen) {
+      Navigator.of(context).pop();
+    }
+
     //move to result page
     //to see the what are the keys to pass in arguments for result screen
     //visit static route function in resultScreen.dart
@@ -557,7 +562,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     final quesCubit = context.read<QuestionsCubit>();
     return WillPopScope(
       onWillPop: () {
-        showDialog(context: context, builder: (_) => ExitGameDailog());
+        isExitDialogOpen = true;
+        showDialog(context: context, builder: (_) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
         return Future.value(true);
       },
       child: Scaffold(

@@ -76,6 +76,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   //
   double timeTakenToCompleteQuiz = 0;
 
+  bool isExitDialogOpen = false;
+
   late List<GlobalKey<GuessTheWordQuestionContainerState>> questionContainerKeys = [];
 
   @override
@@ -129,6 +131,9 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
 
   void navigateToResultScreen() {
     if (isSettingDialogOpen) {
+      Navigator.of(context).pop();
+    }
+    if (isExitDialogOpen) {
       Navigator.of(context).pop();
     }
 
@@ -282,7 +287,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
     final GuessTheWordQuizCubit guessTheWordQuizCubit = context.read<GuessTheWordQuizCubit>();
     return WillPopScope(
       onWillPop: () {
-        showDialog(context: context, builder: (_) => ExitGameDailog());
+        isExitDialogOpen = true;
+        showDialog(context: context, builder: (_) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
         return Future.value(false);
       },
       child: BlocListener<GuessTheWordQuizCubit, GuessTheWordQuizState>(

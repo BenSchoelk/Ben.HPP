@@ -86,6 +86,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
+  bool isExitDialogOpen = false;
+
   //current user message timer
   Timer? currentUserMessageDisappearTimer;
   int currentUserMessageDisappearTimeInSeconds = 4;
@@ -384,6 +386,10 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
           if (isSettingDialogOpen) {
             Navigator.of(context).pop();
           }
+          if (isExitDialogOpen) {
+            Navigator.of(context).pop();
+          }
+
           Navigator.pushReplacementNamed(
             context,
             Routes.multiUserBattleRoomQuizResult,
@@ -635,6 +641,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
         //if user is playing game then show
         //exit game dialog
+
+        isExitDialogOpen = true;
         showDialog(
             context: context,
             builder: (_) => ExitGameDailog(
@@ -649,7 +657,7 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
-                ));
+                )).then((value) => isExitDialogOpen = true);
         return Future.value(false);
       },
       child: Scaffold(

@@ -67,6 +67,8 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
   //to track if setting dialog is open
   bool isSettingDialogOpen = false;
 
+  bool isExitDialogOpen = false;
+
   void _getQuestions() {
     Future.delayed(Duration.zero, () {
       //emitting success as we do not need to fetch questios from cloud and here only questions is important
@@ -178,7 +180,8 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
     final quesCubit = context.read<QuestionsCubit>();
     return WillPopScope(
         onWillPop: () {
-          showDialog(context: context, builder: (context) => ExitGameDailog());
+          isExitDialogOpen = true;
+          showDialog(context: context, builder: (context) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
           return Future.value(false);
         },
         child: Scaffold(
@@ -231,6 +234,13 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen> with TickerProv
                                 showBorder: false,
                                 elevation: 5.0,
                                 onTap: () {
+                                  if (isSettingDialogOpen) {
+                                    Navigator.of(context).pop();
+                                  }
+                                  if (isExitDialogOpen) {
+                                    Navigator.of(context).pop();
+                                  }
+
                                   Navigator.of(context).pop();
                                 },
                                 height: 35.0,
