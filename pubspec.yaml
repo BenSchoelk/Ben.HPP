@@ -57,7 +57,7 @@ dependencies:
   launch_review: ^3.0.1
   lottie: ^1.1.0
   octo_image: ^1.0.0+1
-  otp_autofill: ^1.1.0
+  #otp_autofill: ^1.1.0
   package_info_plus: ^1.0.6
   path_provider: ^2.0.2
   pin_code_fields: ^7.3.0
@@ -65,9 +65,10 @@ dependencies:
   screenshot: ^1.2.1
   share_plus: ^2.1.4
   shared_preferences: ^2.0.6
+  sms_autofill: ^2.2.0
   url_launcher: ^6.0.12
-  webview_flutter: ^2.0.13
   wakelock: ^0.5.6
+  webview_flutter: ^2.0.13
 
 dev_dependencies:
   flutter_test:

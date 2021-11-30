@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/ui/screens/aboutAppScreen.dart';
 import 'package:flutterquiz/ui/screens/appSettingsScreen.dart';
+import 'package:flutterquiz/ui/screens/auth/otpScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signInScreen.dart';
 import 'package:flutterquiz/ui/screens/auth/signUpScreen.dart';
 import 'package:flutterquiz/ui/screens/badgesScreen.dart';
@@ -91,6 +92,7 @@ class Routes {
   static const exam = "/exam";
   static const tournament = "/tournament";
   static const tournamentDetails = "/tournamentDetails";
+  static const otpScreen = "/otpScreen";
 
   static String currentRoute = splash;
 
@@ -109,7 +111,8 @@ class Routes {
         return CupertinoPageRoute(builder: (context) => SignInScreen());
       case signUp:
         return CupertinoPageRoute(builder: (context) => SignUpScreen());
-
+      case otpScreen:
+        return OtpScreen.route(routeSettings);
       case subcategoryAndLevel:
         return SubCategoryAndLevelScreen.route(routeSettings);
       case selectProfile:

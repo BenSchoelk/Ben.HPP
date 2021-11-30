@@ -20,99 +20,49 @@ import 'package:lottie/lottie.dart';
 class OtpScreen extends StatefulWidget {
   @override
   _OtpScreen createState() => _OtpScreen();
+
+  static Route<dynamic> route(RouteSettings routeSettings) {
+    return CupertinoPageRoute(
+        builder: (_) => BlocProvider<SignInCubit>(
+              child: OtpScreen(),
+              create: (_) => SignInCubit(AuthRepository()),
+            ));
+  }
 }
 
 class _OtpScreen extends State<OtpScreen> {
-  final _formKey = GlobalKey<FormState>();
   TextEditingController phoneController = TextEditingController();
   bool iserrorNumber = false, isErrorName = false;
   String? countrycode;
-  // mobile number verify
-  RegExp regExp = new RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-  var phoneNumber;
-  bool validateMobile(String value) {
-    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp regExp = new RegExp(pattern);
-    if (value.trim().isEmpty) {
-      setState(() {
-        iserrorNumber = true;
-      });
-      return false;
-    } else if (!regExp.hasMatch(value)) {
-      setState(() {
-        iserrorNumber = true;
-      });
-      return false;
-    }
-    else if (value.length.toString()!=phoneNumber.toString()) {
-      setState(() {
-        iserrorNumber = true;
-      });
-      return false;
-    }
-    setState(() {
-      iserrorNumber = false;
-    });
-    return true;
-  }
-
-  //check textfield empty for name
-  bool validateName(String name) {
-    if (name.isEmpty) {
-      setState(() {
-        isErrorName = true;
-      });
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SignInCubit>(
-        create: (_) => SignInCubit(AuthRepository()),
-        child: Builder(
-            builder: (context) => Scaffold(
-                  body: Stack(
-                    children: <Widget>[
-                      PageBackgroundGradientContainer(),
-                      SingleChildScrollView(
-                        child: showForm(),
-                      )
-                    ],
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          PageBackgroundGradientContainer(),
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .05, end: MediaQuery.of(context).size.width * .08),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .07,
                   ),
-                )));
-  }
-
-  Widget showForm() {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .05, end: MediaQuery.of(context).size.width * .08),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .07,
+                  _buildClockAnimation(),
+                  _buildEnterNumberTextContainer(),
+                  _buildReceiveOtpContainer(),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .02,
+                  ),
+                  showMobileNumber(),
+                  showVerify(),
+                  TermsAndCondition(),
+                ],
               ),
-              Platform.isIOS ? otpLabelIos() : otpLabel(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .03,
-              ),
-              showTopImage(),
-              showText(),
-              receiveText(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-              showMobileNumber(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .08,
-              ),
-              showVerify(),
-              TermsAndCondition(),
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -146,14 +96,14 @@ class _OtpScreen extends State<OtpScreen> {
     );
   }
 
-  Widget showTopImage() {
+  Widget _buildClockAnimation() {
     return Container(
       transformAlignment: Alignment.topCenter,
       child: Lottie.asset("assets/animations/login.json", height: MediaQuery.of(context).size.height * .25, width: MediaQuery.of(context).size.width * 3),
     );
   }
 
-  Widget showText() {
+  Widget _buildEnterNumberTextContainer() {
     return Container(
         alignment: AlignmentDirectional.topStart,
         padding: EdgeInsetsDirectional.only(
@@ -166,7 +116,7 @@ class _OtpScreen extends State<OtpScreen> {
         ));
   }
 
-  Widget receiveText() {
+  Widget _buildReceiveOtpContainer() {
     return Container(
         alignment: Alignment.topLeft,
         padding: EdgeInsetsDirectional.only(
@@ -179,108 +129,78 @@ class _OtpScreen extends State<OtpScreen> {
   }
 
   Widget showMobileNumber() {
+    return IntlPhoneField(
+      decoration: InputDecoration(
+        labelText: 'Phone Number',
+        border: OutlineInputBorder(
+          borderSide: BorderSide(),
+        ),
+      ),
+      onChanged: (phone) {
+        print(phone.completeNumber);
+      },
+      onCountryChanged: (phone) {
+        print(phone.countryCode);
+      },
+    );
+    /*
     return Stack(
-        children: [
-          Container(
-         height:MediaQuery.of(context).size.height*.075,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration( color:Theme.of(context).backgroundColor,borderRadius: BorderRadius.circular(10.0),),),
-            IntlPhoneField(
-                  controller:phoneController,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  initialCountryCode: initialCountryCode,
-                  decoration: InputDecoration(errorBorder:InputBorder.none,
-                    fillColor: Theme.of(context).backgroundColor,
-                    filled: true,
-                    errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
-                    hintText:"+91 999-999-999",
-                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    contentPadding: EdgeInsets.only(top:25),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
-                    ),
-                  ),
-                  onChanged: (phone) {
-                    countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
-                    print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
-                    phoneNumber=countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length'];
-                  },
-                  onCountryChanged: (phone) {
-                    print('Country code changed to: ' + phone.countryCode!);
-                    countrycode =  phone.countryCode!.toString().replaceFirst("+", "");
-                  },
-               ),
-        ],
-      );
-  }
-
-  /*TextFormField(
+      alignment: Alignment.center,
+      children: [
+        
+        // Container(
+        //   height: MediaQuery.of(context).size.height * 0.06,
+        //   width: MediaQuery.of(context).size.width,
+        //   decoration: BoxDecoration(
+        //     color: Theme.of(context).backgroundColor,
+        //     borderRadius: BorderRadius.circular(10.0),
+        //   ),
+        // ),
+        IntlPhoneField(
+          showCountryFlag: true,
           controller: phoneController,
           keyboardType: TextInputType.number,
-          onChanged: (value) {
-            iserrorNumber = phoneController.text.isEmpty;
-          },
           style: TextStyle(
             color: Theme.of(context).colorScheme.secondary,
           ),
+          initialCountryCode: initialCountryCode,
           decoration: InputDecoration(
-            fillColor: Theme.of(context).backgroundColor,
-            filled: true,
-            prefixIcon: Container(
-                width: MediaQuery.of(context).size.width * .28,
-                child: CountryCodePicker(
-                    padding: EdgeInsets.zero,
-                    flagDecoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                    showDropDownButton: true,
-                    searchDecoration: InputDecoration(
-                      hintText: AppLocalization.of(context)!.getTranslatedValues("countryLbl"),
-                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                      fillColor: Theme.of(context).colorScheme.secondary,
-                    ),
-                    showOnlyCountryWhenClosed: false,
-                    hideMainText: true,
-                    initialSelection: 'IN',
-                    flagWidth: 25,
-                    dialogSize: Size(MediaQuery.of(context).size.width * .8, MediaQuery.of(context).size.height * .8),
-                    // alignLeft: true,
-                    textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
-                    onChanged: (CountryCode countryCode) {
-                      countrycode = countryCode.toString().replaceFirst("+", "");
-                      countryName = countryCode.name;
-                    },
-                    onInit: (code) {
-                      countrycode = code.toString().replaceFirst("+", "");
-                    })),
+            border: InputBorder.none,
+            //errorBorder: InputBorder.none,
+            // fillColor: Theme.of(context).backgroundColor,
+            // filled: true,
             errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
             hintText: "+91 999-999-999",
             hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            contentPadding: EdgeInsets.all(15),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
-            ),
+            // labelStyle: TextStyle(
+            //   fontWeight: FontWeight.w600,
+            //   color: Theme.of(context).colorScheme.secondary,
+            // ),
+            // focusedBorder: OutlineInputBorder(
+            //   borderRadius: BorderRadius.circular(10.0),
+            //   borderSide: BorderSide.none,
+            // ),
+            // enabledBorder: UnderlineInputBorder(
+            //   borderRadius: BorderRadius.circular(10.0),
+            //   borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
+            // ),
           ),
-        ),*/
+          onChanged: (phone) {
+            //countrycode = phone.countryCode!.toString().replaceFirst("+", "");
+            //print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
+            //countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']
+          },
+          onCountryChanged: (phone) {
+            print('Country code changed to: ' + phone.countryCode!);
+            countrycode = phone.countryCode!.toString().replaceFirst("+", "");
+          },
+        ),
+        
+      ],
+    );
+    */
+  }
+
   Widget showVerify() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * .07, vertical: MediaQuery.of(context).size.height * .04),
@@ -292,18 +212,7 @@ class _OtpScreen extends State<OtpScreen> {
           style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold),
         ),
         color: Theme.of(context).primaryColor,
-        onPressed: () {
-          if (phoneController.text.isEmpty || phoneController.text.length.toString()!=phoneNumber.toString()) {
-            print(phoneController.text.length.toString()+" in if  "+phoneNumber.toString());
-            validateMobile(phoneController.text);
-          } else {
-            Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, anim1, anim2) => FillOtpScreen(mobileNumber: phoneController.text, countryCode: countrycode, name: ""),
-                ));
-          }
-        },
+        onPressed: () {},
       ),
     );
   }
