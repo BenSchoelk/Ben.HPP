@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examQuestionStatusBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -34,9 +35,15 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
+    //wake lock enable so phone will not lock automatically after sometime
+
     Wakelock.enable();
 
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+
     WidgetsBinding.instance?.addObserver(this);
+    //start timer
     Future.delayed(Duration.zero, () {
       timerKey.currentState?.startTimer();
     });
@@ -69,6 +76,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     canGiveExamAgainTimer?.cancel();
     WidgetsBinding.instance?.removeObserver(this);
     Wakelock.disable();
+    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.dispose();
   }
 
