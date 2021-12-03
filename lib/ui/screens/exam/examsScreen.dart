@@ -1,10 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/exam/cubits/examsCubit.dart';
+import 'package:flutterquiz/features/exam/examRepository.dart';
+import 'package:flutterquiz/features/exam/models/exam.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examKeyBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examResultBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ExamsScreen extends StatefulWidget {
@@ -15,7 +24,9 @@ class ExamsScreen extends StatefulWidget {
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
-      builder: (context) => ExamsScreen(),
+      builder: (context) => MultiBlocProvider(providers: [
+        BlocProvider<ExamsCubit>(create: (_) => ExamsCubit(ExamRepository())),
+      ], child: ExamsScreen()),
     );
   }
 }
@@ -25,7 +36,19 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   int currentSelectedQuestionIndex = 0;
 
-  void showExamKeyBottomSheet(BuildContext context) //Accept exam object as parameter
+  @override
+  void initState() {
+    super.initState();
+    getExams();
+  }
+
+  void getExams() {
+    Future.delayed(Duration.zero, () {
+      context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+    });
+  }
+
+  void showExamKeyBottomSheet(BuildContext context, Exam exam) //Accept exam object as parameter
   {
     showModalBottomSheet(
         isDismissible: false,
@@ -40,7 +63,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
           ),
         ),
         builder: (context) {
-          return ExamKeyBottomSheetContainer();
+          return ExamKeyBottomSheetContainer(
+            exam: exam,
+          );
         });
   }
 
@@ -131,24 +156,46 @@ class _ExamsScreenState extends State<ExamsScreen> {
   }
 
   Widget _buildTodayExams() {
-    return ListView.builder(
-      padding: EdgeInsets.only(
-        right: MediaQuery.of(context).size.width * (0.05),
-        left: MediaQuery.of(context).size.width * (0.05),
-        top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 10,
-        bottom: MediaQuery.of(context).size.height * 0.075,
-      ),
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return _buildTodayExamContainer(index);
+    return BlocBuilder<ExamsCubit, ExamsState>(
+      bloc: context.read<ExamsCubit>(),
+      builder: (context, state) {
+        if (state is ExamsFetchInProgress || state is ExamsInitial) {
+          return Center(
+            child: CircularProgressContainer(
+              useWhiteLoader: false,
+            ),
+          );
+        }
+        if (state is ExamsFetchFailure) {
+          return Center(
+            child: ErrorContainer(
+                errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                onTapRetry: () {
+                  getExams();
+                },
+                showErrorImage: true),
+          );
+        }
+        return ListView.builder(
+          padding: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width * (0.05),
+            left: MediaQuery.of(context).size.width * (0.05),
+            top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 10,
+            bottom: MediaQuery.of(context).size.height * 0.075,
+          ),
+          itemCount: (state as ExamsFetchSuccess).exams.length,
+          itemBuilder: (context, index) {
+            return _buildTodayExamContainer(state.exams[index]);
+          },
+        );
       },
     );
   }
 
-  Widget _buildTodayExamContainer(int index) {
+  Widget _buildTodayExamContainer(Exam exam) {
     return GestureDetector(
       onTap: () {
-        showExamKeyBottomSheet(context);
+        showExamKeyBottomSheet(context, exam);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
@@ -161,9 +208,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
               children: [
                 Container(
                   alignment: Alignment.centerLeft,
-                  width: MediaQuery.of(context).size.width * (0.5),
+                  width: MediaQuery.of(context).size.width * (0.6),
                   child: Text(
-                    "Exam Title",
+                    exam.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -188,7 +235,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   alignment: Alignment.centerLeft,
                   width: MediaQuery.of(context).size.width * (0.5),
                   child: Text(
-                    "Exam Date",
+                    exam.date,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -198,7 +245,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 ),
                 Spacer(),
                 Text(
-                  "00:25 hh:mm",
+                  UiUtils.convertMinuteIntoHHMM(int.parse(exam.duration)),
                   style: TextStyle(
                     color: Theme.of(context).backgroundColor.withOpacity(0.8),
                   ),

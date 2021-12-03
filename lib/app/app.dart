@@ -17,6 +17,8 @@ import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
+import 'package:flutterquiz/features/exam/examRepository.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
@@ -109,6 +111,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<TournamentCubit>(create: (_) => TournamentCubit(TournamentRepository())),
         //tournament battle cubit
         BlocProvider<TournamentBattleCubit>(create: (_) => TournamentBattleCubit(TournamentRepository())),
+        //exam cubit
+        BlocProvider<ExamCubit>(create: (_) => ExamCubit(ExamRepository())),
       ],
       child: Builder(
         builder: (context) {

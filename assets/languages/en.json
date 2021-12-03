@@ -341,5 +341,6 @@
   "hint" : "Hint",
   "tournament" : "Tournament",
   "desTournament" : "Play exiciting tournament",
-  "myRank" : "My Rank"
+  "myRank" : "My Rank",
+  "alreadyInExam" : "You are already in exam room.Can't give exam"
 }

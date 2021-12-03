@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/exam/models/exam.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -8,7 +9,8 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 //TODO : pass exam status verify cubit
 class ExamKeyBottomSheetContainer extends StatefulWidget {
-  ExamKeyBottomSheetContainer({Key? key}) : super(key: key);
+  final Exam exam;
+  ExamKeyBottomSheetContainer({Key? key, required this.exam}) : super(key: key);
 
   @override
   _ExamKeyBottomSheetContainerState createState() => _ExamKeyBottomSheetContainerState();

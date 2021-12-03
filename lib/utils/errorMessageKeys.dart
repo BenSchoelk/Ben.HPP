@@ -46,6 +46,7 @@ final String canNotStartGameKey = "canNotStartGame";
 final String roomCodeInvalidKey = "roomCodeInvalid";
 final String gameStartedKey = "gameStarted";
 final String roomIsFullKey = "roomIsFull";
+final String alreadyInExamKey = "alreadyInExam";
 
 //
 //error message code that is not given from api
@@ -67,6 +68,7 @@ final String unableToCreateRoomCode = "148";
 final String unableToFindRoomCode = "149";
 final String unableToJoinRoomCode = "150";
 final String unableToSubmitAnswerCode = "151";
+final String alreadyInExamCode = "152";
 
 //
 //firebase auth exceptions code

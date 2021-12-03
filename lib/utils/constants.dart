@@ -54,7 +54,7 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "https://elitequiz.wrteam.in"; // "http://flutterquiz.thewrteam.in"
+final String databaseUrl = "http://flutterquiz.thewrteam.in"; //  "https://elitequiz.wrteam.in"
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
@@ -67,9 +67,9 @@ final String skip = "skip";
 final String resetTime = "resetTime";
 
 //firestore collection names
-final String battleRoomCollection = "battleRoom"; //  "testBattleRoom";
-final String multiUserBattleRoomCollection = "multiUserBattleRoom"; // "testMultiUserBattleRoom";
-final String messagesCollection = "messages"; //"testMessages";
+final String battleRoomCollection = "testBattleRoom"; //   "battleRoom"
+final String multiUserBattleRoomCollection = "testMultiUserBattleRoom"; //  "multiUserBattleRoom"
+final String messagesCollection = "testMessages"; // "messages"
 final String tournamentsCollection = "testTournaments"; // "tournaments";
 
 //api end points
@@ -125,6 +125,10 @@ final String getAudioQuestionUrl = "${baseUrl}get_audio_questions"; //
 final String getUserBadgesUrl = "${baseUrl}get_user_badges";
 final String setUserBadgesUrl = "${baseUrl}set_badges";
 final String setBattleStatisticsUrl = "${baseUrl}set_battle_statistics";
+
+final String getExamModuleUrl = "${baseUrl}get_exam_module";
+final String getExamModuleQuestionsUrl = "${baseUrl}get_exam_module_questions";
+final String setExamModuleResultUrl = "${baseUrl}set_exam_module_result";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;

@@ -47,6 +47,13 @@ class UiUtils {
     return answer;
   }
 
+  static String convertMinuteIntoHHMM(int totalMinutes) {
+    String hours = (totalMinutes ~/ 60).toString().length == 1 ? "0${(totalMinutes ~/ 60)}" : (totalMinutes ~/ 60).toString();
+    String minutes = (totalMinutes % 60).toString().length == 1 ? "0${(totalMinutes % 60)}" : (totalMinutes % 60).toString();
+
+    return "$hours:$minutes hh:mm";
+  }
+
   static BorderRadius getBottomSheetRadius() {
     return BorderRadius.only(
       topLeft: Radius.circular(bottomSheetRadius),
