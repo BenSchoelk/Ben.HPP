@@ -54,7 +54,7 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "http://flutterquiz.thewrteam.in"; //"https://elitequiz.wrteam.in";
+final String databaseUrl = "https://elitequiz.wrteam.in"; // "http://flutterquiz.thewrteam.in"
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
@@ -67,7 +67,7 @@ final String skip = "skip";
 final String resetTime = "resetTime";
 
 //firestore collection names
-final String battleRoomCollection = "testBattleRoom"; // "battleRoom";
+final String battleRoomCollection = "battleRoom"; //  "testBattleRoom";
 final String multiUserBattleRoomCollection = "multiUserBattleRoom"; // "testMultiUserBattleRoom";
 final String messagesCollection = "messages"; //"testMessages";
 final String tournamentsCollection = "testTournaments"; // "tournaments";
