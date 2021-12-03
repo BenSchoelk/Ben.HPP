@@ -70,6 +70,7 @@ dependencies:
   wakelock: ^0.5.6
   webview_flutter: ^2.0.13
   country_code_picker: ^2.0.2
+  flutter_windowmanager: ^0.2.0
 
 dev_dependencies:
   flutter_test:
