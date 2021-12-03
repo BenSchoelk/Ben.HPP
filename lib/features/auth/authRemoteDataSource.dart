@@ -98,14 +98,33 @@ class AuthRemoteDataSource {
     }
   }
 
+//signIn using phone number
+  Future<UserCredential> signInWithPhoneNumber({required String verificationId, required String smsCode}) async {
+    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+
+    final UserCredential userCredential = await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+    return userCredential;
+  }
+
   //SignIn user will accept AuthProvider (enum)
-  Future<Map<String, dynamic>> signInUser(AuthProvider authProvider, {String? email, String? password}) async {
+  Future<Map<String, dynamic>> signInUser(
+    AuthProvider authProvider, {
+    String? email,
+    String? password,
+    String? verificationId,
+    String? smsCode,
+  }) async {
     //user creadential contains information of signin user and is user new or not
     Map<String, dynamic> result = {};
 
     try {
       if (authProvider == AuthProvider.gmail) {
         UserCredential userCredential = await signInWithGoogle();
+
+        result['user'] = userCredential.user!;
+        result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
+      } else if (authProvider == AuthProvider.mobile) {
+        UserCredential userCredential = await signInWithPhoneNumber(verificationId: verificationId!, smsCode: smsCode!);
 
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;

@@ -348,5 +348,6 @@
   "desExam": "Give exam",
   "hint" : "Hint",
   "tournament" : "Tournament",
-  "desTournament" : "Play exiciting tournament"
+  "desTournament" : "Play exiciting tournament",
+  "myRank" : "My Rank"
 }

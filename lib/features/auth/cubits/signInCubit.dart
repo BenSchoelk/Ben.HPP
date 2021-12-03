@@ -38,6 +38,8 @@ class SignInCubit extends Cubit<SignInState> {
   void signInUser(
     AuthProvider authProvider, {
     String? email,
+    String? verificationId,
+    String? smsCode,
     String? password,
   }) {
     //emitting signInProgress state
@@ -48,6 +50,8 @@ class SignInCubit extends Cubit<SignInState> {
       authProvider,
       email: email ?? "",
       password: password ?? "",
+      smsCode: smsCode ?? "",
+      verificationId: verificationId ?? "",
     )
         .then((result) {
       //success

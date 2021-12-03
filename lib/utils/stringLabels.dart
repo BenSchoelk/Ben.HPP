@@ -332,3 +332,5 @@ String noRewardsKey = "noRewards";
 String questionsKey = "questions";
 String backKey = "back";
 String hintKey = "hint";
+
+String myRankKey = "myRank";

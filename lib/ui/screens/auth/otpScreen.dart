@@ -1,21 +1,30 @@
-import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
 
 import 'package:flutterquiz/features/auth/authRepository.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 import 'package:flutterquiz/features/auth/cubits/signInCubit.dart';
-import 'package:flutterquiz/ui/screens/auth/fillOtpScreen.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/screens/auth/widgets/resendOtpTimerContainer.dart';
 import 'package:flutterquiz/ui/screens/auth/widgets/termsAndCondition.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutterquiz/utils/constants.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+
+const int otpTimeOutSeconds = 60;
 
 class OtpScreen extends StatefulWidget {
   @override
@@ -31,38 +40,98 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreen extends State<OtpScreen> {
-  TextEditingController phoneController = TextEditingController();
-  bool iserrorNumber = false, isErrorName = false;
-  String? countrycode;
+  TextEditingController phoneNumberController = TextEditingController();
+
+  CountryCode? selectedCountrycode;
+  final TextEditingController smsCodeEditingController = TextEditingController();
+
+  final GlobalKey<ResendOtpTimerContainerState> resendOtpTimerContainerKey = GlobalKey<ResendOtpTimerContainerState>();
+
+  bool codeSent = false;
+  bool hasError = false;
+  String errorMessage = "";
+  bool isLoading = false;
+  String userVerificationId = "";
+
+  bool enableResendOtpButton = false;
+
+  void signInWithPhoneNumber({required String phoneNumber}) async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      timeout: const Duration(seconds: otpTimeOutSeconds),
+      phoneNumber: '${selectedCountrycode!.dialCode} $phoneNumber',
+      verificationCompleted: (PhoneAuthCredential credential) {
+        print("Phone number verified");
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        //if otp code does not verify
+        print("Firebase Auth error------------");
+        print(e.message);
+        print("---------------------");
+        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+
+        setState(() {
+          isLoading = false;
+        });
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        print("Code sent successfully");
+        setState(() {
+          codeSent = true;
+          userVerificationId = verificationId;
+          isLoading = false;
+        });
+
+        Future.delayed(Duration(milliseconds: 75)).then((value) {
+          resendOtpTimerContainerKey.currentState?.setResendOtpTimer();
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          PageBackgroundGradientContainer(),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .05, end: MediaQuery.of(context).size.width * .08),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .07,
-                  ),
-                  _buildClockAnimation(),
-                  _buildEnterNumberTextContainer(),
-                  _buildReceiveOtpContainer(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .02,
-                  ),
-                  showMobileNumber(),
-                  showVerify(),
-                  TermsAndCondition(),
-                ],
+    return WillPopScope(
+      onWillPop: () {
+        if (isLoading) {
+          print("Is loading is true");
+          return Future.value(false);
+        }
+        if (context.read<SignInCubit>().state is SignInProgress) {
+          return Future.value(false);
+        }
+
+        return Future.value(true);
+      },
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            PageBackgroundGradientContainer(),
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.075)),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .07,
+                    ),
+                    _buildClockAnimation(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * (0.15),
+                    ),
+                    codeSent ? _buildSmsCodeContainer() : _buildMobileNumberWithCountryCode(),
+                    codeSent ? _buildSubmitOtpContainer() : _buildRequestOtpContainer(),
+                    codeSent ? _buildResendText() : Container(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * (0.025),
+                    ),
+                    TermsAndCondition(),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -103,105 +172,144 @@ class _OtpScreen extends State<OtpScreen> {
     );
   }
 
-  Widget _buildEnterNumberTextContainer() {
-    return Container(
-        alignment: AlignmentDirectional.topStart,
-        padding: EdgeInsetsDirectional.only(
-          top: MediaQuery.of(context).size.height * .03,
-          start: 25,
-        ),
-        child: Text(
-          AppLocalization.of(context)!.getTranslatedValues('enterNumberLbl')!,
-          style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 22),
-        ));
-  }
-
-  Widget _buildReceiveOtpContainer() {
-    return Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsetsDirectional.only(
-          start: 25,
-        ),
-        child: Text(
-          AppLocalization.of(context)!.getTranslatedValues('receiveOtpLbl')!,
-          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
-        ));
-  }
-
-  Widget showMobileNumber() {
-    return IntlPhoneField(
-      decoration: InputDecoration(
-        labelText: 'Phone Number',
-        border: OutlineInputBorder(
-          borderSide: BorderSide(),
-        ),
+  Widget _buildMobileNumberWithCountryCode() {
+    final border = UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).primaryColor,
       ),
-      onChanged: (phone) {
-        print(phone.completeNumber);
-      },
-      onCountryChanged: (phone) {
-        print(phone.countryCode);
-      },
     );
-    /*
-    return Stack(
-      alignment: Alignment.center,
+    return Row(
       children: [
-        
-        // Container(
-        //   height: MediaQuery.of(context).size.height * 0.06,
-        //   width: MediaQuery.of(context).size.width,
-        //   decoration: BoxDecoration(
-        //     color: Theme.of(context).backgroundColor,
-        //     borderRadius: BorderRadius.circular(10.0),
-        //   ),
-        // ),
-        IntlPhoneField(
-          showCountryFlag: true,
-          controller: phoneController,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          initialCountryCode: initialCountryCode,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            //errorBorder: InputBorder.none,
-            // fillColor: Theme.of(context).backgroundColor,
-            // filled: true,
-            errorText: iserrorNumber ? AppLocalization.of(context)!.getTranslatedValues("validMobMsg") : null,
-            hintText: "+91 999-999-999",
-            hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
-            // labelStyle: TextStyle(
-            //   fontWeight: FontWeight.w600,
-            //   color: Theme.of(context).colorScheme.secondary,
-            // ),
-            // focusedBorder: OutlineInputBorder(
-            //   borderRadius: BorderRadius.circular(10.0),
-            //   borderSide: BorderSide.none,
-            // ),
-            // enabledBorder: UnderlineInputBorder(
-            //   borderRadius: BorderRadius.circular(10.0),
-            //   borderSide: new BorderSide(color: Theme.of(context).backgroundColor),
-            // ),
-          ),
-          onChanged: (phone) {
-            //countrycode = phone.countryCode!.toString().replaceFirst("+", "");
-            //print(countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']);
-            //countries.firstWhere((element) => element['code'] == phone.countryISOCode)['max_length']
+        CountryCodePicker(
+          onInit: (countryCode) {
+            selectedCountrycode = countryCode;
           },
-          onCountryChanged: (phone) {
-            print('Country code changed to: ' + phone.countryCode!);
-            countrycode = phone.countryCode!.toString().replaceFirst("+", "");
+          onChanged: (countryCode) {
+            selectedCountrycode = countryCode;
           },
+          initialSelection: initialCountryCode,
+          showCountryOnly: false,
+          alignLeft: false,
         ),
-        
+        SizedBox(
+          width: 10.0,
+        ),
+        Flexible(
+          child: TextField(
+            controller: phoneNumberController,
+            keyboardType: TextInputType.number,
+            cursorColor: Theme.of(context).primaryColor,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            decoration: InputDecoration(
+              border: border,
+              enabledBorder: border,
+              errorBorder: border,
+              focusedBorder: border,
+              focusedErrorBorder: border,
+              isDense: true,
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
+              hintText: "+91 999-999-999",
+            ),
+          ),
+        )
       ],
     );
-    */
   }
 
-  Widget showVerify() {
+  Widget _buildSmsCodeContainer() {
+    return PinCodeTextField(
+      onChanged: (value) {},
+      keyboardType: TextInputType.number,
+      appContext: context,
+      length: 6,
+      obscureText: false,
+      textStyle: TextStyle(
+        color: Theme.of(context).primaryColor,
+      ),
+      pinTheme: PinTheme(
+        selectedFillColor: Theme.of(context).colorScheme.secondary,
+        inactiveColor: Theme.of(context).backgroundColor,
+        activeColor: Theme.of(context).backgroundColor,
+        inactiveFillColor: Theme.of(context).backgroundColor,
+        selectedColor: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+        shape: PinCodeFieldShape.box,
+        borderRadius: BorderRadius.circular(5),
+        fieldHeight: 50,
+        fieldWidth: 40,
+        activeFillColor: Theme.of(context).backgroundColor,
+      ),
+      cursorColor: Theme.of(context).backgroundColor,
+      animationDuration: Duration(milliseconds: 300),
+      //backgroundColor:  Theme.of(context).backgroundColor,
+      enableActiveFill: true,
+      controller: smsCodeEditingController,
+    );
+  }
+
+  Widget _buildSubmitOtpContainer() {
+    return BlocConsumer<SignInCubit, SignInState>(
+      bloc: context.read<SignInCubit>(),
+      builder: (context, state) {
+        if (state is SignInProgress) {
+          return CircularProgressContainer(
+            useWhiteLoader: false,
+            heightAndWidth: 50.0,
+          );
+        }
+
+        return Container(
+          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * (0.07), left: MediaQuery.of(context).size.width * (0.07), top: MediaQuery.of(context).size.width * (0.04)),
+          width: MediaQuery.of(context).size.width,
+          child: CupertinoButton(
+            borderRadius: BorderRadius.circular(15),
+            child: Text(
+              AppLocalization.of(context)!.getTranslatedValues(submitBtn)!,
+              style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            color: Theme.of(context).primaryColor,
+            onPressed: () async {
+              if (smsCodeEditingController.text.trim().length == 6) {
+                //
+                context.read<SignInCubit>().signInUser(
+                      AuthProvider.mobile,
+                      smsCode: smsCodeEditingController.text.trim(),
+                      verificationId: userVerificationId,
+                    );
+              }
+            },
+          ),
+        );
+      },
+      listener: (context, state) {
+        if (state is SignInSuccess) {
+          //update auth details
+          context.read<AuthCubit>().updateAuthDetails(authProvider: AuthProvider.mobile, authStatus: true, firebaseId: state.user.uid, isNewUser: state.isNewUser);
+
+          if (state.isNewUser) {
+            context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
+          } else {
+            context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed(Routes.home);
+          }
+        } else if (state is SignInFailure) {
+          UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, false);
+        }
+      },
+    );
+  }
+
+  Widget _buildRequestOtpContainer() {
+    if (isLoading) {
+      return CircularProgressContainer(
+        useWhiteLoader: false,
+        heightAndWidth: 50.0,
+      );
+    }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * .07, vertical: MediaQuery.of(context).size.height * .04),
       width: MediaQuery.of(context).size.width,
@@ -212,7 +320,50 @@ class _OtpScreen extends State<OtpScreen> {
           style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold),
         ),
         color: Theme.of(context).primaryColor,
-        onPressed: () {},
+        onPressed: () async {
+          if (phoneNumberController.text.trim().isEmpty || phoneNumberController.text.trim().length < 8) {
+            UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(validMobMsg)!, context, false);
+          } else {
+            setState(() {
+              isLoading = true;
+            });
+            signInWithPhoneNumber(phoneNumber: phoneNumberController.text.trim());
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildResendText() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ResendOtpTimerContainer(
+              key: resendOtpTimerContainerKey,
+              enableResendOtpButton: () {
+                setState(() {
+                  enableResendOtpButton = true;
+                });
+              }),
+          TextButton(
+            onPressed: enableResendOtpButton
+                ? () async {
+                    print("Resend otp ");
+                    setState(() {
+                      isLoading = false;
+                      enableResendOtpButton = false;
+                    });
+                    resendOtpTimerContainerKey.currentState?.cancelOtpTimer();
+                    signInWithPhoneNumber(phoneNumber: phoneNumberController.text.trim());
+                  }
+                : null,
+            child: Text(
+              AppLocalization.of(context)!.getTranslatedValues("resendBtn")!,
+              style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor, decoration: TextDecoration.underline, fontWeight: FontWeight.normal),
+            ),
+          ),
+        ],
       ),
     );
   }

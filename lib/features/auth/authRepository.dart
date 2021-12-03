@@ -41,9 +41,17 @@ class AuthRepository {
     AuthProvider authProvider, {
     required String email,
     required String password,
+    required String verificationId,
+    required String smsCode,
   }) async {
     try {
-      final result = await _authRemoteDataSource.signInUser(authProvider, email: email, password: password);
+      final result = await _authRemoteDataSource.signInUser(
+        authProvider,
+        email: email,
+        password: password,
+        smsCode: smsCode,
+        verificationId: verificationId,
+      );
       final user = result['user'] as User;
       bool isNewUser = result['isNewUser'] as bool;
 

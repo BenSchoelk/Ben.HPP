@@ -21,7 +21,6 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutterquiz/utils/validators.dart';
 import 'package:lottie/lottie.dart';
-import 'otpScreen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -430,10 +429,7 @@ class SignInScreenState extends State<SignInScreen> {
                   width: MediaQuery.of(context).size.width * .1,
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(pageBuilder: (context, anim1, anim2) => OtpScreen()),
-                  );
+                  Navigator.of(context).pushNamed(Routes.otpScreen);
                 },
               ),
             ],

@@ -17,6 +17,7 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class LeaderBoardScreen extends StatefulWidget {
@@ -97,7 +98,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: CustomBackButton(
-          iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+          iconColor: Theme.of(context).primaryColor,
+          isShowDialog: false,
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +164,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             ));
           }
           if (state is LeaderBoardDailyFailure) {
-            return ErrorContainer(showBackButton: false,
+            return ErrorContainer(
+              showBackButton: false,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
                 context.read<LeaderBoardDailyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
@@ -205,7 +208,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             );
           }
           if (state is LeaderBoardMonthlyFailure) {
-            return ErrorContainer(showBackButton: false,
+            return ErrorContainer(
+              showBackButton: false,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
                 context.read<LeaderBoardMonthlyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
@@ -239,7 +243,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             );
           }
           if (state is LeaderBoardAllTimeFailure) {
-            return ErrorContainer(showBackButton: false,
+            return ErrorContainer(
+              showBackButton: false,
               errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
                 context.read<LeaderBoardAllTimeCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
@@ -495,11 +500,13 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .01,),
+                            padding: EdgeInsetsDirectional.only(
+                              top: MediaQuery.of(context).size.height * .01,
+                            ),
                             child: Column(children: <Widget>[
                               Text(
                                 UiUtils.formatNumber(int.parse(index.toString())),
-                              //  "$index",maxLines: 1,
+                                //  "$index",maxLines: 1,
                                 style: TextStyle(fontSize: 16),
                               ),
                               Icon(Icons.arrow_drop_up, color: Theme.of(context).primaryColor)
@@ -555,7 +562,7 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
       decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: ListTile(
           title: Text(
-            "My Rank",
+            AppLocalization.of(context)!.getTranslatedValues(myRankKey)!,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(color: backgroundColor),
           ),
