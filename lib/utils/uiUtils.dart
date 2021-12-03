@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
@@ -237,6 +238,9 @@ class UiUtils {
       print("Fetch badges details");
       //get badges for given user
       context.read<BadgesCubit>().getBadges(userId: userId);
+
+      //complete any pennding exam
+      context.read<ExamCubit>().completePendingExams(userId: userId);
     }
   }
 

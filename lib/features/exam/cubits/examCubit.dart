@@ -41,10 +41,35 @@ class ExamCubit extends Cubit<ExamState> {
       //check if user can give exam or not
       //if user is in exam then it will throw 103 error means fill all data
       await _examRepository.updateExamStatusToInExam(examModuleId: exam.id, userId: userId);
-
+      await _examRepository.examLocalDataSource.addExamModuleId(exam.id);
       emit(ExamFetchSuccess(exam: exam, questions: questions));
     } catch (e) {
       emit(ExamFetchFailure(e.toString()));
     }
+  }
+
+  List<Question> getQuestions() {
+    if (state is ExamFetchSuccess) {
+      return (state as ExamFetchSuccess).questions;
+    }
+    return [];
+  }
+
+  Exam getExam() {
+    if (state is ExamFetchSuccess) {
+      return (state as ExamFetchSuccess).exam;
+    }
+    return Exam.fromJson({});
+  }
+
+  void submitResult({required String userId, required String totalDuration}) {
+    if (state is ExamFetchSuccess) {
+      //TODO : submit result
+      _examRepository.submitExamResult(examModuleId: (state as ExamFetchSuccess).exam.id, userId: userId, totalDuration: totalDuration, statistics: []);
+    }
+  }
+
+  void completePendingExams({required String userId}) {
+    _examRepository.completePendingExams(userId: userId);
   }
 }

@@ -36,3 +36,5 @@ final String winnerIdKey = 'winner_id';
 final String isDrawnKey = 'is_drawn';
 final String destroyRoomKey = "destroy_match";
 final String examModuleIdKey = "exam_module_id";
+final String totalDurationKey = "total_duration";
+final String statisticsKey = "statistics";

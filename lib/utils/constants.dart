@@ -18,6 +18,11 @@ final String authBox = "auth";
 final String settingsBox = "settings";
 final String bookmarkBox = "bookmark";
 final String userdetailsBox = "userdetails";
+final String examBox = "exam";
+
+//examBox keys
+//
+//
 
 //authBox keys
 final String isLoginKey = "isLogin";

@@ -29,7 +29,7 @@ class ExamResult {
     duration = json['duration'];
     status = json['status'];
     totalDuration = json['total_duration'];
-    statistics = List.from(json['statistics']).map((e) => Statistics.fromJson(e)).toList();
+    statistics = List.from(json['statistics'] ?? []).map((e) => Statistics.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {

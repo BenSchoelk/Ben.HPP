@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examQuestionStatusBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExamScreen extends StatefulWidget {
   ExamScreen({Key? key}) : super(key: key);
@@ -94,7 +96,9 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
           Opacity(
             opacity: 1.0,
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  print(context.read<ExamCubit>().getQuestions().length);
+                },
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Theme.of(context).primaryColor,
@@ -172,7 +176,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
                     alignment: Alignment.center,
                     width: MediaQuery.of(context).size.width * (0.65),
                     child: Text(
-                      "Exam Title",
+                      "${context.read<ExamCubit>().getExam().title}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

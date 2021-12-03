@@ -26,13 +26,12 @@ class ExamsCubit extends Cubit<ExamsState> {
   ExamsCubit(this._examRepository) : super(ExamsInitial());
 
   void getExams({required String userId, required String languageId}) async {
-    print("Get exam");
     emit(ExamsFetchInProgress());
     try {
       //today's all exam but unattempted
       //(status: 1-Not in Exam, 2-In exam, 3-Completed)
       List<Exam> exams = (await _examRepository.getExams(userId: userId, languageId: languageId)).where((element) => element.examStatus == "1").toList();
-      print(exams);
+
       emit(ExamsFetchSuccess(exams));
     } catch (e) {
       emit(ExamsFetchFailure(e.toString()));

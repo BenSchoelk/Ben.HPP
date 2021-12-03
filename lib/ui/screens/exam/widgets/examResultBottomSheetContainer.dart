@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutterquiz/features/exam/models/examResult.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ExamResultBottomSheetContainer extends StatelessWidget {
-  const ExamResultBottomSheetContainer({Key? key}) : super(key: key);
+  final ExamResult examResult;
+  const ExamResultBottomSheetContainer({Key? key, required this.examResult}) : super(key: key);
 
   Widget _buildExamDetailsContainer({required String title, required String examData, required BuildContext context}) {
     return Padding(

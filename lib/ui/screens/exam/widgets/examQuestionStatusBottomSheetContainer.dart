@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
   const ExamQuestionStatusBottomSheetContainer({Key? key}) : super(key: key);
@@ -72,7 +74,7 @@ class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 18.0),
                       child: Text(
-                        "Total Question : 50",
+                        "Total Question : ${context.read<ExamCubit>().getQuestions().length}",
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 17.0,

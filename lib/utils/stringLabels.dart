@@ -334,3 +334,6 @@ String backKey = "back";
 String hintKey = "hint";
 
 String myRankKey = "myRank";
+
+String enterValidExamKey = "enterValidExamKey";
+String enterExamKey = "enterExamKey";

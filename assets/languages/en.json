@@ -342,5 +342,8 @@
   "tournament" : "Tournament",
   "desTournament" : "Play exiciting tournament",
   "myRank" : "My Rank",
-  "alreadyInExam" : "You are already in exam room.Can't give exam"
+  "alreadyInExam" : "You are already in exam room.Can't give exam",
+  "enterValidExamKey" : "Please enter valid exam key",
+  "enterExamKey" : "Enter exam key"
+  
 }

@@ -60,6 +60,7 @@ Future<Widget> initializeApp() async {
   await Hive.openBox(authBox); //auth box for storing all authentication related details
   await Hive.openBox(settingsBox); //settings box for storing all settings details
   await Hive.openBox(userdetailsBox); //userDetails box for storing all userDetails details
+  await Hive.openBox(examBox);
 
   return MyApp();
 }
