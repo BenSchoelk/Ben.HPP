@@ -5,7 +5,7 @@
   "privacyPolicy": "Privacy Policy",
 
   "otpVerificationLbl": "OTP\n Verification",
-  "otpSendLbl": "OTP has been sent to you\nOn your Mobile number",
+  "otpSendLbl": "OTP has been sent to",
   "submitBtn": "Submit",
   "resetLbl": "Resend Code in",
   "resendBtn": "Resend OTP",

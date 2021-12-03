@@ -5,7 +5,7 @@
   "privacyPolicy": "गोपनीयता नीति",
 
   "otpVerificationLbl": "ओटीपी\n सत्यापन",
-  "otpSendLbl": "आपको ओटीपी भेज दिया गया है\nआपके मोबाइल नंबर पर",
+  "otpSendLbl": "आपको ओटीपी भेज दिया गया है",
   "submitBtn": "प्रस्तुत",
   "resetLbl": "कोड फिर से भेजें",
   "resendBtn": "ओटीपी पुनः भेजें",

@@ -89,6 +89,33 @@ class _OtpScreen extends State<OtpScreen> {
     );
   }
 
+  Widget _buildOTPSentToPhoneNumber() {
+    if (codeSent) {
+      return Column(
+        children: [
+          //
+          Text(
+            AppLocalization.of(context)!.getTranslatedValues(otpSendLbl)!,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontSize: 16.0,
+            ),
+          ),
+          Text(
+            '${selectedCountrycode!.dialCode} ${phoneNumberController.text.trim()}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontSize: 16.0,
+            ),
+          ),
+        ],
+      );
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -117,7 +144,11 @@ class _OtpScreen extends State<OtpScreen> {
                     ),
                     _buildClockAnimation(),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * (0.15),
+                      height: MediaQuery.of(context).size.height * (0.1),
+                    ),
+                    _buildOTPSentToPhoneNumber(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * (0.04),
                     ),
                     codeSent ? _buildSmsCodeContainer() : _buildMobileNumberWithCountryCode(),
                     codeSent ? _buildSubmitOtpContainer() : _buildRequestOtpContainer(),
@@ -180,16 +211,19 @@ class _OtpScreen extends State<OtpScreen> {
     );
     return Row(
       children: [
-        CountryCodePicker(
-          onInit: (countryCode) {
-            selectedCountrycode = countryCode;
-          },
-          onChanged: (countryCode) {
-            selectedCountrycode = countryCode;
-          },
-          initialSelection: initialCountryCode,
-          showCountryOnly: false,
-          alignLeft: false,
+        IgnorePointer(
+          ignoring: isLoading,
+          child: CountryCodePicker(
+            onInit: (countryCode) {
+              selectedCountrycode = countryCode;
+            },
+            onChanged: (countryCode) {
+              selectedCountrycode = countryCode;
+            },
+            initialSelection: initialCountryCode,
+            showCountryOnly: false,
+            alignLeft: false,
+          ),
         ),
         SizedBox(
           width: 10.0,
