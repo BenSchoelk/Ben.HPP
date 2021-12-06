@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/exam/cubits/completedExamsCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
+import 'package:flutterquiz/features/exam/cubits/examsCubit.dart';
+import 'package:flutterquiz/features/exam/examRemoteDataSource.dart';
+import 'package:flutterquiz/features/exam/examRepository.dart';
 import 'package:flutterquiz/features/exam/models/exam.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -70,6 +74,16 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
             });
           } else if (state is ExamFetchSuccess) {
             Navigator.of(context).pushReplacementNamed(Routes.exam);
+            /*
+            .then((value) {
+              //fetch exams again with fresh status
+              context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+
+              //fetch completed exam again with fresh status
+              context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+            });
+            
+             */
           }
         },
         child: Container(
@@ -179,7 +193,6 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                           onTap: state is ExamFetchInProgress
                               ? () {}
                               : () {
-                                  //
                                   if (textEditingController.text.trim() == widget.exam.examKey) {
                                     context.read<ExamCubit>().startExam(exam: widget.exam, userId: context.read<UserDetailsCubit>().getUserId());
                                   } else {

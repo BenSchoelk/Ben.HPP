@@ -16,6 +16,7 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ExamsScreen extends StatefulWidget {
@@ -256,7 +257,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 ),
                 Spacer(),
                 Text(
-                  "25 Marks",
+                  "${exam.totalMarks} ${AppLocalization.of(context)!.getTranslatedValues(markKey)!}",
                   style: TextStyle(
                     color: Theme.of(context).backgroundColor,
                     fontSize: 17.25,
@@ -311,7 +312,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   alignment: Alignment.centerLeft,
                   width: MediaQuery.of(context).size.width * (0.5),
                   child: Text(
-                    "Exam Title",
+                    "${examResult.title}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -324,7 +325,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   alignment: Alignment.centerLeft,
                   width: MediaQuery.of(context).size.width * (0.5),
                   child: Text(
-                    "Exam Date",
+                    "${examResult.date}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -337,7 +338,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "Marks 25/25",
+                "${examResult.obtainedMarks()}/${examResult.totalMarks} ${AppLocalization.of(context)!.getTranslatedValues(markKey)!} ",
                 style: TextStyle(
                   color: Theme.of(context).backgroundColor,
                   fontSize: 15,

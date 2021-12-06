@@ -203,7 +203,7 @@
 
   "quizLbl": "The Flutter Quiz App",
 
-  "quizExitLbl": "Do you want to exit the quiz?",
+  "quizExitLbl": "Are you sure, you want to exit?",
 
   "fontSizeLbl": "Font Size",
 
@@ -344,6 +344,18 @@
   "myRank" : "My Rank",
   "alreadyInExam" : "You are already in exam room.Can't give exam",
   "enterValidExamKey" : "Please enter valid exam key",
-  "enterExamKey" : "Enter exam key"
+  "enterExamKey" : "Enter exam key",
+  "examResult" : "Exam Result",
+  "examDuration" : "Exam Duration",
+  "completedIn" : "Completed In",
+  "totalQuestions" : "Total Questions",
+  "obtainedMarks" : "Obtained Marks",
+  "mark" :"Mark",
+  "total" : "Total",
+  "correct" : "Correct",
+  "incorrect" : "Incorrect",
+  "youLeftTheExam" : "You left the exam"
+  
+ 
   
 }

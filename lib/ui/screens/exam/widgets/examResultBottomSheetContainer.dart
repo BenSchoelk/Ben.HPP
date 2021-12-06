@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/exam/models/examResult.dart';
 import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ExamResultBottomSheetContainer extends StatelessWidget {
@@ -48,7 +50,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildQuestionStatistic({required String title, required BuildContext context, required int totalQuestion, required int questionsMark, required int correct, required int incorrect}) {
+  Widget _buildQuestionStatistic({required String title, required BuildContext context, required int totalQuestion, required int correct, required int incorrect}) {
     return Container(
       height: MediaQuery.of(context).size.height * (0.2),
       width: MediaQuery.of(context).size.width,
@@ -61,7 +63,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Total Questions",
+              "$title",
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 20.0,
@@ -88,7 +90,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              "Total \n Questions",
+                              "${AppLocalization.of(context)!.getTranslatedValues(totalKey)!} \n ${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!}",
                               style: textStyle,
                               textAlign: TextAlign.center,
                             ),
@@ -109,7 +111,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
                               )),
                               alignment: Alignment.center,
                               child: Text(
-                                "Correct \n Questions",
+                                "${AppLocalization.of(context)!.getTranslatedValues(correctKey)!} \n ${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!}",
                                 style: textStyle,
                                 textAlign: TextAlign.center,
                               ),
@@ -117,7 +119,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
                           ),
                           Container(
                             child: Text(
-                              "Incorrect \n Questions",
+                              "${AppLocalization.of(context)!.getTranslatedValues(incorrectKey)!} \n ${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!}",
                               style: textStyle,
                               textAlign: TextAlign.center,
                             ),
@@ -203,7 +205,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               child: Text(
-                "Exam Result",
+                "${AppLocalization.of(context)!.getTranslatedValues(examResultKey)!}",
                 style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20.0),
               ),
               width: MediaQuery.of(context).size.width,
@@ -213,24 +215,32 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
             SizedBox(
               height: 15.0,
             ),
-            _buildExamDetailsContainer(title: "Obtained Marks", examData: "25/45", context: context),
+            _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(obtainedMarksKey)!}", examData: "${examResult.obtainedMarks()}/${examResult.totalMarks}", context: context),
             SizedBox(
               height: 10.0,
             ),
-            _buildExamDetailsContainer(title: "Exam Duration", examData: "00:30", context: context),
+            _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(examDurationKey)!}", examData: UiUtils.convertMinuteIntoHHMM(int.parse(examResult.duration)), context: context),
             SizedBox(
               height: 10.0,
             ),
-            _buildExamDetailsContainer(title: "Completed in", examData: "00:28", context: context),
+            _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(completedInKey)!}", examData: UiUtils.convertMinuteIntoHHMM(int.parse(examResult.totalDuration)), context: context),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Divider(
                 thickness: 1.5,
               ),
             ),
-            _buildQuestionStatistic(title: "Total Questions", context: context, totalQuestion: 10, questionsMark: 1, correct: 8, incorrect: 2),
-            _buildQuestionStatistic(title: "1 Mark Questions", context: context, totalQuestion: 10, questionsMark: 1, correct: 8, incorrect: 2),
-            //_buildQuestionStatistic(title: "2 Mark Questions", context: context, totalQuestion: 10, questionsMark: 1, correct: 8, incorrect: 2),
+            _buildQuestionStatistic(
+                title: "${AppLocalization.of(context)!.getTranslatedValues(totalQuestionsKey)!}", context: context, totalQuestion: examResult.totalQuestions(), correct: examResult.totalCorrectAnswers(), incorrect: examResult.totalInCorrectAnswers()),
+            ...examResult.getUniqueMarksOfQuestion().map((mark) {
+              return _buildQuestionStatistic(
+                context: context,
+                correct: examResult.totalCorrectAnswersByMark(mark),
+                totalQuestion: examResult.totalQuestionsByMark(mark),
+                incorrect: examResult.totalInCorrectAnswersByMark(mark),
+                title: "$mark ${AppLocalization.of(context)!.getTranslatedValues(markKey)!} ${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!}",
+              );
+            }).toList(),
             SizedBox(
               height: MediaQuery.of(context).size.height * (0.05),
             ),

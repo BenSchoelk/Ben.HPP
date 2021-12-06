@@ -4,6 +4,7 @@ import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
@@ -397,6 +398,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.audioQuestions) {
       Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioQuestions});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.exam) {
+      //update exam status to exam initial
+      context.read<ExamCubit>().updateState(ExamInitial());
       Navigator.of(context).pushNamed(Routes.exams);
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.tournament) {
       Navigator.of(context).pushNamed(Routes.tournamentDetails);

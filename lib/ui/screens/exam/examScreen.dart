@@ -4,11 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examQuestionStatusBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examTimerContainer.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/questionContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
+import 'package:flutterquiz/ui/widgets/optionContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +36,20 @@ class ExamScreen extends StatefulWidget {
 class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   final GlobalKey<ExamTimerContainerState> timerKey = GlobalKey<ExamTimerContainerState>();
 
+  late PageController pageController = PageController();
+
   Timer? canGiveExamAgainTimer;
   bool canGiveExamAgain = true;
 
   int canGiveExamAgainTimeInSeconds = 5;
+
+  bool isExitDialogOpen = false;
+  bool userLeftTheExam = false;
+
+  bool showYouLeftTheExam = false;
+  bool isExamQuestionStatusBottomsheetOpen = false;
+
+  int currentQuestionIndex = 0;
 
   @override
   void initState() {
@@ -55,7 +72,16 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     canGiveExamAgainTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (canGiveExamAgainTimeInSeconds == 0) {
         timer.cancel();
-        print("You left the exam");
+
+        //can give exam again false
+        canGiveExamAgain = false;
+
+        //show user left the exam
+        setState(() {
+          showYouLeftTheExam = true;
+        });
+        //submit result
+        submitResult();
       } else {
         canGiveExamAgainTimeInSeconds--;
       }
@@ -68,8 +94,10 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
       setCanGiveExamTimer();
     } else if (appState == AppLifecycleState.resumed) {
       canGiveExamAgainTimer?.cancel();
-      canGiveExamAgain = true;
-      canGiveExamAgainTimeInSeconds = 5;
+      //if user can give exam again
+      if (canGiveExamAgain) {
+        canGiveExamAgainTimeInSeconds = 5;
+      }
     }
   }
 
@@ -80,6 +108,60 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     Wakelock.disable();
     FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.dispose();
+  }
+
+  void showExamQuestionStatusBottomSheet() {
+    isExamQuestionStatusBottomsheetOpen = true;
+    showModalBottomSheet(
+        isScrollControlled: true,
+        elevation: 5.0,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
+        builder: (context) {
+          return ExamQuestionStatusBottomSheetContainer(
+            navigateToResultScreen: navigateToResultScreen,
+            pageController: pageController,
+          );
+        }).then((value) => isExamQuestionStatusBottomsheetOpen = false);
+  }
+
+  bool hasSubmittedAnswerForCurrentQuestion() {
+    return context.read<ExamCubit>().getQuestions()[currentQuestionIndex].attempted;
+  }
+
+  void submitResult() {
+    context.read<ExamCubit>().submitResult(userId: context.read<UserDetailsCubit>().getUserId(), totalDuration: timerKey.currentState?.getCompletedExamDuration() ?? "0");
+  }
+
+  void submitAnswer(String submittedAnswerId) {
+    if (hasSubmittedAnswerForCurrentQuestion()) {
+      if (canUserSubmitAnswerAgainInExam) {
+        context.read<ExamCubit>().updateQuestionWithAnswer(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!, submittedAnswerId);
+      }
+    } else {
+      context.read<ExamCubit>().updateQuestionWithAnswer(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!, submittedAnswerId);
+    }
+  }
+
+  void navigateToResultScreen() {
+    if (isExitDialogOpen) {
+      Navigator.of(context).pop();
+    }
+
+    if (isExamQuestionStatusBottomsheetOpen) {
+      Navigator.of(context).pop();
+    }
+
+    submitResult();
+
+    //TODO : navigate to result screen
+    //Navigate to result screen
+    Navigator.of(context).pop();
   }
 
   Widget _buildBottomMenu() {
@@ -94,10 +176,12 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
       child: Row(
         children: [
           Opacity(
-            opacity: 1.0,
+            opacity: currentQuestionIndex != 0 ? 1.0 : 0.5,
             child: IconButton(
                 onPressed: () {
-                  print(context.read<ExamCubit>().getQuestions().length);
+                  if (currentQuestionIndex != 0) {
+                    pageController.previousPage(duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+                  }
                 },
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -120,9 +204,13 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
           ),
           Spacer(),
           Opacity(
-            opacity: 1.0,
+            opacity: (context.read<ExamCubit>().getQuestions().length - 1) != currentQuestionIndex ? 1.0 : 0.5,
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (context.read<ExamCubit>().getQuestions().length - 1 != currentQuestionIndex) {
+                    pageController.nextPage(duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+                  }
+                },
                 icon: Icon(
                   Icons.arrow_forward_ios,
                   color: Theme.of(context).primaryColor,
@@ -131,22 +219,6 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
         ],
       ),
     );
-  }
-
-  void showExamQuestionStatusBottomSheet() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        elevation: 5.0,
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-        ),
-        builder: (context) {
-          return ExamQuestionStatusBottomSheetContainer();
-        });
   }
 
   Widget _buildAppBar() {
@@ -190,7 +262,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
                     height: 2.5,
                   ),
                   Text(
-                    "25 Marks",
+                    "${context.read<ExamCubit>().getExam().totalMarks} ${AppLocalization.of(context)!.getTranslatedValues(markKey)!}",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),
@@ -204,7 +276,8 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
             child: Padding(
               padding: EdgeInsetsDirectional.only(end: 20.0, bottom: 30.0),
               child: ExamTimerContainer(
-                examDurationInMinutes: 60,
+                navigateToResultScreen: navigateToResultScreen,
+                examDurationInMinutes: int.parse(context.read<ExamCubit>().getExam().duration),
                 key: timerKey,
               ),
             ),
@@ -216,18 +289,125 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     );
   }
 
+  Widget _buildYouLeftTheExam() {
+    if (showYouLeftTheExam) {
+      return Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          alignment: Alignment.center,
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+          child: AlertDialog(
+            content: Text(
+              AppLocalization.of(context)!.getTranslatedValues(youLeftTheExamKey)!,
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    AppLocalization.of(context)!.getTranslatedValues(okayLbl)!,
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ))
+            ],
+          ),
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget _buildQuestions() {
+    return BlocBuilder<ExamCubit, ExamState>(
+      bloc: context.read<ExamCubit>(),
+      builder: (context, state) {
+        if (state is ExamFetchSuccess) {
+          return PageView.builder(
+            onPageChanged: (index) {
+              currentQuestionIndex = index;
+              setState(() {});
+            },
+            controller: pageController,
+            itemCount: state.questions.length,
+            itemBuilder: (context, index) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    QuestionContainer(
+                      questionColor: Theme.of(context).colorScheme.secondary,
+                      questionNumber: index + 1,
+                      question: state.questions[index],
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    ...state.questions[index].answerOptions!
+                        .map((option) => OptionContainer(
+                            showAnswerCorrectness: false,
+                            showAudiencePoll: false,
+                            hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width * (0.85),
+                              maxHeight: MediaQuery.of(context).size.height * UiUtils.questionContainerHeightPercentage,
+                            ),
+                            answerOption: option,
+                            correctOptionId: state.questions[index].correctAnswerOptionId!,
+                            submitAnswer: submitAnswer,
+                            submittedAnswerId: state.questions[index].submittedAnswerId))
+                        .toList(),
+                  ],
+                ),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage) + 25,
+                ),
+              );
+            },
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          PageBackgroundGradientContainer(),
-          _buildAppBar(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _buildBottomMenu(),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () {
+        if (showYouLeftTheExam) {
+          return Future.value(true);
+        }
+        isExitDialogOpen = true;
+        showDialog(
+            context: context,
+            builder: (context) => ExitGameDailog(
+                  onTapYes: () {
+                    //
+                    submitResult();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    //submit result of exam
+                  },
+                )).then((value) {
+          isExitDialogOpen = false;
+        });
+        return Future.value(false);
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            PageBackgroundGradientContainer(),
+            _buildAppBar(),
+            _buildQuestions(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _buildBottomMenu(),
+            ),
+            _buildYouLeftTheExam(),
+          ],
+        ),
       ),
     );
   }

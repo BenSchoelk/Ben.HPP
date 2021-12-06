@@ -16,24 +16,25 @@ class Question {
   final bool attempted;
   final String? audio;
   final String? audioType;
+  final String? marks;
 
-  Question({
-    this.questionType,
-    this.answerOptions,
-    this.correctAnswerOptionId,
-    this.id,
-    this.languageId,
-    this.level,
-    this.note,
-    this.question,
-    this.categoryId,
-    this.imageUrl,
-    this.subcategoryId,
-    this.audio,
-    this.audioType,
-    this.attempted = false,
-    this.submittedAnswerId = "",
-  });
+  Question(
+      {this.questionType,
+      this.answerOptions,
+      this.correctAnswerOptionId,
+      this.id,
+      this.languageId,
+      this.level,
+      this.note,
+      this.question,
+      this.categoryId,
+      this.imageUrl,
+      this.subcategoryId,
+      this.audio,
+      this.audioType,
+      this.attempted = false,
+      this.submittedAnswerId = "",
+      this.marks});
 
   static Question fromJson(Map questionJson) {
     /*
@@ -85,11 +86,13 @@ class Question {
         questionType: questionJson['question_type'] ?? "",
         audio: questionJson['audio'] ?? "",
         audioType: questionJson['audio_type'] ?? "",
+        marks: questionJson['marks'] ?? "",
         answerOptions: options);
   }
 
   Question updateQuestionWithAnswer({required String submittedAnswerId}) {
     return Question(
+        marks: this.marks,
         submittedAnswerId: submittedAnswerId,
         audio: this.audio,
         audioType: this.audioType,
@@ -109,6 +112,7 @@ class Question {
 
   Question copyWith({String? submittedAnswer, bool? attempted}) {
     return Question(
+        marks: this.marks,
         submittedAnswerId: submittedAnswer ?? this.submittedAnswerId,
         answerOptions: this.answerOptions,
         audio: this.audio,

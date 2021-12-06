@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
-  const ExamQuestionStatusBottomSheetContainer({Key? key}) : super(key: key);
+  final PageController pageController;
+  final Function navigateToResultScreen;
+  const ExamQuestionStatusBottomSheetContainer({Key? key, required this.pageController, required this.navigateToResultScreen}) : super(key: key);
 
-  Widget _buildQuestionAttemptedByMarksContainer(BuildContext context) {
+  Widget _buildQuestionAttemptedByMarksContainer({required BuildContext context, required String questionMark, required List<Question> questions}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
       child: Column(
         children: [
           Text(
-            "1 Mark (10)",
+            "$questionMark ${AppLocalization.of(context)!.getTranslatedValues(markKey)!} (${questions.length})",
             style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),
           ),
           Divider(
             color: Theme.of(context).primaryColor,
           ),
           Wrap(
-            children: List.generate(10, (index) => index).map((index) => hasQuestionAttemptedContainer(attempted: index % 2 == 0 ? true : false, context: context, questionIndex: index)).toList(),
+            children: List.generate(questions.length, (index) => index)
+                .map((index) => hasQuestionAttemptedContainer(attempted: questions[index].attempted, context: context, questionIndex: context.read<ExamCubit>().getQuetionIndexById(questions[index].id!)))
+                .toList(),
           ),
           Divider(
             color: Theme.of(context).primaryColor,
@@ -36,7 +42,9 @@ class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
 
   Widget hasQuestionAttemptedContainer({required int questionIndex, required bool attempted, required BuildContext context}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        pageController.animateToPage(questionIndex, duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+      },
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
@@ -74,7 +82,7 @@ class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 18.0),
                       child: Text(
-                        "Total Question : ${context.read<ExamCubit>().getQuestions().length}",
+                        "${AppLocalization.of(context)!.getTranslatedValues(totalQuestionsKey)!} : ${context.read<ExamCubit>().getQuestions().length}",
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 17.0,
@@ -99,12 +107,19 @@ class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
                 ),
               ],
             ),
-            _buildQuestionAttemptedByMarksContainer(context),
-            _buildQuestionAttemptedByMarksContainer(context),
+            ...context.read<ExamCubit>().getUniqueQuestionMark().map((questionMark) {
+              return _buildQuestionAttemptedByMarksContainer(
+                context: context,
+                questionMark: questionMark,
+                questions: context.read<ExamCubit>().getQuestionsByMark(questionMark),
+              );
+            }).toList(),
             Container(
               width: MediaQuery.of(context).size.width * (0.25),
               child: CustomRoundedButton(
-                onTap: () {},
+                onTap: () {
+                  navigateToResultScreen();
+                },
                 widthPercentage: MediaQuery.of(context).size.width,
                 backgroundColor: Theme.of(context).primaryColor,
                 buttonTitle: AppLocalization.of(context)!.getTranslatedValues("submitBtn")!,

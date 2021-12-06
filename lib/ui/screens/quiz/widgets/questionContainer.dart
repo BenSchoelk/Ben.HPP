@@ -6,19 +6,37 @@ import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 class QuestionContainer extends StatelessWidget {
   final Question? question;
   final Color? questionColor;
-  const QuestionContainer({Key? key, this.question, this.questionColor}) : super(key: key);
+  final int? questionNumber;
+
+  const QuestionContainer({Key? key, this.question, this.questionColor, this.questionNumber}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
-          child: Text(
-            "${question!.question}",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color: questionColor ?? Theme.of(context).primaryColor),
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
+                child: Text(
+                  questionNumber == null ? "" : "$questionNumber. " + "${question!.question}",
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color: questionColor ?? Theme.of(context).primaryColor),
+                ),
+              ),
+            ),
+            question!.marks!.isEmpty
+                ? Container()
+                : Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      "[${question!.marks}]",
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color: questionColor ?? Theme.of(context).primaryColor),
+                    ),
+                  ),
+          ],
         ),
         SizedBox(
           height: 15.0,

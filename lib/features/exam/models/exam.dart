@@ -19,6 +19,7 @@ class Exam {
   late final String status;
   late final String noOfQue;
   late final String examStatus;
+  late final String totalMarks;
 
   Exam.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,6 +31,7 @@ class Exam {
     status = json['status'];
     noOfQue = json['no_of_que'];
     examStatus = json['exam_status'];
+    totalMarks = json['total_marks'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +45,7 @@ class Exam {
     _data['status'] = status;
     _data['no_of_que'] = noOfQue;
     _data['exam_status'] = examStatus;
+    _data['total_marks'] = totalMarks;
     return _data;
   }
 }

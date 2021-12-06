@@ -30,7 +30,7 @@ class ExamsCubit extends Cubit<ExamsState> {
     try {
       //today's all exam but unattempted
       //(status: 1-Not in Exam, 2-In exam, 3-Completed)
-      List<Exam> exams = (await _examRepository.getExams(userId: userId, languageId: languageId)).where((element) => element.examStatus == "1").toList();
+      List<Exam> exams = (await _examRepository.getExams(userId: userId, languageId: languageId)).where((element) => element.examStatus == "1").toList(); //
 
       emit(ExamsFetchSuccess(exams));
     } catch (e) {

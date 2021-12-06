@@ -29,6 +29,9 @@ class ExamRemoteDataSource {
       if (responseJson['error']) {
         throw ExamException(errorMessageCode: responseJson['message']);
       }
+      if (type == "1") {
+        print(responseJson);
+      }
 
       return responseJson['data'];
     } on SocketException catch (_) {
@@ -80,6 +83,7 @@ class ExamRemoteDataSource {
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
+        print(responseJson);
         throw ExamException(errorMessageCode: responseJson['message'].toString() == "103" ? alreadyInExamCode : responseJson['message']);
       }
       return responseJson['data'];
@@ -92,14 +96,14 @@ class ExamRemoteDataSource {
     }
   }
 
-  Future<dynamic> submitExamResult({required String examModuleId, required String userId, required String totalDuration, required List<Map<String, String>> statistics}) async {
+  Future<dynamic> submitExamResult({required String examModuleId, required String userId, required String totalDuration, required List<Map<String, dynamic>> statistics}) async {
     try {
       //body of post request
       final body = {
         accessValueKey: accessValue,
         examModuleIdKey: examModuleId,
         userIdKey: userId,
-        statisticsKey: statistics,
+        statisticsKey: json.encode(statistics),
         totalDurationKey: totalDuration,
       };
 
@@ -107,14 +111,15 @@ class ExamRemoteDataSource {
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        throw ExamException(errorMessageCode: responseJson['message'].toString() == "103" ? alreadyInExamCode : responseJson['message']);
+        throw ExamException(errorMessageCode: responseJson['message']);
       }
-      return responseJson['data'];
+      return responseJson['message'];
     } on SocketException catch (_) {
       throw ExamException(errorMessageCode: noInternetCode);
     } on ExamException catch (e) {
       throw ExamException(errorMessageCode: e.toString());
     } catch (e) {
+      print(e.toString());
       throw ExamException(errorMessageCode: defaultErrorMessageCode);
     }
   }

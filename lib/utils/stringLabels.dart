@@ -337,3 +337,13 @@ String myRankKey = "myRank";
 
 String enterValidExamKey = "enterValidExamKey";
 String enterExamKey = "enterExamKey";
+String examResultKey = "examResult";
+String examDurationKey = "examDuration";
+String completedInKey = "completedIn";
+String totalQuestionsKey = "totalQuestions";
+String obtainedMarksKey = "obtainedMarks";
+String markKey = "mark";
+String totalKey = "total";
+String correctKey = "correct";
+String incorrectKey = "incorrect";
+String youLeftTheExamKey = "youLeftTheExam";

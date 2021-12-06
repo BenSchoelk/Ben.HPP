@@ -55,10 +55,11 @@ class ExamRepository {
     }
   }
 
-  Future<void> submitExamResult({required String examModuleId, required String userId, required String totalDuration, required List<Map<String, String>> statistics}) async {
+  Future<void> submitExamResult({required String examModuleId, required String userId, required String totalDuration, required List<Map<String, dynamic>> statistics}) async {
     try {
       await _examRemoteDataSource.submitExamResult(examModuleId: examModuleId, userId: userId, totalDuration: totalDuration, statistics: statistics);
     } catch (e) {
+      print(e.toString());
       throw ExamException(errorMessageCode: e.toString());
     }
   }
@@ -67,7 +68,7 @@ class ExamRepository {
     //
     List<String> pendingExamIds = _examLocalDataSource.getAllExamModuleIds();
     pendingExamIds.forEach((element) {
-      submitExamResult(examModuleId: element, userId: userId, totalDuration: "", statistics: []);
+      submitExamResult(examModuleId: element, userId: userId, totalDuration: "0", statistics: []);
     });
 
     //delete exams

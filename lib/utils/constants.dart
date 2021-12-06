@@ -245,3 +245,6 @@ const List<String> examRules = [
 //This ensure that torunament will start only if 8 users are ready to play
 //
 const int numberOfPlayerForTournament = 2;
+
+//It is to determine that user/student can submit answer for given question again or not
+final bool canUserSubmitAnswerAgainInExam = false;

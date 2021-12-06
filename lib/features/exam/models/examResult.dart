@@ -20,6 +20,8 @@ class ExamResult {
   late final String totalDuration;
   late final List<Statistics> statistics;
 
+  late final String totalMarks;
+
   ExamResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     languageId = json['language_id'];
@@ -29,6 +31,8 @@ class ExamResult {
     duration = json['duration'];
     status = json['status'];
     totalDuration = json['total_duration'];
+
+    totalMarks = json['total_marks'] ?? "0";
     statistics = List.from(json['statistics'] ?? []).map((e) => Statistics.fromJson(e)).toList();
   }
 
@@ -43,7 +47,65 @@ class ExamResult {
     _data['status'] = status;
     _data['total_duration'] = totalDuration;
     _data['statistics'] = statistics.map((e) => e.toJson()).toList();
+
+    _data['total_marks'] = totalMarks;
     return _data;
+  }
+
+  int obtainedMarks() {
+    int totalObtainedMarks = 0;
+    this.statistics.forEach((markStatistics) {
+      totalObtainedMarks = totalObtainedMarks + int.parse(markStatistics.mark) * int.parse(markStatistics.correctAnswer);
+    });
+
+    return totalObtainedMarks;
+  }
+
+  int totalQuestions() {
+    int totalQuestion = 0;
+    this.statistics.forEach((markStatistics) {
+      totalQuestion = totalQuestion + int.parse(markStatistics.correctAnswer) + int.parse(markStatistics.incorrect);
+    });
+    return totalQuestion;
+  }
+
+  int totalCorrectAnswers() {
+    int correctAnswers = 0;
+    this.statistics.forEach((markStatistics) {
+      correctAnswers = correctAnswers + int.parse(markStatistics.correctAnswer);
+    });
+    return correctAnswers;
+  }
+
+  int totalInCorrectAnswers() {
+    int inCorrectAnswers = 0;
+    this.statistics.forEach((markStatistics) {
+      inCorrectAnswers = inCorrectAnswers + int.parse(markStatistics.incorrect);
+    });
+    return inCorrectAnswers;
+  }
+
+  int totalQuestionsByMark(String questionMark) {
+    Statistics statistics = _getStatisticsByMark(questionMark);
+    return (int.parse(statistics.correctAnswer) + int.parse(statistics.incorrect));
+  }
+
+  int totalInCorrectAnswersByMark(String questionMark) {
+    Statistics statistics = _getStatisticsByMark(questionMark);
+    return int.parse(statistics.incorrect);
+  }
+
+  int totalCorrectAnswersByMark(String questionMark) {
+    Statistics statistics = _getStatisticsByMark(questionMark);
+    return int.parse(statistics.correctAnswer);
+  }
+
+  Statistics _getStatisticsByMark(String questionMark) {
+    return this.statistics.where((element) => element.mark == questionMark).toList().first;
+  }
+
+  List<String> getUniqueMarksOfQuestion() {
+    return this.statistics.map((e) => e.mark).toList();
   }
 }
 

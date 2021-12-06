@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class ExamTimerContainer extends StatefulWidget {
   final int examDurationInMinutes;
-  ExamTimerContainer({Key? key, required this.examDurationInMinutes}) : super(key: key);
+  final Function navigateToResultScreen;
+  ExamTimerContainer({Key? key, required this.examDurationInMinutes, required this.navigateToResultScreen}) : super(key: key);
 
   @override
   ExamTimerContainerState createState() => ExamTimerContainerState();
@@ -17,8 +18,7 @@ class ExamTimerContainerState extends State<ExamTimerContainer> {
     examTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       if (minutesLeft == 0) {
         timer.cancel();
-        //navigate to result container
-        //exam finished
+        widget.navigateToResultScreen();
       } else {
         minutesLeft--;
         setState(() {});
@@ -27,6 +27,10 @@ class ExamTimerContainerState extends State<ExamTimerContainer> {
   }
 
   Timer? examTimer;
+
+  String getCompletedExamDuration() {
+    return (widget.examDurationInMinutes - minutesLeft).toString();
+  }
 
   @override
   void dispose() {

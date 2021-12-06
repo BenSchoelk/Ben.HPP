@@ -225,6 +225,9 @@ String convertErrorCodeToLanguageKey(String code) {
 
     case "151":
       return unableToSubmitAnswerCode;
+
+    case "152":
+      return alreadyInExamKey;
     default:
       {
         return defaultErrorMessageKey;
