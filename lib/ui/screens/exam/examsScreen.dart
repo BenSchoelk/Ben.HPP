@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/exam/cubits/completedExamsCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examsCubit.dart';
 import 'package:flutterquiz/features/exam/examRepository.dart';
+
 import 'package:flutterquiz/features/exam/models/exam.dart';
 import 'package:flutterquiz/features/exam/models/examResult.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+
 import 'package:flutterquiz/ui/screens/exam/widgets/examKeyBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examResultBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
@@ -27,10 +30,13 @@ class ExamsScreen extends StatefulWidget {
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
-      builder: (context) => MultiBlocProvider(providers: [
-        BlocProvider<ExamsCubit>(create: (_) => ExamsCubit(ExamRepository())),
-        BlocProvider<CompletedExamsCubit>(create: (_) => CompletedExamsCubit(ExamRepository())),
-      ], child: ExamsScreen()),
+      builder: (context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<ExamsCubit>(create: (_) => ExamsCubit(ExamRepository())),
+          BlocProvider<CompletedExamsCubit>(create: (_) => CompletedExamsCubit(ExamRepository())),
+        ],
+        child: ExamsScreen(),
+      ),
     );
   }
 }
@@ -75,6 +81,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         ),
         builder: (context) {
           return ExamKeyBottomSheetContainer(
+            navigateToExamScreen: navigateToExamScreen,
             exam: exam,
           );
         });
@@ -94,6 +101,17 @@ class _ExamsScreenState extends State<ExamsScreen> {
             examResult: examResult,
           );
         });
+  }
+
+  void navigateToExamScreen() {
+    //push exam route
+    Navigator.of(context).pushReplacementNamed(Routes.exam).then((value) {
+      print("Fetch exam details again");
+      //fetch exams again with fresh status
+      context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+      //fetch completed exam again with fresh status
+      context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+    });
   }
 
   Widget _buildAppBar() {
@@ -205,6 +223,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         if (state is ExamsFetchFailure) {
           return Center(
             child: ErrorContainer(
+                errorMessageColor: Theme.of(context).primaryColor,
                 errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
                 onTapRetry: () {
                   getExams();

@@ -126,6 +126,34 @@ class ExamCubit extends Cubit<ExamState> {
     }
   }
 
+  int correctAnswers() {
+    if (state is ExamFetchSuccess) {
+      return (state as ExamFetchSuccess).questions.where((element) => element.correctAnswerOptionId == element.submittedAnswerId).toList().length;
+    }
+    return 0;
+  }
+
+  int incorrectAnswers() {
+    if (state is ExamFetchSuccess) {
+      return (state as ExamFetchSuccess).questions.length - correctAnswers();
+    }
+    return 0;
+  }
+
+  int obtainedMarks() {
+    if (state is ExamFetchSuccess) {
+      final correctAnswers = (state as ExamFetchSuccess).questions.where((element) => element.correctAnswerOptionId == element.submittedAnswerId).toList();
+      int obtainedMark = 0;
+
+      correctAnswers.forEach((element) {
+        obtainedMark = obtainedMark + int.parse(element.marks ?? "0");
+      });
+
+      return obtainedMark;
+    }
+    return 0;
+  }
+
   List<Question> getQuestionsByMark(String questionMark) {
     if (state is ExamFetchSuccess) {
       return (state as ExamFetchSuccess).questions.where((question) => question.marks == questionMark).toList();

@@ -27,10 +27,13 @@ class ExamRemoteDataSource {
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        throw ExamException(errorMessageCode: responseJson['message']);
-      }
-      if (type == "1") {
-        print(responseJson);
+        throw ExamException(
+          errorMessageCode: responseJson['message'].toString() == "102"
+              ? type == "1"
+                  ? noExamForTodayCode
+                  : haveNotCompletedExamCode
+              : responseJson['message'],
+        );
       }
 
       return responseJson['data'];

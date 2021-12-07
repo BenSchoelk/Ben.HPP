@@ -47,6 +47,8 @@ final String roomCodeInvalidKey = "roomCodeInvalid";
 final String gameStartedKey = "gameStarted";
 final String roomIsFullKey = "roomIsFull";
 final String alreadyInExamKey = "alreadyInExam";
+final String noExamForTodayKey = "noExamForToday";
+final String haveNotCompletedExamKey = "haveNotCompletedExam";
 
 //
 //error message code that is not given from api
@@ -69,6 +71,8 @@ final String unableToFindRoomCode = "149";
 final String unableToJoinRoomCode = "150";
 final String unableToSubmitAnswerCode = "151";
 final String alreadyInExamCode = "152";
+final String noExamForTodayCode = "153";
+final String haveNotCompletedExamCode = "154";
 
 //
 //firebase auth exceptions code
@@ -228,6 +232,12 @@ String convertErrorCodeToLanguageKey(String code) {
 
     case "152":
       return alreadyInExamKey;
+
+    case "153":
+      return noExamForTodayKey;
+
+    case "154":
+      return haveNotCompletedExamKey;
     default:
       {
         return defaultErrorMessageKey;

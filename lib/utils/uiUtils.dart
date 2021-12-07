@@ -48,11 +48,11 @@ class UiUtils {
     return answer;
   }
 
-  static String convertMinuteIntoHHMM(int totalMinutes) {
+  static String convertMinuteIntoHHMM(int totalMinutes, {bool? showHourAndMinute}) {
     String hours = (totalMinutes ~/ 60).toString().length == 1 ? "0${(totalMinutes ~/ 60)}" : (totalMinutes ~/ 60).toString();
     String minutes = (totalMinutes % 60).toString().length == 1 ? "0${(totalMinutes % 60)}" : (totalMinutes % 60).toString();
-
-    return "$hours:$minutes hh:mm";
+    bool showHourAndMinutePostText = showHourAndMinute ?? true;
+    return "$hours:$minutes " + (showHourAndMinutePostText ? "hh:mm" : "");
   }
 
   static BorderRadius getBottomSheetRadius() {

@@ -114,6 +114,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<TournamentBattleCubit>(create: (_) => TournamentBattleCubit(TournamentRepository())),
         //exam cubit
         BlocProvider<ExamCubit>(create: (_) => ExamCubit(ExamRepository())),
+        //Need to refresh the today and completed exam details after user has given the
+        //exam hence taking this two cubit as global bloc provider
       ],
       child: Builder(
         builder: (context) {

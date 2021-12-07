@@ -8,6 +8,7 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
+import 'package:flutterquiz/features/exam/models/exam.dart';
 import 'package:flutterquiz/features/quiz/cubits/setContestLeaderboardCubit.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
@@ -18,6 +19,7 @@ import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:flutterquiz/app/routes.dart';
@@ -59,8 +61,21 @@ class ResultScreen extends StatefulWidget {
   //has used any lifeline - it will be in use to check badge earned or not for
   //quizZone quiz type
   final bool? hasUsedAnyLifeline;
+
+  //Exam module details
+  final Exam? exam; //to get the details related exam
+  final int? obtainedMarks;
+  final int? examCompletedInMinutes;
+  final int? correctExamAnswers;
+  final int? incorrectExamAnswers;
+
   ResultScreen(
       {Key? key,
+      this.exam,
+      this.correctExamAnswers,
+      this.incorrectExamAnswers,
+      this.obtainedMarks,
+      this.examCompletedInMinutes,
       this.timeTakenToCompleteQuiz,
       this.hasUsedAnyLifeline,
       this.numberOfPlayer,
@@ -106,6 +121,11 @@ class ResultScreen extends StatefulWidget {
                 ),
               ],
               child: ResultScreen(
+                correctExamAnswers: arguments['correctExamAnswers'],
+                incorrectExamAnswers: arguments['incorrectExamAnswers'],
+                exam: arguments['exam'],
+                obtainedMarks: arguments['obtainedMarks'],
+                examCompletedInMinutes: arguments['examCompletedInMinutes'],
                 myPoints: arguments['myPoints'],
                 numberOfPlayer: arguments['numberOfPlayer'],
                 questions: arguments['questions'],
@@ -175,7 +195,7 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void _updateStatistics() {
-    if (widget.quizType != QuizTypes.selfChallenge) {
+    if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.exam) {
       print("Update statistic");
       print("correctAnswer : ${correctAnswer()}");
       context.read<UpdateStatisticCubit>().updateStatistic(
@@ -328,7 +348,7 @@ class _ResultScreenState extends State<ResultScreen> {
   //
   void _updateScoreAndCoinsDetails() {
     //we need to update score and coins only when quiz type is not self challenge, battle and contest
-    if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.battle && widget.quizType != QuizTypes.contest) {
+    if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.battle && widget.quizType != QuizTypes.contest && widget.quizType != QuizTypes.exam) {
       //if percentage is more than 30 then update socre and coins
       if (_isWinner) {
         //update score and coins for user
@@ -384,6 +404,9 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   int correctAnswer() {
+    if (widget.quizType == QuizTypes.exam) {
+      return widget.correctExamAnswers!;
+    }
     int correctAnswer = 0;
     if (widget.quizType == QuizTypes.guessTheWord) {
       for (var question in widget.guessTheWordQuestions!) {
@@ -403,6 +426,9 @@ class _ResultScreenState extends State<ResultScreen> {
 
   int attemptedQuestion() {
     int attemptedQuestion = 0;
+    if (widget.quizType == QuizTypes.exam) {
+      return 0;
+    }
     if (widget.quizType == QuizTypes.guessTheWord) {
       //
       for (var question in widget.guessTheWordQuestions!) {
@@ -422,6 +448,9 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   double winPercentage() {
+    if (widget.quizType == QuizTypes.exam) {
+      return (widget.obtainedMarks! * 100.0) / int.parse(widget.exam!.totalMarks);
+    }
     if (widget.quizType == QuizTypes.guessTheWord) {
       return (correctAnswer() * 100.0) / widget.guessTheWordQuestions!.length;
     } else if (widget.quizType == QuizTypes.battle) {
@@ -432,7 +461,7 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   bool showCoinsAndScore() {
-    if (widget.quizType == QuizTypes.selfChallenge || widget.quizType == QuizTypes.contest) {
+    if (widget.quizType == QuizTypes.selfChallenge || widget.quizType == QuizTypes.contest || widget.quizType == QuizTypes.exam) {
       return false;
     }
 
@@ -440,6 +469,9 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   int totalQuestions() {
+    if (widget.quizType == QuizTypes.exam) {
+      return (widget.correctExamAnswers! + widget.incorrectExamAnswers!);
+    }
     if (widget.quizType == QuizTypes.guessTheWord) {
       return widget.guessTheWordQuestions!.length;
     }
@@ -527,7 +559,11 @@ class _ResultScreenState extends State<ResultScreen> {
         Align(
           alignment: Alignment.center,
           child: SvgPicture.asset(
-            _isWinner ? UiUtils.getImagePath("celebration.svg") : UiUtils.getImagePath("celebration_loss.svg"),
+            widget.quizType == QuizTypes.exam
+                ? UiUtils.getImagePath("celebration.svg")
+                : _isWinner
+                    ? UiUtils.getImagePath("celebration.svg")
+                    : UiUtils.getImagePath("celebration_loss.svg"),
           ),
         ),
         Align(
@@ -536,54 +572,90 @@ class _ResultScreenState extends State<ResultScreen> {
             builder: (context, constraints) {
               double verticalSpacePercentage = 0.0;
               double profileRadiusPercentage = 0.0;
+
+              double radialSizePercentage = 0.0;
               if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
                 verticalSpacePercentage = 0.015;
                 profileRadiusPercentage = 0.35; //test in
+                radialSizePercentage = 0.6;
               } else {
                 verticalSpacePercentage = 0.035;
                 profileRadiusPercentage = 0.375;
+
+                radialSizePercentage = 0.525;
               }
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  _isWinner
-                      ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("victoryLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
-                      : _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("defeatLbl")!, AppLocalization.of(context)!.getTranslatedValues("betterNextLbl")!),
+                  widget.quizType! == QuizTypes.exam
+                      ? _buildGreetingMessage(widget.exam!.title, AppLocalization.of(context)!.getTranslatedValues(examResultKey)!)
+                      : _isWinner
+                          ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("victoryLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
+                          : _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("defeatLbl")!, AppLocalization.of(context)!.getTranslatedValues("betterNextLbl")!),
                   SizedBox(
                     height: constraints.maxHeight * verticalSpacePercentage,
                   ),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Center(
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.5),
-                              shape: BoxShape.circle,
+                  widget.quizType! == QuizTypes.exam
+                      ? Transform.translate(
+                          offset: Offset(0.0, -20.0), //
+                          child: RadialPercentageResultContainer(
+                            circleColor: Theme.of(context).colorScheme.secondary,
+                            arcColor: Theme.of(context).backgroundColor,
+                            arcStrokeWidth: 12.0,
+                            textFontSize: 20,
+                            circleStrokeWidth: 12.0,
+                            radiusPercentage: 0.27,
+                            percentage: winPercentage(),
+
+                            timeTakenToCompleteQuizInSeconds: widget.examCompletedInMinutes,
+                            size: Size(constraints.maxHeight * radialSizePercentage, constraints.maxHeight * radialSizePercentage), //150.0 , 150.0
+                          ),
+                        )
+                      : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor.withOpacity(0.5),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  height: constraints.maxHeight * profileRadiusPercentage),
                             ),
-                            height: constraints.maxHeight * profileRadiusPercentage),
-                      ),
-                      Center(
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              shape: BoxShape.circle,
+                            Center(
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  height: constraints.maxHeight * (profileRadiusPercentage - 0.025)),
                             ),
-                            height: constraints.maxHeight * (profileRadiusPercentage - 0.025)),
-                      ),
-                      Center(
-                        child: CircularImageContainer(imagePath: userProfileUrl, height: constraints.maxHeight * (profileRadiusPercentage - 0.05), width: constraints.maxWidth * (profileRadiusPercentage - 0.05 + 0.15)),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    _isWinner ? AppLocalization.of(context)!.getTranslatedValues("winnerLbl")! : AppLocalization.of(context)!.getTranslatedValues("youLossLbl")!,
-                    style: TextStyle(
-                      fontSize: 25.0 * MediaQuery.of(context).textScaleFactor * (1.1),
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).backgroundColor, //Theme.of(context).backgroundColor,
-                    ),
-                  )
+                            Center(
+                              child: CircularImageContainer(imagePath: userProfileUrl, height: constraints.maxHeight * (profileRadiusPercentage - 0.05), width: constraints.maxWidth * (profileRadiusPercentage - 0.05 + 0.15)),
+                            ),
+                          ],
+                        ),
+                  widget.quizType! == QuizTypes.exam
+                      ? Transform.translate(
+                          offset: Offset(0, -30.0),
+                          child: Text(
+                            "${widget.obtainedMarks}/${widget.exam!.totalMarks} ${AppLocalization.of(context)!.getTranslatedValues(markKey)!}",
+                            style: TextStyle(
+                              fontSize: 22.0 * MediaQuery.of(context).textScaleFactor * (1.1),
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).backgroundColor, //Theme.of(context).backgroundColor,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          _isWinner ? AppLocalization.of(context)!.getTranslatedValues("winnerLbl")! : AppLocalization.of(context)!.getTranslatedValues("youLossLbl")!,
+                          style: TextStyle(
+                            fontSize: 25.0 * MediaQuery.of(context).textScaleFactor * (1.1),
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).backgroundColor, //Theme.of(context).backgroundColor,
+                          ),
+                        )
                 ],
               );
             },
@@ -593,7 +665,8 @@ class _ResultScreenState extends State<ResultScreen> {
         //incorrect answer
         Align(
           alignment: AlignmentDirectional.bottomStart,
-          child: _buildResultDataWithIconContainer("${totalQuestions() - correctAnswer()}/${totalQuestions()}", "wrong.svg", EdgeInsetsDirectional.only(start: 15.0, bottom: showCoinsAndScore() ? 20.0 : 30.0)),
+          child: _buildResultDataWithIconContainer(widget.quizType == QuizTypes.exam ? "${widget.incorrectExamAnswers}/${totalQuestions()}" : "${totalQuestions() - correctAnswer()}/${totalQuestions()}", "wrong.svg",
+              EdgeInsetsDirectional.only(start: 15.0, bottom: showCoinsAndScore() ? 20.0 : 30.0)),
         ),
         //correct answer
         showCoinsAndScore()
@@ -623,30 +696,32 @@ class _ResultScreenState extends State<ResultScreen> {
             : Container(),
 
         //build radils percentage container
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: LayoutBuilder(builder: (context, constraints) {
-            double radialSizePercentage = 0.0;
-            if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
-              radialSizePercentage = 0.4;
-            } else {
-              radialSizePercentage = 0.325;
-            }
-            return Transform.translate(
-              offset: Offset(0.0, 15.0), //
-              child: RadialPercentageResultContainer(
-                circleColor: Theme.of(context).colorScheme.secondary,
-                arcColor: Theme.of(context).backgroundColor,
-                arcStrokeWidth: 10.0,
-                circleStrokeWidth: 10.0,
-                radiusPercentage: 0.27,
-                percentage: winPercentage(),
-                timeTakenToCompleteQuizInSeconds: widget.timeTakenToCompleteQuiz?.toInt(),
-                size: Size(constraints.maxHeight * radialSizePercentage, constraints.maxHeight * radialSizePercentage), //150.0 , 150.0
+        widget.quizType! == QuizTypes.exam
+            ? Container()
+            : Align(
+                alignment: Alignment.bottomCenter,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  double radialSizePercentage = 0.0;
+                  if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
+                    radialSizePercentage = 0.4;
+                  } else {
+                    radialSizePercentage = 0.325;
+                  }
+                  return Transform.translate(
+                    offset: Offset(0.0, 15.0), //
+                    child: RadialPercentageResultContainer(
+                      circleColor: Theme.of(context).colorScheme.secondary,
+                      arcColor: Theme.of(context).backgroundColor,
+                      arcStrokeWidth: 10.0,
+                      circleStrokeWidth: 10.0,
+                      radiusPercentage: 0.27,
+                      percentage: winPercentage(),
+                      timeTakenToCompleteQuizInSeconds: widget.timeTakenToCompleteQuiz?.toInt(),
+                      size: Size(constraints.maxHeight * radialSizePercentage, constraints.maxHeight * radialSizePercentage), //150.0 , 150.0
+                    ),
+                  );
+                }),
               ),
-            );
-          }),
-        ),
       ],
     );
   }
@@ -1089,15 +1164,21 @@ class _ResultScreenState extends State<ResultScreen> {
             height: betweenButoonSpace,
           ),
           _buildShareYourScoreButton(),
-          /*SizedBox(
+          SizedBox(
             height: betweenButoonSpace,
           ),
-          _buildButton(AppLocalization.of(context)!.getTranslatedValues("anotherOpponentBtn")!, () {
-            _showInterstitialAd();
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-            UiUtils.navigateToOneVSOneBattleScreen(context);
-          }, context),*/
+          _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          }, context),
+        ],
+      );
+    }
+
+    if (widget.quizType! == QuizTypes.exam) {
+      return Column(
+        children: [
+          //
+          _buildShareYourScoreButton(),
           SizedBox(
             height: betweenButoonSpace,
           ),

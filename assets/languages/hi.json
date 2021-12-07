@@ -366,6 +366,10 @@
   "correct" : "Correct",
   "incorrect" : "Incorrect",
 
-  "youLeftTheExam" : "You left the exam"
+  "youLeftTheExam" : "You left the exam",
+
+  "noExamForToday" : "No exam for today",
+
+  "haveNotCompletedExam" : "Have not completed any exam yet"
 
 }

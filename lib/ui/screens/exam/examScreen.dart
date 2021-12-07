@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examQuestionStatusBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examTimerContainer.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/questionContainer.dart';
@@ -135,7 +137,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   }
 
   void submitResult() {
-    context.read<ExamCubit>().submitResult(userId: context.read<UserDetailsCubit>().getUserId(), totalDuration: timerKey.currentState?.getCompletedExamDuration() ?? "0");
+    context.read<ExamCubit>().submitResult(userId: context.read<UserDetailsCubit>().getUserId(), totalDuration: timerKey.currentState?.getCompletedExamDuration().toString() ?? "0");
   }
 
   void submitAnswer(String submittedAnswerId) {
@@ -159,9 +161,17 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
     submitResult();
 
-    //TODO : navigate to result screen
-    //Navigate to result screen
-    Navigator.of(context).pop();
+    print("Completed exam in ${timerKey.currentState?.getCompletedExamDuration()}");
+
+    Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {
+      "quizType": QuizTypes.exam,
+      "exam": context.read<ExamCubit>().getExam(),
+      "obtainedMarks": context.read<ExamCubit>().obtainedMarks(),
+      "examCompletedInMinutes": timerKey.currentState?.getCompletedExamDuration(),
+      "correctExamAnswers": context.read<ExamCubit>().correctAnswers(),
+      "incorrectExamAnswers": context.read<ExamCubit>().incorrectAnswers(),
+      "numberOfPlayer": 1,
+    });
   }
 
   Widget _buildBottomMenu() {

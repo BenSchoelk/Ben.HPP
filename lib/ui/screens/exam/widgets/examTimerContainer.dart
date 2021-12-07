@@ -28,8 +28,8 @@ class ExamTimerContainerState extends State<ExamTimerContainer> {
 
   Timer? examTimer;
 
-  String getCompletedExamDuration() {
-    return (widget.examDurationInMinutes - minutesLeft).toString();
+  int getCompletedExamDuration() {
+    return (widget.examDurationInMinutes - minutesLeft);
   }
 
   @override

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/exam/cubits/completedExamsCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
-import 'package:flutterquiz/features/exam/cubits/examsCubit.dart';
-import 'package:flutterquiz/features/exam/examRemoteDataSource.dart';
-import 'package:flutterquiz/features/exam/examRepository.dart';
+
 import 'package:flutterquiz/features/exam/models/exam.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -17,7 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExamKeyBottomSheetContainer extends StatefulWidget {
   final Exam exam;
-  ExamKeyBottomSheetContainer({Key? key, required this.exam}) : super(key: key);
+  final Function navigateToExamScreen;
+  ExamKeyBottomSheetContainer({Key? key, required this.exam, required this.navigateToExamScreen}) : super(key: key);
 
   @override
   _ExamKeyBottomSheetContainerState createState() => _ExamKeyBottomSheetContainerState();
@@ -73,17 +70,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
               errorMessage = AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!;
             });
           } else if (state is ExamFetchSuccess) {
-            Navigator.of(context).pushReplacementNamed(Routes.exam);
-            /*
-            .then((value) {
-              //fetch exams again with fresh status
-              context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
-
-              //fetch completed exam again with fresh status
-              context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
-            });
-            
-             */
+            //
+            widget.navigateToExamScreen();
           }
         },
         child: Container(

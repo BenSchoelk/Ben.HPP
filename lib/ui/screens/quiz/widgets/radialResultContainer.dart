@@ -10,6 +10,7 @@ class RadialPercentageResultContainer extends StatefulWidget {
   final double arcStrokeWidth;
   final Color? circleColor;
   final Color? arcColor;
+  final double? textFontSize;
   final int? timeTakenToCompleteQuizInSeconds;
   final double radiusPercentage; //respect to width
 
@@ -17,6 +18,7 @@ class RadialPercentageResultContainer extends StatefulWidget {
     Key? key,
     required this.percentage,
     required this.size,
+    this.textFontSize,
     required this.circleStrokeWidth,
     required this.arcStrokeWidth,
     required this.radiusPercentage,
@@ -50,11 +52,12 @@ class _RadialPercentageResultContainerState extends State<RadialPercentageResult
   String _getTimeInMinutesAndSeconds() {
     int totalTime = widget.timeTakenToCompleteQuizInSeconds ?? 0;
     if (totalTime == 0) {
-      return "";
+      return "00:00";
     }
     int seconds = totalTime % 60;
     int minutes = totalTime ~/ 60;
-
+    print("----------------------------");
+    print("Time taken to complete ${widget.timeTakenToCompleteQuizInSeconds}");
     return "${minutes < 10 ? 0 : ''}$minutes:${seconds < 10 ? 0 : ''}$seconds";
   }
 
@@ -87,13 +90,13 @@ class _RadialPercentageResultContainerState extends State<RadialPercentageResult
                         offset: Offset(0, 2.5),
                         child: Text(
                           "${widget.percentage.toStringAsFixed(0)}%",
-                          style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor, fontWeight: FontWeight.w500),
+                          style: TextStyle(fontSize: widget.textFontSize ?? 17.0, color: Theme.of(context).backgroundColor, fontWeight: FontWeight.w500),
                         ),
                       ),
                       _getTimeInMinutesAndSeconds().isNotEmpty
                           ? Text(
                               _getTimeInMinutesAndSeconds(),
-                              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: widget.textFontSize != null ? (widget.textFontSize! - 5) : 12, color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w500),
                             )
                           : Container(),
                     ],
