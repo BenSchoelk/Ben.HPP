@@ -30,7 +30,7 @@ class ExamResult {
     examKey = json['exam_key'];
     duration = json['duration'];
     status = json['status'];
-    totalDuration = json['total_duration'];
+    totalDuration = json['total_duration'] ?? "0";
 
     totalMarks = json['total_marks'] ?? "0";
     statistics = List.from(json['statistics'] ?? []).map((e) => Statistics.fromJson(e)).toList();

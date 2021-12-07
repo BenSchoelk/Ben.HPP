@@ -161,8 +161,6 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
     submitResult();
 
-    print("Completed exam in ${timerKey.currentState?.getCompletedExamDuration()}");
-
     Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {
       "quizType": QuizTypes.exam,
       "exam": context.read<ExamCubit>().getExam(),
