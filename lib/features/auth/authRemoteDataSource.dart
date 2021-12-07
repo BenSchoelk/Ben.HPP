@@ -17,7 +17,7 @@ import 'package:apple_sign_in_safety/apple_sign_in.dart';
 class AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final fb = FacebookLogin();
+  final _facebookSignin = FacebookLogin();
   /*
   data part of addUser response
   {id: 11, firebase_id: G1thaSiA43WYx29dOXmUd6jqUWS2, name: RAHUL HIRANI,
@@ -180,7 +180,7 @@ class AuthRemoteDataSource {
   }
 
   Future<UserCredential?> signInWithFacebook() async {
-    final res = await fb.logIn(permissions: [
+    final res = await _facebookSignin.logIn(permissions: [
       FacebookPermission.publicProfile,
       FacebookPermission.email,
     ]);
@@ -200,6 +200,7 @@ class AuthRemoteDataSource {
 
       case FacebookLoginStatus.error:
         // Log in failed
+        print(res.error);
 
         break;
     }
@@ -280,6 +281,8 @@ class AuthRemoteDataSource {
     _firebaseAuth.signOut();
     if (authProvider == AuthProvider.gmail) {
       _googleSignIn.signOut();
-    }
+    } else if (authProvider == AuthProvider.fb) {
+      _facebookSignin.logOut();
+    } else if (AuthProvider.apple == AuthProvider.apple) {}
   }
 }

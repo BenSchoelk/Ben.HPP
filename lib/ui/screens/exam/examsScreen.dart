@@ -322,12 +322,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
   Widget _buildResultContainer(ExamResult examResult) {
     return GestureDetector(
       onTap: () {
-        print("---------------------");
-        print(examResult.toJson());
-        //print(int.parse(examResult.totalDuration));
-
-        //print("---------------------");
-        //
         showExamResultBottomSheet(context, examResult);
       },
       child: Container(
