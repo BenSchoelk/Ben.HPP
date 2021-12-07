@@ -223,7 +223,8 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
             SizedBox(
               height: 10.0,
             ),
-            _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(completedInKey)!}", examData: UiUtils.convertMinuteIntoHHMM(int.parse(examResult.totalDuration)), context: context),
+            _buildExamDetailsContainer(
+                title: "${AppLocalization.of(context)!.getTranslatedValues(completedInKey)!}", examData: UiUtils.convertMinuteIntoHHMM(examResult.totalDuration.isNotEmpty ? int.parse(examResult.totalDuration) : 0), context: context),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Divider(

@@ -93,6 +93,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
         isScrollControlled: true,
         elevation: 5.0,
         context: context,
+        enableDrag: true,
+        isDismissible: true,
         shape: RoundedRectangleBorder(
           borderRadius: UiUtils.getBottomSheetRadius(),
         ),
@@ -106,11 +108,15 @@ class _ExamsScreenState extends State<ExamsScreen> {
   void navigateToExamScreen() {
     //push exam route
     Navigator.of(context).pushReplacementNamed(Routes.exam).then((value) {
-      print("Fetch exam details again");
-      //fetch exams again with fresh status
-      context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
-      //fetch completed exam again with fresh status
-      context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+      Future.delayed(Duration(milliseconds: 100), () {
+        if (mounted) {
+          print("Fetch exam details again");
+          //fetch exams again with fresh status
+          context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+          //fetch completed exam again with fresh status
+          context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+        }
+      });
     });
   }
 
@@ -316,6 +322,12 @@ class _ExamsScreenState extends State<ExamsScreen> {
   Widget _buildResultContainer(ExamResult examResult) {
     return GestureDetector(
       onTap: () {
+        print("---------------------");
+        print(examResult.toJson());
+        //print(int.parse(examResult.totalDuration));
+
+        //print("---------------------");
+        //
         showExamResultBottomSheet(context, examResult);
       },
       child: Container(

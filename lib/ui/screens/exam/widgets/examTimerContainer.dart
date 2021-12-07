@@ -29,6 +29,7 @@ class ExamTimerContainerState extends State<ExamTimerContainer> {
   Timer? examTimer;
 
   int getCompletedExamDuration() {
+    print("Exam completed in ${(widget.examDurationInMinutes - minutesLeft)}");
     return (widget.examDurationInMinutes - minutesLeft);
   }
 
