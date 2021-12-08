@@ -44,7 +44,7 @@ class ProfileManagementRemoteDataSource {
   /*response ********{"error":false,"message":"Profile uploaded successfully!","data":{profileKey:"http:\/\/flutterquiz.thewrteam.in\/images\/profile\/1623326274.jpg"}}*/
   Future addProfileImage(File? images, String? userId) async {
     try {
-      Map<String, String?> body = {userIdKey: userId};
+      Map<String, String?> body = {userIdKey: userId, accessValueKey: accessValue};
       Map<String, File?> fileList = {
         imageKey: images,
       };
@@ -64,29 +64,25 @@ class ProfileManagementRemoteDataSource {
   }
 
   Future postApiFile(Uri url, Map<String, File?> fileList, Map<String, String?> body, String? userId) async {
-    print("Uri is##############" + url.toString());
     try {
       var request = http.MultipartRequest('POST', url);
       request.headers.addAll(ApiUtils.getHeaders());
+
       body.forEach((key, value) {
         request.fields[key] = value!;
       });
-      request.fields[accessValueKey] = accessValue;
-      body[userIdKey] = userId;
-      print(body[userIdKey].toString());
 
-      fileList.forEach((key, value) async {
-        var pic = await http.MultipartFile.fromPath(key, value!.path);
+      for (var key in fileList.keys.toList()) {
+        var pic = await http.MultipartFile.fromPath(key, fileList[key]!.path);
         request.files.add(pic);
-      });
+      }
       var res = await request.send();
       var responseData = await res.stream.toBytes();
       var response = String.fromCharCodes(responseData);
       if (res.statusCode == 200) {
-        print("response ********" + response);
         return response;
       } else {
-        return null;
+        throw ProfileManagementException(errorMessageCode: defaultErrorMessageCode);
       }
     } on SocketException catch (_) {
       throw ProfileManagementException(errorMessageCode: noInternetCode);
