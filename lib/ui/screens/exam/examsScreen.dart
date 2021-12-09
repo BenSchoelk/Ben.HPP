@@ -105,9 +105,14 @@ class _ExamsScreenState extends State<ExamsScreen> {
         });
   }
 
-  void navigateToExamScreen() {
+  void navigateToExamScreen() async {
+    Navigator.of(context).pop();
+
+    //TODO : test junky navigation in release mode
+
     //push exam route
-    Navigator.of(context).pushReplacementNamed(Routes.exam).then((value) {
+
+    Navigator.of(context).pushNamed(Routes.exam).then((value) {
       Future.delayed(Duration(milliseconds: 100), () {
         if (mounted) {
           print("Fetch exam details again");
