@@ -16,7 +16,7 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/optionContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/constants.dart';
+
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:wakelock/wakelock.dart';
@@ -142,7 +142,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
   void submitAnswer(String submittedAnswerId) {
     if (hasSubmittedAnswerForCurrentQuestion()) {
-      if (canUserSubmitAnswerAgainInExam) {
+      if (context.read<ExamCubit>().canUserSubmitAnswerAgainInExam()) {
         context.read<ExamCubit>().updateQuestionWithAnswer(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!, submittedAnswerId);
       }
     } else {

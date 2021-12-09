@@ -71,6 +71,7 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
             });
           } else if (state is ExamFetchSuccess) {
             //
+            print("Navigate to exam screen");
             widget.navigateToExamScreen();
           }
         },

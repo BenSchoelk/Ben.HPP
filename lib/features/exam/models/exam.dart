@@ -8,6 +8,7 @@ class Exam {
     required this.duration,
     required this.status,
     required this.noOfQue,
+    required this.answerAgain,
     required this.examStatus, //(status: 1-Not in Exam, 2-In exam, 3-Completed)
   });
   late final String id;
@@ -20,6 +21,7 @@ class Exam {
   late final String noOfQue;
   late final String examStatus;
   late final String totalMarks;
+  late final String answerAgain;
 
   Exam.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,6 +34,7 @@ class Exam {
     noOfQue = json['no_of_que'];
     examStatus = json['exam_status'];
     totalMarks = json['total_marks'];
+    answerAgain = json['answer_again'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +49,7 @@ class Exam {
     _data['no_of_que'] = noOfQue;
     _data['exam_status'] = examStatus;
     _data['total_marks'] = totalMarks;
+    _data['answer_again'] = answerAgain;
     return _data;
   }
 }

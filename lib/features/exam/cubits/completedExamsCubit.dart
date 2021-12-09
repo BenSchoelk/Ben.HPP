@@ -30,7 +30,6 @@ class CompletedExamsCubit extends Cubit<CompletedExamsState> {
       //
 
       emit(CompletedExamsFetchSuccess(await _examRepository.getCompletedExams(userId: userId, languageId: languageId)));
-      print("completed exam");
     } catch (e) {
       emit(CompletedExamsFetchFailure(e.toString()));
     }

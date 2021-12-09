@@ -104,6 +104,10 @@ class ExamCubit extends Cubit<ExamState> {
     return Exam.fromJson({});
   }
 
+  bool canUserSubmitAnswerAgainInExam() {
+    return getExam().answerAgain == "1";
+  }
+
   void submitResult({required String userId, required String totalDuration}) {
     if (state is ExamFetchSuccess) {
       List<Statistics> markStatistics = [];
