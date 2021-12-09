@@ -18,7 +18,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -108,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: (int id, String? title, String? body, String? payLoad) {
       print("For ios version <= 9 notification will be shown here");
-      return Future.value();
     });
 
     final InitializationSettings initializationSettings = InitializationSettings(
@@ -233,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'com.wrteam.flutterquiz', //channel id
         'flutterquiz', //channel name
-        'flutterquiz', //channel description
+        channelDescription: 'flutterquiz',
         largeIcon: FilePathAndroidBitmap(largeIconPath),
         styleInformation: bigPictureStyleInformation,
         icon: "app_icon");
@@ -256,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'com.wrteam.flutterquiz', //channel id
         'flutterquiz', //channel name
-        'flutterquiz', //channel description
+        channelDescription: 'flutterquiz',
         importance: Importance.max,
         priority: Priority.high,
         ticker: 'ticker',

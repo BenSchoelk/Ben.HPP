@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -25,12 +24,11 @@ class _ChooseProfileDialog extends State<ChooseProfileDialog> {
       maxHeight: 1800,
     );
     File rotatedImage = await FlutterExifRotation.rotateAndSaveImage(path: pickedFile!.path);
-    if (pickedFile != null) {
-      image = rotatedImage;
-      //File(pickedFile.path);
-      final userId = widget.id;
-      widget.bloc.uploadProfilePicture(image, userId);
-    }
+
+    image = rotatedImage;
+    //File(pickedFile.path);
+    final userId = widget.id;
+    widget.bloc.uploadProfilePicture(image, userId);
   }
 
 //get image file from library
@@ -41,12 +39,11 @@ class _ChooseProfileDialog extends State<ChooseProfileDialog> {
       maxHeight: 1800,
     );
     File rotatedImage = await FlutterExifRotation.rotateAndSaveImage(path: pickedFile!.path);
-    if (pickedFile != null) {
-      image = rotatedImage;
-      //File(pickedFile.path);
-      final userId = widget.id;
-      widget.bloc.uploadProfilePicture(image, userId);
-    }
+
+    image = rotatedImage;
+    //File(pickedFile.path);
+    final userId = widget.id;
+    widget.bloc.uploadProfilePicture(image, userId);
   }
 
   @override

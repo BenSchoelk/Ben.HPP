@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -45,7 +44,8 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           leading: CustomBackButton(
-            iconColor: Theme.of(context).primaryColor,isShowDialog: false,
+            iconColor: Theme.of(context).primaryColor,
+            isShowDialog: false,
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +73,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
           ],
         ));
   }
+
   Widget leaderBoard() {
     return BlocConsumer<GetContestLeaderboardCubit, GetContestLeaderboardState>(
         bloc: context.read<GetContestLeaderboardCubit>(),
@@ -136,8 +137,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                                   child: Text(
                                                     "2\u207f\u1d48",
                                                     style: TextStyle(color: Theme.of(context).backgroundColor),
-                                                  )
-                                              ),
+                                                  )),
                                             ),
                                           ],
                                         ),
@@ -146,7 +146,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                         width: MediaQuery.of(context).size.width * .2,
                                         child: Center(
                                           child: Text(
-                                            getContestLeaderboardList[1].name??"...",
+                                            getContestLeaderboardList[1].name ?? "...",
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             textAlign: TextAlign.center,
@@ -158,14 +158,13 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                           width: MediaQuery.of(context).size.width * .2,
                                           child: Center(
                                             child: Text(
-                                              getContestLeaderboardList[1].score??"...",
+                                              getContestLeaderboardList[1].score ?? "...",
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(color: Theme.of(context).primaryColor),
                                             ),
-                                          )
-                                      ),
+                                          )),
                                     ],
                                   ),
                                 )
@@ -176,9 +175,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                           Container(
                             child: Column(
                               children: [
-                                SvgPicture.asset(UiUtils.getImagePath("Rankone_icon.svg"),
-                                    height: MediaQuery.of(context).size.height * .025,color: primaryColor,
-                                    width: MediaQuery.of(context).size.width * .02),
+                                SvgPicture.asset(UiUtils.getImagePath("Rankone_icon.svg"), height: MediaQuery.of(context).size.height * .025, color: primaryColor, width: MediaQuery.of(context).size.width * .02),
                                 Container(
                                   decoration: BoxDecoration(shape: BoxShape.circle),
                                   height: MediaQuery.of(context).size.height * .16,
@@ -218,7 +215,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                     width: MediaQuery.of(context).size.width * .2,
                                     child: Center(
                                       child: Text(
-                                        getContestLeaderboardList[0].name??"...",
+                                        getContestLeaderboardList[0].name ?? "...",
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                         maxLines: 2,
@@ -229,7 +226,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                     width: MediaQuery.of(context).size.width * .2,
                                     child: Center(
                                       child: Text(
-                                        getContestLeaderboardList[0].score??"...",
+                                        getContestLeaderboardList[0].score ?? "...",
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
@@ -256,7 +253,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                                 child: CircleAvatar(
                                                     radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
                                                     backgroundImage: CachedNetworkImageProvider(
-                                                      getContestLeaderboardList[2].profile??"",
+                                                      getContestLeaderboardList[2].profile ?? "",
                                                     ))),
                                             Positioned(
                                                 left: MediaQuery.of(context).size.width * .06,
@@ -275,7 +272,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                           width: MediaQuery.of(context).size.width * .2,
                                           child: Center(
                                             child: Text(
-                                              getContestLeaderboardList[2].name??"...",
+                                              getContestLeaderboardList[2].name ?? "...",
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
@@ -286,7 +283,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                           width: MediaQuery.of(context).size.width * .2,
                                           child: Center(
                                             child: Text(
-                                              getContestLeaderboardList[2].score??"...",
+                                              getContestLeaderboardList[2].score ?? "...",
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
@@ -355,7 +352,7 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                       trailing: Container(
                                         width: MediaQuery.of(context).size.width * .1,
                                         child: Text(
-                                          UiUtils.formatNumber(int.parse(getContestLeaderboardList[index].score??"0")),
+                                          UiUtils.formatNumber(int.parse(getContestLeaderboardList[index].score ?? "0")),
                                           maxLines: 1,
                                           softWrap: false,
                                           overflow: TextOverflow.ellipsis,
@@ -403,17 +400,12 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                         ),
                         child: Center(
                             child: Text(
-                              QuizRemoteDataSource.score,
-                              style: TextStyle(color: Theme.of(context).backgroundColor),
-                            )
-                        ),
-                      )
-                  ),
+                          QuizRemoteDataSource.score,
+                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                        )),
+                      )),
                 ),
-              ]
-              )
-          );
-        }
-        );
+              ]));
+        });
   }
 }
