@@ -13,6 +13,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 
 import 'package:flutterquiz/ui/screens/exam/widgets/examKeyBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/screens/exam/widgets/examResultBottomSheetContainer.dart';
+
 import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -107,10 +108,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   void navigateToExamScreen() async {
     Navigator.of(context).pop();
-
-    //TODO : test junky navigation in release mode
-
-    //push exam route
 
     Navigator.of(context).pushNamed(Routes.exam).then((value) {
       Future.delayed(Duration(milliseconds: 100), () {

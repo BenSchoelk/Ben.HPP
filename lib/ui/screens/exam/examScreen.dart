@@ -28,7 +28,7 @@ class ExamScreen extends StatefulWidget {
   @override
   _ExamScreenState createState() => _ExamScreenState();
 
-  static Route<dynamic> route(RouteSettings routeSettings) {
+  static Route<ExamScreen> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
       builder: (context) => ExamScreen(),
     );

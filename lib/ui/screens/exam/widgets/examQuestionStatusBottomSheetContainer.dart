@@ -44,6 +44,7 @@ class ExamQuestionStatusBottomSheetContainer extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         pageController.animateToPage(questionIndex, duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+        Navigator.of(context).pop();
       },
       child: Container(
         alignment: Alignment.center,

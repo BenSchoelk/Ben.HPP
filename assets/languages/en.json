@@ -356,7 +356,11 @@
   "incorrect" : "Incorrect",
   "youLeftTheExam" : "You left the exam",
   "noExamForToday" : "No exam for today",
-  "haveNotCompletedExam" : "Have not completed any exam yet"
+  "haveNotCompletedExam" : "Have not completed any exam yet",
+  "iAgreeWithExamRules" : "I agree with exam rules",
+  "pleaseAcceptExamRules" : "Please accept exam rules",
+  "examRules" : "Exam Rules",
+  "viewAllRules" : "View All Rules"
   
  
   

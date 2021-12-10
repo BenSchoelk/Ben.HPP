@@ -25,6 +25,68 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
 
   late String errorMessage = "";
 
+  bool showAllExamRules = false;
+
+  late bool showViewAllRulesButton = examRules.length > 2;
+
+  late bool rulesAccepted = false;
+
+  final double horizontalPaddingPercentage = (0.125);
+
+  Widget _buildAcceptRulesContainer() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * (horizontalPaddingPercentage),
+        vertical: 10.0,
+      ),
+      alignment: Alignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 2.0,
+          ),
+          InkWell(
+            onTap: () {
+              setState(() {
+                rulesAccepted = !rulesAccepted;
+              });
+            },
+            child: AnimatedContainer(
+              child: rulesAccepted
+                  ? Icon(
+                      Icons.check,
+                      color: Theme.of(context).backgroundColor,
+                      size: 15.0,
+                    )
+                  : SizedBox(),
+              duration: Duration(milliseconds: 300),
+              width: 17,
+              height: 17,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: rulesAccepted ? Theme.of(context).primaryColor : Colors.transparent,
+                border: Border.all(
+                  width: 1.5,
+                  color: rulesAccepted ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 10.0,
+          ),
+          Text(
+            AppLocalization.of(context)!.getTranslatedValues(iAgreeWithExamRulesKey)!,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildExamRuleContainer(String rule) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -53,6 +115,61 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
     );
   }
 
+  Widget _buildDivider() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * (0.127),
+      ),
+      child: Divider(
+        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
+
+  Widget _buildExamRules() {
+    List<String> allExamRules = [];
+    if (showAllExamRules) {
+      allExamRules = examRules;
+    } else {
+      allExamRules = examRules.length >= 2 ? examRules.sublist(0, 2) : examRules;
+    }
+
+    return Column(
+      children: allExamRules.map((e) => _buildExamRuleContainer(e)).toList(),
+    );
+  }
+
+  Widget _buildViewAllExamRulesContainer() {
+    if (showViewAllRulesButton) {
+      return Transform.translate(
+        offset: Offset(0, -10.0),
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              showAllExamRules = true;
+              showViewAllRulesButton = false;
+            });
+          },
+          child: Container(
+            alignment: Alignment.topLeft,
+            padding: EdgeInsets.only(left: 15, top: 10),
+            margin: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * horizontalPaddingPercentage,
+            ),
+            child: Text(
+              AppLocalization.of(context)!.getTranslatedValues(viewAllRulesKey)!,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -70,8 +187,6 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
               errorMessage = AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!;
             });
           } else if (state is ExamFetchSuccess) {
-            //
-            print("Navigate to exam screen");
             widget.navigateToExamScreen();
           }
         },
@@ -116,7 +231,7 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * (0.125),
+                      horizontal: MediaQuery.of(context).size.width * horizontalPaddingPercentage,
                     ),
                     padding: EdgeInsetsDirectional.only(start: 20.0),
                     height: 60.0,
@@ -141,8 +256,37 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                   ),
 
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * (0.02),
+                    height: MediaQuery.of(context).size.height * (0.0125),
                   ),
+
+                  _buildDivider(),
+
+                  Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * (0.127),
+                      ),
+                      child: Text(
+                        AppLocalization.of(context)!.getTranslatedValues(examRulesKey)!,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 19.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * horizontalPaddingPercentage,
+                    ),
+                    child: _buildExamRules(),
+                  ),
+
+                  _buildViewAllExamRulesContainer(),
+                  _buildDivider(),
+
+                  _buildAcceptRulesContainer(),
+
+                  //
 
                   //show any error message
                   AnimatedSwitcher(
@@ -182,7 +326,11 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                           onTap: state is ExamFetchInProgress
                               ? () {}
                               : () {
-                                  if (textEditingController.text.trim() == widget.exam.examKey) {
+                                  if (!rulesAccepted) {
+                                    setState(() {
+                                      errorMessage = AppLocalization.of(context)!.getTranslatedValues(pleaseAcceptExamRulesKey)!;
+                                    });
+                                  } else if (textEditingController.text.trim() == widget.exam.examKey) {
                                     context.read<ExamCubit>().startExam(exam: widget.exam, userId: context.read<UserDetailsCubit>().getUserId());
                                   } else {
                                     setState(() {
@@ -196,44 +344,6 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                         ),
                       );
                     },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * (0.0125),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * (0.127),
-                    ),
-                    child: Divider(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                  Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * (0.127),
-                      ),
-                      child: Text(
-                        "Exam Rules",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )),
-
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * (0.0125),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * (0.125),
-                    ),
-                    child: Column(
-                      children: examRules.map((e) => _buildExamRuleContainer(e)).toList(),
-                    ),
                   ),
 
                   //

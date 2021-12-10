@@ -25,6 +25,7 @@ class _BannerAdContainer extends State<BannerAdContainer> {
   @override
   void dispose() {
     _googleBannerAd?.dispose();
+
     super.dispose();
   }
 

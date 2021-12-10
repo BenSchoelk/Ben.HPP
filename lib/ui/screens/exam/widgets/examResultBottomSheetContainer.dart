@@ -196,7 +196,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.95)),
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.9)),
       decoration: BoxDecoration(borderRadius: UiUtils.getBottomSheetRadius(), color: Theme.of(context).backgroundColor),
       child: SingleChildScrollView(
         child: Column(

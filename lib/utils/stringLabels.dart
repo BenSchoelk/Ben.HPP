@@ -347,3 +347,7 @@ String totalKey = "total";
 String correctKey = "correct";
 String incorrectKey = "incorrect";
 String youLeftTheExamKey = "youLeftTheExam";
+String iAgreeWithExamRulesKey = "iAgreeWithExamRules";
+String pleaseAcceptExamRulesKey = "pleaseAcceptExamRules";
+String examRulesKey = "examRules";
+String viewAllRulesKey = "viewAllRules";

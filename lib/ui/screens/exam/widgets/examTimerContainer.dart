@@ -12,15 +12,21 @@ class ExamTimerContainer extends StatefulWidget {
 }
 
 class ExamTimerContainerState extends State<ExamTimerContainer> {
-  late int minutesLeft = widget.examDurationInMinutes;
+  late int minutesLeft = widget.examDurationInMinutes - 1;
+  late int secondsLeft = 59;
 
   void startTimer() {
-    examTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+    examTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (minutesLeft == 0) {
         timer.cancel();
         widget.navigateToResultScreen();
       } else {
-        minutesLeft--;
+        if (secondsLeft == 0) {
+          secondsLeft = 59;
+          minutesLeft--;
+        } else {
+          secondsLeft--;
+        }
         setState(() {});
       }
     });
@@ -33,9 +39,14 @@ class ExamTimerContainerState extends State<ExamTimerContainer> {
     return (widget.examDurationInMinutes - minutesLeft);
   }
 
+  void cancelTimer() {
+    print("Cancel timer");
+    examTimer?.cancel();
+  }
+
   @override
   void dispose() {
-    examTimer?.cancel();
+    cancelTimer();
     super.dispose();
   }
 
@@ -44,10 +55,17 @@ class ExamTimerContainerState extends State<ExamTimerContainer> {
     String hours = (minutesLeft ~/ 60).toString().length == 1 ? "0${(minutesLeft ~/ 60)}" : (minutesLeft ~/ 60).toString();
 
     String minutes = (minutesLeft % 60).toString().length == 1 ? "0${(minutesLeft % 60)}" : (minutesLeft % 60).toString();
-    return Text(
-      "$hours:$minutes",
-      style: TextStyle(
-        color: Theme.of(context).primaryColor,
+    hours = hours == "00" ? "" : hours;
+
+    String seconds = secondsLeft < 10 ? "0$secondsLeft" : "$secondsLeft";
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.5),
+      child: Text(
+        hours.isEmpty ? "$minutes:$seconds" : "$hours:$minutes:$seconds",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+        ),
       ),
     );
   }

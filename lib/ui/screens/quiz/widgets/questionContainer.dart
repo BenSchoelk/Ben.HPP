@@ -19,7 +19,7 @@ class QuestionContainer extends StatelessWidget {
           children: [
             Flexible(
               child: Container(
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
                 child: Text(
                   questionNumber == null ? "" : "$questionNumber. " + "${question!.question}",
@@ -30,7 +30,7 @@ class QuestionContainer extends StatelessWidget {
             question!.marks!.isEmpty
                 ? Container()
                 : Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
+                    padding: const EdgeInsets.only(right: 20.0),
                     child: Text(
                       "[${question!.marks}]",
                       style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color: questionColor ?? Theme.of(context).primaryColor),

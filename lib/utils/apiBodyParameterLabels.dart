@@ -38,3 +38,4 @@ final String destroyRoomKey = "destroy_match";
 final String examModuleIdKey = "exam_module_id";
 final String totalDurationKey = "total_duration";
 final String statisticsKey = "statistics";
+final String obtainedMarksKey = "obtained_marks";

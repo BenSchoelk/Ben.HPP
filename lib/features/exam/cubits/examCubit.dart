@@ -124,7 +124,7 @@ class ExamCubit extends Cubit<ExamState> {
         print(element.toJson());
       });
 
-      _examRepository.submitExamResult(examModuleId: (state as ExamFetchSuccess).exam.id, userId: userId, totalDuration: totalDuration, statistics: markStatistics.map((e) => e.toJson()).toList());
+      _examRepository.submitExamResult(obtainedMarks: obtainedMarks().toString(), examModuleId: (state as ExamFetchSuccess).exam.id, userId: userId, totalDuration: totalDuration, statistics: markStatistics.map((e) => e.toJson()).toList());
 
       _examRepository.examLocalDataSource.removeExamModuleId((state as ExamFetchSuccess).exam.id);
     }
