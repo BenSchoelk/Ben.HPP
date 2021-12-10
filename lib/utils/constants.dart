@@ -233,18 +233,11 @@ const String roomCodeGenerateCharacters = "1234567890"; //Numeric
 ///Add your exam rules here
 ///
 const List<String> examRules = [
-  "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
-  "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
-  "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
-  "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
-  "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
-  "Aee Safed Kapda Aeee Safed Kapda Idhar Idhar Dekhle Aeeeyyy Photo wale",
+  "If you lock your phone then exam will complete automatically",
+  "If you minimize application or open other application and don't come back to application with in 5 seconds then exam will complete automatically",
 ];
 //
 //Please do not change this if you do torunament will not work as expected.
 //This ensure that torunament will start only if 8 users are ready to play
 //
 const int numberOfPlayerForTournament = 2;
-
-//It is to determine that user/student can submit answer for given question again or not
-final bool canUserSubmitAnswerAgainInExam = false;
