@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
 
 import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/badgesIconContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
@@ -61,7 +61,11 @@ class _BadgesScreenState extends State<BadgesScreen> {
                     height: MediaQuery.of(context).size.height * (0.25),
                     width: MediaQuery.of(context).size.width * (0.3),
                     child: LayoutBuilder(builder: (context, constraints) {
-                      return _buildBadgeIcon(constraints, badge);
+                      return BadgesIconContainer(
+                        badge: badge,
+                        constraints: constraints,
+                        addTopPadding: true,
+                      );
                     })),
                 Transform.translate(
                   offset: Offset(0, MediaQuery.of(context).size.height * (-0.05)),
@@ -111,7 +115,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                   return Container();
                                 }
                                 final statisticDetails = (state as StatisticFetchSuccess).statisticModel;
-                                final answerToGo = int.parse(badge.badgeCounter) - int.parse(statisticDetails.correctAnswers!);
+                                final answerToGo = int.parse(badge.badgeCounter) - int.parse(statisticDetails.correctAnswers);
                                 return Column(
                                   children: [
                                     Text(
@@ -159,47 +163,6 @@ class _BadgesScreenState extends State<BadgesScreen> {
     List<Badge> unlockedBadges = badges.where((element) => element.status == "1" || element.status == "2").toList();
     unlockedBadges.addAll(lockedBadges);
     return unlockedBadges;
-  }
-
-  Widget _buildBadgeIcon(BoxConstraints constraints, Badge badge) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: constraints.maxHeight * (0.085),
-            ),
-            child: CustomPaint(
-              painter: HexagonCustomPainter(color: badge.status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, paintingStyle: PaintingStyle.fill),
-              child: Container(
-                width: constraints.maxWidth * (0.875),
-                height: constraints.maxHeight * (0.6), //65
-              ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: constraints.maxHeight * (0.135), //outer hexagon top padding + differnce of inner and outer height
-            ),
-            child: CustomPaint(
-              painter: HexagonCustomPainter(color: Theme.of(context).backgroundColor, paintingStyle: PaintingStyle.stroke), //
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.5),
-                  child: CachedNetworkImage(imageUrl: badge.badgeIcon),
-                ),
-                width: constraints.maxWidth * (0.725),
-                height: constraints.maxHeight * (0.5), //55
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildBadges(BuildContext context) {
@@ -290,7 +253,11 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                 ),
                               ),
                             ),
-                            _buildBadgeIcon(constraints, badges[index]),
+                            BadgesIconContainer(
+                              badge: badges[index],
+                              constraints: constraints,
+                              addTopPadding: true,
+                            ),
                           ],
                         ),
                       ),
@@ -321,36 +288,5 @@ class _BadgesScreenState extends State<BadgesScreen> {
         ],
       ),
     );
-  }
-}
-
-class HexagonCustomPainter extends CustomPainter {
-  final Color color;
-  final PaintingStyle paintingStyle;
-  HexagonCustomPainter({required this.color, required this.paintingStyle});
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = color
-      ..style = paintingStyle;
-
-    if (paintingStyle == PaintingStyle.stroke) {
-      paint.strokeWidth = 2.5;
-    }
-    Path path = Path();
-    path.moveTo(size.width * (0.5), 0);
-    path.lineTo(size.width, size.height * (0.25));
-    path.lineTo(size.width, size.height * (0.75));
-    path.lineTo(size.width * (0.5), size.height);
-    path.lineTo(0, size.height * (0.75));
-    path.lineTo(0, size.height * (0.25));
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }

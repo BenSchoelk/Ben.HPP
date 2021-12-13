@@ -130,6 +130,7 @@ final String getAudioQuestionUrl = "${baseUrl}get_audio_questions"; //
 final String getUserBadgesUrl = "${baseUrl}get_user_badges";
 final String setUserBadgesUrl = "${baseUrl}set_badges";
 final String setBattleStatisticsUrl = "${baseUrl}set_battle_statistics";
+final String getBattleStatisticsUrl = "${baseUrl}get_battle_statistics";
 
 final String getExamModuleUrl = "${baseUrl}get_exam_module";
 final String getExamModuleQuestionsUrl = "${baseUrl}get_exam_module_questions";

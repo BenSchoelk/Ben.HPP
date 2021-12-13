@@ -119,4 +119,23 @@ class StatisticRemoteDataSource {
       throw StatisticException(errorMessageCode: defaultErrorMessageCode);
     }
   }
+
+  Future<dynamic> getBattleStatistic({required String userId}) async {
+    try {
+      final body = {
+        accessValueKey: accessValue,
+        userIdKey: userId,
+      };
+      final response = await http.post(Uri.parse(getBattleStatisticsUrl), body: body, headers: ApiUtils.getHeaders());
+      final responseJson = jsonDecode(response.body);
+
+      return responseJson;
+    } on SocketException catch (_) {
+      throw StatisticException(errorMessageCode: noInternetCode);
+    } on StatisticException catch (e) {
+      throw StatisticException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw StatisticException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
 }

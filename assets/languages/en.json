@@ -360,7 +360,14 @@
   "iAgreeWithExamRules" : "I agree with exam rules",
   "pleaseAcceptExamRules" : "Please accept exam rules",
   "examRules" : "Exam Rules",
-  "viewAllRules" : "View All Rules"
+  "viewAllRules" : "View All Rules",
+  "statisticsLabel" : "Statistics",
+  "hello" : "Hello,",
+  "collectedBadges" : "Collected Badges",
+  "quizDetails" : "Quiz Details",
+  "questionDetails" : "Question Details",
+  "battleStatistics" : "Battle Statistics",
+  "viewAll" : "View All"
   
  
   

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/statistic/statisticModel.dart';
+import 'package:flutterquiz/features/statistic/models/statisticModel.dart';
 import 'package:flutterquiz/features/statistic/statisticRepository.dart';
 
 @immutable
@@ -28,7 +28,18 @@ class StatisticCubit extends Cubit<StatisticState> {
   void getStatistic(String userId) async {
     emit(StatisticFetchInProgress());
     try {
-      final result = await _statisticRepository.getStatistic(userId);
+      final result = await _statisticRepository.getStatistic(userId: userId, getBattleStatistics: false);
+
+      emit(StatisticFetchSuccess(result));
+    } catch (e) {
+      emit(StatisticFetchFailure(e.toString()));
+    }
+  }
+
+  void getStatisticWithBattle(String userId) async {
+    emit(StatisticFetchInProgress());
+    try {
+      final result = await _statisticRepository.getStatistic(userId: userId, getBattleStatistics: true);
 
       emit(StatisticFetchSuccess(result));
     } catch (e) {

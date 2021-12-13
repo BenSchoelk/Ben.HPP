@@ -42,6 +42,7 @@ import 'package:flutterquiz/ui/screens/rewards/rewardsScreen.dart';
 import 'package:flutterquiz/ui/screens/profile/selectProfilePictureScreen.dart';
 
 import 'package:flutterquiz/ui/screens/splashScreen.dart';
+import 'package:flutterquiz/ui/screens/statisticsScreen.dart';
 import 'package:flutterquiz/ui/screens/tournament/tournamentDetailsScreen.dart';
 import 'package:flutterquiz/ui/screens/tournament/tournamentScreen.dart';
 
@@ -93,6 +94,7 @@ class Routes {
   static const tournament = "/tournament";
   static const tournamentDetails = "/tournamentDetails";
   static const otpScreen = "/otpScreen";
+  static const statistics = "/statistics";
 
   static String currentRoute = splash;
 
@@ -198,6 +200,9 @@ class Routes {
 
       case tournamentDetails:
         return TournamentDetailsScreen.route(routeSettings);
+
+      case statistics:
+        return StatisticsScreen.route(routeSettings);
 
       default:
         return CupertinoPageRoute(builder: (context) => Scaffold());

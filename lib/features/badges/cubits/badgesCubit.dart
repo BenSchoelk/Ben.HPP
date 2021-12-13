@@ -66,6 +66,13 @@ class BadgesCubit extends Cubit<BadgesState> {
     return true;
   }
 
+  List<Badge> getUnlockedBadges() {
+    if (state is BadgesFetchSuccess) {
+      return (state as BadgesFetchSuccess).badges.where((element) => element.status != "0").toList();
+    }
+    return [];
+  }
+
   bool isRewardUnlocked(String badgeType) {
     if (state is BadgesFetchSuccess) {
       final badge = (state as BadgesFetchSuccess).badges.where((element) => element.type == badgeType).toList().first;

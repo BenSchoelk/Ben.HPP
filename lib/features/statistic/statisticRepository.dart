@@ -1,5 +1,5 @@
 import 'package:flutterquiz/features/statistic/statisticException.dart';
-import 'package:flutterquiz/features/statistic/statisticModel.dart';
+import 'package:flutterquiz/features/statistic/models/statisticModel.dart';
 import 'package:flutterquiz/features/statistic/statisticRemoteDataSource.dart';
 
 class StatisticRepository {
@@ -14,11 +14,22 @@ class StatisticRepository {
 
   StatisticRepository._internal();
 
-  Future<StatisticModel> getStatistic(String userId) async {
+  Future<StatisticModel> getStatistic({required String userId, required bool getBattleStatistics}) async {
     try {
       final result = await _statisticRemoteDataSource.getStatistic(userId);
-
-      return StatisticModel.fromJson(Map.from(result));
+      if (getBattleStatistics) {
+        final battleResult = await _statisticRemoteDataSource.getBattleStatistic(userId: userId);
+        Map<String, dynamic> battleStatistics = {};
+        Map<String, dynamic> myReports = Map.from((battleResult['myreport'] as List).first);
+        myReports.keys.forEach((element) {
+          battleStatistics.addAll({
+            element: myReports[element],
+          });
+        });
+        battleStatistics['playedBattles'] = battleResult['data'] == null ? [] : (battleResult['data'] as List);
+        return StatisticModel.fromJson(Map.from(result), battleStatistics);
+      }
+      return StatisticModel.fromJson(Map.from(result), {});
     } catch (e) {
       throw StatisticException(errorMessageCode: e.toString());
     }
