@@ -89,7 +89,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
   void iosScreenshotCallback() {
     print("User took screenshot");
-    iosCapturedScreenshotQuestionIds.add(currentQuestionIndex.toString());
+    iosCapturedScreenshotQuestionIds.add(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!);
   }
 
   void iosScreenrecordCallback(bool isRecording) {
