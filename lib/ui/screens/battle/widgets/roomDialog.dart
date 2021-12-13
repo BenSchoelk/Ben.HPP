@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
@@ -183,34 +184,43 @@ class _RoomDialogState extends State<RoomDialog> {
         alignment: Alignment.center,
         padding: useManualValue ? EdgeInsets.symmetric(horizontal: 10.0) : null,
         child: useManualValue
-            ? TextField(
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  print("Entry fee : $value");
-                  entryFee = int.parse(value.trim());
-                  setState(() {});
-                },
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).primaryColor,
-                ),
-                controller: textEditingController,
-                cursorColor: Theme.of(context).primaryColor,
-                decoration: InputDecoration(
-                  hintText: "00",
-                  hintStyle: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).primaryColor,
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      print("Entry fee : $value");
+                      entryFee = int.parse(value.trim());
+                      setState(() {});
+                    },
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    controller: textEditingController,
+                    cursorColor: Theme.of(context).primaryColor,
+                    decoration: InputDecoration(
+                      hintText: "00",
+                      hintStyle: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      contentPadding: EdgeInsets.all(0),
+                      isDense: true,
+                      enabledBorder: _getInputBorder(context),
+                      border: _getInputBorder(context),
+                      focusedBorder: _getInputBorder(context),
+                    ),
                   ),
-                  contentPadding: EdgeInsets.all(0),
-                  isDense: true,
-                  enabledBorder: _getInputBorder(context),
-                  border: _getInputBorder(context),
-                  focusedBorder: _getInputBorder(context),
-                ),
+                  SizedBox(
+                    height: 2.5,
+                  ),
+                  SvgPicture.asset(UiUtils.getImagePath("coins.svg")),
+                ],
               )
             : Column(
                 mainAxisSize: MainAxisSize.min,
@@ -223,6 +233,10 @@ class _RoomDialogState extends State<RoomDialog> {
                       fontWeight: entryFeeValue == entryFee ? FontWeight.bold : FontWeight.w500,
                     ),
                   ),
+                  SizedBox(
+                    height: 2.5,
+                  ),
+                  SvgPicture.asset(UiUtils.getImagePath("coins.svg")),
                 ],
               ),
         decoration: BoxDecoration(
