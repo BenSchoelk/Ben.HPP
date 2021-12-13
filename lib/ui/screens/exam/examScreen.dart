@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:ios_insecure_screen_detector/ios_insecure_screen_detector.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,6 +55,11 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
   int currentQuestionIndex = 0;
 
+  IosInsecureScreenDetector? _iosInsecureScreenDetector;
+  late bool isScreenRecordingInIos = false;
+
+  List<String> iosCapturedScreenshotQuestionIds = [];
+
   @override
   void initState() {
     super.initState();
@@ -64,9 +71,30 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
 
     WidgetsBinding.instance?.addObserver(this);
+
+    if (Platform.isIOS) {
+      initScreenshotAndScreenRecordDetectorInIos();
+    }
+
     //start timer
     Future.delayed(Duration.zero, () {
       timerKey.currentState?.startTimer();
+    });
+  }
+
+  void initScreenshotAndScreenRecordDetectorInIos() async {
+    await _iosInsecureScreenDetector?.initialize();
+    _iosInsecureScreenDetector?.addListener(iosScreenshotCallback, iosScreenrecordCallback);
+  }
+
+  void iosScreenshotCallback() {
+    print("User took screenshot");
+    iosCapturedScreenshotQuestionIds.add(currentQuestionIndex.toString());
+  }
+
+  void iosScreenrecordCallback(bool isRecording) {
+    setState(() {
+      isScreenRecordingInIos = isRecording;
     });
   }
 
@@ -108,6 +136,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     canGiveExamAgainTimer?.cancel();
     WidgetsBinding.instance?.removeObserver(this);
     Wakelock.disable();
+    _iosInsecureScreenDetector?.dispose();
     FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.dispose();
   }
@@ -137,7 +166,11 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   }
 
   void submitResult() {
-    context.read<ExamCubit>().submitResult(userId: context.read<UserDetailsCubit>().getUserId(), totalDuration: timerKey.currentState?.getCompletedExamDuration().toString() ?? "0");
+    context.read<ExamCubit>().submitResult(
+        capturedQuestionIds: iosCapturedScreenshotQuestionIds,
+        rulesViolated: iosCapturedScreenshotQuestionIds.isNotEmpty,
+        userId: context.read<UserDetailsCubit>().getUserId(),
+        totalDuration: timerKey.currentState?.getCompletedExamDuration().toString() ?? "0");
   }
 
   void submitAnswer(String submittedAnswerId) {
@@ -414,6 +447,13 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
               child: _buildBottomMenu(),
             ),
             _buildYouLeftTheExam(),
+            isScreenRecordingInIos
+                ? Container(
+                    color: Colors.black,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                  )
+                : Container(),
           ],
         ),
       ),

@@ -50,6 +50,8 @@ dependencies:
   image_picker: ^0.8.0+1
   in_app_purchase: ^2.0.0
   internet_connection_checker: ^0.0.1+2
+
+  ios_insecure_screen_detector: ^0.0.2
   intl: ^0.17.0
   intl_phone_field: ^2.1.0
   jaguar_jwt: ^3.0.0

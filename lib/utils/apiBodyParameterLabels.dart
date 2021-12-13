@@ -39,3 +39,5 @@ final String examModuleIdKey = "exam_module_id";
 final String totalDurationKey = "total_duration";
 final String statisticsKey = "statistics";
 final String obtainedMarksKey = "obtained_marks";
+final String rulesViolatedKey = "rules_violated";
+final String capturedQuestionIdsKey = "captured_question_ids";
