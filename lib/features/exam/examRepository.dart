@@ -55,12 +55,20 @@ class ExamRepository {
     }
   }
 
-  Future<void> submitExamResult({required String obtainedMarks, required String examModuleId, required String userId, required String totalDuration, required List<Map<String, dynamic>> statistics}) async {
+  Future<void> submitExamResult({
+    required String obtainedMarks,
+    required String examModuleId,
+    required String userId,
+    required String totalDuration,
+    required List<Map<String, dynamic>> statistics,
+    required bool rulesViolated,
+    required List<String> capturedQuestionIds,
+  }) async {
     try {
-      await _examRemoteDataSource.submitExamResult(examModuleId: examModuleId, userId: userId, totalDuration: totalDuration, statistics: statistics, obtainedMarks: obtainedMarks);
+      await _examRemoteDataSource.submitExamResult(capturedQuestionIds: capturedQuestionIds, rulesViolated: rulesViolated, examModuleId: examModuleId, userId: userId, totalDuration: totalDuration, statistics: statistics, obtainedMarks: obtainedMarks);
     } catch (e) {
       print(e.toString());
-      throw ExamException(errorMessageCode: e.toString());
+      //throw ExamException(errorMessageCode: e.toString());
     }
   }
 
@@ -68,7 +76,7 @@ class ExamRepository {
     //
     List<String> pendingExamIds = _examLocalDataSource.getAllExamModuleIds();
     pendingExamIds.forEach((element) {
-      submitExamResult(examModuleId: element, userId: userId, totalDuration: "0", statistics: [], obtainedMarks: "0");
+      submitExamResult(examModuleId: element, userId: userId, totalDuration: "0", statistics: [], obtainedMarks: "0", rulesViolated: false, capturedQuestionIds: []);
     });
 
     //delete exams

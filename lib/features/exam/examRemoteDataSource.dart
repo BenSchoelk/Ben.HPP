@@ -99,7 +99,15 @@ class ExamRemoteDataSource {
     }
   }
 
-  Future<dynamic> submitExamResult({required String examModuleId, required String userId, required String totalDuration, required List<Map<String, dynamic>> statistics, required String obtainedMarks}) async {
+  Future<dynamic> submitExamResult({
+    required String examModuleId,
+    required String userId,
+    required String totalDuration,
+    required List<Map<String, dynamic>> statistics,
+    required String obtainedMarks,
+    required bool rulesViolated,
+    required List<String> capturedQuestionIds,
+  }) async {
     try {
       //body of post request
       final body = {
@@ -109,6 +117,8 @@ class ExamRemoteDataSource {
         statisticsKey: json.encode(statistics),
         totalDurationKey: totalDuration,
         obtainedMarksKey: obtainedMarks,
+        rulesViolatedKey: rulesViolated ? "1" : "0",
+        capturedQuestionIdsKey: json.encode(capturedQuestionIds),
       };
 
       print(body);

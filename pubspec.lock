@@ -588,6 +588,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  ios_insecure_screen_detector:
+    dependency: "direct main"
+    description:
+      name: ios_insecure_screen_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   jaguar_jwt:
     dependency: "direct main"
     description:

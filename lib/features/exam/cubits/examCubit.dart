@@ -108,7 +108,12 @@ class ExamCubit extends Cubit<ExamState> {
     return getExam().answerAgain == "1";
   }
 
-  void submitResult({required String userId, required String totalDuration}) {
+  void submitResult({
+    required String userId,
+    required String totalDuration,
+    required bool rulesViolated,
+    required List<String> capturedQuestionIds,
+  }) {
     if (state is ExamFetchSuccess) {
       List<Statistics> markStatistics = [];
 
@@ -124,7 +129,14 @@ class ExamCubit extends Cubit<ExamState> {
         print(element.toJson());
       });
 
-      _examRepository.submitExamResult(obtainedMarks: obtainedMarks().toString(), examModuleId: (state as ExamFetchSuccess).exam.id, userId: userId, totalDuration: totalDuration, statistics: markStatistics.map((e) => e.toJson()).toList());
+      _examRepository.submitExamResult(
+          capturedQuestionIds: capturedQuestionIds,
+          rulesViolated: rulesViolated,
+          obtainedMarks: obtainedMarks().toString(),
+          examModuleId: (state as ExamFetchSuccess).exam.id,
+          userId: userId,
+          totalDuration: totalDuration,
+          statistics: markStatistics.map((e) => e.toJson()).toList());
 
       _examRepository.examLocalDataSource.removeExamModuleId((state as ExamFetchSuccess).exam.id);
     }

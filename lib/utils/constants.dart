@@ -235,6 +235,9 @@ const String roomCodeGenerateCharacters = "1234567890"; //Numeric
 const List<String> examRules = [
   "If you lock your phone then exam will complete automatically",
   "If you minimize application or open other application and don't come back to application with in 5 seconds then exam will complete automatically",
+  "Screen recording is prohibited",
+  "In Android screenshot capturing is prohibited",
+  "In ios, if you take screenshot then rules will violate and it will inform to examinator"
 ];
 //
 //Please do not change this if you do torunament will not work as expected.
