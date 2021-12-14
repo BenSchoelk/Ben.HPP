@@ -62,6 +62,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
+
     super.initState();
 
     //wake lock enable so phone will not lock automatically after sometime
