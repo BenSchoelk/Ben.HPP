@@ -132,6 +132,10 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
     return widget.questions.length;
   }
 
+  bool isGuessTheWordQuizModule() {
+    return widget.guessTheWordQuestions.isNotEmpty;
+  }
+
   Color getOptionColor(Question question, String? optionId) {
     if (question.attempted) {
       // if given answer is correct
@@ -348,6 +352,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
         children: [
           QuestionContainer(
             question: Question(
+              marks: "",
               id: question.id,
               question: question.question,
               imageUrl: question.image,
@@ -401,7 +406,7 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
                 enableDrag: false,
                 isScrollControlled: true,
                 context: context,
-                builder: (_) => ReportQuestionBottomSheetContainer(questionId: widget.questions[_currentIndex].id!, reportQuestionCubit: reportQuestionCubit));
+                builder: (_) => ReportQuestionBottomSheetContainer(questionId: isGuessTheWordQuizModule() ? widget.guessTheWordQuestions[_currentIndex].id : widget.questions[_currentIndex].id!, reportQuestionCubit: reportQuestionCubit));
           },
           icon: Icon(
             Icons.report_problem,

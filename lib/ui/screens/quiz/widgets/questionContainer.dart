@@ -22,7 +22,7 @@ class QuestionContainer extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
                 child: Text(
-                  questionNumber == null ? "" : "$questionNumber. " + "${question!.question}",
+                  questionNumber == null ? "${question!.question}" : "$questionNumber. " + "${question!.question}",
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color: questionColor ?? Theme.of(context).primaryColor),
                 ),
               ),

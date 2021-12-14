@@ -26,7 +26,6 @@ class ReportQuestionRemoteDataSource {
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        print(responseJson['message']);
         throw ReportQuestionException(errorMessageCode: responseJson['message']); //error
       }
       return responseJson['data'];
