@@ -83,6 +83,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   }
 
   void initScreenshotAndScreenRecordDetectorInIos() async {
+    _iosInsecureScreenDetector = IosInsecureScreenDetector();
     await _iosInsecureScreenDetector?.initialize();
     _iosInsecureScreenDetector?.addListener(iosScreenshotCallback, iosScreenrecordCallback);
   }
