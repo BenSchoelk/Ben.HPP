@@ -490,17 +490,22 @@ class _ResultScreenState extends State<ResultScreen> {
             ? Stack(children: [
                 Align(
                     alignment: Alignment.topLeft,
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: Theme.of(context).backgroundColor,
-                            )))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 15.0,
+                      ),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: Theme.of(context).backgroundColor,
+                              ))),
+                    )),
                 Container(
                     alignment: Alignment.center,
                     child: Text(

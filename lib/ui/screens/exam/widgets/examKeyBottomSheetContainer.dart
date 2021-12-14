@@ -61,8 +61,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                     )
                   : SizedBox(),
               duration: Duration(milliseconds: 300),
-              width: 17,
-              height: 17,
+              width: 20,
+              height: 20,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: rulesAccepted ? Theme.of(context).primaryColor : Colors.transparent,

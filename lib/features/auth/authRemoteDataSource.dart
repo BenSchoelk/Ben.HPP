@@ -80,8 +80,8 @@ class AuthRemoteDataSource {
 
   Future<void> updateFcmId({required String firebaseId, required bool userLoggingOut}) async {
     try {
-      final String fcmId = userLoggingOut ? "empty" : await fcm.FirebaseMessaging.instance.getToken() ?? "";
-      final body = {accessValueKey: accessValue, fcmIdKey: fcmId, firebaseIdKey: firebaseId};
+      final String fcmId = userLoggingOut ? "empty" : await fcm.FirebaseMessaging.instance.getToken() ?? "empty";
+      final body = {accessValueKey: accessValue, fcmIdKey: fcmId, firebaseIdKey: firebaseId.isNotEmpty ? firebaseId : "firebaseId"};
       print(body);
       final response = await http.post(Uri.parse(updateFcmIdUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);

@@ -196,57 +196,78 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.9)),
-      decoration: BoxDecoration(borderRadius: UiUtils.getBottomSheetRadius(), color: Theme.of(context).backgroundColor),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              child: Text(
-                "${AppLocalization.of(context)!.getTranslatedValues(examResultKey)!}",
-                style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20.0),
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * (0.075),
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: UiUtils.getBottomSheetRadius()),
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.85)),
+      decoration: BoxDecoration(
+        borderRadius: UiUtils.getBottomSheetRadius(),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${AppLocalization.of(context)!.getTranslatedValues(examResultKey)!}",
+                    style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20.0),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * (0.075),
+                  decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: UiUtils.getBottomSheetRadius()),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(obtainedMarksKey)!}", examData: "${examResult.obtainedMarks()}/${examResult.totalMarks}", context: context),
+                SizedBox(
+                  height: 10.0,
+                ),
+                _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(examDurationKey)!}", examData: UiUtils.convertMinuteIntoHHMM(int.parse(examResult.duration)), context: context),
+                SizedBox(
+                  height: 10.0,
+                ),
+                _buildExamDetailsContainer(
+                    title: "${AppLocalization.of(context)!.getTranslatedValues(completedInKey)!}", examData: UiUtils.convertMinuteIntoHHMM(examResult.totalDuration.isNotEmpty ? int.parse(examResult.totalDuration) : 0), context: context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Divider(
+                    thickness: 1.5,
+                  ),
+                ),
+                _buildQuestionStatistic(
+                    title: "${AppLocalization.of(context)!.getTranslatedValues(totalQuestionsKey)!}", context: context, totalQuestion: examResult.totalQuestions(), correct: examResult.totalCorrectAnswers(), incorrect: examResult.totalInCorrectAnswers()),
+                ...examResult.getUniqueMarksOfQuestion().map((mark) {
+                  return _buildQuestionStatistic(
+                    context: context,
+                    correct: examResult.totalCorrectAnswersByMark(mark),
+                    totalQuestion: examResult.totalQuestionsByMark(mark),
+                    incorrect: examResult.totalInCorrectAnswersByMark(mark),
+                    title: "$mark ${AppLocalization.of(context)!.getTranslatedValues(markKey)!} ${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!}",
+                  );
+                }).toList(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * (0.05),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 15.0,
-            ),
-            _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(obtainedMarksKey)!}", examData: "${examResult.obtainedMarks()}/${examResult.totalMarks}", context: context),
-            SizedBox(
-              height: 10.0,
-            ),
-            _buildExamDetailsContainer(title: "${AppLocalization.of(context)!.getTranslatedValues(examDurationKey)!}", examData: UiUtils.convertMinuteIntoHHMM(int.parse(examResult.duration)), context: context),
-            SizedBox(
-              height: 10.0,
-            ),
-            _buildExamDetailsContainer(
-                title: "${AppLocalization.of(context)!.getTranslatedValues(completedInKey)!}", examData: UiUtils.convertMinuteIntoHHMM(examResult.totalDuration.isNotEmpty ? int.parse(examResult.totalDuration) : 0), context: context),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Divider(
-                thickness: 1.5,
-              ),
-            ),
-            _buildQuestionStatistic(
-                title: "${AppLocalization.of(context)!.getTranslatedValues(totalQuestionsKey)!}", context: context, totalQuestion: examResult.totalQuestions(), correct: examResult.totalCorrectAnswers(), incorrect: examResult.totalInCorrectAnswers()),
-            ...examResult.getUniqueMarksOfQuestion().map((mark) {
-              return _buildQuestionStatistic(
-                context: context,
-                correct: examResult.totalCorrectAnswersByMark(mark),
-                totalQuestion: examResult.totalQuestionsByMark(mark),
-                incorrect: examResult.totalInCorrectAnswersByMark(mark),
-                title: "$mark ${AppLocalization.of(context)!.getTranslatedValues(markKey)!} ${AppLocalization.of(context)!.getTranslatedValues(questionsKey)!}",
-              );
-            }).toList(),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * (0.05),
-            ),
-          ],
-        ),
+          ),
+          Positioned(
+              top: -60.0,
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: IconButton(
+                      onPressed: () {
+                        print("Something");
+                        //Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        size: 40.0,
+                        color: Theme.of(context).backgroundColor,
+                      )))),
+        ],
       ),
     );
   }
