@@ -62,19 +62,18 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
-
     super.initState();
 
     //wake lock enable so phone will not lock automatically after sometime
 
     Wakelock.enable();
 
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-
     WidgetsBinding.instance?.addObserver(this);
 
     if (Platform.isIOS) {
       initScreenshotAndScreenRecordDetectorInIos();
+    } else {
+      FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     }
 
     //start timer
@@ -139,7 +138,9 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance?.removeObserver(this);
     Wakelock.disable();
     _iosInsecureScreenDetector?.dispose();
-    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    if (Platform.isAndroid) {
+      FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
     super.dispose();
   }
 
