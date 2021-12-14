@@ -47,11 +47,32 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   int currentSelectedQuestionIndex = 0;
 
+  late ScrollController _completedExamScrollController = ScrollController()..addListener(hasMoreResultScrollListener);
+
+  void hasMoreResultScrollListener() {
+    if (_completedExamScrollController.position.maxScrollExtent == _completedExamScrollController.offset) {
+      print("At the end of the list");
+      if (context.read<CompletedExamsCubit>().hasMoreResult()) {
+        //
+        context.read<CompletedExamsCubit>().getMoreResult(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+      } else {
+        print("No more result");
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getExams();
     getCompletedExams();
+  }
+
+  @override
+  void dispose() {
+    _completedExamScrollController.removeListener(hasMoreResultScrollListener);
+    _completedExamScrollController.dispose();
+    super.dispose();
   }
 
   void getExams() {
@@ -202,6 +223,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           );
         }
         return ListView.builder(
+          controller: _completedExamScrollController,
           padding: EdgeInsets.only(
             right: MediaQuery.of(context).size.width * (0.05),
             left: MediaQuery.of(context).size.width * (0.05),
@@ -210,7 +232,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
           ),
           itemCount: (state as CompletedExamsFetchSuccess).completedExams.length,
           itemBuilder: (context, index) {
-            return _buildResultContainer(state.completedExams[index]);
+            return _buildResultContainer(
+              examResult: state.completedExams[index],
+              hasMoreResultFetchError: state.hasMoreFetchError,
+              index: index,
+              totalExamResults: state.completedExams.length,
+              hasMore: state.hasMore,
+            );
           },
         );
       },
@@ -321,7 +349,43 @@ class _ExamsScreenState extends State<ExamsScreen> {
     );
   }
 
-  Widget _buildResultContainer(ExamResult examResult) {
+  Widget _buildResultContainer({
+    required ExamResult examResult,
+    required int index,
+    required int totalExamResults,
+    required bool hasMoreResultFetchError,
+    required bool hasMore,
+  }) {
+    if (index == totalExamResults - 1) {
+      //check if hasMore
+      if (hasMore) {
+        if (hasMoreResultFetchError) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+              child: IconButton(
+                  onPressed: () {
+                    context.read<CompletedExamsCubit>().getMoreResult(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+                  },
+                  icon: Icon(
+                    Icons.error,
+                    color: Theme.of(context).primaryColor,
+                  )),
+            ),
+          );
+        } else {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+              child: CircularProgressContainer(
+                useWhiteLoader: false,
+                heightAndWidth: 40,
+              ),
+            ),
+          );
+        }
+      }
+    }
     return GestureDetector(
       onTap: () {
         showExamResultBottomSheet(context, examResult);

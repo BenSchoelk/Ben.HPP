@@ -22,17 +22,26 @@ class ExamRepository {
 
   Future<List<Exam>> getExams({required String userId, required String languageId}) async {
     try {
-      final result = await _examRemoteDataSource.getExams(userId: userId, languageId: languageId, type: "1");
+      final result = (await _examRemoteDataSource.getExams(limit: "", offset: "", userId: userId, languageId: languageId, type: "1"))['data'] as List;
       return result.map((e) => Exam.fromJson(e)).toList();
     } catch (e) {
       throw ExamException(errorMessageCode: e.toString());
     }
   }
 
-  Future<List<ExamResult>> getCompletedExams({required String userId, required String languageId}) async {
+  Future<Map<String, dynamic>> getCompletedExams({required String userId, required String languageId, required String offset, required String limit}) async {
     try {
-      final result = await _examRemoteDataSource.getExams(userId: userId, languageId: languageId, type: "2");
-      return result.map((e) => ExamResult.fromJson(e)).toList();
+      final result = await _examRemoteDataSource.getExams(
+        userId: userId,
+        languageId: languageId,
+        type: "2",
+        limit: limit,
+        offset: offset,
+      );
+      return {
+        "total": result['total'],
+        "results": (result['data'] as List).map((e) => ExamResult.fromJson(e)).toList(),
+      };
     } catch (e) {
       throw ExamException(errorMessageCode: e.toString());
     }

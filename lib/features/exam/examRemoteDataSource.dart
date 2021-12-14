@@ -10,18 +10,27 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 class ExamRemoteDataSource {
-  Future<List<dynamic>> getExams({required String userId, required String languageId, required String type}) async {
+  Future<dynamic> getExams({required String userId, required String languageId, required String type, required String limit, required String offset}) async {
     try {
       //body of post request
       final body = {
         accessValueKey: accessValue,
         userIdKey: userId,
         languageIdKey: languageId,
-        typeKey: type // 1 for today , 2 for completed
+        typeKey: type, // 1 for today , 2 for completed
+        limitKey: limit,
+        offsetKey: offset,
       };
 
       if (languageId.isEmpty) {
         body.remove(languageIdKey);
+      }
+      if (limit.isEmpty) {
+        body.remove(limitKey);
+      }
+
+      if (offset.isEmpty) {
+        body.remove(offsetKey);
       }
       final response = await http.post(Uri.parse(getExamModuleUrl), body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
@@ -36,7 +45,7 @@ class ExamRemoteDataSource {
         );
       }
 
-      return responseJson['data'];
+      return responseJson;
     } on SocketException catch (_) {
       throw ExamException(errorMessageCode: noInternetCode);
     } on ExamException catch (e) {
