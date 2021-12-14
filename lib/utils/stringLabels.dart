@@ -358,3 +358,6 @@ String quizDetailsKey = "quizDetails";
 String questionDetailsKey = "questionDetails";
 String battleStatisticsKey = "battleStatistics";
 String viewAllKey = "viewAll";
+String playedKey = "played";
+String wonKey = "won";
+String lostKey = "lost";

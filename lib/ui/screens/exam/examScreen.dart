@@ -58,7 +58,7 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   IosInsecureScreenDetector? _iosInsecureScreenDetector;
   late bool isScreenRecordingInIos = false;
 
-  List<String> iosCapturedScreenshotQuestionIds = ["15", "20"];
+  List<String> iosCapturedScreenshotQuestionIds = [];
 
   @override
   void initState() {

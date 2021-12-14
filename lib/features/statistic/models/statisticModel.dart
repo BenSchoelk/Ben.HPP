@@ -38,10 +38,10 @@ class StatisticModel {
 
   static StatisticModel fromJson(Map json, Map battleJson) {
     return StatisticModel(
-        battleDrawn: battleJson['Drawn'] ?? "",
-        battleLoose: battleJson['Loose'] ?? "",
+        battleDrawn: battleJson['Drawn'] ?? "0",
+        battleLoose: battleJson['Loose'] ?? "0",
         playedBattles: battleJson['playedBattles'] ?? [],
-        battleVictories: battleJson['Victories'] ?? "",
+        battleVictories: battleJson['Victories'] ?? "0",
         answeredQuestions: json['questions_answered'] ?? "",
         bestPosition: json['best_position'] ?? "",
         correctAnswers: json['correct_answers'] ?? "",
@@ -50,6 +50,10 @@ class StatisticModel {
         strongCategory: json['strong_category'] ?? "",
         weakCategory: json['weak_category'] ?? "",
         ratiod2: json['ratio2'] ?? "");
+  }
+
+  int calculatePlayedBattles() {
+    return (int.parse(this.battleDrawn) + int.parse(this.battleLoose) + int.parse(this.battleVictories));
   }
 }
 /*

@@ -46,4 +46,11 @@ class StatisticCubit extends Cubit<StatisticState> {
       emit(StatisticFetchFailure(e.toString()));
     }
   }
+
+  StatisticModel getStatisticsDetails() {
+    if (state is StatisticFetchSuccess) {
+      return (state as StatisticFetchSuccess).statisticModel;
+    }
+    return StatisticModel.fromJson({}, {});
+  }
 }
