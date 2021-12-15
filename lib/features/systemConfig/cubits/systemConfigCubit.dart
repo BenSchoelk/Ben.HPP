@@ -128,6 +128,14 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     return "0";
   }
 
+  String? getIsExamAvailable() {
+    if (state is SystemConfigFetchSuccess) {
+      print("Exam mode is : ${(state as SystemConfigFetchSuccess).systemConfigModel.examMode}");
+      return (state as SystemConfigFetchSuccess).systemConfigModel.examMode;
+    }
+    return "0";
+  }
+
   String? getIsGuessTheWordAvailable() {
     if (state is SystemConfigFetchSuccess) {
       return (state as SystemConfigFetchSuccess).systemConfigModel.guessTheWordMode;

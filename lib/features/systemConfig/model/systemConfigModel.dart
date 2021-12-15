@@ -40,8 +40,10 @@ class SystemConfigModel {
   late String iosFbBannerId;
   late String iosFbInterstitialId;
   late String iosFbRewardedId;
+  late String examMode;
 
   SystemConfigModel({
+    required this.examMode,
     required this.adsEnabled,
     required this.adsType,
     required this.androidBannerId,
@@ -127,5 +129,6 @@ class SystemConfigModel {
     iosFbBannerId = json['ios_fb_banner_id'] ?? "";
     iosFbInterstitialId = json['ios_fb_interstitial_id'] ?? "";
     iosFbRewardedId = json['ios_fb_rewarded_id'] ?? "";
+    examMode = json['exam_module'] ?? "0";
   }
 }

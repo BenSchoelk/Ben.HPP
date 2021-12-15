@@ -141,6 +141,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (systemCubit.getIsGuessTheWordAvailable() == "0") {
         _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.guessTheWord);
       }
+      if (systemCubit.getIsExamAvailable() == "0") {
+        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.exam);
+      }
       setState(() {});
     });
   }
@@ -152,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (context.read<SystemConfigCubit>().isForceUpdateEnable()) {
       try {
         bool forceUpdate = await UiUtils.forceUpdate(context.read<SystemConfigCubit>().getAppVersion());
-        print(forceUpdate);
+
         if (forceUpdate) {
           setState(() {
             showUpdateContainer = true;
@@ -300,13 +303,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _onQuizTypeContainerTap(0);
       } else if (containerNumber == 2) {
         _onQuizTypeContainerTap(1);
-        print("Navigate to _quizTypes : ${_quizTypes[1].title}");
       } else if (containerNumber == 3) {
         _onQuizTypeContainerTap(2);
-        print("Navigate to _quizTypes : ${_quizTypes[2].title}");
       } else {
         _onQuizTypeContainerTap(3);
-        print("Navigate to _quizTypes : ${_quizTypes[3].title}");
       }
     } else if (currentMenu == 2) {
       //determine
@@ -315,34 +315,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       } else if (containerNumber == 2) {
         if (_quizTypes.length >= 6) {
           _onQuizTypeContainerTap(5);
-          print("Navigate to _quizTypes : ${_quizTypes[5].title}");
         }
       } else if (containerNumber == 3) {
         if (_quizTypes.length >= 7) {
           _onQuizTypeContainerTap(6);
-          print("Navigate to _quizTypes : ${_quizTypes[6].title}");
         }
       } else {
         if (_quizTypes.length >= 8) {
           _onQuizTypeContainerTap(7);
-          print("Navigate to _quizTypes : ${_quizTypes[7].title}");
         }
       }
     } else {
       if (containerNumber == 1) {
         if (_quizTypes.length >= 9) {
           _onQuizTypeContainerTap(8);
-          print("Navigate to _quizTypes : ${_quizTypes[8].title}");
         }
       } else if (containerNumber == 2) {
         if (_quizTypes.length >= 10) {
           _onQuizTypeContainerTap(9);
-          print("Navigate to _quizTypes : ${_quizTypes[9].title}");
         }
       } else if (containerNumber == 3) {
         if (_quizTypes.length >= 11) {
           _onQuizTypeContainerTap(10);
-          print("Navigate to _quizTypes : ${_quizTypes[10].title}");
         }
       }
     }

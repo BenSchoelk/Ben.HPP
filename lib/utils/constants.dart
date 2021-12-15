@@ -59,7 +59,7 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "https://elitequiz.wrteam.in"; //
+final String databaseUrl = "http://flutterquiz.thewrteam.in"; //"https://elitequiz.wrteam.in"
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
