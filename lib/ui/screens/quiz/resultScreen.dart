@@ -485,34 +485,39 @@ class _ResultScreenState extends State<ResultScreen> {
         SizedBox(
           height: 15.0,
         ),
-        //Ios platform back button add
-        Stack(children: [
-          Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 15.0,
-                ),
-                child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Theme.of(context).backgroundColor,
-                        ))),
-              )),
-          Container(
-              alignment: Alignment.center,
-              child: Text(
-                "$message",
-                style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
-              )),
-        ]),
-
+        Platform.isIOS
+            ? Stack(children: [
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 15.0,
+                      ),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: Theme.of(context).backgroundColor,
+                              ))),
+                    )),
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "$message",
+                      style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                    )),
+              ])
+            : Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "$message",
+                  style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                )),
         SizedBox(
           height: 5.0,
         ),

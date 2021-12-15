@@ -198,6 +198,7 @@ class ExamResultBottomSheetContainer extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.85)),
       decoration: BoxDecoration(
+        color: Theme.of(context).backgroundColor,
         borderRadius: UiUtils.getBottomSheetRadius(),
       ),
       child: Stack(

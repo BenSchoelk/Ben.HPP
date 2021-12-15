@@ -370,7 +370,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildBookmarkButton(QuestionsCubit questionsCubit) {
-    if (widget.quizType == QuizTypes.funAndLearn) {
+    if (widget.quizType == QuizTypes.funAndLearn || widget.quizType == QuizTypes.audioQuestions) {
       return Container();
     }
     return BlocBuilder<QuestionsCubit, QuestionsState>(
