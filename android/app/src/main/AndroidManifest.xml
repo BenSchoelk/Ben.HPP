@@ -13,6 +13,7 @@
         android:label="Elite Quiz"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
+        android:resizeableActivity="false"
        >
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
