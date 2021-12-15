@@ -696,12 +696,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(Routes.leaderBoard);
-                  },
-                  icon: SvgPicture.asset(
-                    UiUtils.getImagePath("leaderboard_dark.svg"),
-                  )),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Routes.leaderBoard);
+                },
+                icon: SvgPicture.asset(
+                  UiUtils.getImagePath("leaderboard_dark.svg"),
+                ),
+              ),
             ),
             SizedBox(
               width: 12.5,

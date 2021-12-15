@@ -32,9 +32,14 @@ class MenuTile extends StatelessWidget {
         ),
         leading: Container(
           width: 60,
-          transform: Matrix4.identity()..scale(0.45),
+          transform: Matrix4.identity()..scale(isSvgIcon ? 0.45 : 1.0),
           transformAlignment: Alignment.center,
-          child: isSvgIcon ? SvgPicture.asset(UiUtils.getImagePath(leadingIcon!)) : Icon(leadingIconData),
+          child: isSvgIcon
+              ? SvgPicture.asset(UiUtils.getImagePath(leadingIcon!))
+              : Icon(
+                  leadingIconData,
+                  color: Theme.of(context).primaryColor,
+                ),
         ),
       ),
     );

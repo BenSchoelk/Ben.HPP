@@ -422,21 +422,23 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
         title: AppLocalization.of(context)!.getTranslatedValues("reviewAnswerLbl")!,
         trailingWidget: widget.questions.isEmpty
             ? _buildReportButton(context.read<ReportQuestionCubit>())
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Transform.translate(
-                    offset: Offset(5.0, 10.0),
-                    child: BookmarkButton(
-                      bookmarkButtonColor: Theme.of(context).primaryColor,
-                      bookmarkFillColor: Theme.of(context).primaryColor,
-                      question: widget.questions[_currentIndex],
-                    ),
+            : widget.questions.first.audio!.isNotEmpty
+                ? _buildReportButton(context.read<ReportQuestionCubit>())
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Transform.translate(
+                        offset: Offset(5.0, 10.0),
+                        child: BookmarkButton(
+                          bookmarkButtonColor: Theme.of(context).primaryColor,
+                          bookmarkFillColor: Theme.of(context).primaryColor,
+                          question: widget.questions[_currentIndex],
+                        ),
+                      ),
+                      _buildReportButton(context.read<ReportQuestionCubit>()),
+                    ],
                   ),
-                  _buildReportButton(context.read<ReportQuestionCubit>()),
-                ],
-              ),
       ),
     );
   }

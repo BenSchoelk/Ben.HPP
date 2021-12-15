@@ -32,7 +32,9 @@ class ExamRemoteDataSource {
       if (offset.isEmpty) {
         body.remove(offsetKey);
       }
+
       final response = await http.post(Uri.parse(getExamModuleUrl), body: body, headers: ApiUtils.getHeaders());
+
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {

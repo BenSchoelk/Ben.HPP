@@ -59,7 +59,7 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "http://flutterquiz.thewrteam.in"; //  "https://elitequiz.wrteam.in"
+final String databaseUrl = "https://elitequiz.wrteam.in"; //
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
@@ -72,10 +72,10 @@ final String skip = "skip";
 final String resetTime = "resetTime";
 
 //firestore collection names
-final String battleRoomCollection = "testBattleRoom"; //   "battleRoom"
-final String multiUserBattleRoomCollection = "testMultiUserBattleRoom"; //  "multiUserBattleRoom"
-final String messagesCollection = "testMessages"; // "messages"
-final String tournamentsCollection = "testTournaments"; // "tournaments";
+final String battleRoomCollection = "battleRoom"; //testBattleRoom
+final String multiUserBattleRoomCollection = "multiUserBattleRoom"; //testMultiUserBattleRoom
+final String messagesCollection = "messages"; // testMessages
+final String tournamentsCollection = "tournaments"; //testTournaments
 
 //api end points
 final String addUserUrl = "${baseUrl}user_signup";
@@ -234,6 +234,7 @@ const String roomCodeGenerateCharacters = "1234567890"; //Numeric
 ///Add your exam rules here
 ///
 const List<String> examRules = [
+  "I will not copy and give this exam with honesty",
   "If you lock your phone then exam will complete automatically",
   "If you minimize application or open other application and don't come back to application with in 5 seconds then exam will complete automatically",
   "Screen recording is prohibited",
@@ -244,4 +245,4 @@ const List<String> examRules = [
 //Please do not change this if you do torunament will not work as expected.
 //This ensure that torunament will start only if 8 users are ready to play
 //
-const int numberOfPlayerForTournament = 2;
+const int numberOfPlayerForTournament = 8;
