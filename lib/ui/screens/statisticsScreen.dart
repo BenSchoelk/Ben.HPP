@@ -85,13 +85,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       SizedBox(
                         height: 10.0,
                       ),
-                      //TODO : test all badges
                       Container(
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: (context.read<BadgesCubit>().getUnlockedBadges().length < showTotalBadgesCounter ? context.read<BadgesCubit>().getUnlockedBadges() : context.read<BadgesCubit>().getUnlockedBadges().sublist(0, showTotalBadgesCounter))
                               .map(
                                 (badge) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
                                   child: BadgesIconContainer(
                                     addTopPadding: false,
                                     badge: badge,

@@ -24,6 +24,10 @@ class BadgesCubit extends Cubit<BadgesState> {
   final BadgesRepository badgesRepository;
   BadgesCubit(this.badgesRepository) : super(BadgesInitial());
 
+  void updateState(BadgesState updatedState) {
+    emit(updatedState);
+  }
+
   void getBadges({required String userId, bool? refreshBadges}) async {
     bool callRefreshBadge = refreshBadges ?? false;
     emit(BadgesFetchInProgress());

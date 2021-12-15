@@ -124,4 +124,8 @@ class BookmarkCubit extends Cubit<BookmarkState> {
     }
     return "";
   }
+
+  void updateState(BookmarkState updatedState) {
+    emit(updatedState);
+  }
 }

@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateUserDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/uploadProfileCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
@@ -317,6 +319,8 @@ class ProfileScreen extends StatelessWidget {
                                               Navigator.of(context).pop();
                                               Navigator.of(context).pop();
 
+                                              context.read<BadgesCubit>().updateState(BadgesInitial());
+                                              context.read<BookmarkCubit>().updateState(BookmarkInitial());
                                               context.read<AuthCubit>().signOut();
                                               Navigator.of(context).pushReplacementNamed(Routes.login);
                                             },
