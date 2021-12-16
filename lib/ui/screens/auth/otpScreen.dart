@@ -353,7 +353,7 @@ class _OtpScreen extends State<OtpScreen> {
         ),
         color: Theme.of(context).primaryColor,
         onPressed: () async {
-          if (phoneNumberController.text.trim().isEmpty || phoneNumberController.text.trim().length < 8) {
+          if (phoneNumberController.text.trim().length < 6) {
             UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(validMobMsg)!, context, false);
           } else {
             setState(() {
