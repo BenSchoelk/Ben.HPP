@@ -38,14 +38,18 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ResultScreen extends StatefulWidget {
-  final QuizTypes? quizType; //to show different kind of result data for different quiz type
-  final int? numberOfPlayer; //to show different kind of resut data for number of player
-  final int? myPoints; // will be in use when quiz is not tyoe of battle and live battle
+  final QuizTypes?
+      quizType; //to show different kind of result data for different quiz type
+  final int?
+      numberOfPlayer; //to show different kind of resut data for number of player
+  final int?
+      myPoints; // will be in use when quiz is not tyoe of battle and live battle
   final List<Question>? questions; //to see reivew answers
   final BattleRoom? battleRoom; //will be in use for battle
   final String? contestId;
   final String? comprehensionId; //will be use to set contest leaderboard
-  final List<GuessTheWordQuestion>? guessTheWordQuestions; //questions when quiz type is guessTheWord
+  final List<GuessTheWordQuestion>?
+      guessTheWordQuestions; //questions when quiz type is guessTheWord
   final int? entryFee;
   //if quizType is quizZone then it will be in use
   //to determine to show next level button
@@ -109,7 +113,8 @@ class ResultScreen extends StatefulWidget {
                 ),
                 //to update user score and coins
                 BlocProvider<UpdateScoreAndCoinsCubit>(
-                  create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  create: (_) =>
+                      UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
                 ),
                 //to update statistic
                 BlocProvider<UpdateStatisticCubit>(
@@ -195,7 +200,8 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void _updateStatistics() {
-    if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.exam) {
+    if (widget.quizType != QuizTypes.selfChallenge &&
+        widget.quizType != QuizTypes.exam) {
       print("Update statistic");
       print("correctAnswer : ${correctAnswer()}");
       context.read<UpdateStatisticCubit>().updateStatistic(
@@ -225,7 +231,8 @@ class _ResultScreenState extends State<ResultScreen> {
       await Future.delayed(Duration.zero);
       _isWinner = context.read<UserDetailsCubit>().getUserId() == winnerId;
       _winnerId = winnerId;
-      _updateCoinsAndScoreAndStatsiticForBattle(widget.battleRoom!.entryFee! * 2);
+      _updateCoinsAndScoreAndStatsiticForBattle(
+          widget.battleRoom!.entryFee! * 2);
       //update winner id and _isWinner in ui
       setState(() {});
     }
@@ -235,7 +242,10 @@ class _ResultScreenState extends State<ResultScreen> {
     Future.delayed(Duration.zero, () {
       //
       String currentUserId = context.read<UserDetailsCubit>().getUserId();
-      UserBattleRoomDetails currentUser = widget.battleRoom!.user1!.uid == currentUserId ? widget.battleRoom!.user1! : widget.battleRoom!.user2!;
+      UserBattleRoomDetails currentUser =
+          widget.battleRoom!.user1!.uid == currentUserId
+              ? widget.battleRoom!.user1!
+              : widget.battleRoom!.user2!;
       if (_isWinner) {
         //update score and coins for user
         context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(
@@ -245,7 +255,9 @@ class _ResultScreenState extends State<ResultScreen> {
               earnedCoins,
             );
         //update score locally and database
-        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: earnedCoins);
+        context
+            .read<UserDetailsCubit>()
+            .updateCoins(addCoin: true, coins: earnedCoins);
         context.read<UserDetailsCubit>().updateScore(currentUser.points);
 
         //update battle stats
@@ -256,7 +268,9 @@ class _ResultScreenState extends State<ResultScreen> {
             );
       } else {
         //if user is not winner then update only score
-        context.read<UpdateScoreAndCoinsCubit>().updateScore(currentUserId, currentUser.points);
+        context
+            .read<UpdateScoreAndCoinsCubit>()
+            .updateScore(currentUserId, currentUser.points);
         context.read<UserDetailsCubit>().updateScore(currentUser.points);
       }
     });
@@ -268,7 +282,9 @@ class _ResultScreenState extends State<ResultScreen> {
     if (widget.quizType == QuizTypes.battle) {
       //if badges is locked
       if (badgesCubit.isBadgeLocked("ultimate_player")) {
-        int badgeEarnPoints = (correctAnswerPointsForBattle + extraPointForQuickestAnswer) * totalQuestions();
+        int badgeEarnPoints =
+            (correctAnswerPointsForBattle + extraPointForQuickestAnswer) *
+                totalQuestions();
         //if user's points is same as highest points
         if (widget.myPoints! == badgeEarnPoints) {
           badgesCubit.setBadge(badgeType: "ultimate_player", userId: userId);
@@ -283,13 +299,17 @@ class _ResultScreenState extends State<ResultScreen> {
 
       //funAndLearn is related to flashback
       if (badgesCubit.isBadgeLocked("flashback")) {
-        int funNLearnQuestionMinimumTimeForBadge = badgesCubit.getBadgeCounterByType("flashback");
+        int funNLearnQuestionMinimumTimeForBadge =
+            badgesCubit.getBadgeCounterByType("flashback");
         //if badges not loaded some how
         if (funNLearnQuestionMinimumTimeForBadge == -1) {
           return;
         }
-        int badgeEarnTimeInSeconds = totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
-        if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+        int badgeEarnTimeInSeconds =
+            totalQuestions() * funNLearnQuestionMinimumTimeForBadge;
+        if (correctAnswer() == totalQuestions() &&
+            widget.timeTakenToCompleteQuiz! <=
+                badgeEarnTimeInSeconds.toDouble()) {
           badgesCubit.setBadge(badgeType: "flashback", userId: userId);
         }
       }
@@ -306,7 +326,8 @@ class _ResultScreenState extends State<ResultScreen> {
       }
 
       if (badgesCubit.isBadgeLocked("brainiac")) {
-        if (correctAnswer() == totalQuestions() && !widget.hasUsedAnyLifeline!) {
+        if (correctAnswer() == totalQuestions() &&
+            !widget.hasUsedAnyLifeline!) {
           badgesCubit.setBadge(badgeType: "brainiac", userId: userId);
         }
       }
@@ -317,7 +338,8 @@ class _ResultScreenState extends State<ResultScreen> {
       }
 
       if (badgesCubit.isBadgeLocked("super_sonic")) {
-        int guessTheWordQuestionMinimumTimeForBadge = badgesCubit.getBadgeCounterByType("super_sonic");
+        int guessTheWordQuestionMinimumTimeForBadge =
+            badgesCubit.getBadgeCounterByType("super_sonic");
 
         //if badges not loaded some how
         if (guessTheWordQuestionMinimumTimeForBadge == -1) {
@@ -325,8 +347,11 @@ class _ResultScreenState extends State<ResultScreen> {
         }
 
         //if user has solved the quiz with in badgeEarnTime then they can earn badge
-        int badgeEarnTimeInSeconds = totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
-        if (correctAnswer() == totalQuestions() && widget.timeTakenToCompleteQuiz! <= badgeEarnTimeInSeconds.toDouble()) {
+        int badgeEarnTimeInSeconds =
+            totalQuestions() * guessTheWordQuestionMinimumTimeForBadge;
+        if (correctAnswer() == totalQuestions() &&
+            widget.timeTakenToCompleteQuiz! <=
+                badgeEarnTimeInSeconds.toDouble()) {
           badgesCubit.setBadge(badgeType: "super_sonic", userId: userId);
         }
       }
@@ -341,14 +366,22 @@ class _ResultScreenState extends State<ResultScreen> {
   void setContestLeaderboard() async {
     await Future.delayed(Duration.zero);
     if (widget.quizType == QuizTypes.contest) {
-      context.read<SetContestLeaderboardCubit>().setContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), questionAttended: attemptedQuestion(), correctAns: correctAnswer(), contestId: widget.contestId, score: widget.myPoints);
+      context.read<SetContestLeaderboardCubit>().setContestLeaderboard(
+          userId: context.read<UserDetailsCubit>().getUserId(),
+          questionAttended: attemptedQuestion(),
+          correctAns: correctAnswer(),
+          contestId: widget.contestId,
+          score: widget.myPoints);
     }
   }
 
   //
   void _updateScoreAndCoinsDetails() {
     //we need to update score and coins only when quiz type is not self challenge, battle and contest
-    if (widget.quizType != QuizTypes.selfChallenge && widget.quizType != QuizTypes.battle && widget.quizType != QuizTypes.contest && widget.quizType != QuizTypes.exam) {
+    if (widget.quizType != QuizTypes.selfChallenge &&
+        widget.quizType != QuizTypes.battle &&
+        widget.quizType != QuizTypes.contest &&
+        widget.quizType != QuizTypes.exam) {
       //if percentage is more than 30 then update socre and coins
       if (_isWinner) {
         //update score and coins for user
@@ -359,7 +392,9 @@ class _ResultScreenState extends State<ResultScreen> {
               _earnedCoins,
             );
         //update score locally and database
-        context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: _earnedCoins);
+        context
+            .read<UserDetailsCubit>()
+            .updateCoins(addCoin: true, coins: _earnedCoins);
 
         context.read<UserDetailsCubit>().updateScore(widget.myPoints);
 
@@ -368,10 +403,15 @@ class _ResultScreenState extends State<ResultScreen> {
           //if this level is not last level then update level
           if (widget.subcategoryMaxLevel != widget.questions!.first.level) {
             //if given level is same as unlocked level then update level
-            if (int.parse(widget.questions!.first.level!) == widget.unlockedLevel) {
+            if (int.parse(widget.questions!.first.level!) ==
+                widget.unlockedLevel) {
               int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
               //update level
-              context.read<UpdateLevelCubit>().updateLevel(context.read<UserDetailsCubit>().getUserId(), widget.questions!.first.categoryId, widget.questions!.first.subcategoryId, updatedLevel.toString());
+              context.read<UpdateLevelCubit>().updateLevel(
+                  context.read<UserDetailsCubit>().getUserId(),
+                  widget.questions!.first.categoryId,
+                  widget.questions!.first.subcategoryId,
+                  updatedLevel.toString());
             }
           }
         }
@@ -389,13 +429,16 @@ class _ResultScreenState extends State<ResultScreen> {
   void earnCoinsBasedOnWinPercentage() {
     if (_isWinner) {
       double percentage = winPercentage();
-      _earnedCoins = UiUtils.coinsBasedOnWinPercentage(percentage, widget.quizType!);
+      _earnedCoins =
+          UiUtils.coinsBasedOnWinPercentage(percentage, widget.quizType!);
     }
   }
 
   String getCategoryIdOfQuestion() {
     if (widget.quizType == QuizTypes.battle) {
-      return widget.battleRoom!.categoryId!.isEmpty ? "0" : widget.battleRoom!.categoryId!;
+      return widget.battleRoom!.categoryId!.isEmpty
+          ? "0"
+          : widget.battleRoom!.categoryId!;
     }
     if (widget.quizType == QuizTypes.guessTheWord) {
       return widget.guessTheWordQuestions!.first.category;
@@ -410,7 +453,8 @@ class _ResultScreenState extends State<ResultScreen> {
     int correctAnswer = 0;
     if (widget.quizType == QuizTypes.guessTheWord) {
       for (var question in widget.guessTheWordQuestions!) {
-        if (question.answer == UiUtils.buildGuessTheWordQuestionAnswer(question.submittedAnswer)) {
+        if (question.answer ==
+            UiUtils.buildGuessTheWordQuestionAnswer(question.submittedAnswer)) {
           correctAnswer++;
         }
       }
@@ -449,7 +493,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
   double winPercentage() {
     if (widget.quizType == QuizTypes.exam) {
-      return (widget.obtainedMarks! * 100.0) / int.parse(widget.exam!.totalMarks);
+      return (widget.obtainedMarks! * 100.0) /
+          int.parse(widget.exam!.totalMarks);
     }
     if (widget.quizType == QuizTypes.guessTheWord) {
       return (correctAnswer() * 100.0) / widget.guessTheWordQuestions!.length;
@@ -461,7 +506,9 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   bool showCoinsAndScore() {
-    if (widget.quizType == QuizTypes.selfChallenge || widget.quizType == QuizTypes.contest || widget.quizType == QuizTypes.exam) {
+    if (widget.quizType == QuizTypes.selfChallenge ||
+        widget.quizType == QuizTypes.contest ||
+        widget.quizType == QuizTypes.exam) {
       return false;
     }
 
@@ -499,7 +546,9 @@ class _ResultScreenState extends State<ResultScreen> {
                           },
                           child: Container(
                               padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
                               child: Icon(
                                 Icons.arrow_back_ios,
                                 color: Theme.of(context).backgroundColor,
@@ -509,14 +558,17 @@ class _ResultScreenState extends State<ResultScreen> {
                     alignment: Alignment.center,
                     child: Text(
                       "$message",
-                      style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                      style: TextStyle(
+                          fontSize: 19.0,
+                          color: Theme.of(context).backgroundColor),
                     )),
               ])
             : Container(
                 alignment: Alignment.center,
                 child: Text(
                   "$message",
-                  style: TextStyle(fontSize: 19.0, color: Theme.of(context).backgroundColor),
+                  style: TextStyle(
+                      fontSize: 19.0, color: Theme.of(context).backgroundColor),
                 )),
         SizedBox(
           height: 5.0,
@@ -533,16 +585,20 @@ class _ResultScreenState extends State<ResultScreen> {
     );
   }
 
-  Widget _buildResultDataWithIconContainer(String title, String icon, EdgeInsetsGeometry margin) {
+  Widget _buildResultDataWithIconContainer(
+      String title, String icon, EdgeInsetsGeometry margin) {
     return Container(
       margin: margin,
-      decoration: BoxDecoration(color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(10.0)),
+      decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.circular(10.0)),
       width: MediaQuery.of(context).size.width * (0.2125),
       height: 30.0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(UiUtils.getImagePath(icon), color: Theme.of(context).colorScheme.secondary),
+          SvgPicture.asset(UiUtils.getImagePath(icon),
+              color: Theme.of(context).colorScheme.secondary),
           SizedBox(
             width: 5,
           ),
@@ -578,7 +634,8 @@ class _ResultScreenState extends State<ResultScreen> {
               double profileRadiusPercentage = 0.0;
 
               double radialSizePercentage = 0.0;
-              if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
+              if (constraints.maxHeight <
+                  UiUtils.profileHeightBreakPointResultScreen) {
                 verticalSpacePercentage = 0.015;
                 profileRadiusPercentage = 0.35; //test in
                 radialSizePercentage = 0.6;
@@ -593,10 +650,21 @@ class _ResultScreenState extends State<ResultScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   widget.quizType! == QuizTypes.exam
-                      ? _buildGreetingMessage(widget.exam!.title, AppLocalization.of(context)!.getTranslatedValues(examResultKey)!)
+                      ? _buildGreetingMessage(
+                          widget.exam!.title,
+                          AppLocalization.of(context)!
+                              .getTranslatedValues(examResultKey)!)
                       : _isWinner
-                          ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("victoryLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
-                          : _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("defeatLbl")!, AppLocalization.of(context)!.getTranslatedValues("betterNextLbl")!),
+                          ? _buildGreetingMessage(
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("victoryLbl")!,
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("congratulationsLbl")!)
+                          : _buildGreetingMessage(
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("defeatLbl")!,
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("betterNextLbl")!),
                   SizedBox(
                     height: constraints.maxHeight * verticalSpacePercentage,
                   ),
@@ -604,7 +672,8 @@ class _ResultScreenState extends State<ResultScreen> {
                       ? Transform.translate(
                           offset: Offset(0.0, -20.0), //
                           child: RadialPercentageResultContainer(
-                            circleColor: Theme.of(context).colorScheme.secondary,
+                            circleColor:
+                                Theme.of(context).colorScheme.secondary,
                             arcColor: Theme.of(context).backgroundColor,
                             arcStrokeWidth: 12.0,
                             textFontSize: 20,
@@ -612,8 +681,12 @@ class _ResultScreenState extends State<ResultScreen> {
                             radiusPercentage: 0.27,
                             percentage: winPercentage(),
 
-                            timeTakenToCompleteQuizInSeconds: widget.examCompletedInMinutes,
-                            size: Size(constraints.maxHeight * radialSizePercentage, constraints.maxHeight * radialSizePercentage), //150.0 , 150.0
+                            timeTakenToCompleteQuizInSeconds:
+                                widget.examCompletedInMinutes,
+                            size: Size(
+                                constraints.maxHeight * radialSizePercentage,
+                                constraints.maxHeight *
+                                    radialSizePercentage), //150.0 , 150.0
                           ),
                         )
                       : Stack(
@@ -622,10 +695,13 @@ class _ResultScreenState extends State<ResultScreen> {
                             Center(
                               child: Container(
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor.withOpacity(0.5),
+                                    color: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.5),
                                     shape: BoxShape.circle,
                                   ),
-                                  height: constraints.maxHeight * profileRadiusPercentage),
+                                  height: constraints.maxHeight *
+                                      profileRadiusPercentage),
                             ),
                             Center(
                               child: Container(
@@ -633,10 +709,16 @@ class _ResultScreenState extends State<ResultScreen> {
                                     color: Theme.of(context).primaryColor,
                                     shape: BoxShape.circle,
                                   ),
-                                  height: constraints.maxHeight * (profileRadiusPercentage - 0.025)),
+                                  height: constraints.maxHeight *
+                                      (profileRadiusPercentage - 0.025)),
                             ),
                             Center(
-                              child: CircularImageContainer(imagePath: userProfileUrl, height: constraints.maxHeight * (profileRadiusPercentage - 0.05), width: constraints.maxWidth * (profileRadiusPercentage - 0.05 + 0.15)),
+                              child: CircularImageContainer(
+                                  imagePath: userProfileUrl,
+                                  height: constraints.maxHeight *
+                                      (profileRadiusPercentage - 0.05),
+                                  width: constraints.maxWidth *
+                                      (profileRadiusPercentage - 0.05 + 0.15)),
                             ),
                           ],
                         ),
@@ -646,18 +728,28 @@ class _ResultScreenState extends State<ResultScreen> {
                           child: Text(
                             "${widget.obtainedMarks}/${widget.exam!.totalMarks} ${AppLocalization.of(context)!.getTranslatedValues(markKey)!}",
                             style: TextStyle(
-                              fontSize: 22.0 * MediaQuery.of(context).textScaleFactor * (1.1),
+                              fontSize: 22.0 *
+                                  MediaQuery.of(context).textScaleFactor *
+                                  (1.1),
                               fontWeight: FontWeight.w400,
-                              color: Theme.of(context).backgroundColor, //Theme.of(context).backgroundColor,
+                              color: Theme.of(context)
+                                  .backgroundColor, //Theme.of(context).backgroundColor,
                             ),
                           ),
                         )
                       : Text(
-                          _isWinner ? AppLocalization.of(context)!.getTranslatedValues("winnerLbl")! : AppLocalization.of(context)!.getTranslatedValues("youLossLbl")!,
+                          _isWinner
+                              ? AppLocalization.of(context)!
+                                  .getTranslatedValues("winnerLbl")!
+                              : AppLocalization.of(context)!
+                                  .getTranslatedValues("youLossLbl")!,
                           style: TextStyle(
-                            fontSize: 25.0 * MediaQuery.of(context).textScaleFactor * (1.1),
+                            fontSize: 25.0 *
+                                MediaQuery.of(context).textScaleFactor *
+                                (1.1),
                             fontWeight: FontWeight.w400,
-                            color: Theme.of(context).backgroundColor, //Theme.of(context).backgroundColor,
+                            color: Theme.of(context)
+                                .backgroundColor, //Theme.of(context).backgroundColor,
                           ),
                         )
                 ],
@@ -669,25 +761,39 @@ class _ResultScreenState extends State<ResultScreen> {
         //incorrect answer
         Align(
           alignment: AlignmentDirectional.bottomStart,
-          child: _buildResultDataWithIconContainer(widget.quizType == QuizTypes.exam ? "${widget.incorrectExamAnswers}/${totalQuestions()}" : "${totalQuestions() - correctAnswer()}/${totalQuestions()}", "wrong.svg",
-              EdgeInsetsDirectional.only(start: 15.0, bottom: showCoinsAndScore() ? 20.0 : 30.0)),
+          child: _buildResultDataWithIconContainer(
+              widget.quizType == QuizTypes.exam
+                  ? "${widget.incorrectExamAnswers}/${totalQuestions()}"
+                  : "${totalQuestions() - correctAnswer()}/${totalQuestions()}",
+              "wrong.svg",
+              EdgeInsetsDirectional.only(
+                  start: 15.0, bottom: showCoinsAndScore() ? 20.0 : 30.0)),
         ),
         //correct answer
         showCoinsAndScore()
             ? Align(
                 alignment: AlignmentDirectional.bottomStart,
-                child: _buildResultDataWithIconContainer("${correctAnswer()}/${totalQuestions()}", "correct.svg", EdgeInsetsDirectional.only(start: 15.0, bottom: 60.0)),
+                child: _buildResultDataWithIconContainer(
+                    "${correctAnswer()}/${totalQuestions()}",
+                    "correct.svg",
+                    EdgeInsetsDirectional.only(start: 15.0, bottom: 60.0)),
               )
             : Align(
                 alignment: Alignment.bottomRight,
-                child: _buildResultDataWithIconContainer("${correctAnswer()}/${totalQuestions()}", "correct.svg", EdgeInsetsDirectional.only(end: 15.0, bottom: 30.0)),
+                child: _buildResultDataWithIconContainer(
+                    "${correctAnswer()}/${totalQuestions()}",
+                    "correct.svg",
+                    EdgeInsetsDirectional.only(end: 15.0, bottom: 30.0)),
               ),
 
         //points
         showCoinsAndScore()
             ? Align(
                 alignment: AlignmentDirectional.bottomEnd,
-                child: _buildResultDataWithIconContainer("${widget.myPoints}", "score.svg", EdgeInsetsDirectional.only(end: 15.0, bottom: 60.0)),
+                child: _buildResultDataWithIconContainer(
+                    "${widget.myPoints}",
+                    "score.svg",
+                    EdgeInsetsDirectional.only(end: 15.0, bottom: 60.0)),
               )
             : Container(),
 
@@ -695,7 +801,10 @@ class _ResultScreenState extends State<ResultScreen> {
         showCoinsAndScore()
             ? Align(
                 alignment: AlignmentDirectional.bottomEnd,
-                child: _buildResultDataWithIconContainer("$_earnedCoins", "earnedCoin.svg", EdgeInsetsDirectional.only(end: 15.0, bottom: 20.0)),
+                child: _buildResultDataWithIconContainer(
+                    "$_earnedCoins",
+                    "earnedCoin.svg",
+                    EdgeInsetsDirectional.only(end: 15.0, bottom: 20.0)),
               )
             : Container(),
 
@@ -706,7 +815,8 @@ class _ResultScreenState extends State<ResultScreen> {
                 alignment: Alignment.bottomCenter,
                 child: LayoutBuilder(builder: (context, constraints) {
                   double radialSizePercentage = 0.0;
-                  if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
+                  if (constraints.maxHeight <
+                      UiUtils.profileHeightBreakPointResultScreen) {
                     radialSizePercentage = 0.4;
                   } else {
                     radialSizePercentage = 0.325;
@@ -720,8 +830,12 @@ class _ResultScreenState extends State<ResultScreen> {
                       circleStrokeWidth: 10.0,
                       radiusPercentage: 0.27,
                       percentage: winPercentage(),
-                      timeTakenToCompleteQuizInSeconds: widget.timeTakenToCompleteQuiz?.toInt(),
-                      size: Size(constraints.maxHeight * radialSizePercentage, constraints.maxHeight * radialSizePercentage), //150.0 , 150.0
+                      timeTakenToCompleteQuizInSeconds:
+                          widget.timeTakenToCompleteQuiz?.toInt(),
+                      size: Size(
+                          constraints.maxHeight * radialSizePercentage,
+                          constraints.maxHeight *
+                              radialSizePercentage), //150.0 , 150.0
                     ),
                   );
                 }),
@@ -731,8 +845,14 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildBattleResultDetails() {
-    UserBattleRoomDetails? winnerDetails = widget.battleRoom!.user1!.uid == _winnerId ? widget.battleRoom!.user1 : widget.battleRoom!.user2;
-    UserBattleRoomDetails? looserDetails = widget.battleRoom!.user1!.uid != _winnerId ? widget.battleRoom!.user1 : widget.battleRoom!.user2;
+    UserBattleRoomDetails? winnerDetails =
+        widget.battleRoom!.user1!.uid == _winnerId
+            ? widget.battleRoom!.user1
+            : widget.battleRoom!.user2;
+    UserBattleRoomDetails? looserDetails =
+        widget.battleRoom!.user1!.uid != _winnerId
+            ? widget.battleRoom!.user1
+            : widget.battleRoom!.user2;
 
     return _winnerId == null
         ? Container()
@@ -743,16 +863,19 @@ class _ResultScreenState extends State<ResultScreen> {
               double verticalSpacePercentage = 0.0;
               double translateOffsetdy = 0.0;
               double nameAndProfileSizedBoxHeight = 0.0;
-              if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
+              if (constraints.maxHeight <
+                  UiUtils.profileHeightBreakPointResultScreen) {
                 profileRadiusPercentage = _winnerId!.isEmpty ? 0.165 : 0.18;
                 verticalSpacePercentage = _winnerId!.isEmpty ? 0.035 : 0.03;
-                looserProfileRadiusPercentage = _winnerId!.isEmpty ? profileRadiusPercentage : 0.127;
+                looserProfileRadiusPercentage =
+                    _winnerId!.isEmpty ? profileRadiusPercentage : 0.127;
                 translateOffsetdy = -15.0;
                 nameAndProfileSizedBoxHeight = 5.0;
               } else {
                 profileRadiusPercentage = _winnerId!.isEmpty ? 0.15 : 0.17;
                 verticalSpacePercentage = _winnerId!.isEmpty ? 0.075 : 0.05;
-                looserProfileRadiusPercentage = _winnerId!.isEmpty ? profileRadiusPercentage : 0.11;
+                looserProfileRadiusPercentage =
+                    _winnerId!.isEmpty ? profileRadiusPercentage : 0.11;
                 translateOffsetdy = 25.0;
                 nameAndProfileSizedBoxHeight = 10.0;
               }
@@ -760,21 +883,46 @@ class _ResultScreenState extends State<ResultScreen> {
               return Column(
                 children: [
                   _winnerId!.isEmpty
-                      ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("matchDrawLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
+                      ? _buildGreetingMessage(
+                          AppLocalization.of(context)!
+                              .getTranslatedValues("matchDrawLbl")!,
+                          AppLocalization.of(context)!
+                              .getTranslatedValues("congratulationsLbl")!)
                       : _isWinner
-                          ? _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("victoryLbl")!, AppLocalization.of(context)!.getTranslatedValues("congratulationsLbl")!)
-                          : _buildGreetingMessage(AppLocalization.of(context)!.getTranslatedValues("defeatLbl")!, AppLocalization.of(context)!.getTranslatedValues("betterNextLbl")!),
+                          ? _buildGreetingMessage(
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("victoryLbl")!,
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("congratulationsLbl")!)
+                          : _buildGreetingMessage(
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("defeatLbl")!,
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("betterNextLbl")!),
                   context.read<UserDetailsCubit>().getUserId() == _winnerId
                       ? Text(
-                          AppLocalization.of(context)!.getTranslatedValues("youWin")! + " ${widget.entryFee} " + AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,
-                          style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),
+                          AppLocalization.of(context)!
+                                  .getTranslatedValues("youWin")! +
+                              " ${widget.entryFee} " +
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("coinsLbl")!,
+                          style: TextStyle(
+                              fontSize: 17.0,
+                              color: Theme.of(context).backgroundColor),
                         )
                       : Text(
-                          AppLocalization.of(context)!.getTranslatedValues("youLossLbl")! + " ${widget.entryFee} " + AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!,
-                          style: TextStyle(fontSize: 17.0, color: Theme.of(context).backgroundColor),
+                          AppLocalization.of(context)!
+                                  .getTranslatedValues("youLossLbl")! +
+                              " ${widget.entryFee} " +
+                              AppLocalization.of(context)!
+                                  .getTranslatedValues("coinsLbl")!,
+                          style: TextStyle(
+                              fontSize: 17.0,
+                              color: Theme.of(context).backgroundColor),
                         ),
                   SizedBox(
-                    height: constraints.maxHeight * verticalSpacePercentage - 10.2,
+                    height:
+                        constraints.maxHeight * verticalSpacePercentage - 10.2,
                   ),
                   _winnerId!.isEmpty
                       ? Padding(
@@ -791,8 +939,12 @@ class _ResultScreenState extends State<ResultScreen> {
                                         children: [
                                           Center(
                                             child: CircleAvatar(
-                                              radius: constraints.maxHeight * (profileRadiusPercentage),
-                                              backgroundImage: CachedNetworkImageProvider(widget.battleRoom!.user1!.profileUrl),
+                                              radius: constraints.maxHeight *
+                                                  (profileRadiusPercentage),
+                                              backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                      widget.battleRoom!.user1!
+                                                          .profileUrl),
                                             ),
                                           ),
                                         ],
@@ -803,7 +955,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                     height: nameAndProfileSizedBoxHeight,
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 5.0),
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).backgroundColor,
                                       borderRadius: BorderRadius.circular(5.0),
@@ -811,7 +964,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                     width: constraints.maxWidth * (0.3),
                                     child: Text(
                                       "${widget.battleRoom!.user1!.name}",
-                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
@@ -824,8 +979,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                     width: constraints.maxWidth * (0.3),
                                     padding: EdgeInsets.only(left: 10),
                                     child: Text(
-                                      AppLocalization.of(context)!.getTranslatedValues("winnerLbl")!,
-                                      style: TextStyle(color: Theme.of(context).backgroundColor),
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues("winnerLbl")!,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .backgroundColor),
                                     ),
                                   ),
                                 ],
@@ -838,8 +996,13 @@ class _ResultScreenState extends State<ResultScreen> {
                                     children: [
                                       Center(
                                         child: CircleAvatar(
-                                          radius: constraints.maxHeight * (profileRadiusPercentage),
-                                          backgroundImage: CachedNetworkImageProvider(widget.battleRoom!.user2!.profileUrl),
+                                          radius: constraints.maxHeight *
+                                              (profileRadiusPercentage),
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(widget
+                                                  .battleRoom!
+                                                  .user2!
+                                                  .profileUrl),
                                         ),
                                       ),
                                     ],
@@ -848,7 +1011,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                     height: nameAndProfileSizedBoxHeight,
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 5.0),
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).backgroundColor,
                                       borderRadius: BorderRadius.circular(5.0),
@@ -856,7 +1020,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                     width: constraints.maxWidth * (0.3),
                                     child: Text(
                                       "${widget.battleRoom!.user2!.name}",
-                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
@@ -869,8 +1035,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                     width: constraints.maxWidth * (0.3),
                                     padding: EdgeInsets.only(left: 10),
                                     child: Text(
-                                      AppLocalization.of(context)!.getTranslatedValues("winnerLbl")!,
-                                      style: TextStyle(color: Theme.of(context).backgroundColor),
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues("winnerLbl")!,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .backgroundColor),
                                     ),
                                   ),
                                 ],
@@ -890,8 +1059,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                   children: [
                                     Center(
                                       child: CircleAvatar(
-                                        radius: constraints.maxHeight * (profileRadiusPercentage),
-                                        backgroundImage: CachedNetworkImageProvider(winnerDetails!.profileUrl),
+                                        radius: constraints.maxHeight *
+                                            (profileRadiusPercentage),
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
+                                                winnerDetails!.profileUrl),
                                       ),
                                     ),
                                   ],
@@ -900,7 +1072,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                   height: nameAndProfileSizedBoxHeight,
                                 ),
                                 Container(
-                                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 5.0),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).backgroundColor,
                                     borderRadius: BorderRadius.circular(5.0),
@@ -921,10 +1094,14 @@ class _ResultScreenState extends State<ResultScreen> {
                                 ),
                                 Container(
                                   width: constraints.maxWidth * (0.3),
-                                  padding: EdgeInsetsDirectional.only(start: 10),
+                                  padding:
+                                      EdgeInsetsDirectional.only(start: 10),
                                   child: Text(
-                                    AppLocalization.of(context)!.getTranslatedValues("winnerLbl")!,
-                                    style: TextStyle(color: Theme.of(context).backgroundColor),
+                                    AppLocalization.of(context)!
+                                        .getTranslatedValues("winnerLbl")!,
+                                    style: TextStyle(
+                                        color:
+                                            Theme.of(context).backgroundColor),
                                   ),
                                 ),
                               ],
@@ -940,8 +1117,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                     children: [
                                       Center(
                                         child: CircleAvatar(
-                                          radius: constraints.maxHeight * (looserProfileRadiusPercentage),
-                                          backgroundImage: CachedNetworkImageProvider(looserDetails!.profileUrl),
+                                          radius: constraints.maxHeight *
+                                              (looserProfileRadiusPercentage),
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(
+                                                  looserDetails!.profileUrl),
                                         ),
                                       ),
                                     ],
@@ -950,7 +1130,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                     height: nameAndProfileSizedBoxHeight,
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 5.0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5.0),
                                       color: Theme.of(context).backgroundColor,
@@ -961,7 +1142,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                       textAlign: TextAlign.center,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     ),
                                   ),
                                   SizedBox(
@@ -969,10 +1152,14 @@ class _ResultScreenState extends State<ResultScreen> {
                                   ),
                                   Container(
                                     width: constraints.maxWidth * (0.3),
-                                    padding: EdgeInsetsDirectional.only(start: 10),
+                                    padding:
+                                        EdgeInsetsDirectional.only(start: 10),
                                     child: Text(
-                                      AppLocalization.of(context)!.getTranslatedValues("looserLbl")!,
-                                      style: TextStyle(color: Theme.of(context).backgroundColor),
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues("looserLbl")!,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .backgroundColor),
                                     ),
                                   ),
                                 ],
@@ -985,7 +1172,11 @@ class _ResultScreenState extends State<ResultScreen> {
                         ),
                   Spacer(),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen ? 7.5 : 15.0),
+                    padding: EdgeInsets.symmetric(
+                        vertical: constraints.maxHeight <
+                                UiUtils.profileHeightBreakPointResultScreen
+                            ? 7.5
+                            : 15.0),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
@@ -994,11 +1185,17 @@ class _ResultScreenState extends State<ResultScreen> {
                     width: constraints.maxWidth * (0.8),
                     child: Text(
                       "${winnerDetails!.points}:${looserDetails!.points}",
-                      style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w500, color: Theme.of(context).primaryColor),
+                      style: TextStyle(
+                          fontSize: 17.5,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).primaryColor),
                     ),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen ? 10.0 : 20.0,
+                    height: constraints.maxHeight <
+                            UiUtils.profileHeightBreakPointResultScreen
+                        ? 10.0
+                        : 20.0,
                   ),
                 ],
               );
@@ -1007,7 +1204,8 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildResultDetails(BuildContext context) {
-    final userProfileUrl = context.read<UserDetailsCubit>().getUserProfile().profileUrl ?? "";
+    final userProfileUrl =
+        context.read<UserDetailsCubit>().getUserProfile().profileUrl ?? "";
 
     //build results for 1 user
     if (widget.numberOfPlayer == 1) {
@@ -1035,7 +1233,8 @@ class _ResultScreenState extends State<ResultScreen> {
     );
   }
 
-  Widget _buildButton(String buttonTitle, Function onTap, BuildContext context) {
+  Widget _buildButton(
+      String buttonTitle, Function onTap, BuildContext context) {
     return CustomRoundedButton(
       widthPercentage: 0.85,
       backgroundColor: Theme.of(context).primaryColor,
@@ -1060,12 +1259,18 @@ class _ResultScreenState extends State<ResultScreen> {
         return Container();
       }
 
-      return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
+      return _buildButton(
+          AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!,
+          () {
         Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
           "numberOfPlayer": 1,
           "quizType": QuizTypes.audioQuestions,
-          "subcategoryId": widget.questions!.first.subcategoryId == "0" ? "" : widget.questions!.first.subcategoryId,
-          "categoryId": widget.questions!.first.subcategoryId == "0" ? widget.questions!.first.categoryId : "",
+          "subcategoryId": widget.questions!.first.subcategoryId == "0"
+              ? ""
+              : widget.questions!.first.subcategoryId,
+          "categoryId": widget.questions!.first.subcategoryId == "0"
+              ? widget.questions!.first.categoryId
+              : "",
         });
       }, context);
     } else if (widget.quizType == QuizTypes.guessTheWord) {
@@ -1073,10 +1278,17 @@ class _ResultScreenState extends State<ResultScreen> {
         return Container();
       }
 
-      return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
-        Navigator.of(context).pushReplacementNamed(Routes.guessTheWord, arguments: {
-          "type": widget.guessTheWordQuestions!.first.subcategory == "0" ? "category" : "subcategory",
-          "typeId": widget.guessTheWordQuestions!.first.subcategory == "0" ? widget.guessTheWordQuestions!.first.category : widget.guessTheWordQuestions!.first.subcategory,
+      return _buildButton(
+          AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!,
+          () {
+        Navigator.of(context)
+            .pushReplacementNamed(Routes.guessTheWord, arguments: {
+          "type": widget.guessTheWordQuestions!.first.subcategory == "0"
+              ? "category"
+              : "subcategory",
+          "typeId": widget.guessTheWordQuestions!.first.subcategory == "0"
+              ? widget.guessTheWordQuestions!.first.category
+              : widget.guessTheWordQuestions!.first.subcategory,
         });
       }, context);
     } else if (widget.quizType == QuizTypes.funAndLearn) {
@@ -1090,17 +1302,26 @@ class _ResultScreenState extends State<ResultScreen> {
         if (maxLevel == currentLevel) {
           return Container();
         }
-        return _buildButton(AppLocalization.of(context)!.getTranslatedValues("nextLevelBtn")!, () {
+        return _buildButton(
+            AppLocalization.of(context)!.getTranslatedValues("nextLevelBtn")!,
+            () {
           //if given level is same as unlocked level then we need to update level
           //else do not update level
-          int? unlockedLevel = int.parse(widget.questions!.first.level!) == widget.unlockedLevel ? (widget.unlockedLevel! + 1) : widget.unlockedLevel;
+          int? unlockedLevel =
+              int.parse(widget.questions!.first.level!) == widget.unlockedLevel
+                  ? (widget.unlockedLevel! + 1)
+                  : widget.unlockedLevel;
           //play quiz for next level
           Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
             "numberOfPlayer": widget.numberOfPlayer,
             "quizType": widget.quizType,
             //if subcategory id is empty for question means we need to fetch quesitons by it's category
-            "categoryId": widget.questions!.first.subcategoryId == "0" ? widget.questions!.first.categoryId : "",
-            "subcategoryId": widget.questions!.first.subcategoryId == "0" ? "" : widget.questions!.first.subcategoryId,
+            "categoryId": widget.questions!.first.subcategoryId == "0"
+                ? widget.questions!.first.categoryId
+                : "",
+            "subcategoryId": widget.questions!.first.subcategoryId == "0"
+                ? ""
+                : widget.questions!.first.subcategoryId,
             "level": (currentLevel + 1).toString(), //increase level
             "subcategoryMaxLevel": widget.subcategoryMaxLevel,
             "unlockedLevel": unlockedLevel,
@@ -1108,14 +1329,20 @@ class _ResultScreenState extends State<ResultScreen> {
         }, context);
       }
       //if user failed to complete this level
-      return _buildButton(AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!, () {
+      return _buildButton(
+          AppLocalization.of(context)!.getTranslatedValues("playAgainBtn")!,
+          () {
         //to play this level again (for quizZone quizType)
         Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
           "numberOfPlayer": widget.numberOfPlayer,
           "quizType": widget.quizType,
           //if subcategory id is empty for question means we need to fetch quesitons by it's category
-          "categoryId": widget.questions!.first.subcategoryId == "0" ? widget.questions!.first.categoryId : "",
-          "subcategoryId": widget.questions!.first.subcategoryId == "0" ? "" : widget.questions!.first.subcategoryId,
+          "categoryId": widget.questions!.first.subcategoryId == "0"
+              ? widget.questions!.first.categoryId
+              : "",
+          "subcategoryId": widget.questions!.first.subcategoryId == "0"
+              ? ""
+              : widget.questions!.first.subcategoryId,
           "level": widget.questions!.first.level,
           "unlockedLevel": widget.unlockedLevel,
           "subcategoryMaxLevel": widget.subcategoryMaxLevel,
@@ -1127,7 +1354,9 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildShareYourScoreButton() {
-    return _buildButton(AppLocalization.of(context)!.getTranslatedValues("shareScoreBtn")!, () async {
+    return _buildButton(
+        AppLocalization.of(context)!.getTranslatedValues("shareScoreBtn")!,
+        () async {
       try {
         //capturing image
         final image = await screenshotController.capture();
@@ -1145,7 +1374,11 @@ class _ResultScreenState extends State<ResultScreen> {
           text: AppLocalization.of(context)!.getTranslatedValues("myScoreLbl")!,
         );
       } catch (e) {
-        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+        UiUtils.setSnackbar(
+            AppLocalization.of(context)!.getTranslatedValues(
+                convertErrorCodeToLanguageKey(defaultErrorMessageCode))!,
+            context,
+            false);
       }
     }, context);
   }
@@ -1158,10 +1391,16 @@ class _ResultScreenState extends State<ResultScreen> {
           SizedBox(
             height: betweenButoonSpace,
           ),
-          _buildButton(AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!, () {
+          _buildButton(
+              AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!,
+              () {
             Navigator.of(context).pushNamed(Routes.reviewAnswers, arguments: {
-              "questions": widget.quizType == QuizTypes.guessTheWord ? List<Question>.from([]) : widget.questions,
-              "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord ? widget.guessTheWordQuestions : List<GuessTheWordQuestion>.from([]),
+              "questions": widget.quizType == QuizTypes.guessTheWord
+                  ? List<Question>.from([])
+                  : widget.questions,
+              "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord
+                  ? widget.guessTheWordQuestions
+                  : List<GuessTheWordQuestion>.from([]),
             });
           }, context),
           SizedBox(
@@ -1171,7 +1410,8 @@ class _ResultScreenState extends State<ResultScreen> {
           SizedBox(
             height: betweenButoonSpace,
           ),
-          _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
+          _buildButton(
+              AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           }, context),
         ],
@@ -1186,7 +1426,8 @@ class _ResultScreenState extends State<ResultScreen> {
           SizedBox(
             height: betweenButoonSpace,
           ),
-          _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
+          _buildButton(
+              AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           }, context),
         ],
@@ -1200,10 +1441,16 @@ class _ResultScreenState extends State<ResultScreen> {
         SizedBox(
           height: betweenButoonSpace,
         ),
-        _buildButton(AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!, () {
+        _buildButton(
+            AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!,
+            () {
           Navigator.of(context).pushNamed(Routes.reviewAnswers, arguments: {
-            "questions": widget.quizType == QuizTypes.guessTheWord ? List<Question>.from([]) : widget.questions,
-            "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord ? widget.guessTheWordQuestions : List<GuessTheWordQuestion>.from([]),
+            "questions": widget.quizType == QuizTypes.guessTheWord
+                ? List<Question>.from([])
+                : widget.questions,
+            "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord
+                ? widget.guessTheWordQuestions
+                : List<GuessTheWordQuestion>.from([]),
           });
         }, context),
         SizedBox(
@@ -1213,7 +1460,8 @@ class _ResultScreenState extends State<ResultScreen> {
         SizedBox(
           height: betweenButoonSpace,
         ),
-        _buildButton(AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
+        _buildButton(
+            AppLocalization.of(context)!.getTranslatedValues("homeBtn")!, () {
           Navigator.of(context).popUntil((route) => route.isFirst);
         }, context),
       ],

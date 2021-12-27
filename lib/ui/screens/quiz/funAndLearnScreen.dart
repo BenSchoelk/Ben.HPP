@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -45,7 +43,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
             Duration(seconds: comprehensionParagraphReadingTimeInSeconds));
     timerAnimationController
         .forward()
-        .then((value) => navigateToQuestionScreen());
+        .then((value) => navigateToQuestionScreen()); //navigateTo
     super.initState();
   }
 
@@ -62,18 +60,6 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
       "comprehensionId": widget.id,
       "quizName": "Fun 'N'Learn",
     });
-  }
-
-  Widget _buildTimerContainer() {
-    return Align(
-      alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
-      child: Padding(
-        padding: EdgeInsets.only(top: 7.5),
-        child: HorizontalTimerContainer(
-          timerAnimationController: timerAnimationController,
-        ),
-      ),
-    );
   }
 
   Widget _buildStartButton() {
@@ -112,7 +98,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
           margin: EdgeInsetsDirectional.only(
             start: 20,
             end: 20,
-            top: 35.0,
+            top: 40.0,
           ),
           child: SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 80),
@@ -121,13 +107,22 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
     );
   }
 
-  Widget backButton() {
-    return Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-            padding: EdgeInsets.only(left: 10),
-            child:
-                CustomBackButton(iconColor: Theme.of(context).primaryColor)));
+  Widget _buildTimerAndBackButton() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomBackButton(),
+          Spacer(),
+          Transform.translate(
+            offset: Offset(-8.0, 0),
+            child: HorizontalTimerContainer(
+                timerAnimationController: timerAnimationController),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -138,8 +133,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
       child: Stack(
         children: [
           PageBackgroundGradientContainer(),
-          _buildTimerContainer(),
-          Platform.isIOS ? backButton() : Container(),
+          _buildTimerAndBackButton(),
           _buildParagraph(),
           _buildStartButton(),
         ],

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +18,11 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
-import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
@@ -207,6 +207,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
 
   //next question
   void changeQuestion() {
+    /*
     questionAnimationController.forward(from: 0.0).then((value) {
       //need to dispose the animation controllers
       questionAnimationController.dispose();
@@ -219,6 +220,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
       //load content(options, image etc) of question
       questionContentAnimationController.forward();
     });
+    */
   }
 
   Widget _buildQuesitons(GuessTheWordQuizCubit guessTheWordQuizCubit) {
@@ -310,15 +312,43 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
     );
   }
 
-  Widget backButton() {
+  void onTapBackButton() {
+    isExitDialogOpen = true;
+    showDialog(context: context, builder: (_) => ExitGameDailog())
+        .then((value) => isExitDialogOpen = false);
+  }
+
+  Widget _buildTopMenu() {
     return Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
-            child: CustomBackButton(
-              iconColor: Theme.of(context).primaryColor,
-            )));
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            left: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            top: MediaQuery.of(context).padding.top - 12.5),
+        child: Row(
+          children: [
+            CustomBackButton(
+              onTap: () {
+                onTapBackButton();
+              },
+              iconColor: Theme.of(context).backgroundColor,
+            ),
+            Spacer(),
+            SettingButton(onPressed: () {
+              toggleSettingDialog();
+              showDialog(
+                  context: context,
+                  builder: (_) => SettingsDialogContainer()).then((value) {
+                toggleSettingDialog();
+              });
+            }),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -327,9 +357,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
         context.read<GuessTheWordQuizCubit>();
     return WillPopScope(
       onWillPop: () {
-        isExitDialogOpen = true;
-        showDialog(context: context, builder: (_) => ExitGameDailog())
-            .then((value) => isExitDialogOpen = false);
+        onTapBackButton();
         return Future.value(false);
       },
       child: BlocListener<GuessTheWordQuizCubit, GuessTheWordQuizState>(
@@ -356,20 +384,9 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                 alignment: Alignment.topCenter,
                 child: QuizPlayAreaBackgroundContainer(heightPercentage: 0.885),
               ),
-              Align(
-                alignment:
-                    Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 7.5),
-                  child: HorizontalTimerContainer(
-                    timerAnimationController: timerAnimationController,
-                  ),
-                ),
-              ),
               _buildQuesitons(guessTheWordQuizCubit),
               _buildSubmitButton(guessTheWordQuizCubit),
-              Platform.isIOS ? backButton() : Container()
+              _buildTopMenu(),
             ],
           ),
         ),
