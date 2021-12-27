@@ -59,7 +59,8 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "https://elitequiz.wrteam.in";
+final String databaseUrl =
+    "http://flutterquiz.thewrteam.in"; //"https://elitequiz.wrteam.in";
 final String baseUrl = databaseUrl + '/Api/';
 //
 final String jwtKey = 'set_your_strong_jwt_secret_key';
@@ -73,7 +74,8 @@ final String resetTime = "resetTime";
 
 //firestore collection names
 final String battleRoomCollection = "battleRoom"; //testBattleRoom
-final String multiUserBattleRoomCollection = "multiUserBattleRoom"; //testMultiUserBattleRoom
+final String multiUserBattleRoomCollection =
+    "multiUserBattleRoom"; //testMultiUserBattleRoom
 final String messagesCollection = "messages"; // testMessages
 final String tournamentsCollection = "tournaments"; //testTournaments
 
@@ -81,7 +83,8 @@ final String tournamentsCollection = "tournaments"; //testTournaments
 final String addUserUrl = "${baseUrl}user_signup";
 
 final String getQuestionForOneToOneBattle = "${baseUrl}get_random_questions";
-final String getQuestionForMultiUserBattle = "${baseUrl}get_question_by_room_id";
+final String getQuestionForMultiUserBattle =
+    "${baseUrl}get_question_by_room_id";
 final String createMultiUserBattleRoom = "${baseUrl}create_room";
 final String deleteMultiUserBattleRoom = "${baseUrl}destroy_room_by_room_id";
 
@@ -101,7 +104,8 @@ final String getQuestionsByLevelUrl = "${baseUrl}get_questions_by_level";
 final String getQuestionForDailyQuizUrl = "${baseUrl}get_daily_quiz";
 final String getLevelUrl = "${baseUrl}get_level_data";
 final String getSubCategoryUrl = "${baseUrl}get_subcategory_by_maincategory";
-final String getQuestionForSelfChallengeUrl = "${baseUrl}get_questions_for_self_challenge";
+final String getQuestionForSelfChallengeUrl =
+    "${baseUrl}get_questions_for_self_challenge";
 final String updateLevelUrl = "${baseUrl}set_level_data";
 final String getMonthlyLeaderboardUrl = "${baseUrl}get_monthly_leaderboard";
 final String getDailyLeaderboardUrl = "${baseUrl}get_daily_leaderboard";
@@ -165,7 +169,8 @@ final int correctAnswerPointsForBattle = 4;
 final int guessTheWordCorrectAnswerPoints = 6;
 final int guessTheWordWrongAnswerDeductPoints = 3;
 final double winPercentageBreakPoint = 30.0; // more than 30% declare winner
-final double maxCoinsWinningPercentage = 80.0; //it is highest percentage to earn maxCoins
+final double maxCoinsWinningPercentage =
+    80.0; //it is highest percentage to earn maxCoins
 final int maxWinningCoins = 4;
 final int guessTheWordMaxWinningCoins = 6;
 //Coins to give winner of battle (1 vs 1)
@@ -183,7 +188,8 @@ final int maxCoinsForGroupBattleCreation = 50;
 final String defaultQuestionLanguageId = "";
 
 //Group battle invite message
-final String groupBattleInviteMessage = "Hello, Join a group battle in $appName app. Go to group battle in the app and join using the code : ";
+final String groupBattleInviteMessage =
+    "Hello, Join a group battle in $appName app. Go to group battle in the app and join using the code : ";
 
 // Fb Ads placementId
 final String fbBannerAndInterstitialAdPrefix = "IMG_16_9_APP_INSTALL#";
