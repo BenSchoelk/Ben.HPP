@@ -6,7 +6,8 @@
 //
 import 'package:flutterquiz/utils/stringLabels.dart';
 
-final String defaultErrorMessageKey = "defaultErrorMessage"; //something went wrong
+final String defaultErrorMessageKey =
+    "defaultErrorMessage"; //something went wrong
 final String noInternetKey = "noInternet";
 final String invalidHashKey = "invalidHash";
 final String dataNotFoundKey = "dataNotFound";
@@ -28,7 +29,8 @@ final String invalidEmailKey = "invalid-email";
 final String userDisabledKey = "user-disabled";
 final String userNotFoundKey = "user-not-found";
 final String wrongPasswordKey = "wrong-password";
-final String accountExistCredentialKey = "account-exists-with-different-credential";
+final String accountExistCredentialKey =
+    "account-exists-with-different-credential";
 final String invalidCredentialKey = "invalid-credential";
 final String operationNotAllowedKey = "operation-not-allowed";
 final String invalidVerificationCodeKey = "invalid-verification-code";
@@ -49,6 +51,7 @@ final String roomIsFullKey = "roomIsFull";
 final String alreadyInExamKey = "alreadyInExam";
 final String noExamForTodayKey = "noExamForToday";
 final String haveNotCompletedExamKey = "haveNotCompletedExam";
+final String requireRecentLoginKey = "requires-recent-login";
 
 //
 //error message code that is not given from api
@@ -73,6 +76,7 @@ final String unableToSubmitAnswerCode = "151";
 final String alreadyInExamCode = "152";
 final String noExamForTodayCode = "153";
 final String haveNotCompletedExamCode = "154";
+final String requireRecentLoginCode = "155";
 
 //
 //firebase auth exceptions code
@@ -101,6 +105,8 @@ String firebaseErrorCodeToNumber(String firebaseErrorCode) {
       return "136";
     case "weak-password":
       return "137";
+    case "requires-recent-login":
+      return "155";
 
     default:
       return defaultErrorMessageCode;
@@ -238,6 +244,9 @@ String convertErrorCodeToLanguageKey(String code) {
 
     case "154":
       return haveNotCompletedExamKey;
+
+    case "155":
+      return requireRecentLoginKey;
     default:
       {
         return defaultErrorMessageKey;

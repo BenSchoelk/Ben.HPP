@@ -46,16 +46,22 @@ Future<Widget> initializeApp() async {
 
   if (!kIsWeb) {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarBrightness: Brightness.dark, statusBarIconBrightness: Brightness.dark));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark));
 
     await Firebase.initializeApp();
     FirebaseFirestore.instance.settings = Settings(persistenceEnabled: false);
   }
 
   await Hive.initFlutter();
-  await Hive.openBox(authBox); //auth box for storing all authentication related details
-  await Hive.openBox(settingsBox); //settings box for storing all settings details
-  await Hive.openBox(userdetailsBox); //userDetails box for storing all userDetails details
+  await Hive.openBox(
+      authBox); //auth box for storing all authentication related details
+  await Hive.openBox(
+      settingsBox); //settings box for storing all settings details
+  await Hive.openBox(
+      userdetailsBox); //userDetails box for storing all userDetails details
   await Hive.openBox(examBox);
 
   return MyApp();
@@ -76,42 +82,53 @@ class MyApp extends StatelessWidget {
     precacheImage(AssetImage(UiUtils.getImagePath("splash_logo.png")), context);
     precacheImage(AssetImage(UiUtils.getImagePath("map_finded.png")), context);
     precacheImage(AssetImage(UiUtils.getImagePath("map_finding.png")), context);
-    precacheImage(AssetImage(UiUtils.getImagePath("scratchCardCover.png")), context);
+    precacheImage(
+        AssetImage(UiUtils.getImagePath("scratchCardCover.png")), context);
 
     return MultiBlocProvider(
       //providing global providers
       providers: [
         //Creating cubit/bloc that will be use in whole app or
         //will be use in multiple screens
-        BlocProvider<ThemeCubit>(create: (_) => ThemeCubit(SettingsLocalDataSource())),
-        BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(SettingsRepository())),
+        BlocProvider<ThemeCubit>(
+            create: (_) => ThemeCubit(SettingsLocalDataSource())),
+        BlocProvider<SettingsCubit>(
+            create: (_) => SettingsCubit(SettingsRepository())),
         BlocProvider<AuthCubit>(create: (_) => AuthCubit(AuthRepository())),
-        BlocProvider<AppLocalizationCubit>(create: (_) => AppLocalizationCubit(SettingsLocalDataSource())),
-        BlocProvider<UserDetailsCubit>(create: (_) => UserDetailsCubit(ProfileManagementRepository())),
-        BlocProvider<BookmarkCubit>(create: (_) => BookmarkCubit(BookmarkRepository())),
+        BlocProvider<AppLocalizationCubit>(
+            create: (_) => AppLocalizationCubit(SettingsLocalDataSource())),
+        BlocProvider<UserDetailsCubit>(
+            create: (_) => UserDetailsCubit(ProfileManagementRepository())),
+        BlocProvider<BookmarkCubit>(
+            create: (_) => BookmarkCubit(BookmarkRepository())),
         //it will be use in multiple dialogs and screen
-        BlocProvider<MultiUserBattleRoomCubit>(create: (_) => MultiUserBattleRoomCubit(BattleRoomRepository())),
+        BlocProvider<MultiUserBattleRoomCubit>(
+            create: (_) => MultiUserBattleRoomCubit(BattleRoomRepository())),
 
-        BlocProvider<BattleRoomCubit>(create: (_) => BattleRoomCubit(BattleRoomRepository())),
+        BlocProvider<BattleRoomCubit>(
+            create: (_) => BattleRoomCubit(BattleRoomRepository())),
 
         //system config
-        BlocProvider<SystemConfigCubit>(create: (_) => SystemConfigCubit(SystemConfigRepository())),
+        BlocProvider<SystemConfigCubit>(
+            create: (_) => SystemConfigCubit(SystemConfigRepository())),
         //to configure badges
-        BlocProvider<BadgesCubit>(create: (_) => BadgesCubit(BadgesRepository())),
+        BlocProvider<BadgesCubit>(
+            create: (_) => BadgesCubit(BadgesRepository())),
         //statistic cubit
-        BlocProvider<StatisticCubit>(create: (_) => StatisticCubit(StatisticRepository())),
+        BlocProvider<StatisticCubit>(
+            create: (_) => StatisticCubit(StatisticRepository())),
         //Interstitial ad cubit
         BlocProvider<InterstitialAdCubit>(create: (_) => InterstitialAdCubit()),
         //Rewarded ad cubit
         BlocProvider<RewardedAdCubit>(create: (_) => RewardedAdCubit()),
         //tournament cubit
-        BlocProvider<TournamentCubit>(create: (_) => TournamentCubit(TournamentRepository())),
+        BlocProvider<TournamentCubit>(
+            create: (_) => TournamentCubit(TournamentRepository())),
         //tournament battle cubit
-        BlocProvider<TournamentBattleCubit>(create: (_) => TournamentBattleCubit(TournamentRepository())),
+        BlocProvider<TournamentBattleCubit>(
+            create: (_) => TournamentBattleCubit(TournamentRepository())),
         //exam cubit
         BlocProvider<ExamCubit>(create: (_) => ExamCubit(ExamRepository())),
-        //Need to refresh the today and completed exam details after user has given the
-        //exam hence taking this two cubit as global bloc provider
       ],
       child: Builder(
         builder: (context) {
@@ -119,14 +136,18 @@ class MyApp extends StatelessWidget {
           final currentTheme = context.watch<ThemeCubit>().state.appTheme;
           //
 
-          final currentLanguage = context.watch<AppLocalizationCubit>().state.language;
+          final currentLanguage =
+              context.watch<AppLocalizationCubit>().state.language;
 
           return MaterialApp(
             builder: (context, widget) {
-              return ScrollConfiguration(behavior: GlobalScrollBehavior(), child: widget!);
+              return ScrollConfiguration(
+                  behavior: GlobalScrollBehavior(), child: widget!);
             },
             locale: currentLanguage,
-            theme: appThemeData[currentTheme]!.copyWith(textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
+            theme: appThemeData[currentTheme]!.copyWith(
+                textTheme:
+                    GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
             debugShowCheckedModeBanner: false,
             localizationsDelegates: [
               AppLocalization.delegate,

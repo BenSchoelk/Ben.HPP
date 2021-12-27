@@ -139,6 +139,7 @@ final String getBattleStatisticsUrl = "${baseUrl}get_battle_statistics";
 final String getExamModuleUrl = "${baseUrl}get_exam_module";
 final String getExamModuleQuestionsUrl = "${baseUrl}get_exam_module_questions";
 final String setExamModuleResultUrl = "${baseUrl}set_exam_module_result";
+final String deleteUserAccountUrl = "${baseUrl}delete_user_account";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;

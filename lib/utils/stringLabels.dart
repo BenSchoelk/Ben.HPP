@@ -361,3 +361,7 @@ String viewAllKey = "viewAll";
 String playedKey = "played";
 String wonKey = "won";
 String lostKey = "lost";
+String deleteAccountKey = "deleteAccount";
+String deleteAccountConfirmationKey = "deleteAccountConfirmation";
+String deletingAccountKey = "deletingAccount";
+String accountDeletedSuccessfullyKey = "accountDeletedSuccessfully";

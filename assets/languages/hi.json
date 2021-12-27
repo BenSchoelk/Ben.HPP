@@ -388,6 +388,13 @@
   "viewAll" : "View All",
   "played" : "Played",
   "won" : "Won",
-  "lost" : "Lost"
+  "lost" : "Lost",
+  
+  "deleteAccount" : "Delete Account",
+  "requires-recent-login" : "To delete account sign-in again and delete account immediate.",
+  "deleteAccountConfirmation" : "Are you srue to delete account?",
+  "deletingAccount" : "Deleting Account...",
+  "accountDeletedSuccessfully" : "Account deleted successfully"
+
 
 }
