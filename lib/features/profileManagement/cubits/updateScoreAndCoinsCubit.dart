@@ -22,15 +22,19 @@ class UpdateScoreAndCoinsFailure extends UpdateScoreAndCoinsState {
 
 class UpdateScoreAndCoinsCubit extends Cubit<UpdateScoreAndCoinsState> {
   final ProfileManagementRepository _profileManagementRepository;
-  UpdateScoreAndCoinsCubit(this._profileManagementRepository) : super(UpdateScoreAndCoinsInitial());
+  UpdateScoreAndCoinsCubit(this._profileManagementRepository)
+      : super(UpdateScoreAndCoinsInitial());
 
-  void updateCoins(String? userId, int? coins, bool addCoin, {String? type}) async {
+  void updateCoins(String? userId, int? coins, bool addCoin,
+      {String? type}) async {
     emit(UpdateScoreAndCoinsInProgress());
 
     _profileManagementRepository
-        .updateConins(userId: userId!, coins: coins, addCoin: addCoin, type: type)
+        .updateConins(
+            userId: userId!, coins: coins, addCoin: addCoin, type: type)
         .then(
-          (result) => emit(UpdateScoreAndCoinsSuccess(coins: result['coins'], score: result['score'])),
+          (result) => emit(UpdateScoreAndCoinsSuccess(
+              coins: result['coins'], score: result['score'])),
         )
         .catchError((e) {
       emit(UpdateScoreAndCoinsFailure(e.toString()));
@@ -42,20 +46,30 @@ class UpdateScoreAndCoinsCubit extends Cubit<UpdateScoreAndCoinsState> {
     _profileManagementRepository
         .updateScore(userId: userId!, score: score, type: type)
         .then(
-          (result) => UpdateScoreAndCoinsSuccess(coins: result['coins'], score: result['score']),
+          (result) => UpdateScoreAndCoinsSuccess(
+              coins: result['coins'], score: result['score']),
         )
         .catchError((e) {
       emit(UpdateScoreAndCoinsFailure(e.toString()));
     });
   }
 
-  void updateCoinsAndScore(String? userId, int? score, bool addCoin, int coins, {String? type}) async {
+  void updateCoinsAndScore(
+      String? userId, int? score, bool addCoin, int coins, String title,
+      {String? type}) async {
     emit(UpdateScoreAndCoinsInProgress());
 
     _profileManagementRepository
-        .updateConinsAndScore(userId: userId!, coins: coins, addCoin: addCoin, score: score, type: type)
+        .updateConinsAndScore(
+            title: title,
+            userId: userId!,
+            coins: coins,
+            addCoin: addCoin,
+            score: score,
+            type: type)
         .then(
-          (result) => emit(UpdateScoreAndCoinsSuccess(coins: result['coins'], score: result['score'])),
+          (result) => emit(UpdateScoreAndCoinsSuccess(
+              coins: result['coins'], score: result['score'])),
         )
         .catchError((e) {
       emit(UpdateScoreAndCoinsFailure(e.toString()));

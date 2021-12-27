@@ -100,14 +100,17 @@ class ProfileManagementRepository {
       required int? score,
       required int coins,
       required bool addCoin,
+      required String title,
       String? type}) async {
     try {
       final result =
           await _profileManagementRemoteDataSource.updateCoinsAndScore(
               userId: userId,
+              title: title,
               coins: addCoin ? coins.toString() : (coins * -1).toString(),
               score: score.toString(),
               type: type);
+      print("Result of coins and score update : $result");
       return Map.from(result);
     } catch (e) {
       throw ProfileManagementException(errorMessageCode: e.toString());

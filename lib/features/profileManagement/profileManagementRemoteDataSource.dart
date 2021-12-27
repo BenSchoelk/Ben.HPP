@@ -116,6 +116,7 @@ class ProfileManagementRemoteDataSource {
     required String userId,
     required String score,
     required String coins,
+    required String title,
     String? type,
   }) async {
     try {
@@ -125,7 +126,9 @@ class ProfileManagementRemoteDataSource {
         userIdKey: userId,
         coinsKey: coins,
         scoreKey: score,
-        typeKey: type ?? ""
+        typeKey: type ?? "",
+        titleKey: title,
+        statusKey: (int.parse(coins) < 0) ? "1" : "0",
       };
 
       if (body[typeKey]!.isEmpty) {
