@@ -68,22 +68,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   late List<QuizType> _quizTypes = quizTypes;
 
-  late AnimationController profileAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 85));
-  late AnimationController selfChallengeAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 85));
+  late AnimationController profileAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 85));
+  late AnimationController selfChallengeAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 85));
 
-  late Animation<Offset> profileSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: profileAnimationController, curve: Curves.easeIn));
+  late Animation<Offset> profileSlideAnimation =
+      Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(
+          CurvedAnimation(
+              parent: profileAnimationController, curve: Curves.easeIn));
 
-  late Animation<Offset> selfChallengeSlideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(CurvedAnimation(parent: selfChallengeAnimationController, curve: Curves.easeIn));
+  late Animation<Offset> selfChallengeSlideAnimation =
+      Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(
+          CurvedAnimation(
+              parent: selfChallengeAnimationController, curve: Curves.easeIn));
 
-  late AnimationController firstAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-  late Animation<double> firstAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: firstAnimationController, curve: Curves.easeInOut));
-  late AnimationController secondAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-  late Animation<double> secondAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: secondAnimationController, curve: Curves.easeInOut));
+  late AnimationController firstAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+  late Animation<double> firstAnimation = Tween<double>(begin: 0.0, end: 1.0)
+      .animate(CurvedAnimation(
+          parent: firstAnimationController, curve: Curves.easeInOut));
+  late AnimationController secondAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+  late Animation<double> secondAnimation = Tween<double>(begin: 0.0, end: 1.0)
+      .animate(CurvedAnimation(
+          parent: secondAnimationController, curve: Curves.easeInOut));
 
   bool? dragUP;
   int currentMenu = 1;
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -104,22 +119,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _initLocalNotification() async {
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
-    final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: (int id, String? title, String? body, String? payLoad) {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    final IOSInitializationSettings initializationSettingsIOS =
+        IOSInitializationSettings(onDidReceiveLocalNotification:
+            (int id, String? title, String? body, String? payLoad) {
       print("For ios version <= 9 notification will be shown here");
     });
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: _onTapLocalNotification);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: _onTapLocalNotification);
     _requestPermissionsForIos();
   }
 
   Future<void> _requestPermissionsForIos() async {
     if (Platform.isIOS) {
-      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions();
+      flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions();
     }
   }
 
@@ -127,22 +150,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     Future.delayed(Duration.zero, () {
       final systemCubit = context.read<SystemConfigCubit>();
       if (systemCubit.getIsContestAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.contest);
+        _quizTypes.removeWhere(
+            (element) => element.quizTypeEnum == QuizTypes.contest);
       }
       if (systemCubit.getIsDailyQuizAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.dailyQuiz);
+        _quizTypes.removeWhere(
+            (element) => element.quizTypeEnum == QuizTypes.dailyQuiz);
       }
       if (systemCubit.getIsAudioQuestionAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.audioQuestions);
+        _quizTypes.removeWhere(
+            (element) => element.quizTypeEnum == QuizTypes.audioQuestions);
       }
       if (systemCubit.getIsFunNLearnAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.funAndLearn);
+        _quizTypes.removeWhere(
+            (element) => element.quizTypeEnum == QuizTypes.funAndLearn);
       }
       if (systemCubit.getIsGuessTheWordAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.guessTheWord);
+        _quizTypes.removeWhere(
+            (element) => element.quizTypeEnum == QuizTypes.guessTheWord);
       }
       if (systemCubit.getIsExamAvailable() == "0") {
-        _quizTypes.removeWhere((element) => element.quizTypeEnum == QuizTypes.exam);
+        _quizTypes
+            .removeWhere((element) => element.quizTypeEnum == QuizTypes.exam);
       }
       setState(() {});
     });
@@ -154,7 +183,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     await Future.delayed(Duration.zero);
     if (context.read<SystemConfigCubit>().isForceUpdateEnable()) {
       try {
-        bool forceUpdate = await UiUtils.forceUpdate(context.read<SystemConfigCubit>().getAppVersion());
+        bool forceUpdate = await UiUtils.forceUpdate(
+            context.read<SystemConfigCubit>().getAppVersion());
 
         if (forceUpdate) {
           setState(() {
@@ -168,7 +198,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Future<void> setupInteractedMessage() async {
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       _handleMessage(initialMessage);
     }
@@ -195,7 +226,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         });
       }
       //payload is some data you want to pass in local notification
-      image != null ? generateImageNotification(title, body, image, type, type) : generateSimpleNotification(title, body, type);
+      image != null
+          ? generateImageNotification(title, body, image, type, type)
+          : generateSimpleNotification(title, body, type);
     });
   }
 
@@ -204,7 +237,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     print("User has opened the app by tapping on notification");
     try {
       if (message.data['type'] == 'category') {
-        Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
+        Navigator.of(context).pushNamed(Routes.category,
+            arguments: {"quizType": QuizTypes.quizZone});
       } else if (message.data['type'] == 'badges') {
         //if user open app by tapping
         UiUtils.updateBadgesLocally(context);
@@ -227,10 +261,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> generateImageNotification(String title, String msg, String image, String payloads, String type) async {
+  Future<void> generateImageNotification(String title, String msg, String image,
+      String payloads, String type) async {
     var largeIconPath = await _downloadAndSaveFile(image, 'largeIcon');
     var bigPicturePath = await _downloadAndSaveFile(image, 'bigPicture');
-    var bigPictureStyleInformation = BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath), hideExpandedLargeIcon: true, contentTitle: title, htmlFormatContentTitle: true, summaryText: msg, htmlFormatSummaryText: true);
+    var bigPictureStyleInformation = BigPictureStyleInformation(
+        FilePathAndroidBitmap(bigPicturePath),
+        hideExpandedLargeIcon: true,
+        contentTitle: title,
+        htmlFormatContentTitle: true,
+        summaryText: msg,
+        htmlFormatSummaryText: true);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'com.wrteam.flutterquiz', //channel id
         'flutterquiz', //channel name
@@ -238,8 +279,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         largeIcon: FilePathAndroidBitmap(largeIconPath),
         styleInformation: bigPictureStyleInformation,
         icon: "app_icon");
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(0, title, msg, platformChannelSpecifics, payload: payloads);
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin
+        .show(0, title, msg, platformChannelSpecifics, payload: payloads);
   }
 
   Future<String> _downloadAndSaveFile(String url, String fileName) async {
@@ -252,7 +295,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // notification on foreground
-  Future<void> generateSimpleNotification(String title, String body, String payloads) async {
+  Future<void> generateSimpleNotification(
+      String title, String body, String payloads) async {
     print("Trigger local notification");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'com.wrteam.flutterquiz', //channel id
@@ -262,10 +306,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         priority: Priority.high,
         ticker: 'ticker',
         icon: "app_icon");
-    const IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+    const IOSNotificationDetails iosNotificationDetails =
+        IOSNotificationDetails();
 
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
-    await flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: payloads);
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
+    await flutterLocalNotificationsPlugin
+        .show(0, title, body, platformChannelSpecifics, payload: payloads);
   }
 
   @override
@@ -281,9 +328,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     int baseCondition = quizTypeIndex % 2 == 0 ? 0 : 1;
     for (int i = quizTypeIndex; i > baseCondition; i = i - 2) {
       //
-      double topQuizTypeHeight = maxHeightQuizTypeIndexes.contains(i - 2) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage;
+      double topQuizTypeHeight = maxHeightQuizTypeIndexes.contains(i - 2)
+          ? UiUtils.quizTypeMaxHeightPercentage
+          : UiUtils.quizTypeMinHeightPercentage;
 
-      topMarginPercentage = topMarginPercentage + quizTypeBetweenVerticalSpacing + topQuizTypeHeight;
+      topMarginPercentage = topMarginPercentage +
+          quizTypeBetweenVerticalSpacing +
+          topQuizTypeHeight;
     }
     return topMarginPercentage;
   }
@@ -345,13 +396,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void _onQuizTypeContainerTap(int quizTypeIndex) {
     if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.dailyQuiz) {
       if (context.read<SystemConfigCubit>().getIsDailyQuizAvailable() == "1") {
-        Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.dailyQuiz, "numberOfPlayer": 1, "quizName": "Daily Quiz"});
+        Navigator.of(context).pushNamed(Routes.quiz, arguments: {
+          "quizType": QuizTypes.dailyQuiz,
+          "numberOfPlayer": 1,
+          "quizName": "Daily Quiz"
+        });
       } else {
-        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(currentlyNotAvailableKey)!, context, false);
+        UiUtils.setSnackbar(
+            AppLocalization.of(context)!
+                .getTranslatedValues(currentlyNotAvailableKey)!,
+            context,
+            false);
       }
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.quizZone) {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.quizZone});
-    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.selfChallenge) {
+      Navigator.of(context).pushNamed(Routes.category,
+          arguments: {"quizType": QuizTypes.quizZone});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum ==
+        QuizTypes.selfChallenge) {
       Navigator.of(context).pushNamed(Routes.selfChallenge);
     } //
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
@@ -361,34 +422,57 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       showDialog(
         context: context,
         builder: (context) => MultiBlocProvider(providers: [
-          BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository())),
-          BlocProvider<UpdateScoreAndCoinsCubit>(create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
+          BlocProvider<QuizCategoryCubit>(
+              create: (_) => QuizCategoryCubit(QuizRepository())),
+          BlocProvider<UpdateScoreAndCoinsCubit>(
+              create: (_) =>
+                  UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
         ], child: RandomOrPlayFrdDialog()),
       );
-    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.trueAndFalse) {
-      Navigator.of(context).pushNamed(Routes.quiz, arguments: {"quizType": QuizTypes.trueAndFalse, "numberOfPlayer": 1, "quizName": "True & False"});
-    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.funAndLearn) {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.funAndLearn});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum ==
+        QuizTypes.trueAndFalse) {
+      Navigator.of(context).pushNamed(Routes.quiz, arguments: {
+        "quizType": QuizTypes.trueAndFalse,
+        "numberOfPlayer": 1,
+        "quizName": "True & False"
+      });
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum ==
+        QuizTypes.funAndLearn) {
+      Navigator.of(context).pushNamed(Routes.category,
+          arguments: {"quizType": QuizTypes.funAndLearn});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.groupPlay) {
-      context.read<MultiUserBattleRoomCubit>().updateState(MultiUserBattleRoomInitial());
+      context
+          .read<MultiUserBattleRoomCubit>()
+          .updateState(MultiUserBattleRoomInitial());
       //
       showDialog(
           context: context,
           builder: (context) => MultiBlocProvider(providers: [
-                BlocProvider<QuizCategoryCubit>(create: (_) => QuizCategoryCubit(QuizRepository())),
-                BlocProvider<UpdateScoreAndCoinsCubit>(create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
+                BlocProvider<QuizCategoryCubit>(
+                    create: (_) => QuizCategoryCubit(QuizRepository())),
+                BlocProvider<UpdateScoreAndCoinsCubit>(
+                    create: (_) => UpdateScoreAndCoinsCubit(
+                        ProfileManagementRepository())),
               ], child: RoomDialog(quizType: QuizTypes.groupPlay)));
       //
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.contest) {
       if (context.read<SystemConfigCubit>().getIsContestAvailable() == "1") {
         Navigator.of(context).pushNamed(Routes.contest);
       } else {
-        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(currentlyNotAvailableKey)!, context, false);
+        UiUtils.setSnackbar(
+            AppLocalization.of(context)!
+                .getTranslatedValues(currentlyNotAvailableKey)!,
+            context,
+            false);
       }
-    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.guessTheWord) {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.guessTheWord});
-    } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.audioQuestions) {
-      Navigator.of(context).pushNamed(Routes.category, arguments: {"quizType": QuizTypes.audioQuestions});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum ==
+        QuizTypes.guessTheWord) {
+      Navigator.of(context).pushNamed(Routes.category,
+          arguments: {"quizType": QuizTypes.guessTheWord});
+    } else if (_quizTypes[quizTypeIndex].quizTypeEnum ==
+        QuizTypes.audioQuestions) {
+      Navigator.of(context).pushNamed(Routes.category,
+          arguments: {"quizType": QuizTypes.audioQuestions});
     } else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.exam) {
       //update exam status to exam initial
       context.read<ExamCubit>().updateState(ExamInitial());
@@ -419,7 +503,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColor,
                         radius: 37.5,
-                        backgroundImage: CachedNetworkImageProvider(state.userProfile.profileUrl!),
+                        backgroundImage: CachedNetworkImageProvider(
+                            state.userProfile.profileUrl!),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * (0.0175),
@@ -442,10 +527,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  state.userProfile.email!.isEmpty ? state.userProfile.mobileNumber! : state.userProfile.email!,
+                                  state.userProfile.email!.isEmpty
+                                      ? state.userProfile.mobileNumber!
+                                      : state.userProfile.email!,
                                   style: TextStyle(
                                     fontSize: 13.0,
-                                    color: Theme.of(context).primaryColor.withOpacity(0.6),
+                                    color: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.6),
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -454,11 +543,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   height: constraints.maxHeight * (0.05),
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    UserAchievementContainer(title: AppLocalization.of(context)!.getTranslatedValues("rankLbl")!, value: state.userProfile.allTimeRank ?? "0"),
-                                    UserAchievementContainer(title: AppLocalization.of(context)!.getTranslatedValues("coinsLbl")!, value: state.userProfile.coins ?? "0"),
-                                    UserAchievementContainer(title: AppLocalization.of(context)!.getTranslatedValues("scoreLbl")!, value: UiUtils.formatNumber(int.parse(state.userProfile.allTimeScore ?? "0"))),
+                                    UserAchievementContainer(
+                                        title: AppLocalization.of(context)!
+                                            .getTranslatedValues("rankLbl")!,
+                                        value: state.userProfile.allTimeRank ??
+                                            "0"),
+                                    UserAchievementContainer(
+                                        title: AppLocalization.of(context)!
+                                            .getTranslatedValues("coinsLbl")!,
+                                        value: state.userProfile.coins ?? "0"),
+                                    UserAchievementContainer(
+                                        title: AppLocalization.of(context)!
+                                            .getTranslatedValues("scoreLbl")!,
+                                        value: UiUtils.formatNumber(int.parse(
+                                            state.userProfile.allTimeScore ??
+                                                "0"))),
                                   ], //
                                 ),
                               ],
@@ -472,7 +574,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 return Container();
               },
             ),
-            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * (0.085) + statusBarPadding),
+            margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * (0.085) +
+                    statusBarPadding),
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               //gradient: UiUtils.buildLinerGradient([Theme.of(context).primaryColor, Theme.of(context).colorScheme.secondary], Alignment.topCenter, Alignment.bottomCenter),
@@ -499,13 +603,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: SlideTransition(
           position: selfChallengeSlideAnimation,
           child: Container(
-            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.28 + statusBarPadding),
+            margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.28 +
+                    statusBarPadding),
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
 
               //gradient: UiUtils.buildLinerGradient([Theme.of(context).colorScheme.secondary, Theme.of(context).primaryColor], Alignment.centerLeft, Alignment.centerRight),
 
-              boxShadow: [UiUtils.buildBoxShadow(offset: Offset(5.0, 5.0), blurRadius: 10.0)],
+              boxShadow: [
+                UiUtils.buildBoxShadow(
+                    offset: Offset(5.0, 5.0), blurRadius: 10.0)
+              ],
               borderRadius: BorderRadius.circular(20.0),
             ),
             width: MediaQuery.of(context).size.width * (0.84),
@@ -525,7 +634,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppLocalization.of(context)!.getTranslatedValues(selfChallengeLbl)!,
+                            AppLocalization.of(context)!
+                                .getTranslatedValues(selfChallengeLbl)!,
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
@@ -536,10 +646,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             height: 1.0,
                           ),
                           Text(
-                            AppLocalization.of(context)!.getTranslatedValues(challengeYourselfLbl)!,
+                            AppLocalization.of(context)!
+                                .getTranslatedValues(challengeYourselfLbl)!,
                             style: TextStyle(
                               fontSize: 14.0,
-                              color: Theme.of(context).primaryColor.withOpacity(0.6),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.6),
                             ),
                           ),
                         ],
@@ -548,7 +661,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   Align(
                     alignment: AlignmentDirectional.centerEnd,
-                    child: Transform.scale(scale: 0.55, child: SvgPicture.asset("assets/images/selfchallenge_icon.svg")),
+                    child: Transform.scale(
+                        scale: 0.55,
+                        child: SvgPicture.asset(
+                            "assets/images/selfchallenge_icon.svg")),
                   ),
                 ],
               ),
@@ -560,7 +676,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildQuizType(int quizTypeIndex, double statusBarPadding) {
-    double quizTypeHorizontalMargin = MediaQuery.of(context).size.width * quizTypeHorizontalMarginPercentage;
+    double quizTypeHorizontalMargin =
+        MediaQuery.of(context).size.width * quizTypeHorizontalMarginPercentage;
     double topMarginPercentage = quizTypeTopMargin;
 
     if (quizTypeIndex - 2 < 0) {
@@ -575,13 +692,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       return AnimatedBuilder(
         builder: (context, child) {
           return Positioned(
-            top: (MediaQuery.of(context).size.height * topMarginPercentage) + statusBarPadding,
+            top: (MediaQuery.of(context).size.height * topMarginPercentage) +
+                statusBarPadding,
             left: isLeft ? quizTypeHorizontalMargin : null,
             right: isLeft ? null : quizTypeHorizontalMargin,
             child: SlideTransition(
-              position: firstAnimation.drive<Offset>(Tween<Offset>(begin: Offset.zero, end: Offset(isLeft ? -1.0 : 1.0, 0))),
+              position: firstAnimation.drive<Offset>(Tween<Offset>(
+                  begin: Offset.zero, end: Offset(isLeft ? -1.0 : 1.0, 0))),
               child: FadeTransition(
-                opacity: firstAnimation.drive<double>(Tween<double>(begin: 1.0, end: 0.0)),
+                opacity: firstAnimation
+                    .drive<double>(Tween<double>(begin: 1.0, end: 0.0)),
                 child: child!,
               ),
             ),
@@ -591,7 +711,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: QuizTypeContainer(
           quizType: _quizTypes[quizTypeIndex],
           widthPercentage: quizTypeWidthPercentage,
-          heightPercentage: maxHeightQuizTypeIndexes.contains(quizTypeIndex) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage,
+          heightPercentage: maxHeightQuizTypeIndexes.contains(quizTypeIndex)
+              ? UiUtils.quizTypeMaxHeightPercentage
+              : UiUtils.quizTypeMinHeightPercentage,
         ),
       );
     } else if (quizTypeIndex < 8) {
@@ -600,20 +722,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           double endMarginPercentage = quizTypeTopMargin;
           //change static number to length of menu
           if (quizTypeIndex == 6 || quizTypeIndex == 7) {
-            double previousTopQuizTypeHeight = maxHeightQuizTypeIndexes.contains(quizTypeIndex - 2) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage;
-            endMarginPercentage = quizTypeTopMargin + quizTypeBetweenVerticalSpacing + previousTopQuizTypeHeight;
+            double previousTopQuizTypeHeight =
+                maxHeightQuizTypeIndexes.contains(quizTypeIndex - 2)
+                    ? UiUtils.quizTypeMaxHeightPercentage
+                    : UiUtils.quizTypeMinHeightPercentage;
+            endMarginPercentage = quizTypeTopMargin +
+                quizTypeBetweenVerticalSpacing +
+                previousTopQuizTypeHeight;
           }
 
-          double topPositionPercentage = firstAnimation.drive<double>(Tween(begin: topMarginPercentage, end: endMarginPercentage)).value;
+          double topPositionPercentage = firstAnimation
+              .drive<double>(
+                  Tween(begin: topMarginPercentage, end: endMarginPercentage))
+              .value;
 
           return Positioned(
-            top: (MediaQuery.of(context).size.height * topPositionPercentage) + statusBarPadding,
+            top: (MediaQuery.of(context).size.height * topPositionPercentage) +
+                statusBarPadding,
             left: isLeft ? quizTypeHorizontalMargin : null,
             right: isLeft ? null : quizTypeHorizontalMargin,
             child: SlideTransition(
-              position: secondAnimation.drive<Offset>(Tween<Offset>(begin: Offset.zero, end: Offset(isLeft ? -1.0 : 1.0, 0))),
+              position: secondAnimation.drive<Offset>(Tween<Offset>(
+                  begin: Offset.zero, end: Offset(isLeft ? -1.0 : 1.0, 0))),
               child: FadeTransition(
-                opacity: secondAnimation.drive<double>(Tween<double>(begin: 1.0, end: 0.0)),
+                opacity: secondAnimation
+                    .drive<double>(Tween<double>(begin: 1.0, end: 0.0)),
                 child: child!,
               ),
             ),
@@ -623,7 +756,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: QuizTypeContainer(
           quizType: _quizTypes[quizTypeIndex],
           widthPercentage: quizTypeWidthPercentage,
-          heightPercentage: maxHeightQuizTypeIndexes.contains(quizTypeIndex) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage,
+          heightPercentage: maxHeightQuizTypeIndexes.contains(quizTypeIndex)
+              ? UiUtils.quizTypeMaxHeightPercentage
+              : UiUtils.quizTypeMinHeightPercentage,
         ),
       );
     } else {
@@ -632,20 +767,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         builder: (context, child) {
           return AnimatedBuilder(
             builder: (context, child) {
-              double firstEndMarginPercentage = _getTopMarginForQuizTypeContainer(quizTypeIndex - 4);
+              double firstEndMarginPercentage =
+                  _getTopMarginForQuizTypeContainer(quizTypeIndex - 4);
               double topPositionPercentage = 0.0;
 
-              topPositionPercentage = firstAnimation.drive<double>(Tween(begin: topMarginPercentage, end: firstEndMarginPercentage)).value;
+              topPositionPercentage = firstAnimation
+                  .drive<double>(Tween(
+                      begin: topMarginPercentage,
+                      end: firstEndMarginPercentage))
+                  .value;
 
               double previousTopQuizTypeHeight = 0;
               if (quizTypeIndex == 10 || quizTypeIndex == 11) {
-                previousTopQuizTypeHeight = maxHeightQuizTypeIndexes.contains(quizTypeIndex - 2) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage;
-                previousTopQuizTypeHeight = quizTypeBetweenVerticalSpacing + previousTopQuizTypeHeight;
+                previousTopQuizTypeHeight =
+                    maxHeightQuizTypeIndexes.contains(quizTypeIndex - 2)
+                        ? UiUtils.quizTypeMaxHeightPercentage
+                        : UiUtils.quizTypeMinHeightPercentage;
+                previousTopQuizTypeHeight =
+                    quizTypeBetweenVerticalSpacing + previousTopQuizTypeHeight;
               }
-              topPositionPercentage = topPositionPercentage - (firstEndMarginPercentage - quizTypeTopMargin - previousTopQuizTypeHeight) * (secondAnimation.drive<double>(Tween(begin: 0.0, end: 1.0)).value);
+              topPositionPercentage = topPositionPercentage -
+                  (firstEndMarginPercentage -
+                          quizTypeTopMargin -
+                          previousTopQuizTypeHeight) *
+                      (secondAnimation
+                          .drive<double>(Tween(begin: 0.0, end: 1.0))
+                          .value);
 
               return Positioned(
-                top: (MediaQuery.of(context).size.height * topPositionPercentage) + statusBarPadding,
+                top: (MediaQuery.of(context).size.height *
+                        topPositionPercentage) +
+                    statusBarPadding,
                 left: isLeft ? quizTypeHorizontalMargin : null,
                 right: isLeft ? null : quizTypeHorizontalMargin,
                 child: child!,
@@ -655,7 +807,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             child: QuizTypeContainer(
               quizType: _quizTypes[quizTypeIndex],
               widthPercentage: quizTypeWidthPercentage,
-              heightPercentage: maxHeightQuizTypeIndexes.contains(quizTypeIndex) ? UiUtils.quizTypeMaxHeightPercentage : UiUtils.quizTypeMinHeightPercentage,
+              heightPercentage: maxHeightQuizTypeIndexes.contains(quizTypeIndex)
+                  ? UiUtils.quizTypeMaxHeightPercentage
+                  : UiUtils.quizTypeMinHeightPercentage,
             ),
           );
         },
@@ -685,7 +839,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
                 boxShadow: [
-                  UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
+                  UiUtils.buildBoxShadow(
+                      offset: Offset(5, 5), blurRadius: 10.0),
                 ],
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -707,7 +862,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
                 boxShadow: [
-                  UiUtils.buildBoxShadow(offset: Offset(5, 5), blurRadius: 10.0),
+                  UiUtils.buildBoxShadow(
+                      offset: Offset(5, 5), blurRadius: 10.0),
                 ],
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -743,29 +899,68 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildTopMenuContainer(double statusBarPadding) {
     return Positioned(
-      top: MediaQuery.of(context).size.height * (quizTypeTopMargin) + statusBarPadding,
+      top: MediaQuery.of(context).size.height * (quizTypeTopMargin) +
+          statusBarPadding,
       child: GestureDetector(
         onTap: () {},
         onTapUp: (tapDownDetails) {
-          double firstTapStartDx = quizTypeHorizontalMarginPercentage * MediaQuery.of(context).size.width;
-          double topTapStartDy = quizTypeTopMargin * MediaQuery.of(context).size.height + statusBarPadding;
+          double firstTapStartDx = quizTypeHorizontalMarginPercentage *
+              MediaQuery.of(context).size.width;
+          double topTapStartDy =
+              quizTypeTopMargin * MediaQuery.of(context).size.height +
+                  statusBarPadding;
 
-          double secondTapStartDx = MediaQuery.of(context).size.width - MediaQuery.of(context).size.width * (quizTypeWidthPercentage + quizTypeHorizontalMarginPercentage);
+          double secondTapStartDx = MediaQuery.of(context).size.width -
+              MediaQuery.of(context).size.width *
+                  (quizTypeWidthPercentage +
+                      quizTypeHorizontalMarginPercentage);
 
-          double thirdTapStartDy = MediaQuery.of(context).size.height * (quizTypeBetweenVerticalSpacing + quizTypeTopMargin + UiUtils.quizTypeMaxHeightPercentage) + statusBarPadding;
-          double fourthTapStartDy = MediaQuery.of(context).size.height * (quizTypeBetweenVerticalSpacing + quizTypeTopMargin + UiUtils.quizTypeMinHeightPercentage) + statusBarPadding;
+          double thirdTapStartDy = MediaQuery.of(context).size.height *
+                  (quizTypeBetweenVerticalSpacing +
+                      quizTypeTopMargin +
+                      UiUtils.quizTypeMaxHeightPercentage) +
+              statusBarPadding;
+          double fourthTapStartDy = MediaQuery.of(context).size.height *
+                  (quizTypeBetweenVerticalSpacing +
+                      quizTypeTopMargin +
+                      UiUtils.quizTypeMinHeightPercentage) +
+              statusBarPadding;
 
-          if (tapDownDetails.globalPosition.dx >= firstTapStartDx && tapDownDetails.globalPosition.dx <= (firstTapStartDx + MediaQuery.of(context).size.width * quizTypeWidthPercentage)) {
+          if (tapDownDetails.globalPosition.dx >= firstTapStartDx &&
+              tapDownDetails.globalPosition.dx <=
+                  (firstTapStartDx +
+                      MediaQuery.of(context).size.width *
+                          quizTypeWidthPercentage)) {
             //
-            if (tapDownDetails.globalPosition.dy >= topTapStartDy && tapDownDetails.globalPosition.dy <= (topTapStartDy + (MediaQuery.of(context).size.height * UiUtils.quizTypeMaxHeightPercentage))) {
+            if (tapDownDetails.globalPosition.dy >= topTapStartDy &&
+                tapDownDetails.globalPosition.dy <=
+                    (topTapStartDy +
+                        (MediaQuery.of(context).size.height *
+                            UiUtils.quizTypeMaxHeightPercentage))) {
               _navigateToQuizZone(1);
-            } else if (tapDownDetails.globalPosition.dy >= thirdTapStartDy && tapDownDetails.globalPosition.dy <= (thirdTapStartDy + (MediaQuery.of(context).size.height * UiUtils.quizTypeMinHeightPercentage))) {
+            } else if (tapDownDetails.globalPosition.dy >= thirdTapStartDy &&
+                tapDownDetails.globalPosition.dy <=
+                    (thirdTapStartDy +
+                        (MediaQuery.of(context).size.height *
+                            UiUtils.quizTypeMinHeightPercentage))) {
               _navigateToQuizZone(3);
             }
-          } else if (tapDownDetails.globalPosition.dx >= secondTapStartDx && tapDownDetails.globalPosition.dx <= (secondTapStartDx + MediaQuery.of(context).size.width * quizTypeWidthPercentage)) {
-            if (tapDownDetails.globalPosition.dy >= topTapStartDy && tapDownDetails.globalPosition.dy <= (topTapStartDy + (MediaQuery.of(context).size.height * UiUtils.quizTypeMinHeightPercentage))) {
+          } else if (tapDownDetails.globalPosition.dx >= secondTapStartDx &&
+              tapDownDetails.globalPosition.dx <=
+                  (secondTapStartDx +
+                      MediaQuery.of(context).size.width *
+                          quizTypeWidthPercentage)) {
+            if (tapDownDetails.globalPosition.dy >= topTapStartDy &&
+                tapDownDetails.globalPosition.dy <=
+                    (topTapStartDy +
+                        (MediaQuery.of(context).size.height *
+                            UiUtils.quizTypeMinHeightPercentage))) {
               _navigateToQuizZone(2);
-            } else if (tapDownDetails.globalPosition.dy >= fourthTapStartDy && tapDownDetails.globalPosition.dy <= (fourthTapStartDy + (MediaQuery.of(context).size.height * UiUtils.quizTypeMaxHeightPercentage))) {
+            } else if (tapDownDetails.globalPosition.dy >= fourthTapStartDy &&
+                tapDownDetails.globalPosition.dy <=
+                    (fourthTapStartDy +
+                        (MediaQuery.of(context).size.height *
+                            UiUtils.quizTypeMaxHeightPercentage))) {
               _navigateToQuizZone(4);
             }
           }
@@ -774,8 +969,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onVerticalDragUpdate: (dragUpdateDetails) {
           if (currentMenu == 1) {
             //when firstMenu is selected
-            double dragged = dragUpdateDetails.primaryDelta! / MediaQuery.of(context).size.height;
-            firstAnimationController.value = firstAnimationController.value - 2.50 * dragged;
+            double dragged = dragUpdateDetails.primaryDelta! /
+                MediaQuery.of(context).size.height;
+            firstAnimationController.value =
+                firstAnimationController.value - 2.50 * dragged;
           } else if (currentMenu == 2) {
             //when second _quizTypes
             if (dragUP == null) {
@@ -791,16 +988,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             //
             if (dragUP != null) {
               if (dragUP!) {
-                double dragged = dragUpdateDetails.primaryDelta! / MediaQuery.of(context).size.height;
-                secondAnimationController.value = secondAnimationController.value - 2.50 * dragged;
+                double dragged = dragUpdateDetails.primaryDelta! /
+                    MediaQuery.of(context).size.height;
+                secondAnimationController.value =
+                    secondAnimationController.value - 2.50 * dragged;
               } else {
-                double dragged = dragUpdateDetails.primaryDelta! / MediaQuery.of(context).size.height;
-                firstAnimationController.value = firstAnimationController.value - 2.50 * dragged;
+                double dragged = dragUpdateDetails.primaryDelta! /
+                    MediaQuery.of(context).size.height;
+                firstAnimationController.value =
+                    firstAnimationController.value - 2.50 * dragged;
               }
             }
           } else {
-            double dragged = dragUpdateDetails.primaryDelta! / MediaQuery.of(context).size.height;
-            secondAnimationController.value = secondAnimationController.value - 2.50 * dragged;
+            double dragged = dragUpdateDetails.primaryDelta! /
+                MediaQuery.of(context).size.height;
+            secondAnimationController.value =
+                secondAnimationController.value - 2.50 * dragged;
           }
         },
         onVerticalDragEnd: (dragEndDetails) async {
@@ -851,7 +1054,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Container(
           color: Colors.transparent,
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * (1.0 - quizTypeTopMargin),
+          height:
+              MediaQuery.of(context).size.height * (1.0 - quizTypeTopMargin),
         ),
       ),
     );
@@ -873,12 +1077,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: BlocConsumer<UserDetailsCubit, UserDetailsState>(
         listener: (context, state) {
           if (state is UserDetailsFetchSuccess) {
-            UiUtils.fetchBookmarkAndBadges(context: context, userId: state.userProfile.userId!);
+            UiUtils.fetchBookmarkAndBadges(
+                context: context, userId: state.userProfile.userId!);
           }
         },
         bloc: context.read<UserDetailsCubit>(),
         builder: (context, state) {
-          if (state is UserDetailsFetchInProgress || state is UserDetailsInitial) {
+          if (state is UserDetailsFetchInProgress ||
+              state is UserDetailsInitial) {
             return _buildHomeScreen([
               Center(
                 child: CircularProgressContainer(
@@ -891,9 +1097,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             return _buildHomeScreen([
               ErrorContainer(
                 showBackButton: true,
-                errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
+                errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                    convertErrorCodeToLanguageKey(state.errorMessage))!,
                 onTapRetry: () {
-                  context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
+                  context.read<UserDetailsCubit>().fetchUserDetails(
+                      context.read<AuthCubit>().getUserFirebaseId());
                 },
                 showErrorImage: true,
                 errorMessageColor: Theme.of(context).primaryColor,
@@ -901,14 +1109,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ]);
           }
 
-          UserProfile userProfile = (state as UserDetailsFetchSuccess).userProfile;
+          UserProfile userProfile =
+              (state as UserDetailsFetchSuccess).userProfile;
           if (userProfile.status == "0") {
             return _buildHomeScreen([
               ErrorContainer(
                 showBackButton: true,
-                errorMessage: AppLocalization.of(context)!.getTranslatedValues(accountDeactivatedKey)!,
+                errorMessage: AppLocalization.of(context)!
+                    .getTranslatedValues(accountDeactivatedKey)!,
                 onTapRetry: () {
-                  context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
+                  context.read<UserDetailsCubit>().fetchUserDetails(
+                      context.read<AuthCubit>().getUserFirebaseId());
                 },
                 showErrorImage: true,
                 errorMessageColor: Theme.of(context).primaryColor,

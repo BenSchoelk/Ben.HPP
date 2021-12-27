@@ -26,8 +26,9 @@ class BadgesRemoteDataSource {
     try {
       //body of post request
       final body = {accessValueKey: accessValue, userIdKey: userId};
-
-      final response = await http.post(Uri.parse(getUserBadgesUrl), body: body, headers: ApiUtils.getHeaders());
+      print(getUserBadgesUrl);
+      final response = await http.post(Uri.parse(getUserBadgesUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -43,11 +44,17 @@ class BadgesRemoteDataSource {
     }
   }
 
-  Future<void> setBadges({required String userId, required String badgeType}) async {
+  Future<void> setBadges(
+      {required String userId, required String badgeType}) async {
     try {
-      final body = {accessValueKey: accessValue, userIdKey: userId, typeKey: badgeType};
+      final body = {
+        accessValueKey: accessValue,
+        userIdKey: userId,
+        typeKey: badgeType
+      };
 
-      final response = await http.post(Uri.parse(setUserBadgesUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(setUserBadgesUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {

@@ -121,9 +121,11 @@ class ProfileManagementRepository {
       {required String userId,
       required int? coins,
       required bool addCoin,
+      required String title,
       String? type}) async {
     try {
       final result = await _profileManagementRemoteDataSource.updateCoins(
+          title: title,
           userId: userId,
           coins: addCoin ? coins.toString() : (coins! * -1).toString(),
           type: type);

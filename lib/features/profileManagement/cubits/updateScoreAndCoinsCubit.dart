@@ -25,13 +25,17 @@ class UpdateScoreAndCoinsCubit extends Cubit<UpdateScoreAndCoinsState> {
   UpdateScoreAndCoinsCubit(this._profileManagementRepository)
       : super(UpdateScoreAndCoinsInitial());
 
-  void updateCoins(String? userId, int? coins, bool addCoin,
+  void updateCoins(String? userId, int? coins, bool addCoin, String title,
       {String? type}) async {
     emit(UpdateScoreAndCoinsInProgress());
 
     _profileManagementRepository
         .updateConins(
-            userId: userId!, coins: coins, addCoin: addCoin, type: type)
+            userId: userId!,
+            coins: coins,
+            addCoin: addCoin,
+            type: type,
+            title: title)
         .then(
           (result) => emit(UpdateScoreAndCoinsSuccess(
               coins: result['coins'], score: result['score'])),

@@ -44,10 +44,12 @@ class QuizScreen extends StatefulWidget {
   final String level; //will be in use for quizZone quizType
   final String categoryId; //will be in use for quizZone quizType
   final String subcategoryId; //will be in use for quizZone quizType
-  final String subcategoryMaxLevel; //will be in use for quizZone quizType (to pass in result screen)
+  final String
+      subcategoryMaxLevel; //will be in use for quizZone quizType (to pass in result screen)
   final int unlockedLevel;
   final String contestId;
-  final String comprehensionId; // will be in use for quizZone quizType (to pass in result screen)
+  final String
+      comprehensionId; // will be in use for quizZone quizType (to pass in result screen)
   final String quizName;
 
   QuizScreen(
@@ -83,9 +85,11 @@ class QuizScreen extends StatefulWidget {
                 ),
                 //to update user coins after using lifeline
                 BlocProvider<UpdateScoreAndCoinsCubit>(
-                  create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  create: (_) =>
+                      UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
                 ),
-                BlocProvider<UpdateBookmarkCubit>(create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
+                BlocProvider<UpdateBookmarkCubit>(
+                    create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
               ],
               child: QuizScreen(
                   numberOfPlayer: arguments['numberOfPlayer'] as int,
@@ -105,7 +109,9 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late AnimationController questionAnimationController;
   late AnimationController questionContentAnimationController;
-  late AnimationController timerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: questionDurationInSeconds))..addStatusListener(currentUserTimerAnimationStatusListener);
+  late AnimationController timerAnimationController = AnimationController(
+      vsync: this, duration: Duration(seconds: questionDurationInSeconds))
+    ..addStatusListener(currentUserTimerAnimationStatusListener);
 
   late Animation<double> questionSlideAnimation;
   late Animation<double> questionScaleUpAnimation;
@@ -113,9 +119,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late Animation<double> questionContentAnimation;
   late AnimationController animationController;
   late AnimationController topContainerAnimationController;
-  late AnimationController showOptionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-  late Animation<double> showOptionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: showOptionAnimationController, curve: Curves.easeInOut));
-  late List<GlobalKey<AudioQuestionContainerState>> audioQuestionContainerKeys = [];
+  late AnimationController showOptionAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  late Animation<double> showOptionAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: showOptionAnimationController, curve: Curves.easeInOut));
+  late List<GlobalKey<AudioQuestionContainerState>> audioQuestionContainerKeys =
+      [];
   int currentQuestionIndex = 0;
   final double optionWidth = 0.7;
   final double optionHeight = 0.09;
@@ -154,28 +164,45 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     super.initState();
     //init reward ad
     Future.delayed(Duration.zero, () {
-      context.read<RewardedAdCubit>().createRewardedAd(context, onFbRewardAdCompleted: _addCoinsAfterRewardAd);
+      context.read<RewardedAdCubit>().createRewardedAd(context,
+          onFbRewardAdCompleted: _addCoinsAfterRewardAd);
     });
     //init animations
     initializeAnimation();
-    animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
-    topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    topContainerAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     //
     _getQuestions();
   }
 
   void initializeAnimation() {
-    questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-    questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 525));
-    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionAnimationController, curve: Curves.easeInOut));
-    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
-    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionContentAnimationController, curve: Curves.easeInQuad));
-    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
+    questionContentAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+    questionAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 525));
+    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionAnimationController, curve: Curves.easeInOut));
+    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
+    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionContentAnimationController,
+            curve: Curves.easeInQuad));
+    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
   }
 
   @override
   void dispose() {
-    timerAnimationController.removeStatusListener(currentUserTimerAnimationStatusListener);
+    timerAnimationController
+        .removeStatusListener(currentUserTimerAnimationStatusListener);
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
@@ -215,7 +242,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   void updateSubmittedAnswerForBookmark(Question question) {
     if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
-      context.read<BookmarkCubit>().updateSubmittedAnswerId(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+      context.read<BookmarkCubit>().updateSubmittedAnswerId(
+          context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
     }
   }
 
@@ -267,31 +295,45 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   //if user has submitted the answer for current question
   bool hasSubmittedAnswerForCurrentQuestion() {
-    return context.read<QuestionsCubit>().questions()[currentQuestionIndex].attempted;
+    return context
+        .read<QuestionsCubit>()
+        .questions()[currentQuestionIndex]
+        .attempted;
   }
 
   Map<String, LifelineStatus> getLifeLines() {
-    if (widget.quizType == QuizTypes.quizZone || widget.quizType == QuizTypes.dailyQuiz) {
+    if (widget.quizType == QuizTypes.quizZone ||
+        widget.quizType == QuizTypes.dailyQuiz) {
       return lifelines;
     }
     return {};
   }
 
   void updateTotalSecondsToCompleteQuiz() {
-    totalSecondsToCompleteQuiz = totalSecondsToCompleteQuiz + UiUtils.timeTakenToSubmitAnswer(animationControllerValue: timerAnimationController.value, quizType: widget.quizType);
+    totalSecondsToCompleteQuiz = totalSecondsToCompleteQuiz +
+        UiUtils.timeTakenToSubmitAnswer(
+            animationControllerValue: timerAnimationController.value,
+            quizType: widget.quizType);
     print("Time to complete quiz: $totalSecondsToCompleteQuiz");
   }
 
   //update answer locally and on cloud
   void submitAnswer(String submittedAnswer) async {
     timerAnimationController.stop();
-    if (!context.read<QuestionsCubit>().questions()[currentQuestionIndex].attempted) {
-      context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(context.read<QuestionsCubit>().questions()[currentQuestionIndex].id, submittedAnswer);
+    if (!context
+        .read<QuestionsCubit>()
+        .questions()[currentQuestionIndex]
+        .attempted) {
+      context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(
+          context.read<QuestionsCubit>().questions()[currentQuestionIndex].id,
+          submittedAnswer);
       updateTotalSecondsToCompleteQuiz();
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
-      if (currentQuestionIndex != (context.read<QuestionsCubit>().questions().length - 1)) {
-        updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+      if (currentQuestionIndex !=
+          (context.read<QuestionsCubit>().questions().length - 1)) {
+        updateSubmittedAnswerForBookmark(
+            context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         changeQuestion();
         //if quizType is not audio then start timer again
         if (widget.quizType == QuizTypes.audioQuestions) {
@@ -301,7 +343,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           timerAnimationController.forward(from: 0.0);
         }
       } else {
-        updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+        updateSubmittedAnswerForBookmark(
+            context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
         navigateToResultScreen();
       }
     }
@@ -347,12 +390,15 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             child: CustomRoundedButton(
               widthPercentage: MediaQuery.of(context).size.width * (0.5),
               backgroundColor: Theme.of(context).primaryColor,
-              buttonTitle: AppLocalization.of(context)!.getTranslatedValues(showOptionsKey)!,
+              buttonTitle: AppLocalization.of(context)!
+                  .getTranslatedValues(showOptionsKey)!,
               radius: 5,
               onTap: () {
                 if (!showOptionAnimationController.isAnimating) {
                   showOptionAnimationController.reverse();
-                  audioQuestionContainerKeys[currentQuestionIndex].currentState!.changeShowOption();
+                  audioQuestionContainerKeys[currentQuestionIndex]
+                      .currentState!
+                      .changeShowOption();
                   timerAnimationController.forward(from: 0.0);
                 }
               },
@@ -370,7 +416,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildBookmarkButton(QuestionsCubit questionsCubit) {
-    if (widget.quizType == QuizTypes.funAndLearn || widget.quizType == QuizTypes.audioQuestions) {
+    if (widget.quizType == QuizTypes.funAndLearn ||
+        widget.quizType == QuizTypes.audioQuestions) {
       return Container();
     }
     return BlocBuilder<QuestionsCubit, QuestionsState>(
@@ -385,16 +432,35 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildLifelineContainer(VoidCallback onTap, String lifelineTitle, String lifelineIcon) {
+  Widget _buildLifelineContainer(
+      VoidCallback onTap, String lifelineTitle, String lifelineIcon) {
     return GestureDetector(
-      onTap: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2
+      onTap: lifelineTitle == fiftyFifty &&
+              context
+                      .read<QuestionsCubit>()
+                      .questions()[currentQuestionIndex]
+                      .answerOptions!
+                      .length ==
+                  2
           ? () {
-              UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
+              UiUtils.setSnackbar(
+                  AppLocalization.of(context)!
+                      .getTranslatedValues("notAvailable")!,
+                  context,
+                  false);
             }
           : onTap,
       child: Container(
           decoration: BoxDecoration(
-              color: lifelineTitle == fiftyFifty && context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2 ? Theme.of(context).backgroundColor.withOpacity(0.7) : Theme.of(context).backgroundColor,
+              color: lifelineTitle == fiftyFifty &&
+                      context
+                              .read<QuestionsCubit>()
+                              .questions()[currentQuestionIndex]
+                              .answerOptions!
+                              .length ==
+                          2
+                  ? Theme.of(context).backgroundColor.withOpacity(0.7)
+                  : Theme.of(context).backgroundColor,
               boxShadow: [
                 UiUtils.buildBoxShadow(),
               ],
@@ -415,17 +481,23 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           addCoin: true,
           coins: lifeLineDeductCoins,
         );
+
+    //TODO : Watched reward ad
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-          context.read<UserDetailsCubit>().getUserId(),
-          lifeLineDeductCoins,
-          true,
-        );
+        context.read<UserDetailsCubit>().getUserId(),
+        lifeLineDeductCoins,
+        true,
+        "Watched reward ad");
     timerAnimationController.forward(from: timerAnimationController.value);
   }
 
   void showAdDialog() {
     if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
-      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!, context, false);
+      UiUtils.setSnackbar(
+          AppLocalization.of(context)!.getTranslatedValues(
+              convertErrorCodeToLanguageKey(notEnoughCoinsCode))!,
+          context,
+          false);
       return;
     }
     //stop timer
@@ -435,7 +507,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         builder: (_) => WatchRewardAdDialog(
               onTapYesButton: () {
                 //on tap of yes button show ad
-                context.read<RewardedAdCubit>().showAd(context: context, onAdDismissedCallback: _addCoinsAfterRewardAd);
+                context.read<RewardedAdCubit>().showAd(
+                    context: context,
+                    onAdDismissedCallback: _addCoinsAfterRewardAd);
               },
               onTapNoButton: () {
                 //pass true to start timer
@@ -450,7 +524,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildLifeLines() {
-    if (widget.quizType == QuizTypes.dailyQuiz || widget.quizType == QuizTypes.quizZone) {
+    if (widget.quizType == QuizTypes.dailyQuiz ||
+        widget.quizType == QuizTypes.quizZone) {
       return Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -461,15 +536,30 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 _buildLifelineContainer(() {
                   if (lifelines[fiftyFifty] == LifelineStatus.unused) {
                     if (hasEnoughCoinsForLifeline(context)) {
-                      if (context.read<QuestionsCubit>().questions()[currentQuestionIndex].answerOptions!.length == 2) {
-                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("notAvailable")!, context, false);
+                      if (context
+                              .read<QuestionsCubit>()
+                              .questions()[currentQuestionIndex]
+                              .answerOptions!
+                              .length ==
+                          2) {
+                        UiUtils.setSnackbar(
+                            AppLocalization.of(context)!
+                                .getTranslatedValues("notAvailable")!,
+                            context,
+                            false);
                       } else {
                         //deduct coins for using lifeline
-                        context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: lifeLineDeductCoins);
+                        context.read<UserDetailsCubit>().updateCoins(
+                            addCoin: false, coins: lifeLineDeductCoins);
                         //mark fiftyFifty lifeline as using
 
                         //update coins in cloud
-                        context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), 5, false);
+                        //TODO : Use of fifty-fifty lifeline
+                        context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                            context.read<UserDetailsCubit>().getUserId(),
+                            5,
+                            false,
+                            "Use of 50-50 lifeline");
                         setState(() {
                           lifelines[fiftyFifty] = LifelineStatus.using;
                         });
@@ -478,16 +568,27 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       showAdDialog();
                     }
                   } else {
-                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
+                    UiUtils.setSnackbar(
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(lifeLineUsedCode))!,
+                        context,
+                        false);
                   }
                 }, fiftyFifty, "fiftyfifty icon.svg"),
                 _buildLifelineContainer(() {
                   if (lifelines[audiencePoll] == LifelineStatus.unused) {
                     if (hasEnoughCoinsForLifeline(context)) {
                       //deduct coins for using lifeline
-                      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: lifeLineDeductCoins);
+                      context.read<UserDetailsCubit>().updateCoins(
+                          addCoin: false, coins: lifeLineDeductCoins);
                       //update coins in cloud
-                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), 5, false);
+
+                      //TODO : Use of audience-poll lifeline
+                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                          context.read<UserDetailsCubit>().getUserId(),
+                          5,
+                          false,
+                          "Use of audience poll lifeline");
                       setState(() {
                         lifelines[audiencePoll] = LifelineStatus.using;
                       });
@@ -495,18 +596,28 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       showAdDialog();
                     }
                   } else {
-                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
+                    UiUtils.setSnackbar(
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(lifeLineUsedCode))!,
+                        context,
+                        false);
                   }
                 }, audiencePoll, "audience_poll.svg"),
                 _buildLifelineContainer(() {
                   if (lifelines[resetTime] == LifelineStatus.unused) {
                     if (hasEnoughCoinsForLifeline(context)) {
                       //deduct coins for using lifeline
-                      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: lifeLineDeductCoins);
+                      context.read<UserDetailsCubit>().updateCoins(
+                          addCoin: false, coins: lifeLineDeductCoins);
                       //mark fiftyFifty lifeline as using
 
+                      //TODO : Use of reset timer lifeline
                       //update coins in cloud
-                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, false);
+                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                          context.read<UserDetailsCubit>().getUserId(),
+                          lifeLineDeductCoins,
+                          false,
+                          "Use of reset timer lifeline");
                       setState(() {
                         lifelines[resetTime] = LifelineStatus.using;
                       });
@@ -516,16 +627,28 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       showAdDialog();
                     }
                   } else {
-                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
+                    UiUtils.setSnackbar(
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(lifeLineUsedCode))!,
+                        context,
+                        false);
                   }
                 }, resetTime, "reset_time.svg"),
                 _buildLifelineContainer(() {
                   if (lifelines[skip] == LifelineStatus.unused) {
                     if (hasEnoughCoinsForLifeline(context)) {
                       //deduct coins for using lifeline
-                      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: 5);
+                      context
+                          .read<UserDetailsCubit>()
+                          .updateCoins(addCoin: false, coins: 5);
                       //update coins in cloud
-                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), lifeLineDeductCoins, false);
+
+                      //TODO : Use of skip lifeline
+                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                          context.read<UserDetailsCubit>().getUserId(),
+                          lifeLineDeductCoins,
+                          false,
+                          "Use of skip lifeline");
                       setState(() {
                         lifelines[skip] = LifelineStatus.using;
                       });
@@ -534,7 +657,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       showAdDialog();
                     }
                   } else {
-                    UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(lifeLineUsedCode))!, context, false);
+                    UiUtils.setSnackbar(
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(lifeLineUsedCode))!,
+                        context,
+                        false);
                   }
                 }, skip, "skip_icon.svg"),
               ],
@@ -548,7 +675,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return Align(
         alignment: Alignment.topLeft,
         child: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
             child: CustomBackButton(
               iconColor: Theme.of(context).primaryColor,
               bgColor: Theme.of(context).backgroundColor,
@@ -562,7 +690,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: () {
         isExitDialogOpen = true;
-        showDialog(context: context, builder: (_) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
+        showDialog(context: context, builder: (_) => ExitGameDailog())
+            .then((value) => isExitDialogOpen = false);
         return Future.value(true);
       },
       child: Scaffold(
@@ -578,9 +707,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             //showDialog(context: context, builder: (_) => ExitGameDailog());
 
             Align(
-              alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
+              alignment:
+                  Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5, right: Platform.isIOS ? 10 : 0),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 7.5,
+                    right: Platform.isIOS ? 10 : 0),
                 child: HorizontalTimerContainer(
                   timerAnimationController: timerAnimationController,
                 ),
@@ -590,10 +722,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 bloc: quesCubit,
                 listener: (context, state) {
                   if (state is QuestionsFetchSuccess) {
-                    if (currentQuestionIndex == 0 && !state.questions[currentQuestionIndex].attempted) {
+                    if (currentQuestionIndex == 0 &&
+                        !state.questions[currentQuestionIndex].attempted) {
                       if (widget.quizType == QuizTypes.audioQuestions) {
                         state.questions.forEach((element) {
-                          audioQuestionContainerKeys.add(GlobalKey<AudioQuestionContainerState>());
+                          audioQuestionContainerKeys
+                              .add(GlobalKey<AudioQuestionContainerState>());
                         });
 
                         //
@@ -609,7 +743,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   }
                 },
                 builder: (context, state) {
-                  if (state is QuestionsFetchInProgress || state is QuestionsIntial) {
+                  if (state is QuestionsFetchInProgress ||
+                      state is QuestionsIntial) {
                     return Center(
                       child: CircularProgressContainer(
                         useWhiteLoader: true,
@@ -620,7 +755,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     return Center(
                       child: ErrorContainer(
                         showBackButton: true,
-                        errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                        errorMessage: AppLocalization.of(context)!
+                            .getTranslatedValues(convertErrorCodeToLanguageKey(
+                                state.errorMessage)),
                         onTapRetry: () {
                           _getQuestions();
                         },
@@ -636,10 +773,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       toggleSettingDialog: toggleSettingDialog,
                       showAnswerCorrectness: true,
                       lifeLines: getLifeLines(),
-                      timerAnimationController: widget.quizType == QuizTypes.audioQuestions ? timerAnimationController : null,
+                      timerAnimationController:
+                          widget.quizType == QuizTypes.audioQuestions
+                              ? timerAnimationController
+                              : null,
                       bookmarkButton: _buildBookmarkButton(quesCubit),
                       topPadding: 30.0,
-                      hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
+                      hasSubmittedAnswerForCurrentQuestion:
+                          hasSubmittedAnswerForCurrentQuestion,
                       questions: context.read<QuestionsCubit>().questions(),
                       submitAnswer: submitAnswer,
                       questionContentAnimation: questionContentAnimation,
@@ -648,7 +789,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       questionSlideAnimation: questionSlideAnimation,
                       currentQuestionIndex: currentQuestionIndex,
                       questionAnimationController: questionAnimationController,
-                      questionContentAnimationController: questionContentAnimationController,
+                      questionContentAnimationController:
+                          questionContentAnimationController,
                       guessTheWordQuestions: [],
                       guessTheWordQuestionContainerKeys: [],
                       level: widget.level,

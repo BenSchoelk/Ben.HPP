@@ -33,7 +33,8 @@ class _RoomDialogState extends State<RoomDialog> {
 
   String selectedCategory = selectCategoryKey;
   List<int> entryFees = [minCoinsForGroupBattleCreation, 10, 15, 20];
-  int entryFee = minCoinsForGroupBattleCreation; //difference between two entries is
+  int entryFee =
+      minCoinsForGroupBattleCreation; //difference between two entries is
   TextEditingController textEditingController = TextEditingController();
   TextEditingController roomCodeEditingController = TextEditingController();
 
@@ -41,7 +42,8 @@ class _RoomDialogState extends State<RoomDialog> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      context.read<RewardedAdCubit>().createRewardedAd(context, onFbRewardAdCompleted: _addCoinsAfterRewardAd);
+      context.read<RewardedAdCubit>().createRewardedAd(context,
+          onFbRewardAdCompleted: _addCoinsAfterRewardAd);
       //to get categories
       if (isCategoryEnabled()) {
         context.read<QuizCategoryCubit>().getQuizCategory(
@@ -59,23 +61,30 @@ class _RoomDialogState extends State<RoomDialog> {
           addCoin: true,
           coins: lifeLineDeductCoins,
         );
+
+    //TODO : Watched reward ad -
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-          context.read<UserDetailsCubit>().getUserId(),
-          lifeLineDeductCoins,
-          true,
-        );
+        context.read<UserDetailsCubit>().getUserId(),
+        lifeLineDeductCoins,
+        true,
+        "Watched reward ad");
   }
 
   void showAdDialog() {
     if (context.read<RewardedAdCubit>().state is! RewardedAdLoaded) {
-      UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notEnoughCoinsCode))!);
+      UiUtils.errorMessageDialog(
+          context,
+          AppLocalization.of(context)!.getTranslatedValues(
+              convertErrorCodeToLanguageKey(notEnoughCoinsCode))!);
       return;
     }
     showDialog(
         context: context,
         builder: (_) => WatchRewardAdDialog(onTapYesButton: () {
               //showAd
-              context.read<RewardedAdCubit>().showAd(context: context, onAdDismissedCallback: _addCoinsAfterRewardAd);
+              context.read<RewardedAdCubit>().showAd(
+                  context: context,
+                  onAdDismissedCallback: _addCoinsAfterRewardAd);
             }));
   }
 
@@ -88,20 +97,32 @@ class _RoomDialogState extends State<RoomDialog> {
 
   bool isCategoryEnabled() {
     if (widget.quizType == QuizTypes.battle) {
-      return context.read<SystemConfigCubit>().getIsCategoryEnableForBattle()! == "1";
+      return context
+              .read<SystemConfigCubit>()
+              .getIsCategoryEnableForBattle()! ==
+          "1";
     }
-    return context.read<SystemConfigCubit>().getIsCategoryEnableForGroupBattle()! == "1";
+    return context
+            .read<SystemConfigCubit>()
+            .getIsCategoryEnableForGroupBattle()! ==
+        "1";
   }
 
   String getCategoryId() {
     QuizCategoryCubit quizCategoryCubit = context.read<QuizCategoryCubit>();
     if (quizCategoryCubit.state is QuizCategorySuccess) {
-      return (quizCategoryCubit.state as QuizCategorySuccess).categories.where((element) => element.categoryName == selectedCategory).toList().first.id!;
+      return (quizCategoryCubit.state as QuizCategorySuccess)
+          .categories
+          .where((element) => element.categoryName == selectedCategory)
+          .toList()
+          .first
+          .id!;
     }
     return "";
   }
 
-  Widget _buildTabContainer(int index, String title, BoxConstraints boxConstraints) {
+  Widget _buildTabContainer(
+      int index, String title, BoxConstraints boxConstraints) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -119,14 +140,19 @@ class _RoomDialogState extends State<RoomDialog> {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18.0,
-            fontWeight: index == currentSelectedTab ? FontWeight.bold : FontWeight.w500,
-            color: index == currentSelectedTab ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
+            fontWeight:
+                index == currentSelectedTab ? FontWeight.bold : FontWeight.w500,
+            color: index == currentSelectedTab
+                ? Theme.of(context).backgroundColor
+                : Theme.of(context).primaryColor,
           ),
         ),
         height: boxConstraints.maxHeight * (0.15),
         width: boxConstraints.maxWidth * (0.5),
         decoration: BoxDecoration(
-            color: index == currentSelectedTab ? Theme.of(context).primaryColor : Theme.of(context).canvasColor,
+            color: index == currentSelectedTab
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).canvasColor,
             borderRadius: index == 1
                 ? BorderRadius.only(
                     topLeft: Radius.circular(UiUtils.dailogRadius),
@@ -140,13 +166,15 @@ class _RoomDialogState extends State<RoomDialog> {
 
   //using for category
   Widget _buildDropdown({
-    required List<Map<String, String?>> values, //keys of value will be name and id
+    required List<Map<String, String?>>
+        values, //keys of value will be name and id
     required String keyValue, // need to have this keyValues for fade animation
   }) {
     return DropdownButton<String>(
         key: Key(keyValue),
         borderRadius: BorderRadius.circular(20),
-        dropdownColor: Theme.of(context).canvasColor, //same as background of dropdown color
+        dropdownColor: Theme.of(context)
+            .canvasColor, //same as background of dropdown color
         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),
         isExpanded: true,
         iconEnabledColor: Theme.of(context).primaryColor,
@@ -161,14 +189,17 @@ class _RoomDialogState extends State<RoomDialog> {
         //values is map of name and id. only passing name to dropdown
         items: values.map((e) => e['name']).toList().map((name) {
           return DropdownMenuItem(
-            child: name! == selectCategoryKey ? Text(AppLocalization.of(context)!.getTranslatedValues(name)!) : Text(name),
+            child: name! == selectCategoryKey
+                ? Text(AppLocalization.of(context)!.getTranslatedValues(name)!)
+                : Text(name),
             value: name,
           );
         }).toList(),
         value: selectedCategory);
   }
 
-  Widget _buildEntryFeeContainer(int entryFeeValue, BoxConstraints boxConstraints, bool useManualValue) {
+  Widget _buildEntryFeeContainer(
+      int entryFeeValue, BoxConstraints boxConstraints, bool useManualValue) {
     return GestureDetector(
       onTap: useManualValue
           ? null
@@ -228,9 +259,13 @@ class _RoomDialogState extends State<RoomDialog> {
                   Text(
                     "$entryFeeValue",
                     style: TextStyle(
-                      color: entryFeeValue == entryFee ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
+                      color: entryFeeValue == entryFee
+                          ? Theme.of(context).backgroundColor
+                          : Theme.of(context).primaryColor,
                       fontSize: 16.0,
-                      fontWeight: entryFeeValue == entryFee ? FontWeight.bold : FontWeight.w500,
+                      fontWeight: entryFeeValue == entryFee
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                     ),
                   ),
                   SizedBox(
@@ -240,8 +275,17 @@ class _RoomDialogState extends State<RoomDialog> {
                 ],
               ),
         decoration: BoxDecoration(
-            boxShadow: entryFeeValue == entryFee ? [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.5), blurRadius: 5, offset: Offset(2.5, 2.5))] : null,
-            color: entryFeeValue == entryFee ? Theme.of(context).primaryColor : Theme.of(context).canvasColor,
+            boxShadow: entryFeeValue == entryFee
+                ? [
+                    BoxShadow(
+                        color: Theme.of(context).primaryColor.withOpacity(0.5),
+                        blurRadius: 5,
+                        offset: Offset(2.5, 2.5))
+                  ]
+                : null,
+            color: entryFeeValue == entryFee
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(10.0)),
       ),
     );
@@ -254,16 +298,22 @@ class _RoomDialogState extends State<RoomDialog> {
         Container(
             alignment: Alignment.center,
             child: Text(
-              AppLocalization.of(context)!.getTranslatedValues(enterRoomCodeHereKey)!,
-              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 18.0),
+              AppLocalization.of(context)!
+                  .getTranslatedValues(enterRoomCodeHereKey)!,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 18.0),
             )),
         SizedBox(
           height: constraints.maxHeight * (0.04),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
-          margin: EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.1)),
-          decoration: BoxDecoration(color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(25.0)),
+          margin:
+              EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.1)),
+          decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(25.0)),
           height: constraints.maxHeight * (0.115),
           child: TextField(
             style: TextStyle(color: Theme.of(context).primaryColor),
@@ -271,7 +321,8 @@ class _RoomDialogState extends State<RoomDialog> {
             cursorColor: Theme.of(context).primaryColor,
             decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: AppLocalization.of(context)!.getTranslatedValues(enterCodeLbl),
+                hintText: AppLocalization.of(context)!
+                    .getTranslatedValues(enterCodeLbl),
                 hintStyle: TextStyle(
                   color: Theme.of(context).primaryColor,
                 )),
@@ -286,9 +337,16 @@ class _RoomDialogState extends State<RoomDialog> {
                 listener: (context, state) {
                   if (state is BattleRoomUserFound) {
                     Navigator.of(context).pop();
-                    showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType: QuizTypes.battle));
+                    showDialog(
+                        context: context,
+                        builder: (context) =>
+                            WaitingForPlayesDialog(quizType: QuizTypes.battle));
                   } else if (state is BattleRoomFailure) {
-                    UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
+                    UiUtils.errorMessageDialog(
+                        context,
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(
+                                state.errorMessageCode)));
                   }
                 },
                 bloc: context.read<BattleRoomCubit>(),
@@ -300,22 +358,30 @@ class _RoomDialogState extends State<RoomDialog> {
                             if (roomCodeEditingController.text.trim().isEmpty) {
                               return;
                             }
-                            UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
+                            UserProfile userProfile = context
+                                .read<UserDetailsCubit>()
+                                .getUserProfile();
                             context.read<BattleRoomCubit>().joinRoom(
                                   currentCoin: userProfile.coins!,
                                   name: userProfile.name,
                                   uid: userProfile.userId,
                                   profileUrl: userProfile.profileUrl,
-                                  roomCode: roomCodeEditingController.text.trim(),
+                                  roomCode:
+                                      roomCodeEditingController.text.trim(),
                                 );
                           },
                     widthPercentage: UiUtils.dailogWidthPercentage - 0.1,
                     backgroundColor: Theme.of(context).primaryColor,
-                    buttonTitle: state is BattleRoomJoining ? AppLocalization.of(context)!.getTranslatedValues('joiningLoadingLbl')! : AppLocalization.of(context)!.getTranslatedValues(joinRoomKey)!,
+                    buttonTitle: state is BattleRoomJoining
+                        ? AppLocalization.of(context)!
+                            .getTranslatedValues('joiningLoadingLbl')!
+                        : AppLocalization.of(context)!
+                            .getTranslatedValues(joinRoomKey)!,
                     radius: 25.0,
                     elevation: 5.0,
                     titleColor: Theme.of(context).backgroundColor,
-                    shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                    shadowColor:
+                        Theme.of(context).primaryColor.withOpacity(0.3),
                     showBorder: false,
                     height: constraints.maxHeight * (0.115),
                     fontWeight: FontWeight.bold,
@@ -332,7 +398,11 @@ class _RoomDialogState extends State<RoomDialog> {
                               quizType: QuizTypes.groupPlay,
                             ));
                   } else if (state is MultiUserBattleRoomFailure) {
-                    UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
+                    UiUtils.errorMessageDialog(
+                        context,
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(
+                                state.errorMessageCode)));
                   }
                 },
                 bloc: context.read<MultiUserBattleRoomCubit>(),
@@ -344,22 +414,30 @@ class _RoomDialogState extends State<RoomDialog> {
                             if (roomCodeEditingController.text.trim().isEmpty) {
                               return;
                             }
-                            UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
+                            UserProfile userProfile = context
+                                .read<UserDetailsCubit>()
+                                .getUserProfile();
                             context.read<MultiUserBattleRoomCubit>().joinRoom(
                                   currentCoin: userProfile.coins!,
                                   name: userProfile.name,
                                   uid: userProfile.userId,
                                   profileUrl: userProfile.profileUrl,
-                                  roomCode: roomCodeEditingController.text.trim(),
+                                  roomCode:
+                                      roomCodeEditingController.text.trim(),
                                 );
                           },
                     widthPercentage: UiUtils.dailogWidthPercentage - 0.1,
                     backgroundColor: Theme.of(context).primaryColor,
-                    buttonTitle: state is MultiUserBattleRoomInProgress ? AppLocalization.of(context)!.getTranslatedValues('joiningLoadingLbl')! : AppLocalization.of(context)!.getTranslatedValues(joinRoomKey)!,
+                    buttonTitle: state is MultiUserBattleRoomInProgress
+                        ? AppLocalization.of(context)!
+                            .getTranslatedValues('joiningLoadingLbl')!
+                        : AppLocalization.of(context)!
+                            .getTranslatedValues(joinRoomKey)!,
                     radius: 25.0,
                     elevation: 5.0,
                     titleColor: Theme.of(context).backgroundColor,
-                    shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                    shadowColor:
+                        Theme.of(context).primaryColor.withOpacity(0.3),
                     showBorder: false,
                     height: constraints.maxHeight * (0.115),
                     fontWeight: FontWeight.bold,
@@ -379,8 +457,11 @@ class _RoomDialogState extends State<RoomDialog> {
                 padding: EdgeInsets.symmetric(
                   horizontal: 20.0,
                 ),
-                margin: EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.05)),
-                decoration: BoxDecoration(color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(25.0)),
+                margin: EdgeInsets.symmetric(
+                    horizontal: constraints.maxWidth * (0.05)),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                    borderRadius: BorderRadius.circular(25.0)),
                 height: constraints.maxHeight * (0.115),
                 child: BlocConsumer<QuizCategoryCubit, QuizCategoryState>(
                   bloc: context.read<QuizCategoryCubit>(),
@@ -401,19 +482,26 @@ class _RoomDialogState extends State<RoomDialog> {
                                       //context.read<QuizCategoryCubit>().getQuizCategory(UiUtils.getCurrentQuestionLanguageId(context), "");
                                     },
                                     child: Text(
-                                      AppLocalization.of(context)!.getTranslatedValues(retryLbl)!,
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues(retryLbl)!,
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                   )
                                 ],
-                                content: Text(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!),
+                                content: Text(AppLocalization.of(context)!
+                                    .getTranslatedValues(
+                                        convertErrorCodeToLanguageKey(
+                                            state.errorMessage))!),
                               )).then((value) {
                         if (value != null && value) {
                           context.read<QuizCategoryCubit>().getQuizCategory(
-                                languageId: UiUtils.getCurrentQuestionLanguageId(context),
-                                type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+                                languageId:
+                                    UiUtils.getCurrentQuestionLanguageId(
+                                        context),
+                                type: UiUtils.getCategoryTypeNumberFromQuizType(
+                                    widget.quizType),
                               );
                         }
                       });
@@ -423,7 +511,12 @@ class _RoomDialogState extends State<RoomDialog> {
                     return AnimatedSwitcher(
                       duration: Duration(milliseconds: 500),
                       child: state is QuizCategorySuccess
-                          ? _buildDropdown(values: state.categories.map((e) => {"name": e.categoryName, "id": e.id}).toList(), keyValue: "selectCategorySuccess")
+                          ? _buildDropdown(
+                              values: state.categories
+                                  .map((e) =>
+                                      {"name": e.categoryName, "id": e.id})
+                                  .toList(),
+                              keyValue: "selectCategorySuccess")
                           : Opacity(
                               opacity: 0.65,
                               child: _buildDropdown(values: [
@@ -439,10 +532,13 @@ class _RoomDialogState extends State<RoomDialog> {
           height: constraints.maxHeight * (isCategoryEnabled() ? 0.05 : 0),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.05)),
+          padding:
+              EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.05)),
           child: Row(
             children: [
-              ...entryFees.map((e) => _buildEntryFeeContainer(e, constraints, false)).toList(),
+              ...entryFees
+                  .map((e) => _buildEntryFeeContainer(e, constraints, false))
+                  .toList(),
               _buildEntryFeeContainer(-1, constraints, true),
             ],
           ),
@@ -451,8 +547,11 @@ class _RoomDialogState extends State<RoomDialog> {
           height: constraints.maxHeight * (0.075),
         ),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.1)),
-          decoration: BoxDecoration(color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(25.0)),
+          margin:
+              EdgeInsets.symmetric(horizontal: constraints.maxWidth * (0.1)),
+          decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(25.0)),
           height: constraints.maxHeight * (0.115),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -495,9 +594,16 @@ class _RoomDialogState extends State<RoomDialog> {
                   if (state is BattleRoomCreated) {
                     //wait for others
                     Navigator.of(context).pop();
-                    showDialog(context: context, builder: (context) => WaitingForPlayesDialog(quizType: QuizTypes.battle, battleLbl: "playFrd"));
+                    showDialog(
+                        context: context,
+                        builder: (context) => WaitingForPlayesDialog(
+                            quizType: QuizTypes.battle, battleLbl: "playFrd"));
                   } else if (state is BattleRoomFailure) {
-                    UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
+                    UiUtils.errorMessageDialog(
+                        context,
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(
+                                state.errorMessageCode)));
                   }
                 },
                 builder: (context, state) {
@@ -505,15 +611,26 @@ class _RoomDialogState extends State<RoomDialog> {
                     onTap: state is BattleRoomCreating
                         ? () {}
                         : () {
-                            if (isCategoryEnabled() && getCategoryId().isEmpty) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
+                            if (isCategoryEnabled() &&
+                                getCategoryId().isEmpty) {
+                              UiUtils.errorMessageDialog(
+                                  context,
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues(
+                                          pleaseSelectCategoryKey)!);
                               return;
                             }
                             if (entryFee < 0) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey)!);
+                              UiUtils.errorMessageDialog(
+                                  context,
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues(
+                                          moreThanZeroCoinsKey)!);
                               return;
                             }
-                            UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
+                            UserProfile userProfile = context
+                                .read<UserDetailsCubit>()
+                                .getUserProfile();
 
                             if (int.parse(userProfile.coins!) < entryFee) {
                               showAdDialog();
@@ -527,16 +644,23 @@ class _RoomDialogState extends State<RoomDialog> {
                                   name: userProfile.name,
                                   profileUrl: userProfile.profileUrl,
                                   uid: userProfile.userId,
-                                  questionLanguageId: UiUtils.getCurrentQuestionLanguageId(context),
+                                  questionLanguageId:
+                                      UiUtils.getCurrentQuestionLanguageId(
+                                          context),
                                 );
                           },
                     widthPercentage: UiUtils.dailogWidthPercentage - 0.1,
                     backgroundColor: Theme.of(context).primaryColor,
-                    buttonTitle: state is BattleRoomCreating ? AppLocalization.of(context)!.getTranslatedValues(creatingLoadingLbl) : AppLocalization.of(context)!.getTranslatedValues(createRoomKey),
+                    buttonTitle: state is BattleRoomCreating
+                        ? AppLocalization.of(context)!
+                            .getTranslatedValues(creatingLoadingLbl)
+                        : AppLocalization.of(context)!
+                            .getTranslatedValues(createRoomKey),
                     radius: 25.0,
                     elevation: 5.0,
                     titleColor: Theme.of(context).backgroundColor,
-                    shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                    shadowColor:
+                        Theme.of(context).primaryColor.withOpacity(0.3),
                     showBorder: false,
                     height: constraints.maxHeight * (0.115),
                     fontWeight: FontWeight.bold,
@@ -556,7 +680,11 @@ class _RoomDialogState extends State<RoomDialog> {
                               battleLbl: "",
                             ));
                   } else if (state is MultiUserBattleRoomFailure) {
-                    UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)));
+                    UiUtils.errorMessageDialog(
+                        context,
+                        AppLocalization.of(context)!.getTranslatedValues(
+                            convertErrorCodeToLanguageKey(
+                                state.errorMessageCode)));
                   }
                 },
                 builder: (context, state) {
@@ -564,16 +692,27 @@ class _RoomDialogState extends State<RoomDialog> {
                     onTap: state is MultiUserBattleRoomInProgress
                         ? () {}
                         : () {
-                            if (isCategoryEnabled() && getCategoryId().isEmpty) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(pleaseSelectCategoryKey)!);
+                            if (isCategoryEnabled() &&
+                                getCategoryId().isEmpty) {
+                              UiUtils.errorMessageDialog(
+                                  context,
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues(
+                                          pleaseSelectCategoryKey)!);
                               return;
                             }
                             if (entryFee < 0) {
-                              UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(moreThanZeroCoinsKey)!);
+                              UiUtils.errorMessageDialog(
+                                  context,
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues(
+                                          moreThanZeroCoinsKey)!);
 
                               return;
                             }
-                            UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
+                            UserProfile userProfile = context
+                                .read<UserDetailsCubit>()
+                                .getUserProfile();
 
                             if (int.parse(userProfile.coins!) < entryFee) {
                               showAdDialog();
@@ -586,16 +725,23 @@ class _RoomDialogState extends State<RoomDialog> {
                                   profileUrl: userProfile.profileUrl,
                                   roomType: "public",
                                   uid: userProfile.userId,
-                                  questionLanguageId: UiUtils.getCurrentQuestionLanguageId(context),
+                                  questionLanguageId:
+                                      UiUtils.getCurrentQuestionLanguageId(
+                                          context),
                                 );
                           },
                     widthPercentage: UiUtils.dailogWidthPercentage - 0.1,
                     backgroundColor: Theme.of(context).primaryColor,
-                    buttonTitle: state is MultiUserBattleRoomInProgress ? AppLocalization.of(context)!.getTranslatedValues(creatingLoadingLbl) : AppLocalization.of(context)!.getTranslatedValues(createRoomKey),
+                    buttonTitle: state is MultiUserBattleRoomInProgress
+                        ? AppLocalization.of(context)!
+                            .getTranslatedValues(creatingLoadingLbl)
+                        : AppLocalization.of(context)!
+                            .getTranslatedValues(createRoomKey),
                     radius: 25.0,
                     elevation: 5.0,
                     titleColor: Theme.of(context).backgroundColor,
-                    shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                    shadowColor:
+                        Theme.of(context).primaryColor.withOpacity(0.3),
                     showBorder: false,
                     height: constraints.maxHeight * (0.115),
                     fontWeight: FontWeight.bold,
@@ -613,7 +759,8 @@ class _RoomDialogState extends State<RoomDialog> {
         //means user is in create tab
         if (currentSelectedTab == 1) {
           if (widget.quizType == QuizTypes.groupPlay) {
-            if (context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
+            if (context.read<MultiUserBattleRoomCubit>().state
+                is MultiUserBattleRoomInProgress) {
               return Future.value(false);
             }
             return Future.value(true);
@@ -627,7 +774,8 @@ class _RoomDialogState extends State<RoomDialog> {
         //user in join tab
         else {
           if (widget.quizType == QuizTypes.groupPlay) {
-            if (context.read<MultiUserBattleRoomCubit>().state is MultiUserBattleRoomInProgress) {
+            if (context.read<MultiUserBattleRoomCubit>().state
+                is MultiUserBattleRoomInProgress) {
               return Future.value(false);
             }
             return Future.value(true);
@@ -642,7 +790,8 @@ class _RoomDialogState extends State<RoomDialog> {
       onBackButtonPress: () {
         if (currentSelectedTab == 1) {
           if (widget.quizType == QuizTypes.groupPlay) {
-            if (context.read<MultiUserBattleRoomCubit>().state is! MultiUserBattleRoomInProgress) {
+            if (context.read<MultiUserBattleRoomCubit>().state
+                is! MultiUserBattleRoomInProgress) {
               Navigator.of(context).pop();
             }
           } else {
@@ -652,7 +801,8 @@ class _RoomDialogState extends State<RoomDialog> {
           }
         } else {
           if (widget.quizType == QuizTypes.groupPlay) {
-            if (context.read<MultiUserBattleRoomCubit>().state is! MultiUserBattleRoomInProgress) {
+            if (context.read<MultiUserBattleRoomCubit>().state
+                is! MultiUserBattleRoomInProgress) {
               Navigator.of(context).pop();
             }
           } else {
@@ -673,8 +823,16 @@ class _RoomDialogState extends State<RoomDialog> {
                 children: [
                   Row(
                     children: [
-                      _buildTabContainer(1, AppLocalization.of(context)!.getTranslatedValues("creatingLbl")!, constraints),
-                      _buildTabContainer(2, AppLocalization.of(context)!.getTranslatedValues("joinLbl")!, constraints),
+                      _buildTabContainer(
+                          1,
+                          AppLocalization.of(context)!
+                              .getTranslatedValues("creatingLbl")!,
+                          constraints),
+                      _buildTabContainer(
+                          2,
+                          AppLocalization.of(context)!
+                              .getTranslatedValues("joinLbl")!,
+                          constraints),
                     ],
                   ),
                   // Container(
@@ -684,7 +842,9 @@ class _RoomDialogState extends State<RoomDialog> {
                   SizedBox(
                     height: constraints.maxHeight * (0.05),
                   ),
-                  currentSelectedTab == 1 ? _buildCreateRoomTab(constraints) : _buildJoinRoomTab(constraints)
+                  currentSelectedTab == 1
+                      ? _buildCreateRoomTab(constraints)
+                      : _buildJoinRoomTab(constraints)
                   //
                 ],
               ),
