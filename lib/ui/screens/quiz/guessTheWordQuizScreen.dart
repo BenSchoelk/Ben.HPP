@@ -30,7 +30,8 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 class GuessTheWordQuizScreen extends StatefulWidget {
   final String type; //category or subcategory
   final String typeId; //id of category or subcategory
-  GuessTheWordQuizScreen({Key? key, required this.type, required this.typeId}) : super(key: key);
+  GuessTheWordQuizScreen({Key? key, required this.type, required this.typeId})
+      : super(key: key);
 
   @override
   _GuessTheWordQuizScreenState createState() => _GuessTheWordQuizScreenState();
@@ -41,9 +42,11 @@ class GuessTheWordQuizScreen extends StatefulWidget {
         builder: (context) => MultiBlocProvider(
               providers: [
                 BlocProvider<UpdateScoreAndCoinsCubit>(
-                  create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  create: (_) =>
+                      UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
                 ),
-                BlocProvider<GuessTheWordQuizCubit>(create: (_) => GuessTheWordQuizCubit(QuizRepository()))
+                BlocProvider<GuessTheWordQuizCubit>(
+                    create: (_) => GuessTheWordQuizCubit(QuizRepository()))
               ],
               child: GuessTheWordQuizScreen(
                 type: arguments['type'],
@@ -53,8 +56,12 @@ class GuessTheWordQuizScreen extends StatefulWidget {
   }
 }
 
-class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with TickerProviderStateMixin {
-  late AnimationController timerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: guessTheWordQuestionDurationInSeconds))..addStatusListener(currentUserTimerAnimationStatusListener);
+class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
+    with TickerProviderStateMixin {
+  late AnimationController timerAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: guessTheWordQuestionDurationInSeconds))
+    ..addStatusListener(currentUserTimerAnimationStatusListener);
 
   //to animate the question container
   late AnimationController questionAnimationController;
@@ -78,7 +85,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
 
   bool isExitDialogOpen = false;
 
-  late List<GlobalKey<GuessTheWordQuestionContainerState>> questionContainerKeys = [];
+  late List<GlobalKey<GuessTheWordQuestionContainerState>>
+      questionContainerKeys = [];
 
   @override
   void initState() {
@@ -100,7 +108,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
 
   @override
   void dispose() {
-    timerAnimationController.removeStatusListener(currentUserTimerAnimationStatusListener);
+    timerAnimationController
+        .removeStatusListener(currentUserTimerAnimationStatusListener);
     timerAnimationController.dispose();
     questionContentAnimationController.dispose();
     questionAnimationController.dispose();
@@ -109,13 +118,26 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   }
 
   void initializeAnimation() {
-    questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+    questionAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    questionContentAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
 
-    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionAnimationController, curve: Curves.easeInOut));
-    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
-    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
-    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionContentAnimationController, curve: Curves.easeInQuad));
+    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionAnimationController, curve: Curves.easeInOut));
+    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
+    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
+    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionContentAnimationController,
+            curve: Curves.easeInQuad));
   }
 
   void toggleSettingDialog() {
@@ -125,7 +147,9 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   //listener for current user timer
   void currentUserTimerAnimationStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      submitAnswer(questionContainerKeys[_currentQuestionIndex].currentState!.getSubmittedAnswer());
+      submitAnswer(questionContainerKeys[_currentQuestionIndex]
+          .currentState!
+          .getSubmittedAnswer());
     }
   }
 
@@ -142,7 +166,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
       "quizType": QuizTypes.guessTheWord,
       "numberOfPlayer": 1,
       "timeTakenToCompleteQuiz": timeTakenToCompleteQuiz,
-      "guessTheWordQuestions": context.read<GuessTheWordQuizCubit>().getQuestions(),
+      "guessTheWordQuestions":
+          context.read<GuessTheWordQuizCubit>().getQuestions(),
     });
   }
 
@@ -151,13 +176,18 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
     updateTimeTakenToCompleteQuiz();
     final guessTheWordQuizCubit = context.read<GuessTheWordQuizCubit>();
     //if answer not submitted then submit answer
-    if (!guessTheWordQuizCubit.getQuestions()[_currentQuestionIndex].hasAnswered) {
+    if (!guessTheWordQuizCubit
+        .getQuestions()[_currentQuestionIndex]
+        .hasAnswered) {
       //submitted answer
-      guessTheWordQuizCubit.submitAnswer(guessTheWordQuizCubit.getQuestions()[_currentQuestionIndex].id, submittedAnswer);
+      guessTheWordQuizCubit.submitAnswer(
+          guessTheWordQuizCubit.getQuestions()[_currentQuestionIndex].id,
+          submittedAnswer);
       //wait for some seconds
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
       //if currentQuestion is last then move user to result screen
-      if (_currentQuestionIndex == (guessTheWordQuizCubit.getQuestions().length - 1)) {
+      if (_currentQuestionIndex ==
+          (guessTheWordQuizCubit.getQuestions().length - 1)) {
         navigateToResultScreen();
       } else {
         //change question
@@ -168,7 +198,10 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   }
 
   void updateTimeTakenToCompleteQuiz() {
-    timeTakenToCompleteQuiz = timeTakenToCompleteQuiz + UiUtils.timeTakenToSubmitAnswer(animationControllerValue: timerAnimationController.value, quizType: QuizTypes.guessTheWord);
+    timeTakenToCompleteQuiz = timeTakenToCompleteQuiz +
+        UiUtils.timeTakenToSubmitAnswer(
+            animationControllerValue: timerAnimationController.value,
+            quizType: QuizTypes.guessTheWord);
     print("Time to complete quiz: $timeTakenToCompleteQuiz");
   }
 
@@ -189,8 +222,10 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
   }
 
   Widget _buildQuesitons(GuessTheWordQuizCubit guessTheWordQuizCubit) {
-    return BlocBuilder<GuessTheWordQuizCubit, GuessTheWordQuizState>(builder: (context, state) {
-      if (state is GuessTheWordQuizIntial || state is GuessTheWordQuizFetchInProgress) {
+    return BlocBuilder<GuessTheWordQuizCubit, GuessTheWordQuizState>(
+        builder: (context, state) {
+      if (state is GuessTheWordQuizIntial ||
+          state is GuessTheWordQuizFetchInProgress) {
         return Center(
           child: CircularProgressContainer(
             useWhiteLoader: true,
@@ -203,7 +238,6 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
           child: QuestionsContainer(
             timerAnimationController: timerAnimationController,
             quizType: QuizTypes.guessTheWord,
-            toggleSettingDialog: toggleSettingDialog,
             showAnswerCorrectness: true,
             lifeLines: {},
             bookmarkButton: Container(),
@@ -219,7 +253,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
             questionSlideAnimation: questionSlideAnimation,
             currentQuestionIndex: _currentQuestionIndex,
             questionAnimationController: questionAnimationController,
-            questionContentAnimationController: questionContentAnimationController,
+            questionContentAnimationController:
+                questionContentAnimationController,
           ),
         );
       }
@@ -227,7 +262,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
         return Center(
           child: ErrorContainer(
               showBackButton: true,
-              errorMessage: AppLocalization.of(context)?.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+              errorMessage: AppLocalization.of(context)?.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage)),
               onTapRetry: () {
                 _getQuestions();
               },
@@ -250,13 +286,17 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
               child: CustomRoundedButton(
                 widthPercentage: 0.5,
                 backgroundColor: Theme.of(context).primaryColor,
-                buttonTitle: AppLocalization.of(context)!.getTranslatedValues("submitBtn")!.toUpperCase(),
+                buttonTitle: AppLocalization.of(context)!
+                    .getTranslatedValues("submitBtn")!
+                    .toUpperCase(),
                 elevation: 5.0,
                 shadowColor: Colors.black45,
                 titleColor: Theme.of(context).backgroundColor,
                 fontWeight: FontWeight.bold,
                 onTap: () {
-                  submitAnswer(questionContainerKeys[_currentQuestionIndex].currentState!.getSubmittedAnswer());
+                  submitAnswer(questionContainerKeys[_currentQuestionIndex]
+                      .currentState!
+                      .getSubmittedAnswer());
                 },
                 radius: 10.0,
                 showBorder: false,
@@ -274,30 +314,33 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
     return Align(
         alignment: Alignment.topLeft,
         child: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
             child: CustomBackButton(
               iconColor: Theme.of(context).primaryColor,
-              bgColor: Theme.of(context).backgroundColor,
-              isShowDialog: true,
             )));
   }
 
   @override
   Widget build(BuildContext context) {
-    final GuessTheWordQuizCubit guessTheWordQuizCubit = context.read<GuessTheWordQuizCubit>();
+    final GuessTheWordQuizCubit guessTheWordQuizCubit =
+        context.read<GuessTheWordQuizCubit>();
     return WillPopScope(
       onWillPop: () {
         isExitDialogOpen = true;
-        showDialog(context: context, builder: (_) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
+        showDialog(context: context, builder: (_) => ExitGameDailog())
+            .then((value) => isExitDialogOpen = false);
         return Future.value(false);
       },
       child: BlocListener<GuessTheWordQuizCubit, GuessTheWordQuizState>(
         bloc: guessTheWordQuizCubit,
         listener: (context, state) {
           if (state is GuessTheWordQuizFetchSuccess) {
-            if (_currentQuestionIndex == 0 && !state.questions[_currentQuestionIndex].hasAnswered) {
+            if (_currentQuestionIndex == 0 &&
+                !state.questions[_currentQuestionIndex].hasAnswered) {
               state.questions.forEach((element) {
-                questionContainerKeys.add(GlobalKey<GuessTheWordQuestionContainerState>());
+                questionContainerKeys
+                    .add(GlobalKey<GuessTheWordQuestionContainerState>());
               });
               //start timer
               timerAnimationController.forward();
@@ -314,9 +357,11 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen> with Ti
                 child: QuizPlayAreaBackgroundContainer(heightPercentage: 0.885),
               ),
               Align(
-                alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
+                alignment:
+                    Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top + 7.5),
                   child: HorizontalTimerContainer(
                     timerAnimationController: timerAnimationController,
                   ),

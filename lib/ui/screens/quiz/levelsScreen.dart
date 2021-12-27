@@ -18,7 +18,9 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 class LevelsScreen extends StatefulWidget {
   final String maxLevel;
   final String categoryId;
-  const LevelsScreen({Key? key, required this.maxLevel, required this.categoryId}) : super(key: key);
+  const LevelsScreen(
+      {Key? key, required this.maxLevel, required this.categoryId})
+      : super(key: key);
 
   @override
   _LevelsScreenState createState() => _LevelsScreenState();
@@ -58,7 +60,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
       padding: const EdgeInsetsDirectional.only(top: 30, start: 20, end: 20),
       child: CustomBackButton(
         iconColor: Theme.of(context).primaryColor,
-        isShowDialog: false,
       ),
     );
   }
@@ -74,7 +75,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
             //
           },
           builder: (context, state) {
-            if (state is UnlockedLevelInitial || state is UnlockedLevelFetchInProgress) {
+            if (state is UnlockedLevelInitial ||
+                state is UnlockedLevelFetchInProgress) {
               return Center(
                 child: CircularProgressContainer(useWhiteLoader: false),
               );
@@ -82,7 +84,9 @@ class _LevelsScreenState extends State<LevelsScreen> {
             if (state is UnlockedLevelFetchFailure) {
               return Center(
                 child: ErrorContainer(
-                  errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
+                  errorMessage: AppLocalization.of(context)!
+                      .getTranslatedValues(
+                          convertErrorCodeToLanguageKey(state.errorMessage))!,
                   onTapRetry: () {
                     getUnlockedLevelData();
                   },
@@ -90,7 +94,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
                 ),
               );
             }
-            int unlockedLevel = (state as UnlockedLevelFetchSuccess).unlockedLevel;
+            int unlockedLevel =
+                (state as UnlockedLevelFetchSuccess).unlockedLevel;
             return ListView.builder(
                 itemCount: int.parse(widget.maxLevel),
                 itemBuilder: (context, index) {
@@ -99,7 +104,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
                       //index start with 0 so we comparing (index + 1)
                       if ((index + 1) <= unlockedLevel) {
                         //replacing this page
-                        Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
+                        Navigator.of(context)
+                            .pushReplacementNamed(Routes.quiz, arguments: {
                           "numberOfPlayer": 1,
                           "quizType": QuizTypes.quizZone,
                           "categoryId": widget.categoryId,
@@ -112,7 +118,12 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           "quizName": "Quiz Zone"
                         });
                       } else {
-                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(levelLockedCode))!, context, false);
+                        UiUtils.setSnackbar(
+                            AppLocalization.of(context)!.getTranslatedValues(
+                                convertErrorCodeToLanguageKey(
+                                    levelLockedCode))!,
+                            context,
+                            false);
                       }
                     },
                     child: Opacity(
@@ -126,7 +137,9 @@ class _LevelsScreenState extends State<LevelsScreen> {
                         height: 75.0,
                         margin: EdgeInsets.only(bottom: 20.0),
                         child: Text(
-                          AppLocalization.of(context)!.getTranslatedValues("levelLbl")! + " ${index + 1}",
+                          AppLocalization.of(context)!
+                                  .getTranslatedValues("levelLbl")! +
+                              " ${index + 1}",
                           style: TextStyle(
                             fontSize: 20.0,
                             color: Theme.of(context).backgroundColor,

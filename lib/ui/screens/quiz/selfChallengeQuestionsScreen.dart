@@ -35,10 +35,17 @@ class SelfChallengeQuestionsScreen extends StatefulWidget {
   final String? subcategoryId;
   final int? minutes;
   final String? numberOfQuestions;
-  SelfChallengeQuestionsScreen({Key? key, required this.categoryId, required this.minutes, required this.numberOfQuestions, required this.subcategoryId}) : super(key: key);
+  SelfChallengeQuestionsScreen(
+      {Key? key,
+      required this.categoryId,
+      required this.minutes,
+      required this.numberOfQuestions,
+      required this.subcategoryId})
+      : super(key: key);
 
   @override
-  _SelfChallengeQuestionsScreenState createState() => _SelfChallengeQuestionsScreenState();
+  _SelfChallengeQuestionsScreenState createState() =>
+      _SelfChallengeQuestionsScreenState();
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map? arguments = routeSettings.arguments as Map<dynamic, dynamic>?;
@@ -47,8 +54,10 @@ class SelfChallengeQuestionsScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(
                 providers: [
-                  BlocProvider<QuestionsCubit>(create: (_) => QuestionsCubit(QuizRepository())),
-                  BlocProvider<UpdateBookmarkCubit>(create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
+                  BlocProvider<QuestionsCubit>(
+                      create: (_) => QuestionsCubit(QuizRepository())),
+                  BlocProvider<UpdateBookmarkCubit>(
+                      create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
                 ],
                 child: SelfChallengeQuestionsScreen(
                   categoryId: arguments!['categoryId'],
@@ -59,7 +68,8 @@ class SelfChallengeQuestionsScreen extends StatefulWidget {
   }
 }
 
-class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScreen> with TickerProviderStateMixin {
+class _SelfChallengeQuestionsScreenState
+    extends State<SelfChallengeQuestionsScreen> with TickerProviderStateMixin {
   int currentQuestionIndex = 0;
   late List<Question> ques;
   late AnimationController questionAnimationController;
@@ -94,26 +104,45 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
   @override
   void initState() {
     initializeAnimation();
-    timerAnimationController = AnimationController(vsync: this, duration: Duration(minutes: widget.minutes!))..addStatusListener(currentUserTimerAnimationStatusListener);
+    timerAnimationController = AnimationController(
+        vsync: this, duration: Duration(minutes: widget.minutes!))
+      ..addStatusListener(currentUserTimerAnimationStatusListener);
 
-    animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
-    topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    topContainerAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _getQuestions();
     super.initState();
   }
 
   void initializeAnimation() {
-    questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250))..forward();
-    questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 525));
-    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionAnimationController, curve: Curves.easeInOut));
-    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
-    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionContentAnimationController, curve: Curves.easeInQuad));
-    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
+    questionContentAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250))
+          ..forward();
+    questionAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 525));
+    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionAnimationController, curve: Curves.easeInOut));
+    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
+    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionContentAnimationController,
+            curve: Curves.easeInQuad));
+    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
   }
 
   @override
   void dispose() {
-    timerAnimationController.removeStatusListener(currentUserTimerAnimationStatusListener);
+    timerAnimationController
+        .removeStatusListener(currentUserTimerAnimationStatusListener);
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
@@ -122,7 +151,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
 
   void updateSubmittedAnswerForBookmark(Question question) {
     if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
-      context.read<BookmarkCubit>().updateSubmittedAnswerId(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+      context.read<BookmarkCubit>().updateSubmittedAnswerId(
+          context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
     }
   }
 
@@ -130,7 +160,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
     isSettingDialogOpen = !isSettingDialogOpen;
   }
 
-  void changeQuestion({required bool increaseIndex, required int newQuestionIndex}) {
+  void changeQuestion(
+      {required bool increaseIndex, required int newQuestionIndex}) {
     questionAnimationController.forward(from: 0.0).then((value) {
       //need to dispose the animation controllers
       questionAnimationController.dispose();
@@ -160,10 +191,12 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
 
   //update answer locally and on cloud
   void submitAnswer(String submittedAnswer) async {
-    context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(ques[currentQuestionIndex].id, submittedAnswer);
+    context.read<QuestionsCubit>().updateQuestionWithAnswerAndLifeline(
+        ques[currentQuestionIndex].id, submittedAnswer);
     //change question
     await Future.delayed(Duration(milliseconds: 500));
-    updateSubmittedAnswerForBookmark(context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+    updateSubmittedAnswerForBookmark(
+        context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
   }
 
   //listener for current user timer
@@ -184,8 +217,13 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
       Navigator.of(context).pop();
     }
 
-    Navigator.of(context)
-        .pushReplacementNamed(Routes.result, arguments: {"numberOfPlayer": 1, "myPoints": context.read<QuestionsCubit>().currentPoints(), "quizType": QuizTypes.selfChallenge, "questions": context.read<QuestionsCubit>().questions(), "entryFee": 0});
+    Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {
+      "numberOfPlayer": 1,
+      "myPoints": context.read<QuestionsCubit>().currentPoints(),
+      "quizType": QuizTypes.selfChallenge,
+      "questions": context.read<QuestionsCubit>().questions(),
+      "entryFee": 0
+    });
   }
 
   Widget hasQuestionAttemptedContainer(int questionIndex, bool attempted) {
@@ -198,7 +236,9 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-        color: attempted ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
+        color: attempted
+            ? Theme.of(context).primaryColor
+            : Theme.of(context).colorScheme.secondary,
         height: 30.0,
         width: 30.0,
         child: Text(
@@ -218,8 +258,12 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
       context: context,
       builder: (context) => Container(
           padding: EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.6)),
+          decoration: BoxDecoration(
+              color: Theme.of(context).backgroundColor,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * (0.6)),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -237,7 +281,10 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                   ),
                 ),
                 Wrap(
-                  children: List.generate(questions.length, (index) => index).map((index) => hasQuestionAttemptedContainer(index, questions[index].attempted)).toList(),
+                  children: List.generate(questions.length, (index) => index)
+                      .map((index) => hasQuestionAttemptedContainer(
+                          index, questions[index].attempted))
+                      .toList(),
                 ),
                 SizedBox(
                   height: 20.0,
@@ -252,7 +299,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                     },
                     widthPercentage: MediaQuery.of(context).size.width,
                     backgroundColor: Theme.of(context).primaryColor,
-                    buttonTitle: AppLocalization.of(context)!.getTranslatedValues("submitBtn")!,
+                    buttonTitle: AppLocalization.of(context)!
+                        .getTranslatedValues("submitBtn")!,
                     radius: 10,
                     showBorder: false,
                     titleColor: Theme.of(context).backgroundColor,
@@ -282,13 +330,17 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                         width: 10.0,
                       ),
                       Text(
-                        AppLocalization.of(context)!.getTranslatedValues("attemptedLbl")!,
-                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).colorScheme.secondary),
+                        AppLocalization.of(context)!
+                            .getTranslatedValues("attemptedLbl")!,
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                       Spacer(),
                       CircleAvatar(
                         radius: 15,
-                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
                         child: Center(
                           child: Icon(
                             Icons.check,
@@ -301,8 +353,11 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                         width: 10.0,
                       ),
                       Text(
-                        AppLocalization.of(context)!.getTranslatedValues("unAttemptedLbl")!,
-                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).colorScheme.secondary),
+                        AppLocalization.of(context)!
+                            .getTranslatedValues("unAttemptedLbl")!,
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                     ],
                   ),
@@ -333,7 +388,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                       onPressed: () {
                         if (!questionAnimationController.isAnimating) {
                           if (currentQuestionIndex != 0) {
-                            changeQuestion(increaseIndex: false, newQuestionIndex: -1);
+                            changeQuestion(
+                                increaseIndex: false, newQuestionIndex: -1);
                           }
                         }
                       },
@@ -353,18 +409,23 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                     radius: 20,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: SvgPicture.asset(UiUtils.getImagePath("moveto_icon.svg")),
+                      child: SvgPicture.asset(
+                          UiUtils.getImagePath("moveto_icon.svg")),
                     ),
                   ),
                 ),
                 Spacer(),
                 Opacity(
-                  opacity: currentQuestionIndex != (state.questions.length - 1) ? 1.0 : 0.5,
+                  opacity: currentQuestionIndex != (state.questions.length - 1)
+                      ? 1.0
+                      : 0.5,
                   child: IconButton(
                       onPressed: () {
                         if (!questionAnimationController.isAnimating) {
-                          if (currentQuestionIndex != (state.questions.length - 1)) {
-                            changeQuestion(increaseIndex: true, newQuestionIndex: -1);
+                          if (currentQuestionIndex !=
+                              (state.questions.length - 1)) {
+                            changeQuestion(
+                                increaseIndex: true, newQuestionIndex: -1);
                           }
                         }
                       },
@@ -399,11 +460,10 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
     return Align(
         alignment: Alignment.topLeft,
         child: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
             child: CustomBackButton(
               iconColor: Theme.of(context).primaryColor,
-              bgColor: Theme.of(context).backgroundColor,
-              isShowDialog: true,
             )));
   }
 
@@ -413,7 +473,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
     return WillPopScope(
       onWillPop: () {
         isExitDialogOpen = true;
-        showDialog(context: context, builder: (context) => ExitGameDailog()).then((value) => isExitDialogOpen = false);
+        showDialog(context: context, builder: (context) => ExitGameDailog())
+            .then((value) => isExitDialogOpen = false);
         return Future.value(false);
       },
       child: Scaffold(
@@ -427,9 +488,11 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
               ),
             ),
             Align(
-              alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
+              alignment:
+                  Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7.5),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 7.5),
                 child: HorizontalTimerContainer(
                   timerAnimationController: timerAnimationController,
                 ),
@@ -445,7 +508,8 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                   }
                 },
                 builder: (context, state) {
-                  if (state is QuestionsFetchInProgress || state is QuestionsIntial) {
+                  if (state is QuestionsFetchInProgress ||
+                      state is QuestionsIntial) {
                     return Center(
                       child: CircularProgressContainer(
                         useWhiteLoader: true,
@@ -456,7 +520,9 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                     return Center(
                       child: ErrorContainer(
                         showBackButton: true,
-                        errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                        errorMessage: AppLocalization.of(context)!
+                            .getTranslatedValues(convertErrorCodeToLanguageKey(
+                                state.errorMessage)),
                         onTapRetry: () {
                           _getQuestions();
                         },
@@ -469,13 +535,14 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                   return Align(
                       alignment: Alignment.topCenter,
                       child: QuestionsContainer(
+                        timerAnimationController: timerAnimationController,
                         quizType: QuizTypes.selfChallenge,
-                        toggleSettingDialog: toggleSettingDialog,
                         showAnswerCorrectness: false,
                         lifeLines: {},
                         bookmarkButton: _buildBookmarkButton(quesCubit),
                         topPadding: 30.0,
-                        hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
+                        hasSubmittedAnswerForCurrentQuestion:
+                            hasSubmittedAnswerForCurrentQuestion,
                         questions: questions,
                         submitAnswer: submitAnswer,
                         questionContentAnimation: questionContentAnimation,
@@ -483,8 +550,10 @@ class _SelfChallengeQuestionsScreenState extends State<SelfChallengeQuestionsScr
                         questionScaleUpAnimation: questionScaleUpAnimation,
                         questionSlideAnimation: questionSlideAnimation,
                         currentQuestionIndex: currentQuestionIndex,
-                        questionAnimationController: questionAnimationController,
-                        questionContentAnimationController: questionContentAnimationController,
+                        questionAnimationController:
+                            questionAnimationController,
+                        questionContentAnimationController:
+                            questionContentAnimationController,
                         guessTheWordQuestions: [],
                         guessTheWordQuestionContainerKeys: [],
                         // quizType: QuizTypes.selfChallenge,

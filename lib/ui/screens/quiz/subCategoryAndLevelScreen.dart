@@ -36,7 +36,8 @@ class SubCategoryAndLevelScreen extends StatefulWidget {
                   create: (_) => UnlockedLevelCubit(QuizRepository()),
                 ),
               ],
-              child: SubCategoryAndLevelScreen(category: routeSettings.arguments as String?),
+              child: SubCategoryAndLevelScreen(
+                  category: routeSettings.arguments as String?),
             ));
   }
 }
@@ -66,14 +67,14 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
         children: [
           CustomBackButton(
             iconColor: Theme.of(context).primaryColor,
-            isShowDialog: false,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLevels(UnlockedLevelState state, List<Subcategory> subcategoryList) {
+  Widget _buildLevels(
+      UnlockedLevelState state, List<Subcategory> subcategoryList) {
     if (state is UnlockedLevelInitial) {
       return Container();
     }
@@ -87,11 +88,15 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
     if (state is UnlockedLevelFetchFailure) {
       return Center(
         child: ErrorContainer(
-          errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+          errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+              convertErrorCodeToLanguageKey(state.errorMessage)),
           topMargin: 0.0,
           onTapRetry: () {
             //fetch unlocked level for current selected subcategory
-            context.read<UnlockedLevelCubit>().fetchUnlockLevel(context.read<UserDetailsCubit>().getUserId(), widget.category, subcategoryList[currentIndex].id);
+            context.read<UnlockedLevelCubit>().fetchUnlockLevel(
+                context.read<UserDetailsCubit>().getUserId(),
+                widget.category,
+                subcategoryList[currentIndex].id);
           },
           showErrorImage: false,
         ),
@@ -108,7 +113,8 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
               //index start with 0 so we comparing (index + 1)
               if ((index + 1) <= unlockedLevel) {
                 //replacing this page
-                Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
+                Navigator.of(context)
+                    .pushReplacementNamed(Routes.quiz, arguments: {
                   "numberOfPlayer": 1,
                   "quizType": QuizTypes.quizZone,
                   "categoryId": "",
@@ -121,7 +127,11 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                   "quizName": "Quiz Zone"
                 });
               } else {
-                UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(levelLockedCode))!, context, false);
+                UiUtils.setSnackbar(
+                    AppLocalization.of(context)!.getTranslatedValues(
+                        convertErrorCodeToLanguageKey(levelLockedCode))!,
+                    context,
+                    false);
               }
             },
             child: Opacity(
@@ -138,7 +148,9 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                   vertical: 10.0,
                 ),
                 child: Text(
-                  AppLocalization.of(context)!.getTranslatedValues("levelLbl")! + " ${index + 1}",
+                  AppLocalization.of(context)!
+                          .getTranslatedValues("levelLbl")! +
+                      " ${index + 1}",
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Theme.of(context).backgroundColor,
@@ -169,12 +181,16 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                     listener: (context, state) {
                       if (state is SubCategoryFetchSuccess) {
                         if (currentIndex == 0) {
-                          context.read<UnlockedLevelCubit>().fetchUnlockLevel(context.read<UserDetailsCubit>().getUserId(), widget.category, state.subcategoryList.first.id);
+                          context.read<UnlockedLevelCubit>().fetchUnlockLevel(
+                              context.read<UserDetailsCubit>().getUserId(),
+                              widget.category,
+                              state.subcategoryList.first.id);
                         }
                       }
                     },
                     builder: (context, state) {
-                      if (state is SubCategoryFetchInProgress || state is SubCategoryInitial) {
+                      if (state is SubCategoryFetchInProgress ||
+                          state is SubCategoryInitial) {
                         return Center(
                           child: CircularProgressContainer(
                             useWhiteLoader: false,
@@ -184,14 +200,20 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                       if (state is SubCategoryFetchFailure) {
                         return ErrorContainer(
                           errorMessageColor: Theme.of(context).primaryColor,
-                          errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                          errorMessage: AppLocalization.of(context)!
+                              .getTranslatedValues(
+                                  convertErrorCodeToLanguageKey(
+                                      state.errorMessage)),
                           showErrorImage: true,
                           onTapRetry: () {
-                            context.read<SubCategoryCubit>().fetchSubCategory(widget.category!);
+                            context
+                                .read<SubCategoryCubit>()
+                                .fetchSubCategory(widget.category!);
                           },
                         );
                       }
-                      final subCategoryList = (state as SubCategoryFetchSuccess).subcategoryList;
+                      final subCategoryList =
+                          (state as SubCategoryFetchSuccess).subcategoryList;
 
                       return Column(
                         children: [
@@ -204,7 +226,14 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                                     currentIndex = index;
                                   });
                                   //fetch unlocked level for current selected subcategory
-                                  context.read<UnlockedLevelCubit>().fetchUnlockLevel(context.read<UserDetailsCubit>().getUserId(), widget.category, subCategoryList[index].id);
+                                  context
+                                      .read<UnlockedLevelCubit>()
+                                      .fetchUnlockLevel(
+                                          context
+                                              .read<UserDetailsCubit>()
+                                              .getUserId(),
+                                          widget.category,
+                                          subCategoryList[index].id);
                                 },
                                 controller: pageController,
                                 itemBuilder: (context, index) {
@@ -221,7 +250,8 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                           Flexible(
                               child: ClipRRect(
                             borderRadius: BorderRadius.circular(25.0),
-                            child: BlocConsumer<UnlockedLevelCubit, UnlockedLevelState>(
+                            child: BlocConsumer<UnlockedLevelCubit,
+                                UnlockedLevelState>(
                               listener: (context, state) {},
                               builder: (context, state) {
                                 return AnimatedSwitcher(
@@ -251,21 +281,29 @@ class SubcategoryContainer extends StatefulWidget {
   final int index;
   final int currentIndex;
   final Subcategory subcategory;
-  SubcategoryContainer({Key? key, required this.currentIndex, required this.index, required this.subcategory}) : super(key: key);
+  SubcategoryContainer(
+      {Key? key,
+      required this.currentIndex,
+      required this.index,
+      required this.subcategory})
+      : super(key: key);
 
   @override
   _SubcategoryContainerState createState() => _SubcategoryContainerState();
 }
 
-class _SubcategoryContainerState extends State<SubcategoryContainer> with SingleTickerProviderStateMixin {
+class _SubcategoryContainerState extends State<SubcategoryContainer>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> scaleAnimation;
 
   @override
   void initState() {
-    animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
-    scaleAnimation = Tween<double>(begin: 0.75, end: 1.0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeInOut));
+    scaleAnimation = Tween<double>(begin: 0.75, end: 1.0).animate(
+        CurvedAnimation(parent: animationController, curve: Curves.easeInOut));
     if (widget.index == widget.currentIndex) {
       animationController.forward();
     }
@@ -297,7 +335,9 @@ class _SubcategoryContainerState extends State<SubcategoryContainer> with Single
         return Transform.scale(
           scale: scaleAnimation.value,
           child: Container(
-            decoration: BoxDecoration(color: Colors.primaries[widget.index].shade100, borderRadius: BorderRadius.circular(20.0)),
+            decoration: BoxDecoration(
+                color: Colors.primaries[widget.index].shade100,
+                borderRadius: BorderRadius.circular(20.0)),
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

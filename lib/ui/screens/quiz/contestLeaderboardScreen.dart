@@ -24,7 +24,8 @@ class ContestLeaderBoardScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (_) => BlocProvider<GetContestLeaderboardCubit>(
               create: (_) => GetContestLeaderboardCubit(QuizRepository()),
-              child: ContestLeaderBoardScreen(contestId: arguments!['contestId']),
+              child:
+                  ContestLeaderBoardScreen(contestId: arguments!['contestId']),
             ));
   }
 }
@@ -33,7 +34,9 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<GetContestLeaderboardCubit>().getContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), contestId: widget.contestId);
+    context.read<GetContestLeaderboardCubit>().getContestLeaderboard(
+        userId: context.read<UserDetailsCubit>().getUserId(),
+        contestId: widget.contestId);
   }
 
   @override
@@ -45,7 +48,6 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
           elevation: 0,
           leading: CustomBackButton(
             iconColor: Theme.of(context).primaryColor,
-            isShowDialog: false,
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -60,7 +62,8 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                 width: 5,
               ),
               Text(
-                AppLocalization.of(context)!.getTranslatedValues("contestLeaderBoardLbl")!,
+                AppLocalization.of(context)!
+                    .getTranslatedValues("contestLeaderBoardLbl")!,
                 style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ],
@@ -79,20 +82,28 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
         bloc: context.read<GetContestLeaderboardCubit>(),
         listener: (context, state) {},
         builder: (context, state) {
-          if (state is GetContestLeaderboardProgress || state is GetContestLeaderboardInitial) {
+          if (state is GetContestLeaderboardProgress ||
+              state is GetContestLeaderboardInitial) {
             return Center(
-              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).primaryColor)),
             );
           }
           if (state is GetContestLeaderboardFailure) {
             return ErrorContainer(
                 errorMessage: state.errorMessage,
                 onTapRetry: () {
-                  context.read<GetContestLeaderboardCubit>().getContestLeaderboard(userId: context.read<UserDetailsCubit>().getUserId(), contestId: widget.contestId);
+                  context
+                      .read<GetContestLeaderboardCubit>()
+                      .getContestLeaderboard(
+                          userId: context.read<UserDetailsCubit>().getUserId(),
+                          contestId: widget.contestId);
                 },
                 showErrorImage: true);
           }
-          final getContestLeaderboardList = (state as GetContestLeaderboardSuccess).getContestLeaderboardList;
+          final getContestLeaderboardList =
+              (state as GetContestLeaderboardSuccess).getContestLeaderboardList;
           return Container(
               height: MediaQuery.of(context).size.height,
               child: Column(children: [
@@ -101,7 +112,8 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                     height: MediaQuery.of(context).size.height * .28,
                     child: LayoutBuilder(builder: (context, constraints) {
                       double profileRadiusPercentage = 0.0;
-                      if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
+                      if (constraints.maxHeight <
+                          UiUtils.profileHeightBreakPointResultScreen) {
                         profileRadiusPercentage = 0.175;
                       } else {
                         profileRadiusPercentage = 0.2;
@@ -111,126 +123,211 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                         children: [
                           getContestLeaderboardList.length > 1
                               ? Container(
-                                  padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .07),
+                                  padding: EdgeInsetsDirectional.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          .07),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: MediaQuery.of(context).size.height * .115,
-                                        width: MediaQuery.of(context).size.width * .22,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .115,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .22,
                                         child: Stack(
                                           children: [
                                             Container(
-                                                height: MediaQuery.of(context).size.height * .1,
-                                                width: MediaQuery.of(context).size.width * .22,
-                                                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor)),
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .1,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .22,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        width: 1.0,
+                                                        color: Theme.of(context)
+                                                            .backgroundColor)),
                                                 child: CircleAvatar(
-                                                    radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
-                                                    backgroundImage: CachedNetworkImageProvider(
-                                                      getContestLeaderboardList[1].profile!,
+                                                    radius: constraints
+                                                            .maxHeight *
+                                                        (profileRadiusPercentage -
+                                                            0.0535),
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                      getContestLeaderboardList[
+                                                              1]
+                                                          .profile!,
                                                     ))),
                                             Positioned(
-                                              left: MediaQuery.of(context).size.width * .06,
-                                              top: MediaQuery.of(context).size.height * .07,
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .06,
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .07,
                                               child: CircleAvatar(
                                                   radius: 15,
-                                                  backgroundColor: Theme.of(context).primaryColor,
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor,
                                                   child: Text(
                                                     "2\u207f\u1d48",
-                                                    style: TextStyle(color: Theme.of(context).backgroundColor),
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .backgroundColor),
                                                   )),
                                             ),
                                           ],
                                         ),
                                       ),
                                       Container(
-                                        width: MediaQuery.of(context).size.width * .2,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .2,
                                         child: Center(
                                           child: Text(
-                                            getContestLeaderboardList[1].name ?? "...",
+                                            getContestLeaderboardList[1].name ??
+                                                "...",
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(color: Theme.of(context).primaryColor),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
                                           ),
                                         ),
                                       ),
                                       Container(
-                                          width: MediaQuery.of(context).size.width * .2,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .2,
                                           child: Center(
                                             child: Text(
-                                              getContestLeaderboardList[1].score ?? "...",
+                                              getContestLeaderboardList[1]
+                                                      .score ??
+                                                  "...",
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
                                           )),
                                     ],
                                   ),
                                 )
                               : Container(
-                                  height: MediaQuery.of(context).size.height * .1,
-                                  width: MediaQuery.of(context).size.width * .22,
+                                  height:
+                                      MediaQuery.of(context).size.height * .1,
+                                  width:
+                                      MediaQuery.of(context).size.width * .22,
                                 ),
                           Container(
                             child: Column(
                               children: [
-                                SvgPicture.asset(UiUtils.getImagePath("Rankone_icon.svg"), height: MediaQuery.of(context).size.height * .025, color: primaryColor, width: MediaQuery.of(context).size.width * .02),
+                                SvgPicture.asset(
+                                    UiUtils.getImagePath("Rankone_icon.svg"),
+                                    height: MediaQuery.of(context).size.height *
+                                        .025,
+                                    color: primaryColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        .02),
                                 Container(
-                                  decoration: BoxDecoration(shape: BoxShape.circle),
-                                  height: MediaQuery.of(context).size.height * .16,
-                                  width: MediaQuery.of(context).size.width * .26,
+                                  decoration:
+                                      BoxDecoration(shape: BoxShape.circle),
+                                  height:
+                                      MediaQuery.of(context).size.height * .16,
+                                  width:
+                                      MediaQuery.of(context).size.width * .26,
                                   child: Stack(
                                     children: [
                                       Container(
-                                        height: MediaQuery.of(context).size.height * .14,
-                                        width: MediaQuery.of(context).size.width * .26,
-                                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 3.0, color: Theme.of(context).primaryColor)),
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .14,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .26,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                width: 3.0,
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
                                         child: Card(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(100),
+                                            borderRadius:
+                                                BorderRadius.circular(100),
                                           ),
                                           child: CircleAvatar(
-                                              radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
-                                              backgroundImage: CachedNetworkImageProvider(
-                                                getContestLeaderboardList[0].profile!,
+                                              radius: constraints.maxHeight *
+                                                  (profileRadiusPercentage -
+                                                      0.0535),
+                                              backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                getContestLeaderboardList[0]
+                                                    .profile!,
                                               )),
                                         ),
                                       ),
                                       Positioned(
-                                        left: MediaQuery.of(context).size.width * .08,
-                                        top: MediaQuery.of(context).size.height * .11,
+                                        left:
+                                            MediaQuery.of(context).size.width *
+                                                .08,
+                                        top:
+                                            MediaQuery.of(context).size.height *
+                                                .11,
                                         child: CircleAvatar(
                                             radius: 17,
-                                            backgroundColor: Theme.of(context).primaryColor,
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
                                             child: Text(
                                               "1\u02e2\u1d57",
-                                              style: TextStyle(color: Theme.of(context).backgroundColor),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .backgroundColor),
                                             )),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                    width: MediaQuery.of(context).size.width * .2,
+                                    width:
+                                        MediaQuery.of(context).size.width * .2,
                                     child: Center(
                                       child: Text(
-                                        getContestLeaderboardList[0].name ?? "...",
+                                        getContestLeaderboardList[0].name ??
+                                            "...",
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                         maxLines: 2,
-                                        style: TextStyle(color: Theme.of(context).primaryColor),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                     )),
                                 Container(
-                                    width: MediaQuery.of(context).size.width * .2,
+                                    width:
+                                        MediaQuery.of(context).size.width * .2,
                                     child: Center(
                                       child: Text(
-                                        getContestLeaderboardList[0].score ?? "...",
+                                        getContestLeaderboardList[0].score ??
+                                            "...",
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
-                                        style: TextStyle(color: Theme.of(context).primaryColor),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                     ))
                               ],
@@ -238,64 +335,115 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                           ),
                           getContestLeaderboardList.length > 2
                               ? Container(
-                                  padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .07),
+                                  padding: EdgeInsetsDirectional.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          .07),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: MediaQuery.of(context).size.height * .115,
-                                        width: MediaQuery.of(context).size.width * .22,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .115,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .22,
                                         child: Stack(
                                           children: [
                                             Container(
-                                                height: MediaQuery.of(context).size.height * .1,
-                                                width: MediaQuery.of(context).size.width * .22,
-                                                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor)),
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .1,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .22,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        width: 1.0,
+                                                        color: Theme.of(context)
+                                                            .backgroundColor)),
                                                 child: CircleAvatar(
-                                                    radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
-                                                    backgroundImage: CachedNetworkImageProvider(
-                                                      getContestLeaderboardList[2].profile ?? "",
+                                                    radius: constraints
+                                                            .maxHeight *
+                                                        (profileRadiusPercentage -
+                                                            0.0535),
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                      getContestLeaderboardList[
+                                                                  2]
+                                                              .profile ??
+                                                          "",
                                                     ))),
                                             Positioned(
-                                                left: MediaQuery.of(context).size.width * .06,
-                                                top: MediaQuery.of(context).size.height * .07,
+                                                left: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .06,
+                                                top: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
                                                 child: CircleAvatar(
                                                     radius: 15,
-                                                    backgroundColor: Theme.of(context).primaryColor,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
                                                     child: Text(
                                                       "3\u02b3\u1d48",
-                                                      style: TextStyle(color: Theme.of(context).backgroundColor),
+                                                      style: TextStyle(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .backgroundColor),
                                                     ))),
                                           ],
                                         ),
                                       ),
                                       Container(
-                                          width: MediaQuery.of(context).size.width * .2,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .2,
                                           child: Center(
                                             child: Text(
-                                              getContestLeaderboardList[2].name ?? "...",
+                                              getContestLeaderboardList[2]
+                                                      .name ??
+                                                  "...",
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
                                           )),
                                       Container(
-                                          width: MediaQuery.of(context).size.width * .2,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .2,
                                           child: Center(
                                             child: Text(
-                                              getContestLeaderboardList[2].score ?? "...",
+                                              getContestLeaderboardList[2]
+                                                      .score ??
+                                                  "...",
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
-                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
                                           )),
                                     ],
                                   ),
                                 )
                               : Container(
-                                  height: MediaQuery.of(context).size.height * .1,
-                                  width: MediaQuery.of(context).size.width * .22,
+                                  height:
+                                      MediaQuery.of(context).size.height * .1,
+                                  width:
+                                      MediaQuery.of(context).size.width * .22,
                                 )
                         ],
                       );
@@ -315,44 +463,68 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                                 Expanded(
                                   flex: 1,
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .01, start: 10),
+                                    padding: EdgeInsetsDirectional.only(
+                                        top:
+                                            MediaQuery.of(context).size.height *
+                                                .01,
+                                        start: 10),
                                     child: Column(children: <Widget>[
                                       Text(
                                         "$i",
                                         style: TextStyle(fontSize: 18),
                                       ),
-                                      Icon(Icons.arrow_drop_up, color: Theme.of(context).primaryColor)
+                                      Icon(Icons.arrow_drop_up,
+                                          color: Theme.of(context).primaryColor)
                                     ]),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 9,
                                   child: Card(
-                                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                    color: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.1),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(35.0),
                                     ),
                                     child: ListTile(
                                       dense: true,
-                                      contentPadding: EdgeInsets.only(left: 0, right: 20),
+                                      contentPadding:
+                                          EdgeInsets.only(left: 0, right: 20),
                                       title: Text(
                                         getContestLeaderboardList[index].name!,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       leading: Container(
-                                        width: MediaQuery.of(context).size.width * .12,
-                                        height: MediaQuery.of(context).size.height * .3,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .12,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .3,
                                         decoration: BoxDecoration(
-                                          color: Theme.of(context).primaryColor.withOpacity(0.5),
+                                          color: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.5),
                                           shape: BoxShape.circle,
-                                          image: DecorationImage(image: NetworkImage(getContestLeaderboardList[index].profile!), fit: BoxFit.cover),
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  getContestLeaderboardList[
+                                                          index]
+                                                      .profile!),
+                                              fit: BoxFit.cover),
                                         ),
                                       ),
                                       trailing: Container(
-                                        width: MediaQuery.of(context).size.width * .1,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .1,
                                         child: Text(
-                                          UiUtils.formatNumber(int.parse(getContestLeaderboardList[index].score ?? "0")),
+                                          UiUtils.formatNumber(int.parse(
+                                              getContestLeaderboardList[index]
+                                                      .score ??
+                                                  "0")),
                                           maxLines: 1,
                                           softWrap: false,
                                           overflow: TextOverflow.ellipsis,
@@ -368,7 +540,11 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
                   child: ListTile(
                       title: Text(
                         "My Rank",
@@ -378,7 +554,8 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                       leading: Wrap(children: [
                         Container(
                           width: MediaQuery.of(context).size.width * .08,
-                          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .02),
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * .02),
                           child: Text(
                             QuizRemoteDataSource.rank,
                             overflow: TextOverflow.ellipsis,
@@ -389,19 +566,32 @@ class _ContestLeaderBoardScreen extends State<ContestLeaderBoardScreen> {
                         Container(
                             height: MediaQuery.of(context).size.height * .06,
                             width: MediaQuery.of(context).size.width * .13,
-                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor), image: new DecorationImage(fit: BoxFit.fill, image: NetworkImage(QuizRemoteDataSource.profile)))),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 1.0,
+                                    color: Theme.of(context).backgroundColor),
+                                image: new DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(
+                                        QuizRemoteDataSource.profile)))),
                       ]),
                       trailing: Container(
                         height: MediaQuery.of(context).size.height * .06,
                         width: MediaQuery.of(context).size.width * .25,
                         decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50.0), topLeft: Radius.circular(50.0), bottomRight: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(50.0),
+                              topLeft: Radius.circular(50.0),
+                              bottomRight: Radius.circular(20.0),
+                              topRight: Radius.circular(20.0)),
                         ),
                         child: Center(
                             child: Text(
                           QuizRemoteDataSource.score,
-                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                          style: TextStyle(
+                              color: Theme.of(context).backgroundColor),
                         )),
                       )),
                 ),

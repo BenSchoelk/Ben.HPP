@@ -23,6 +23,7 @@ class UiUtils {
   static double questionContainerHeightPercentage = 0.725;
   static double quizTypeMaxHeightPercentage = 0.275;
   static double quizTypeMinHeightPercentage = 0.185;
+  static double quesitonContainerWidthPercentage = 0.85;
 
   static double profileHeightBreakPointResultScreen = 355.0;
 
@@ -48,9 +49,14 @@ class UiUtils {
     return answer;
   }
 
-  static String convertMinuteIntoHHMM(int totalMinutes, {bool? showHourAndMinute}) {
-    String hours = (totalMinutes ~/ 60).toString().length == 1 ? "0${(totalMinutes ~/ 60)}" : (totalMinutes ~/ 60).toString();
-    String minutes = (totalMinutes % 60).toString().length == 1 ? "0${(totalMinutes % 60)}" : (totalMinutes % 60).toString();
+  static String convertMinuteIntoHHMM(int totalMinutes,
+      {bool? showHourAndMinute}) {
+    String hours = (totalMinutes ~/ 60).toString().length == 1
+        ? "0${(totalMinutes ~/ 60)}"
+        : (totalMinutes ~/ 60).toString();
+    String minutes = (totalMinutes % 60).toString().length == 1
+        ? "0${(totalMinutes % 60)}"
+        : (totalMinutes % 60).toString();
     bool showHourAndMinutePostText = showHourAndMinute ?? true;
     return "$hours:$minutes " + (showHourAndMinutePostText ? "hh:mm" : "");
   }
@@ -76,9 +82,15 @@ class UiUtils {
     needToUpdateBadgesLocally.clear();
   }
 
-  static void setSnackbar(String msg, BuildContext context, bool showAction, {Function? onPressedAction, Duration? duration}) {
+  static void setSnackbar(String msg, BuildContext context, bool showAction,
+      {Function? onPressedAction, Duration? duration}) {
     ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
-      content: new Text(msg, textAlign: showAction ? TextAlign.start : TextAlign.center, style: TextStyle(color: Theme.of(context).backgroundColor, fontWeight: FontWeight.bold, fontSize: 16.0)),
+      content: new Text(msg,
+          textAlign: showAction ? TextAlign.start : TextAlign.center,
+          style: TextStyle(
+              color: Theme.of(context).backgroundColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0)),
       behavior: SnackBarBehavior.fixed,
       duration: duration ?? Duration(seconds: 2),
       backgroundColor: Theme.of(context).primaryColor,
@@ -94,7 +106,9 @@ class UiUtils {
   }
 
   static void errorMessageDialog(BuildContext context, String? errorMessage) {
-    showDialog(context: context, builder: (_) => ErrorMessageDialog(errorMessage: errorMessage));
+    showDialog(
+        context: context,
+        builder: (_) => ErrorMessageDialog(errorMessage: errorMessage));
   }
 
   static String getImagePath(String imageName) {
@@ -109,7 +123,8 @@ class UiUtils {
     return "assets/images/emojis/$emojiName";
   }
 
-  static BoxShadow buildBoxShadow({Offset? offset, double? blurRadius, Color? color}) {
+  static BoxShadow buildBoxShadow(
+      {Offset? offset, double? blurRadius, Color? color}) {
     return BoxShadow(
       color: color ?? Colors.black.withOpacity(0.1),
       blurRadius: blurRadius ?? 10.0,
@@ -118,18 +133,24 @@ class UiUtils {
   }
 
   static BoxShadow buildAppbarShadow() {
-    return buildBoxShadow(blurRadius: 5.0, color: Colors.black.withOpacity(0.3), offset: Offset.zero);
+    return buildBoxShadow(
+        blurRadius: 5.0,
+        color: Colors.black.withOpacity(0.3),
+        offset: Offset.zero);
   }
 
-  static LinearGradient buildLinerGradient(List<Color> colors, Alignment begin, Alignment end) {
+  static LinearGradient buildLinerGradient(
+      List<Color> colors, Alignment begin, Alignment end) {
     return LinearGradient(colors: colors, begin: begin, end: end);
   }
 
   static String getCurrentQuestionLanguageId(BuildContext context) {
     final currentLanguage = context.read<AppLocalizationCubit>().state.language;
     if (context.read<SystemConfigCubit>().getLanguageMode() == "1") {
-      final supporatedLanguage = context.read<SystemConfigCubit>().getSupportedLanguages();
-      final supporatedLanguageIndex = supporatedLanguage.indexWhere((element) => getLocaleFromLanguageCode(element.languageCode) == currentLanguage);
+      final supporatedLanguage =
+          context.read<SystemConfigCubit>().getSupportedLanguages();
+      final supporatedLanguageIndex = supporatedLanguage.indexWhere((element) =>
+          getLocaleFromLanguageCode(element.languageCode) == currentLanguage);
       print(supporatedLanguageIndex);
       return supporatedLanguage[supporatedLanguageIndex].id;
     }
@@ -139,7 +160,9 @@ class UiUtils {
 
   static Locale getLocaleFromLanguageCode(String languageCode) {
     List<String> result = languageCode.split("-");
-    return result.length == 1 ? Locale(result.first) : Locale(result.first, result.last);
+    return result.length == 1
+        ? Locale(result.first)
+        : Locale(result.first, result.last);
   }
 
   static String formatNumber(int number) {
@@ -160,11 +183,16 @@ class UiUtils {
 
     int earnedCoins = 0;
     if (percentage >= maxCoinsWinningPercentage) {
-      earnedCoins = quizType == QuizTypes.guessTheWord ? guessTheWordMaxWinningCoins : maxWinningCoins;
+      earnedCoins = quizType == QuizTypes.guessTheWord
+          ? guessTheWordMaxWinningCoins
+          : maxWinningCoins;
     } else {
-      int maxCoins = quizType == QuizTypes.guessTheWord ? guessTheWordMaxWinningCoins : maxWinningCoins;
+      int maxCoins = quizType == QuizTypes.guessTheWord
+          ? guessTheWordMaxWinningCoins
+          : maxWinningCoins;
 
-      earnedCoins = (maxCoins - ((maxCoinsWinningPercentage - percentage) / 10)).toInt();
+      earnedCoins =
+          (maxCoins - ((maxCoinsWinningPercentage - percentage) / 10)).toInt();
     }
     if (earnedCoins < 0) {
       earnedCoins = 0;
@@ -193,15 +221,20 @@ class UiUtils {
       return false;
     }
 
-    bool updateBasedOnVersion = _shouldUpdateBasedOnVersion(currentVersion.split("+").first, updatedVersion.split("+").first);
-    bool updateBasedOnBuildNumber = _shouldUpdateBasedOnBuildNumber(currentVersion.split("+").last, updatedVersion.split("+").last);
+    bool updateBasedOnVersion = _shouldUpdateBasedOnVersion(
+        currentVersion.split("+").first, updatedVersion.split("+").first);
+    bool updateBasedOnBuildNumber = _shouldUpdateBasedOnBuildNumber(
+        currentVersion.split("+").last, updatedVersion.split("+").last);
 
     return (updateBasedOnVersion || updateBasedOnBuildNumber);
   }
 
-  static bool _shouldUpdateBasedOnVersion(String currentVersion, String updatedVersion) {
-    List<int> currentVersionList = currentVersion.split(".").map((e) => int.parse(e)).toList();
-    List<int> updatedVersionList = updatedVersion.split(".").map((e) => int.parse(e)).toList();
+  static bool _shouldUpdateBasedOnVersion(
+      String currentVersion, String updatedVersion) {
+    List<int> currentVersionList =
+        currentVersion.split(".").map((e) => int.parse(e)).toList();
+    List<int> updatedVersionList =
+        updatedVersion.split(".").map((e) => int.parse(e)).toList();
 
     if (updatedVersionList[0] > currentVersionList[0]) {
       return true;
@@ -216,7 +249,8 @@ class UiUtils {
     return false;
   }
 
-  static bool _shouldUpdateBasedOnBuildNumber(String currentBuildNumber, String updatedBuildNumber) {
+  static bool _shouldUpdateBasedOnBuildNumber(
+      String currentBuildNumber, String updatedBuildNumber) {
     return int.parse(updatedBuildNumber) > int.parse(currentBuildNumber);
   }
 
@@ -225,7 +259,8 @@ class UiUtils {
     HapticFeedback.vibrate();
   }
 
-  static void fetchBookmarkAndBadges({required BuildContext context, required String userId}) {
+  static void fetchBookmarkAndBadges(
+      {required BuildContext context, required String userId}) {
     //fetch bookmark
     if (context.read<BookmarkCubit>().state is! BookmarkFetchSuccess) {
       print("Fetch bookmark details");
@@ -244,8 +279,10 @@ class UiUtils {
     }
   }
 
-  static int determineBattleCorrectAnswerPoints(double animationControllerValue) {
-    double secondsTakenToAnswer = (questionDurationInSeconds * animationControllerValue);
+  static int determineBattleCorrectAnswerPoints(
+      double animationControllerValue) {
+    double secondsTakenToAnswer =
+        (questionDurationInSeconds * animationControllerValue);
 
     print("Took ${secondsTakenToAnswer}s to give the answer");
 
@@ -258,13 +295,16 @@ class UiUtils {
     return correctAnswerPointsForBattle;
   }
 
-  static double timeTakenToSubmitAnswer({required double animationControllerValue, required QuizTypes quizType}) {
+  static double timeTakenToSubmitAnswer(
+      {required double animationControllerValue, required QuizTypes quizType}) {
     double secondsTakenToAnswer;
 
     if (quizType == QuizTypes.guessTheWord) {
-      secondsTakenToAnswer = (guessTheWordQuestionDurationInSeconds * animationControllerValue);
+      secondsTakenToAnswer =
+          (guessTheWordQuestionDurationInSeconds * animationControllerValue);
     } else {
-      secondsTakenToAnswer = (questionDurationInSeconds * animationControllerValue);
+      secondsTakenToAnswer =
+          (questionDurationInSeconds * animationControllerValue);
     }
     return secondsTakenToAnswer;
   }
@@ -285,7 +325,8 @@ class UiUtils {
 
   //will be in use while playing screen
   //this method will be in use to display color based on user's answer
-  static Color getOptionBackgroundColor(Question question, BuildContext context, String? optionId, String? showCorrectAnswerMode) {
+  static Color getOptionBackgroundColor(Question question, BuildContext context,
+      String? optionId, String? showCorrectAnswerMode) {
     if (question.attempted) {
       if (showCorrectAnswerMode == "0") {
         return Theme.of(context).primaryColor.withOpacity(0.65);
@@ -317,7 +358,8 @@ class UiUtils {
 
   //will be in use while playing  quiz screen
   //this method will be in use to display color based on user's answer
-  static Color getOptionTextColor(Question question, BuildContext context, String? optionId, String? showCorrectAnswerMode) {
+  static Color getOptionTextColor(Question question, BuildContext context,
+      String? optionId, String? showCorrectAnswerMode) {
     if (question.attempted) {
       if (showCorrectAnswerMode == "0") {
         return Theme.of(context).scaffoldBackgroundColor;

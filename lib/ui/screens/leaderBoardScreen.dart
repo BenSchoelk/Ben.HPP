@@ -24,8 +24,10 @@ class LeaderBoardScreen extends StatefulWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
         builder: (context) => MultiBlocProvider(providers: [
-              BlocProvider<LeaderBoardMonthlyCubit>(create: (context) => LeaderBoardMonthlyCubit()),
-              BlocProvider<LeaderBoardDailyCubit>(create: (context) => LeaderBoardDailyCubit()),
+              BlocProvider<LeaderBoardMonthlyCubit>(
+                  create: (context) => LeaderBoardMonthlyCubit()),
+              BlocProvider<LeaderBoardDailyCubit>(
+                  create: (context) => LeaderBoardDailyCubit()),
               BlocProvider<LeaderBoardAllTimeCubit>(
                   create: (context) => LeaderBoardAllTimeCubit(
                       // LeaderBoardRepository(),
@@ -44,13 +46,19 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
     controllerA.addListener(scrollListenerA);
     controllerD.addListener(scrollListenerD);
     Future.delayed(Duration.zero, () {
-      context.read<LeaderBoardDailyCubit>().fetchLeaderBoard("20", context.read<UserDetailsCubit>().getUserId());
+      context
+          .read<LeaderBoardDailyCubit>()
+          .fetchLeaderBoard("20", context.read<UserDetailsCubit>().getUserId());
     });
     Future.delayed(Duration.zero, () {
-      context.read<LeaderBoardMonthlyCubit>().fetchLeaderBoard("20", context.read<UserDetailsCubit>().getUserId());
+      context
+          .read<LeaderBoardMonthlyCubit>()
+          .fetchLeaderBoard("20", context.read<UserDetailsCubit>().getUserId());
     });
     Future.delayed(Duration.zero, () {
-      context.read<LeaderBoardAllTimeCubit>().fetchLeaderBoard("20", context.read<UserDetailsCubit>().getUserId());
+      context
+          .read<LeaderBoardAllTimeCubit>()
+          .fetchLeaderBoard("20", context.read<UserDetailsCubit>().getUserId());
     });
 
     super.initState();
@@ -67,7 +75,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
   scrollListenerM() {
     if (controllerM.position.maxScrollExtent == controllerM.offset) {
       if (context.read<LeaderBoardMonthlyCubit>().hasMoreData()) {
-        context.read<LeaderBoardMonthlyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
+        context.read<LeaderBoardMonthlyCubit>().fetchMoreLeaderBoardData(
+            "20", context.read<UserDetailsCubit>().getUserId());
       }
     }
   }
@@ -75,7 +84,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
   scrollListenerA() {
     if (controllerA.position.maxScrollExtent == controllerA.offset) {
       if (context.read<LeaderBoardAllTimeCubit>().hasMoreData()) {
-        context.read<LeaderBoardAllTimeCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
+        context.read<LeaderBoardAllTimeCubit>().fetchMoreLeaderBoardData(
+            "20", context.read<UserDetailsCubit>().getUserId());
       }
     }
   }
@@ -83,7 +93,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
   scrollListenerD() {
     if (controllerD.position.maxScrollExtent == controllerD.offset) {
       if (context.read<LeaderBoardDailyCubit>().hasMoreData()) {
-        context.read<LeaderBoardDailyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
+        context.read<LeaderBoardDailyCubit>().fetchMoreLeaderBoardData(
+            "20", context.read<UserDetailsCubit>().getUserId());
       }
     }
   }
@@ -97,7 +108,6 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
         elevation: 0,
         leading: CustomBackButton(
           iconColor: Theme.of(context).primaryColor,
-          isShowDialog: false,
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +120,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                 width: MediaQuery.of(context).size.width * .03),
             SizedBox(width: 2),
             Text(
-              AppLocalization.of(context)!.getTranslatedValues("leaderboardLbl")!,
+              AppLocalization.of(context)!
+                  .getTranslatedValues("leaderboardLbl")!,
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ],
@@ -132,11 +143,19 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
               labelColor: backgroundColor,
               unselectedLabelColor: Theme.of(context).colorScheme.secondary,
               labelStyle: Theme.of(context).textTheme.subtitle1,
-              indicator: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Theme.of(context).primaryColor),
+              indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Theme.of(context).primaryColor),
               tabs: [
-                Tab(text: AppLocalization.of(context)!.getTranslatedValues("dailyLbl")),
-                Tab(text: AppLocalization.of(context)!.getTranslatedValues("monthLbl")),
-                Tab(text: AppLocalization.of(context)!.getTranslatedValues("allTimeLbl")),
+                Tab(
+                    text: AppLocalization.of(context)!
+                        .getTranslatedValues("dailyLbl")),
+                Tab(
+                    text: AppLocalization.of(context)!
+                        .getTranslatedValues("monthLbl")),
+                Tab(
+                    text: AppLocalization.of(context)!
+                        .getTranslatedValues("allTimeLbl")),
               ],
             ),
             Expanded(
@@ -155,7 +174,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
         bloc: context.read<LeaderBoardDailyCubit>(),
         listener: (context, state) {},
         builder: (context, state) {
-          if (state is LeaderBoardDailyProgress || state is LeaderBoardDailyInitial) {
+          if (state is LeaderBoardDailyProgress ||
+              state is LeaderBoardDailyInitial) {
             return Center(
                 child: CircularProgressContainer(
               useWhiteLoader: false,
@@ -164,15 +184,18 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
           if (state is LeaderBoardDailyFailure) {
             return ErrorContainer(
               showBackButton: false,
-              errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
+              errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
-                context.read<LeaderBoardDailyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
+                context.read<LeaderBoardDailyCubit>().fetchMoreLeaderBoardData(
+                    "20", context.read<UserDetailsCubit>().getUserId());
               },
               showErrorImage: true,
               errorMessageColor: Theme.of(context).primaryColor,
             );
           }
-          final dailyList = (state as LeaderBoardDailySuccess).leaderBoardDetails;
+          final dailyList =
+              (state as LeaderBoardDailySuccess).leaderBoardDetails;
           final hasMore = state.hasMore;
           return Container(
               height: MediaQuery.of(context).size.height * .6,
@@ -198,7 +221,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
           //offset=offset+perPage;
         },
         builder: (context, state) {
-          if (state is LeaderBoardMonthlyProgress || state is LeaderBoardAllTimeInitial) {
+          if (state is LeaderBoardMonthlyProgress ||
+              state is LeaderBoardAllTimeInitial) {
             return Center(
               child: CircularProgressContainer(
                 useWhiteLoader: false,
@@ -208,22 +232,32 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
           if (state is LeaderBoardMonthlyFailure) {
             return ErrorContainer(
               showBackButton: false,
-              errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
+              errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
-                context.read<LeaderBoardMonthlyCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
+                context
+                    .read<LeaderBoardMonthlyCubit>()
+                    .fetchMoreLeaderBoardData(
+                        "20", context.read<UserDetailsCubit>().getUserId());
               },
               showErrorImage: true,
               errorMessageColor: Theme.of(context).primaryColor,
             );
           }
-          final monthlyList = (state as LeaderBoardMonthlySuccess).leaderBoardDetails;
+          final monthlyList =
+              (state as LeaderBoardMonthlySuccess).leaderBoardDetails;
           final hasMore = state.hasMore;
           return Container(
               height: MediaQuery.of(context).size.height * .6,
               child: Column(children: [
                 circleProfile(monthlyList),
                 leaderBoardList(monthlyList, controllerM, hasMore),
-                LeaderBoardMonthlyCubit.scoreM == "0" ? Container() : myRank(LeaderBoardMonthlyCubit.rankM, LeaderBoardMonthlyCubit.profileM, LeaderBoardMonthlyCubit.scoreM)
+                LeaderBoardMonthlyCubit.scoreM == "0"
+                    ? Container()
+                    : myRank(
+                        LeaderBoardMonthlyCubit.rankM,
+                        LeaderBoardMonthlyCubit.profileM,
+                        LeaderBoardMonthlyCubit.scoreM)
               ]));
         });
   }
@@ -233,7 +267,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
         bloc: context.read<LeaderBoardAllTimeCubit>(),
         listener: (context, state) {},
         builder: (context, state) {
-          if (state is LeaderBoardAllTimeProgress || state is LeaderBoardAllTimeInitial) {
+          if (state is LeaderBoardAllTimeProgress ||
+              state is LeaderBoardAllTimeInitial) {
             return Center(
               child: CircularProgressContainer(
                 useWhiteLoader: false,
@@ -243,22 +278,32 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
           if (state is LeaderBoardAllTimeFailure) {
             return ErrorContainer(
               showBackButton: false,
-              errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
+              errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!,
               onTapRetry: () {
-                context.read<LeaderBoardAllTimeCubit>().fetchMoreLeaderBoardData("20", context.read<UserDetailsCubit>().getUserId());
+                context
+                    .read<LeaderBoardAllTimeCubit>()
+                    .fetchMoreLeaderBoardData(
+                        "20", context.read<UserDetailsCubit>().getUserId());
               },
               showErrorImage: true,
               errorMessageColor: Theme.of(context).primaryColor,
             );
           }
-          final allTimeList = (state as LeaderBoardAllTimeSuccess).leaderBoardDetails;
+          final allTimeList =
+              (state as LeaderBoardAllTimeSuccess).leaderBoardDetails;
           final hasMore = state.hasMore;
           return Container(
               height: MediaQuery.of(context).size.height * .6,
               child: Column(children: [
                 circleProfile(allTimeList),
                 leaderBoardList(allTimeList, controllerA, hasMore),
-                LeaderBoardAllTimeCubit.scoreA == "0" ? Container() : myRank(LeaderBoardAllTimeCubit.rankA, LeaderBoardAllTimeCubit.profileA, LeaderBoardAllTimeCubit.scoreA)
+                LeaderBoardAllTimeCubit.scoreA == "0"
+                    ? Container()
+                    : myRank(
+                        LeaderBoardAllTimeCubit.rankA,
+                        LeaderBoardAllTimeCubit.profileA,
+                        LeaderBoardAllTimeCubit.scoreA)
               ]));
         });
   }
@@ -269,7 +314,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
         height: MediaQuery.of(context).size.height * .28,
         child: LayoutBuilder(builder: (context, constraints) {
           double profileRadiusPercentage = 0.0;
-          if (constraints.maxHeight < UiUtils.profileHeightBreakPointResultScreen) {
+          if (constraints.maxHeight <
+              UiUtils.profileHeightBreakPointResultScreen) {
             profileRadiusPercentage = 0.175;
           } else {
             profileRadiusPercentage = 0.2;
@@ -279,7 +325,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             children: [
               circleList.length > 2
                   ? Container(
-                      padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .07),
+                      padding: EdgeInsetsDirectional.only(
+                          top: MediaQuery.of(context).size.height * .07),
                       child: Column(
                         children: [
                           Container(
@@ -288,23 +335,35 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                             child: Stack(
                               children: [
                                 Container(
-                                    height: MediaQuery.of(context).size.height * .1,
-                                    width: MediaQuery.of(context).size.width * .21,
-                                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor)),
+                                    height:
+                                        MediaQuery.of(context).size.height * .1,
+                                    width:
+                                        MediaQuery.of(context).size.width * .21,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 1.0,
+                                            color: Theme.of(context)
+                                                .backgroundColor)),
                                     child: CircleAvatar(
-                                        radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
-                                        backgroundImage: CachedNetworkImageProvider(
+                                        radius: constraints.maxHeight *
+                                            (profileRadiusPercentage - 0.0535),
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
                                           circleList[2]['profile'],
                                         ))),
                                 PositionedDirectional(
-                                  start: MediaQuery.of(context).size.width * .06,
+                                  start:
+                                      MediaQuery.of(context).size.width * .06,
                                   top: MediaQuery.of(context).size.height * .07,
                                   child: CircleAvatar(
                                       radius: 15,
-                                      backgroundColor: Theme.of(context).primaryColor,
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
                                       child: Text(
                                         "2\u207f\u1d48",
-                                        style: TextStyle(color: backgroundColor),
+                                        style:
+                                            TextStyle(color: backgroundColor),
                                       )),
                                 ),
                               ],
@@ -314,22 +373,28 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                               width: MediaQuery.of(context).size.width * .2,
                               child: Center(
                                 child: Text(
-                                  circleList[2]['name']!.isNotEmpty ? circleList[2]['name']! : "...",
+                                  circleList[2]['name']!.isNotEmpty
+                                      ? circleList[2]['name']!
+                                      : "...",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
                                 ),
                               )),
                           Container(
                               width: MediaQuery.of(context).size.width * .15,
                               child: Center(
                                 child: Text(
-                                  circleList[2]['score']!.isNotEmpty ? circleList[2]['score']! : "...",
+                                  circleList[2]['score']!.isNotEmpty
+                                      ? circleList[2]['score']!
+                                      : "...",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
                                 ),
                               )),
                         ],
@@ -344,7 +409,11 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                   ? Container(
                       child: Column(
                         children: [
-                          SvgPicture.asset(UiUtils.getImagePath("Rankone_icon.svg"), height: MediaQuery.of(context).size.height * .025, color: Theme.of(context).primaryColor, width: MediaQuery.of(context).size.width * .02),
+                          SvgPicture.asset(
+                              UiUtils.getImagePath("Rankone_icon.svg"),
+                              height: MediaQuery.of(context).size.height * .025,
+                              color: Theme.of(context).primaryColor,
+                              width: MediaQuery.of(context).size.width * .02),
                           Container(
                             decoration: BoxDecoration(shape: BoxShape.circle),
                             height: MediaQuery.of(context).size.height * .16,
@@ -352,29 +421,41 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                             child: Stack(
                               children: [
                                 Container(
-                                  height: MediaQuery.of(context).size.height * .14,
-                                  width: MediaQuery.of(context).size.width * .26,
-                                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 3.0, color: Theme.of(context).primaryColor)),
+                                  height:
+                                      MediaQuery.of(context).size.height * .14,
+                                  width:
+                                      MediaQuery.of(context).size.width * .26,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          width: 3.0,
+                                          color:
+                                              Theme.of(context).primaryColor)),
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(100),
                                     ),
                                     child: CircleAvatar(
-                                        radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
-                                        backgroundImage: CachedNetworkImageProvider(
+                                        radius: constraints.maxHeight *
+                                            (profileRadiusPercentage - 0.0535),
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
                                           circleList[1]['profile']!,
                                         )),
                                   ),
                                 ),
                                 PositionedDirectional(
-                                  start: MediaQuery.of(context).size.width * .08,
+                                  start:
+                                      MediaQuery.of(context).size.width * .08,
                                   top: MediaQuery.of(context).size.height * .11,
                                   child: CircleAvatar(
                                       radius: 17,
-                                      backgroundColor: Theme.of(context).primaryColor,
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
                                       child: Text(
                                         "1\u02e2\u1d57",
-                                        style: TextStyle(color: backgroundColor),
+                                        style:
+                                            TextStyle(color: backgroundColor),
                                       )),
                                 ),
                               ],
@@ -384,22 +465,28 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                               width: MediaQuery.of(context).size.width * .2,
                               child: Center(
                                 child: Text(
-                                  circleList[1]['name']!.isNotEmpty ? circleList[1]['name']! : "...",
+                                  circleList[1]['name']!.isNotEmpty
+                                      ? circleList[1]['name']!
+                                      : "...",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
                                 ),
                               )),
                           Container(
                               width: MediaQuery.of(context).size.width * .15,
                               child: Center(
                                 child: Text(
-                                  circleList[1]['score']!.isNotEmpty ? circleList[1]['score']! : "...",
+                                  circleList[1]['score']!.isNotEmpty
+                                      ? circleList[1]['score']!
+                                      : "...",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
                                 ),
                               )),
                         ],
@@ -412,7 +499,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                     ),
               circleList.length > 3
                   ? Container(
-                      padding: EdgeInsetsDirectional.only(top: MediaQuery.of(context).size.height * .07),
+                      padding: EdgeInsetsDirectional.only(
+                          top: MediaQuery.of(context).size.height * .07),
                       child: Column(
                         children: [
                           Container(
@@ -421,23 +509,36 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                             child: Stack(
                               children: [
                                 Container(
-                                    height: MediaQuery.of(context).size.height * .1,
-                                    width: MediaQuery.of(context).size.width * .22,
-                                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor)),
+                                    height:
+                                        MediaQuery.of(context).size.height * .1,
+                                    width:
+                                        MediaQuery.of(context).size.width * .22,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 1.0,
+                                            color: Theme.of(context)
+                                                .backgroundColor)),
                                     child: CircleAvatar(
-                                        radius: constraints.maxHeight * (profileRadiusPercentage - 0.0535),
-                                        backgroundImage: CachedNetworkImageProvider(
+                                        radius: constraints.maxHeight *
+                                            (profileRadiusPercentage - 0.0535),
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
                                           circleList[3]['profile']!,
                                         ))),
                                 PositionedDirectional(
-                                    start: MediaQuery.of(context).size.width * .06,
-                                    top: MediaQuery.of(context).size.height * .07,
+                                    start:
+                                        MediaQuery.of(context).size.width * .06,
+                                    top: MediaQuery.of(context).size.height *
+                                        .07,
                                     child: CircleAvatar(
                                         radius: 15,
-                                        backgroundColor: Theme.of(context).primaryColor,
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
                                         child: Text(
                                           "3\u02b3\u1d48",
-                                          style: TextStyle(color: backgroundColor),
+                                          style:
+                                              TextStyle(color: backgroundColor),
                                         ))),
                               ],
                             ),
@@ -446,22 +547,28 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                               width: MediaQuery.of(context).size.width * .2,
                               child: Center(
                                 child: Text(
-                                  circleList[3]['name']!.isNotEmpty ? circleList[3]['name']! : "...",
+                                  circleList[3]['name']!.isNotEmpty
+                                      ? circleList[3]['name']!
+                                      : "...",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
                                 ),
                               )),
                           Container(
                               width: MediaQuery.of(context).size.width * .15,
                               child: Center(
                                 child: Text(
-                                  circleList[3]['score']!.isNotEmpty ? circleList[3]['score']! : "...",
+                                  circleList[3]['score']!.isNotEmpty
+                                      ? circleList[3]['score']!
+                                      : "...",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
                                 ),
                               )),
                         ],
@@ -477,15 +584,19 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
         }));
   }
 
-  Widget leaderBoardList(List leaderBoardList, ScrollController controller, bool hasMore) {
+  Widget leaderBoardList(
+      List leaderBoardList, ScrollController controller, bool hasMore) {
     return Expanded(
         child: Container(
       height: MediaQuery.of(context).size.height * .45,
-      padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .02, end: MediaQuery.of(context).size.width * .02),
+      padding: EdgeInsetsDirectional.only(
+          start: MediaQuery.of(context).size.width * .02,
+          end: MediaQuery.of(context).size.width * .02),
       child: ListView.builder(
         controller: controller,
         shrinkWrap: true,
-        itemCount: /*(offset < totals) ? leaderBoardList.length + 1 : */ leaderBoardList.length,
+        itemCount: /*(offset < totals) ? leaderBoardList.length + 1 : */ leaderBoardList
+            .length,
         itemBuilder: (BuildContext context, int index) {
           return index > 3
               ? (hasMore && index == (leaderBoardList.length - 1))
@@ -503,24 +614,28 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                             ),
                             child: Column(children: <Widget>[
                               Text(
-                                UiUtils.formatNumber(int.parse(index.toString())),
+                                UiUtils.formatNumber(
+                                    int.parse(index.toString())),
                                 //  "$index",maxLines: 1,
                                 style: TextStyle(fontSize: 16),
                               ),
-                              Icon(Icons.arrow_drop_up, color: Theme.of(context).primaryColor)
+                              Icon(Icons.arrow_drop_up,
+                                  color: Theme.of(context).primaryColor)
                             ]),
                           ),
                         ),
                         Expanded(
                           flex: 9,
                           child: Card(
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(0.1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(35.0),
                             ),
                             child: ListTile(
                               dense: true,
-                              contentPadding: EdgeInsetsDirectional.only(end: 20),
+                              contentPadding:
+                                  EdgeInsetsDirectional.only(end: 20),
                               title: Text(
                                 leaderBoardList[index]['name'] ?? "",
                                 overflow: TextOverflow.ellipsis,
@@ -529,15 +644,22 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
                                 width: MediaQuery.of(context).size.width * .12,
                                 height: MediaQuery.of(context).size.height * .3,
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor.withOpacity(0.5),
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.5),
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(image: NetworkImage(leaderBoardList[index]['profile'] ?? ""), fit: BoxFit.cover),
+                                  image: DecorationImage(
+                                      image: NetworkImage(leaderBoardList[index]
+                                              ['profile'] ??
+                                          ""),
+                                      fit: BoxFit.cover),
                                 ),
                               ),
                               trailing: Container(
                                 width: MediaQuery.of(context).size.width * .1,
                                 child: Text(
-                                  UiUtils.formatNumber(int.parse(leaderBoardList[index]['score'] ?? "0")),
+                                  UiUtils.formatNumber(int.parse(
+                                      leaderBoardList[index]['score'] ?? "0")),
                                   // leaderBoardList[index]['score'] ?? "",
                                   maxLines: 1,
                                   softWrap: false,
@@ -557,7 +679,10 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
 
   Widget myRank(String rank, String profile, String score) {
     return Container(
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: ListTile(
           title: Text(
             AppLocalization.of(context)!.getTranslatedValues(myRankKey)!,
@@ -567,7 +692,8 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
           leading: Wrap(children: [
             Container(
               width: MediaQuery.of(context).size.width * .08,
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .02),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * .02),
               child: Text(
                 rank,
                 overflow: TextOverflow.ellipsis,
@@ -578,14 +704,23 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
             Container(
                 height: MediaQuery.of(context).size.height * .06,
                 width: MediaQuery.of(context).size.width * .13,
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.0, color: Theme.of(context).backgroundColor), image: new DecorationImage(fit: BoxFit.fill, image: NetworkImage(profile)))),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                        width: 1.0, color: Theme.of(context).backgroundColor),
+                    image: new DecorationImage(
+                        fit: BoxFit.fill, image: NetworkImage(profile)))),
           ]),
           trailing: Container(
             height: MediaQuery.of(context).size.height * .06,
             width: MediaQuery.of(context).size.width * .25,
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50.0), topLeft: Radius.circular(50.0), bottomRight: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50.0),
+                  topLeft: Radius.circular(50.0),
+                  bottomRight: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0)),
             ),
             child: Center(
                 child: Text(

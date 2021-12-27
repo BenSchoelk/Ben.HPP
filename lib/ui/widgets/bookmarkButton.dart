@@ -14,7 +14,12 @@ class BookmarkButton extends StatelessWidget {
   final Color? bookmarkButtonColor;
   final Color? bookmarkFillColor;
 
-  const BookmarkButton({Key? key, required this.question, this.bookmarkFillColor, this.bookmarkButtonColor}) : super(key: key);
+  const BookmarkButton(
+      {Key? key,
+      required this.question,
+      this.bookmarkFillColor,
+      this.bookmarkButtonColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,11 @@ class BookmarkButton extends StatelessWidget {
             //if unable to add question to bookmark then remove question
             bookmarkCubit.removeBookmarkQuestion(question.id);
           }
-          UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(updateBookmarkFailureCode))!, context, false);
+          UiUtils.setSnackbar(
+              AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(updateBookmarkFailureCode))!,
+              context,
+              false);
         }
         if (state is UpdateBookmarkSuccess) {
           print("Success");
@@ -46,29 +55,43 @@ class BookmarkButton extends StatelessWidget {
         bloc: bookmarkCubit,
         builder: (context, state) {
           if (state is BookmarkFetchSuccess) {
-            return IconButton(
-              onPressed: () {
+            return InkWell(
+              onTap: () {
                 if (bookmarkCubit.hasQuestionBookmarked(question.id)) {
                   //remove
                   bookmarkCubit.removeBookmarkQuestion(question.id);
-                  updateBookmarkcubit.updateBookmark(context.read<UserDetailsCubit>().getUserId(), question.id!, "0");
+                  updateBookmarkcubit.updateBookmark(
+                      context.read<UserDetailsCubit>().getUserId(),
+                      question.id!,
+                      "0");
                 } else {
                   //add
                   bookmarkCubit.addBookmarkQuestion(question);
-                  updateBookmarkcubit.updateBookmark(context.read<UserDetailsCubit>().getUserId(), question.id!, "1");
+                  updateBookmarkcubit.updateBookmark(
+                      context.read<UserDetailsCubit>().getUserId(),
+                      question.id!,
+                      "1");
                 }
               },
-              icon: bookmarkCubit.hasQuestionBookmarked(question.id)
-                  ? Icon(
-                      CupertinoIcons.bookmark_fill,
-                      color: bookmarkFillColor ?? Theme.of(context).colorScheme.secondary,
-                      size: 20,
-                    )
-                  : Icon(
-                      CupertinoIcons.bookmark,
-                      color: bookmarkButtonColor ?? Theme.of(context).colorScheme.secondary,
-                      size: 20,
-                    ),
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.transparent),
+                ),
+                child: bookmarkCubit.hasQuestionBookmarked(question.id)
+                    ? Icon(
+                        CupertinoIcons.bookmark_fill,
+                        color: bookmarkFillColor ??
+                            Theme.of(context).backgroundColor,
+                        size: 20,
+                      )
+                    : Icon(
+                        CupertinoIcons.bookmark,
+                        color: bookmarkButtonColor ??
+                            Theme.of(context).backgroundColor,
+                        size: 20,
+                      ),
+              ),
             );
           }
           if (state is BookmarkFetchFailure) {

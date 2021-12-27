@@ -28,10 +28,14 @@ class ReferAndEarnScreen extends StatelessWidget {
         child: Stack(
           children: [
             PageBackgroundGradientContainer(),
-            Platform.isIOS ?Container(
-                padding: EdgeInsets.only(left: 10),
-                alignment: Alignment.topLeft,
-                child: CustomBackButton(isShowDialog: false,iconColor: Theme.of(context).primaryColor,)):Container(),
+            Platform.isIOS
+                ? Container(
+                    padding: EdgeInsets.only(left: 10),
+                    alignment: Alignment.topLeft,
+                    child: CustomBackButton(
+                      iconColor: Theme.of(context).primaryColor,
+                    ))
+                : Container(),
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
@@ -41,12 +45,14 @@ class ReferAndEarnScreen extends StatelessWidget {
                     children: [
                       Container(
                         height: MediaQuery.of(context).size.height * (0.3),
-                        child: SvgPicture.asset(UiUtils.getImagePath("refer_earn.svg")),
+                        child: SvgPicture.asset(
+                            UiUtils.getImagePath("refer_earn.svg")),
                       ),
                       Transform.translate(
                         offset: Offset(0.0, -10.0),
                         child: Text(
-                          AppLocalization.of(context)!.getTranslatedValues("referAndEarn")!,
+                          AppLocalization.of(context)!
+                              .getTranslatedValues("referAndEarn")!,
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontSize: 22.5,
@@ -57,7 +63,8 @@ class ReferAndEarnScreen extends StatelessWidget {
                       Center(
                         child: Container(
                           child: Text(
-                            AppLocalization.of(context)!.getTranslatedValues("referFrdLbl")!,
+                            AppLocalization.of(context)!
+                                .getTranslatedValues("referFrdLbl")!,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,
@@ -66,11 +73,13 @@ class ReferAndEarnScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        child: SvgPicture.asset(UiUtils.getImagePath("steps.svg")),
+                        child:
+                            SvgPicture.asset(UiUtils.getImagePath("steps.svg")),
                         height: MediaQuery.of(context).size.height * (0.2),
                       ),
                       Text(
-                        AppLocalization.of(context)!.getTranslatedValues("yourRefCOdeLbl")!,
+                        AppLocalization.of(context)!
+                            .getTranslatedValues("yourRefCOdeLbl")!,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 22.5,
@@ -93,7 +102,10 @@ class ReferAndEarnScreen extends StatelessWidget {
                                 width: 15.0,
                               ),
                               Text(
-                                context.read<UserDetailsCubit>().getUserProfile().referCode!,
+                                context
+                                    .read<UserDetailsCubit>()
+                                    .getUserProfile()
+                                    .referCode!,
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 16,
@@ -103,15 +115,28 @@ class ReferAndEarnScreen extends StatelessWidget {
                               Spacer(),
                               GestureDetector(
                                 onTap: () async {
-                                  await Clipboard.setData(ClipboardData(text: context.read<UserDetailsCubit>().getUserProfile().referCode!));
-                                  UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues("referCodeCopyMsg")!, context, false);
+                                  await Clipboard.setData(ClipboardData(
+                                      text: context
+                                          .read<UserDetailsCubit>()
+                                          .getUserProfile()
+                                          .referCode!));
+                                  UiUtils.setSnackbar(
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              "referCodeCopyMsg")!,
+                                      context,
+                                      false);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15.0),
                                     color: Theme.of(context).primaryColor,
                                   ),
-                                  child: Transform.scale(scale: 0.4, child: SvgPicture.asset(UiUtils.getImagePath("copy_icon.svg"))),
+                                  child: Transform.scale(
+                                      scale: 0.4,
+                                      child: SvgPicture.asset(
+                                          UiUtils.getImagePath(
+                                              "copy_icon.svg"))),
                                   width: 50.0,
                                 ),
                               ),
@@ -124,15 +149,22 @@ class ReferAndEarnScreen extends StatelessWidget {
                         height: verticalSpace,
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.width * (0)),
                         child: CustomRoundedButton(
                           onTap: () {
-                            Share.share(context.read<UserDetailsCubit>().getUserProfile().referCode!);
+                            Share.share(context
+                                .read<UserDetailsCubit>()
+                                .getUserProfile()
+                                .referCode!);
                           },
-                          widthPercentage: MediaQuery.of(context).size.width * (0.7),
+                          widthPercentage:
+                              MediaQuery.of(context).size.width * (0.7),
                           backgroundColor: Theme.of(context).primaryColor,
                           titleColor: Theme.of(context).backgroundColor,
-                          buttonTitle: AppLocalization.of(context)!.getTranslatedValues("shareNowLbl")!,
+                          buttonTitle: AppLocalization.of(context)!
+                              .getTranslatedValues("shareNowLbl")!,
                           radius: 15.0,
                           textSize: 18.0,
                           showBorder: false,

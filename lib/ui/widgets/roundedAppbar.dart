@@ -8,7 +8,14 @@ class RoundedAppbar extends StatelessWidget {
   final bool? removeSnackBars;
   final Color? appBarColor;
   final Color? appTextAndIconColor;
-  RoundedAppbar({Key? key, required this.title, this.trailingWidget, this.removeSnackBars, this.appBarColor, this.appTextAndIconColor}) : super(key: key);
+  RoundedAppbar(
+      {Key? key,
+      required this.title,
+      this.trailingWidget,
+      this.removeSnackBars,
+      this.appBarColor,
+      this.appTextAndIconColor})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,8 +28,8 @@ class RoundedAppbar extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(start: 25.0),
               child: CustomBackButton(
                 removeSnackBars: removeSnackBars,
-                isShowDialog: false,
-                iconColor: appTextAndIconColor ?? Theme.of(context).primaryColor,
+                iconColor:
+                    appTextAndIconColor ?? Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -31,7 +38,9 @@ class RoundedAppbar extends StatelessWidget {
             child: Text(
               "$title",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 22.0, color: appTextAndIconColor ?? Theme.of(context).primaryColor),
+              style: TextStyle(
+                  fontSize: 22.0,
+                  color: appTextAndIconColor ?? Theme.of(context).primaryColor),
             ),
           ),
           Align(
@@ -40,8 +49,14 @@ class RoundedAppbar extends StatelessWidget {
           ),
         ],
       ),
-      height: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage,
-      decoration: BoxDecoration(boxShadow: [UiUtils.buildAppbarShadow()], color: appBarColor ?? Theme.of(context).backgroundColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))),
+      height:
+          MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage,
+      decoration: BoxDecoration(
+          boxShadow: [UiUtils.buildAppbarShadow()],
+          color: appBarColor ?? Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20.0),
+              bottomRight: Radius.circular(20.0))),
     );
   }
 }

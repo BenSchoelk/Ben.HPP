@@ -34,7 +34,8 @@ class ExamsScreen extends StatefulWidget {
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider<ExamsCubit>(create: (_) => ExamsCubit(ExamRepository())),
-          BlocProvider<CompletedExamsCubit>(create: (_) => CompletedExamsCubit(ExamRepository())),
+          BlocProvider<CompletedExamsCubit>(
+              create: (_) => CompletedExamsCubit(ExamRepository())),
         ],
         child: ExamsScreen(),
       ),
@@ -47,14 +48,18 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   int currentSelectedQuestionIndex = 0;
 
-  late ScrollController _completedExamScrollController = ScrollController()..addListener(hasMoreResultScrollListener);
+  late ScrollController _completedExamScrollController = ScrollController()
+    ..addListener(hasMoreResultScrollListener);
 
   void hasMoreResultScrollListener() {
-    if (_completedExamScrollController.position.maxScrollExtent == _completedExamScrollController.offset) {
+    if (_completedExamScrollController.position.maxScrollExtent ==
+        _completedExamScrollController.offset) {
       print("At the end of the list");
       if (context.read<CompletedExamsCubit>().hasMoreResult()) {
         //
-        context.read<CompletedExamsCubit>().getMoreResult(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+        context.read<CompletedExamsCubit>().getMoreResult(
+            userId: context.read<UserDetailsCubit>().getUserId(),
+            languageId: UiUtils.getCurrentQuestionLanguageId(context));
       } else {
         print("No more result");
       }
@@ -77,17 +82,22 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   void getExams() {
     Future.delayed(Duration.zero, () {
-      context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+      context.read<ExamsCubit>().getExams(
+          userId: context.read<UserDetailsCubit>().getUserId(),
+          languageId: UiUtils.getCurrentQuestionLanguageId(context));
     });
   }
 
   void getCompletedExams() {
     Future.delayed(Duration.zero, () {
-      context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+      context.read<CompletedExamsCubit>().getCompletedExams(
+          userId: context.read<UserDetailsCubit>().getUserId(),
+          languageId: UiUtils.getCurrentQuestionLanguageId(context));
     });
   }
 
-  void showExamKeyBottomSheet(BuildContext context, Exam exam) //Accept exam object as parameter
+  void showExamKeyBottomSheet(
+      BuildContext context, Exam exam) //Accept exam object as parameter
   {
     showModalBottomSheet(
         isDismissible: false,
@@ -109,7 +119,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
         });
   }
 
-  void showExamResultBottomSheet(BuildContext context, ExamResult examResult) //Accept exam object as parameter
+  void showExamResultBottomSheet(BuildContext context,
+      ExamResult examResult) //Accept exam object as parameter
   {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -135,9 +146,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
         if (mounted) {
           print("Fetch exam details again");
           //fetch exams again with fresh status
-          context.read<ExamsCubit>().getExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+          context.read<ExamsCubit>().getExams(
+              userId: context.read<UserDetailsCubit>().getUserId(),
+              languageId: UiUtils.getCurrentQuestionLanguageId(context));
           //fetch completed exam again with fresh status
-          context.read<CompletedExamsCubit>().getCompletedExams(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+          context.read<CompletedExamsCubit>().getCompletedExams(
+              userId: context.read<UserDetailsCubit>().getUserId(),
+              languageId: UiUtils.getCurrentQuestionLanguageId(context));
         }
       });
     });
@@ -154,7 +169,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
               padding: EdgeInsetsDirectional.only(start: 25.0, bottom: 25.0),
               child: CustomBackButton(
                 removeSnackBars: false,
-                isShowDialog: false,
                 iconColor: Theme.of(context).primaryColor,
               ),
             ),
@@ -175,8 +189,14 @@ class _ExamsScreenState extends State<ExamsScreen> {
           ),
         ],
       ),
-      height: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage),
-      decoration: BoxDecoration(boxShadow: [UiUtils.buildAppbarShadow()], color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))),
+      height:
+          MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage),
+      decoration: BoxDecoration(
+          boxShadow: [UiUtils.buildAppbarShadow()],
+          color: Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20.0),
+              bottomRight: Radius.circular(20.0))),
     );
   }
 
@@ -192,7 +212,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
         child: Text(
           title,
           style: TextStyle(
-            color: Theme.of(context).primaryColor.withOpacity(_currentSelectedTab == index ? 1.0 : 0.5),
+            color: Theme.of(context)
+                .primaryColor
+                .withOpacity(_currentSelectedTab == index ? 1.0 : 0.5),
             fontSize: 16.0,
           ),
         ),
@@ -204,7 +226,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
     return BlocBuilder<CompletedExamsCubit, CompletedExamsState>(
       bloc: context.read<CompletedExamsCubit>(),
       builder: (context, state) {
-        if (state is CompletedExamsFetchInProgress || state is CompletedExamsInitial) {
+        if (state is CompletedExamsFetchInProgress ||
+            state is CompletedExamsInitial) {
           return Center(
             child: CircularProgressContainer(
               useWhiteLoader: false,
@@ -215,7 +238,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
           return Center(
             child: ErrorContainer(
                 errorMessageColor: Theme.of(context).primaryColor,
-                errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                    convertErrorCodeToLanguageKey(state.errorMessage)),
                 onTapRetry: () {
                   getCompletedExams();
                 },
@@ -227,10 +251,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
           padding: EdgeInsets.only(
             right: MediaQuery.of(context).size.width * (0.05),
             left: MediaQuery.of(context).size.width * (0.05),
-            top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 10,
+            top: MediaQuery.of(context).size.height *
+                    UiUtils.appBarHeightPercentage +
+                10,
             bottom: MediaQuery.of(context).size.height * 0.075,
           ),
-          itemCount: (state as CompletedExamsFetchSuccess).completedExams.length,
+          itemCount:
+              (state as CompletedExamsFetchSuccess).completedExams.length,
           itemBuilder: (context, index) {
             return _buildResultContainer(
               examResult: state.completedExams[index],
@@ -260,7 +287,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
           return Center(
             child: ErrorContainer(
                 errorMessageColor: Theme.of(context).primaryColor,
-                errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                    convertErrorCodeToLanguageKey(state.errorMessage)),
                 onTapRetry: () {
                   getExams();
                 },
@@ -271,7 +299,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
           padding: EdgeInsets.only(
             right: MediaQuery.of(context).size.width * (0.05),
             left: MediaQuery.of(context).size.width * (0.05),
-            top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 10,
+            top: MediaQuery.of(context).size.height *
+                    UiUtils.appBarHeightPercentage +
+                10,
             bottom: MediaQuery.of(context).size.height * 0.075,
           ),
           itemCount: (state as ExamsFetchSuccess).exams.length,
@@ -290,7 +320,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10.0)),
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(10.0)),
         height: MediaQuery.of(context).size.height * (0.1),
         margin: EdgeInsets.symmetric(vertical: 10.0),
         child: Column(
@@ -365,7 +397,10 @@ class _ExamsScreenState extends State<ExamsScreen> {
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
               child: IconButton(
                   onPressed: () {
-                    context.read<CompletedExamsCubit>().getMoreResult(userId: context.read<UserDetailsCubit>().getUserId(), languageId: UiUtils.getCurrentQuestionLanguageId(context));
+                    context.read<CompletedExamsCubit>().getMoreResult(
+                        userId: context.read<UserDetailsCubit>().getUserId(),
+                        languageId:
+                            UiUtils.getCurrentQuestionLanguageId(context));
                   },
                   icon: Icon(
                     Icons.error,
@@ -392,7 +427,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10.0)),
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(10.0)),
         height: MediaQuery.of(context).size.height * (0.1),
         margin: EdgeInsets.symmetric(vertical: 10.0),
         child: Stack(
@@ -450,7 +487,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
           PageBackgroundGradientContainer(),
           Align(
             alignment: Alignment.topCenter,
-            child: _currentSelectedTab == 1 ? _buildTodayExams() : _buildExamResults(),
+            child: _currentSelectedTab == 1
+                ? _buildTodayExams()
+                : _buildExamResults(),
           ),
           Align(
             alignment: Alignment.topCenter,

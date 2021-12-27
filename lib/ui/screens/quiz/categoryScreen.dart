@@ -74,7 +74,6 @@ class _CategoryScreen extends State<CategoryScreen> {
         children: [
           CustomBackButton(
             iconColor: Theme.of(context).primaryColor,
-            isShowDialog: false,
           )
         ],
       ),
@@ -104,7 +103,8 @@ class _CategoryScreen extends State<CategoryScreen> {
               onTapRetry: () {
                 context.read<QuizCategoryCubit>().getQuizCategory(
                       languageId: UiUtils.getCurrentQuestionLanguageId(context),
-                      type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+                      type: UiUtils.getCategoryTypeNumberFromQuizType(
+                          widget.quizType),
                     );
               },
             );
@@ -130,7 +130,8 @@ class _CategoryScreen extends State<CategoryScreen> {
                       //means this category does not have level
                       if (categoryList[index].maxLevel == "0") {
                         //direct move to quiz screen pass level as 0
-                        Navigator.of(context).pushNamed(Routes.quiz, arguments: {
+                        Navigator.of(context)
+                            .pushNamed(Routes.quiz, arguments: {
                           "numberOfPlayer": 1,
                           "quizType": QuizTypes.quizZone,
                           "categoryId": categoryList[index].id,
@@ -144,13 +145,16 @@ class _CategoryScreen extends State<CategoryScreen> {
                         });
                       } else {
                         //navigate to level screen
-                        Navigator.of(context).pushNamed(Routes.levels, arguments: {
+                        Navigator.of(context)
+                            .pushNamed(Routes.levels, arguments: {
                           "maxLevel": categoryList[index].maxLevel,
                           "categoryId": categoryList[index].id,
                         });
                       }
                     } else {
-                      Navigator.of(context).pushNamed(Routes.subcategoryAndLevel, arguments: categoryList[index].id);
+                      Navigator.of(context).pushNamed(
+                          Routes.subcategoryAndLevel,
+                          arguments: categoryList[index].id);
                     }
                   } else if (widget.quizType == QuizTypes.audioQuestions) {
                     //noOf means how many subcategory it has
@@ -164,7 +168,8 @@ class _CategoryScreen extends State<CategoryScreen> {
                       });
                     } else {
                       //
-                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                      Navigator.of(context)
+                          .pushNamed(Routes.subCategory, arguments: {
                         "categoryId": categoryList[index].id,
                         "quizType": widget.quizType,
                       });
@@ -172,12 +177,14 @@ class _CategoryScreen extends State<CategoryScreen> {
                   } else if (widget.quizType == QuizTypes.guessTheWord) {
                     //if therse is noo subcategory then get questions by category
                     if (categoryList[index].noOf == "0") {
-                      Navigator.of(context).pushNamed(Routes.guessTheWord, arguments: {
+                      Navigator.of(context)
+                          .pushNamed(Routes.guessTheWord, arguments: {
                         "type": "category",
                         "typeId": categoryList[index].id,
                       });
                     } else {
-                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                      Navigator.of(context)
+                          .pushNamed(Routes.subCategory, arguments: {
                         "categoryId": categoryList[index].id,
                         "quizType": widget.quizType,
                       });
@@ -185,12 +192,14 @@ class _CategoryScreen extends State<CategoryScreen> {
                   } else if (widget.quizType == QuizTypes.funAndLearn) {
                     //if therse is no subcategory then get questions by category
                     if (categoryList[index].noOf == "0") {
-                      Navigator.of(context).pushNamed(Routes.funAndLearnTitle, arguments: {
+                      Navigator.of(context)
+                          .pushNamed(Routes.funAndLearnTitle, arguments: {
                         "type": "category",
                         "typeId": categoryList[index].id,
                       });
                     } else {
-                      Navigator.of(context).pushNamed(Routes.subCategory, arguments: {
+                      Navigator.of(context)
+                          .pushNamed(Routes.subCategory, arguments: {
                         "categoryId": categoryList[index].id,
                         "quizType": widget.quizType,
                       });
@@ -201,7 +210,9 @@ class _CategoryScreen extends State<CategoryScreen> {
                     height: 90,
                     alignment: Alignment.center,
                     margin: EdgeInsets.all(15),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0), color: Theme.of(context).primaryColor),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: Theme.of(context).primaryColor),
                     child: ListTile(
                       leading: CachedNetworkImage(
                         placeholder: (context, _) => SizedBox(),
@@ -218,7 +229,8 @@ class _CategoryScreen extends State<CategoryScreen> {
                       ),
                       title: Text(
                         categoryList[index].categoryName!,
-                        style: TextStyle(color: Theme.of(context).backgroundColor),
+                        style:
+                            TextStyle(color: Theme.of(context).backgroundColor),
                       ),
                     )),
               );

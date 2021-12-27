@@ -34,22 +34,30 @@ class MultiUserBattleRoomQuizScreen extends StatefulWidget {
   MultiUserBattleRoomQuizScreen({Key? key}) : super(key: key);
 
   @override
-  _MultiUserBattleRoomQuizScreenState createState() => _MultiUserBattleRoomQuizScreenState();
+  _MultiUserBattleRoomQuizScreenState createState() =>
+      _MultiUserBattleRoomQuizScreenState();
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(providers: [
               BlocProvider<UpdateScoreAndCoinsCubit>(
-                create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                create: (context) =>
+                    UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
               ),
-              BlocProvider<UpdateBookmarkCubit>(create: (context) => UpdateBookmarkCubit(BookmarkRepository())),
-              BlocProvider<MessageCubit>(create: (context) => MessageCubit(BattleRoomRepository())),
+              BlocProvider<UpdateBookmarkCubit>(
+                  create: (context) =>
+                      UpdateBookmarkCubit(BookmarkRepository())),
+              BlocProvider<MessageCubit>(
+                  create: (context) => MessageCubit(BattleRoomRepository())),
             ], child: MultiUserBattleRoomQuizScreen()));
   }
 }
 
-class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizScreen> with WidgetsBindingObserver, TickerProviderStateMixin {
-  late AnimationController timerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: questionDurationInSeconds))
+class _MultiUserBattleRoomQuizScreenState
+    extends State<MultiUserBattleRoomQuizScreen>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+  late AnimationController timerAnimationController = AnimationController(
+      vsync: this, duration: Duration(seconds: questionDurationInSeconds))
     ..addStatusListener(currentUserTimerAnimationStatusListener)
     ..forward();
 
@@ -65,16 +73,24 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   //to slude the question content from right to left
   late Animation<double> questionContentAnimation;
 
-  late AnimationController messageAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300), reverseDuration: Duration(milliseconds: 300));
-  late Animation<double> messageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: messageAnimationController, curve: Curves.easeOutBack));
+  late AnimationController messageAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+      reverseDuration: Duration(milliseconds: 300));
+  late Animation<double> messageAnimation = Tween<double>(begin: 0.0, end: 1.0)
+      .animate(CurvedAnimation(
+          parent: messageAnimationController, curve: Curves.easeOutBack));
 
   late List<AnimationController> opponentMessageAnimationControllers = [];
   late List<Animation<double>> opponentMessageAnimations = [];
 
   late List<AnimationController> opponentProgressAnimationControllers = [];
 
-  late AnimationController messageBoxAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 350));
-  late Animation<double> messageBoxAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: messageBoxAnimationController, curve: Curves.easeInOut));
+  late AnimationController messageBoxAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 350));
+  late Animation<double> messageBoxAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: messageBoxAnimationController, curve: Curves.easeInOut));
 
   int currentQuestionIndex = 0;
 
@@ -101,9 +117,15 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   void initState() {
     //deduct coins of entry fee
     Future.delayed(Duration.zero, () {
-      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), context.read<MultiUserBattleRoomCubit>().getEntryFee(), false);
-      context.read<UserDetailsCubit>().updateCoins(addCoin: false, coins: context.read<MultiUserBattleRoomCubit>().getEntryFee());
-      context.read<MessageCubit>().subscribeToMessages(context.read<MultiUserBattleRoomCubit>().getRoomId());
+      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+          context.read<UserDetailsCubit>().getUserId(),
+          context.read<MultiUserBattleRoomCubit>().getEntryFee(),
+          false);
+      context.read<UserDetailsCubit>().updateCoins(
+          addCoin: false,
+          coins: context.read<MultiUserBattleRoomCubit>().getEntryFee());
+      context.read<MessageCubit>().subscribeToMessages(
+          context.read<MultiUserBattleRoomCubit>().getRoomId());
     });
     initializeAnimation();
     initOpponentConfig();
@@ -115,7 +137,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
   @override
   void dispose() {
-    timerAnimationController.removeStatusListener(currentUserTimerAnimationStatusListener);
+    timerAnimationController
+        .removeStatusListener(currentUserTimerAnimationStatusListener);
     timerAnimationController.dispose();
     questionAnimationController.dispose();
     questionContentAnimationController.dispose();
@@ -141,17 +164,22 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     super.didChangeAppLifecycleState(state);
     //remove user from room
     if (state == AppLifecycleState.paused) {
-      MultiUserBattleRoomCubit multiUserBattleRoomCubit = context.read<MultiUserBattleRoomCubit>();
+      MultiUserBattleRoomCubit multiUserBattleRoomCubit =
+          context.read<MultiUserBattleRoomCubit>();
       //if user has already won the game then do nothing
       if (multiUserBattleRoomCubit.getUsers().length != 1) {
         deleteMessages(multiUserBattleRoomCubit);
-        multiUserBattleRoomCubit.deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
+        multiUserBattleRoomCubit
+            .deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
       }
       //
     } else if (state == AppLifecycleState.resumed) {
-      MultiUserBattleRoomCubit multiUserBattleRoomCubit = context.read<MultiUserBattleRoomCubit>();
+      MultiUserBattleRoomCubit multiUserBattleRoomCubit =
+          context.read<MultiUserBattleRoomCubit>();
       //if user has won the game already
-      if (multiUserBattleRoomCubit.getUsers().length == 1 && multiUserBattleRoomCubit.getUsers().first!.uid == context.read<UserDetailsCubit>().getUserId()) {
+      if (multiUserBattleRoomCubit.getUsers().length == 1 &&
+          multiUserBattleRoomCubit.getUsers().first!.uid ==
+              context.read<UserDetailsCubit>().getUserId()) {
         setState(() {
           showUserLeftTheGame = false;
         });
@@ -169,14 +197,20 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
   void deleteMessages(MultiUserBattleRoomCubit battleRoomCubit) {
     //to delete messages by given user
-    context.read<MessageCubit>().deleteMessages(battleRoomCubit.getRoomId(), context.read<UserDetailsCubit>().getUserId());
+    context.read<MessageCubit>().deleteMessages(battleRoomCubit.getRoomId(),
+        context.read<UserDetailsCubit>().getUserId());
   }
 
   void initOpponentConfig() {
     for (var i = 0; i < 3; i++) {
-      opponentMessageAnimationControllers.add(AnimationController(vsync: this, duration: Duration(milliseconds: 300)));
-      opponentProgressAnimationControllers.add(AnimationController(vsync: this));
-      opponentMessageAnimations.add(Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: opponentMessageAnimationControllers[i], curve: Curves.easeOutBack)));
+      opponentMessageAnimationControllers.add(AnimationController(
+          vsync: this, duration: Duration(milliseconds: 300)));
+      opponentProgressAnimationControllers
+          .add(AnimationController(vsync: this));
+      opponentMessageAnimations.add(Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(
+              parent: opponentMessageAnimationControllers[i],
+              curve: Curves.easeOutBack)));
       opponentsMessageDisappearTimer.add(null);
       opponentsMessageDisappearTimeInSeconds.add(4);
     }
@@ -184,13 +218,26 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
   //
   void initializeAnimation() {
-    questionAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    questionContentAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+    questionAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    questionContentAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
 
-    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionAnimationController, curve: Curves.easeInOut));
-    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
-    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(CurvedAnimation(parent: questionAnimationController, curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
-    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: questionContentAnimationController, curve: Curves.easeInQuad));
+    questionSlideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionAnimationController, curve: Curves.easeInOut));
+    questionScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
+    questionScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
+        CurvedAnimation(
+            parent: questionAnimationController,
+            curve: Interval(0.5, 1.0, curve: Curves.easeOutQuad)));
+    questionContentAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: questionContentAnimationController,
+            curve: Curves.easeInQuad));
   }
 
   void toggleSettingDialog() {
@@ -219,9 +266,14 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
     if (!questions[currentQuestionIndex].attempted) {
       //updated answer locally
-      battleRoomCubit.updateQuestionAnswer(questions[currentQuestionIndex].id!, submittedAnswer);
+      battleRoomCubit.updateQuestionAnswer(
+          questions[currentQuestionIndex].id!, submittedAnswer);
       //update answer on cloud
-      battleRoomCubit.submitAnswer(context.read<UserDetailsCubit>().getUserId(), submittedAnswer, questions[currentQuestionIndex].correctAnswerOptionId == submittedAnswer);
+      battleRoomCubit.submitAnswer(
+          context.read<UserDetailsCubit>().getUserId(),
+          submittedAnswer,
+          questions[currentQuestionIndex].correctAnswerOptionId ==
+              submittedAnswer);
 
       updateSubmittedAnswerForBookmark(questions[currentQuestionIndex]);
 
@@ -256,16 +308,21 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
 
   //if user has submitted the answer for current question
   bool hasSubmittedAnswerForCurrentQuestion() {
-    return context.read<MultiUserBattleRoomCubit>().getQuestions()[currentQuestionIndex].attempted;
+    return context
+        .read<MultiUserBattleRoomCubit>()
+        .getQuestions()[currentQuestionIndex]
+        .attempted;
   }
 
-  void battleRoomListener(BuildContext context, MultiUserBattleRoomState state, MultiUserBattleRoomCubit battleRoomCubit) {
+  void battleRoomListener(BuildContext context, MultiUserBattleRoomState state,
+      MultiUserBattleRoomCubit battleRoomCubit) {
     if (state is MultiUserBattleRoomSuccess) {
       //show result only for more than two user
       if (battleRoomCubit.getUsers().length != 1) {
         //if there is more than one user in room
         //navigate to result
-        navigateToResultScreen(battleRoomCubit.getUsers(), state.battleRoom, state.questions);
+        navigateToResultScreen(
+            battleRoomCubit.getUsers(), state.battleRoom, state.questions);
       }
     }
   }
@@ -275,7 +332,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       currentUserMessageDisappearTimeInSeconds = 4;
     }
 
-    currentUserMessageDisappearTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    currentUserMessageDisappearTimer =
+        Timer.periodic(Duration(seconds: 1), (timer) {
       if (currentUserMessageDisappearTimeInSeconds == 0) {
         //
         timer.cancel();
@@ -292,14 +350,16 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       opponentsMessageDisappearTimeInSeconds[opponentUserIndex] = 4;
     }
 
-    opponentsMessageDisappearTimer[opponentUserIndex] = Timer.periodic(Duration(seconds: 1), (timer) {
+    opponentsMessageDisappearTimer[opponentUserIndex] =
+        Timer.periodic(Duration(seconds: 1), (timer) {
       if (opponentsMessageDisappearTimeInSeconds[opponentUserIndex] == 0) {
         //
         timer.cancel();
         opponentMessageAnimationControllers[opponentUserIndex].reverse();
       } else {
         //print("Opponent $opponentUserMessageDisappearTimeInSeconds");
-        opponentsMessageDisappearTimeInSeconds[opponentUserIndex] = opponentsMessageDisappearTimeInSeconds[opponentUserIndex] - 1;
+        opponentsMessageDisappearTimeInSeconds[opponentUserIndex] =
+            opponentsMessageDisappearTimeInSeconds[opponentUserIndex] - 1;
       }
     });
   }
@@ -307,11 +367,13 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
   void messagesListener(MessageState state) async {
     if (state is MessageFetchedSuccess) {
       if (state.messages.isNotEmpty) {
-        if (state.messages.last.by == context.read<UserDetailsCubit>().getUserId()) {
+        if (state.messages.last.by ==
+            context.read<UserDetailsCubit>().getUserId()) {
           //current user message
           //
           //means timer is running
-          if (currentUserMessageDisappearTimeInSeconds > 0 && currentUserMessageDisappearTimeInSeconds < 4) {
+          if (currentUserMessageDisappearTimeInSeconds > 0 &&
+              currentUserMessageDisappearTimeInSeconds < 4) {
             print(currentUserMessageDisappearTimeInSeconds);
             currentUserMessageDisappearTimer?.cancel();
             setCurrentUserMessageDisappearTimer();
@@ -320,14 +382,18 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
             setCurrentUserMessageDisappearTimer();
           }
         } else {
-          List<UserBattleRoomDetails?> opponentUsers = context.read<MultiUserBattleRoomCubit>().getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
-          int opponentUserIndex = opponentUsers.indexWhere((element) => state.messages.last.by == element!.uid);
+          List<UserBattleRoomDetails?> opponentUsers = context
+              .read<MultiUserBattleRoomCubit>()
+              .getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+          int opponentUserIndex = opponentUsers
+              .indexWhere((element) => state.messages.last.by == element!.uid);
 
           //opponent message
           //
           //means timer is running
           if (opponentUserIndex != -1) {
-            if (opponentsMessageDisappearTimeInSeconds[opponentUserIndex] > 0 && opponentsMessageDisappearTimeInSeconds[opponentUserIndex] < 4) {
+            if (opponentsMessageDisappearTimeInSeconds[opponentUserIndex] > 0 &&
+                opponentsMessageDisappearTimeInSeconds[opponentUserIndex] < 4) {
               //
               opponentsMessageDisappearTimer[opponentUserIndex]?.cancel();
               setOpponentUserMessageDisappearTimer(opponentUserIndex);
@@ -341,7 +407,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     }
   }
 
-  void navigateToResultScreen(List<UserBattleRoomDetails?> users, BattleRoom? battleRoom, List<Question>? questions) {
+  void navigateToResultScreen(List<UserBattleRoomDetails?> users,
+      BattleRoom? battleRoom, List<Question>? questions) {
     bool navigateToResult = true;
 
     if (users.isEmpty) {
@@ -369,8 +436,11 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
           ), () {
         try {
           //delete battle room by creator of this room
-          if (battleRoom!.user1!.uid == context.read<UserDetailsCubit>().getUserId()) {
-            context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+          if (battleRoom!.user1!.uid ==
+              context.read<UserDetailsCubit>().getUserId()) {
+            context
+                .read<MultiUserBattleRoomCubit>()
+                .deleteMultiUserBattleRoom();
           }
           deleteMessages(context.read<MultiUserBattleRoomCubit>());
 
@@ -408,7 +478,9 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       bloc: battleRoomCubit,
       builder: (context, state) {
         if (state is MultiUserBattleRoomSuccess) {
-          if (battleRoomCubit.getUsers().length == 1 && state.battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserId()) {
+          if (battleRoomCubit.getUsers().length == 1 &&
+              state.battleRoom.user1!.uid ==
+                  context.read<UserDetailsCubit>().getUserId()) {
             timerAnimationController.stop();
             return Container(
               width: MediaQuery.of(context).size.width,
@@ -417,12 +489,16 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
               alignment: Alignment.center,
               child: AlertDialog(
                 title: Text(
-                  AppLocalization.of(context)!.getTranslatedValues('youWonLbl')!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  AppLocalization.of(context)!
+                      .getTranslatedValues('youWonLbl')!,
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
                 content: Text(
-                  AppLocalization.of(context)!.getTranslatedValues('everyOneLeftLbl')!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  AppLocalization.of(context)!
+                      .getTranslatedValues('everyOneLeftLbl')!,
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
                 actions: [
                   TextButton(
@@ -431,16 +507,21 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                       deleteMessages(context.read<MultiUserBattleRoomCubit>());
 
                       //add coins locally
-                      context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: battleRoomCubit.getEntryFee());
+                      context.read<UserDetailsCubit>().updateCoins(
+                          addCoin: true, coins: battleRoomCubit.getEntryFee());
                       //add coins in database
-                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(context.read<UserDetailsCubit>().getUserId(), battleRoomCubit.getEntryFee(), true);
+                      context.read<UpdateScoreAndCoinsCubit>().updateCoins(
+                          context.read<UserDetailsCubit>().getUserId(),
+                          battleRoomCubit.getEntryFee(),
+                          true);
 
                       //delete room
                       battleRoomCubit.deleteMultiUserBattleRoom();
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      AppLocalization.of(context)!.getTranslatedValues('okayLbl')!,
+                      AppLocalization.of(context)!
+                          .getTranslatedValues('okayLbl')!,
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                       ),
@@ -505,23 +586,46 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     );
   }
 
-  Widget _buildOpponentUserDetails({required int questionsLength, required AlignmentDirectional alignment, required List<UserBattleRoomDetails?> opponentUsers, required int opponentUserIndex}) {
-    UserBattleRoomDetails userBattleRoomDetails = opponentUsers[opponentUserIndex]!;
-    double progressPercentage = (100.0 * userBattleRoomDetails.answers.length) / questionsLength;
-    opponentProgressAnimationControllers[opponentUserIndex].value = NormalizeNumber.inRange(currentValue: progressPercentage, minValue: 0.0, maxValue: 100.0, newMaxValue: 1.0, newMinValue: 0.0);
+  Widget _buildOpponentUserDetails(
+      {required int questionsLength,
+      required AlignmentDirectional alignment,
+      required List<UserBattleRoomDetails?> opponentUsers,
+      required int opponentUserIndex}) {
+    UserBattleRoomDetails userBattleRoomDetails =
+        opponentUsers[opponentUserIndex]!;
+    double progressPercentage =
+        (100.0 * userBattleRoomDetails.answers.length) / questionsLength;
+    opponentProgressAnimationControllers[opponentUserIndex].value =
+        NormalizeNumber.inRange(
+            currentValue: progressPercentage,
+            minValue: 0.0,
+            maxValue: 100.0,
+            newMaxValue: 1.0,
+            newMinValue: 0.0);
     return Align(
       alignment: alignment,
       child: Padding(
         padding: EdgeInsetsDirectional.only(
-          start: alignment == AlignmentDirectional.bottomEnd || alignment == AlignmentDirectional.topEnd ? 0 : userDetailsPadding,
-          end: alignment == AlignmentDirectional.bottomEnd || alignment == AlignmentDirectional.topEnd ? userDetailsPadding : 0,
+          start: alignment == AlignmentDirectional.bottomEnd ||
+                  alignment == AlignmentDirectional.topEnd
+              ? 0
+              : userDetailsPadding,
+          end: alignment == AlignmentDirectional.bottomEnd ||
+                  alignment == AlignmentDirectional.topEnd
+              ? userDetailsPadding
+              : 0,
           bottom: userDetailsPadding,
-          top: alignment == AlignmentDirectional.topStart || alignment == AlignmentDirectional.topEnd ? MediaQuery.of(context).padding.top + userDetailsPadding * (0.25) : 0,
+          top: alignment == AlignmentDirectional.topStart ||
+                  alignment == AlignmentDirectional.topEnd
+              ? MediaQuery.of(context).padding.top + userDetailsPadding * (0.25)
+              : 0,
         ),
         child: RectangleUserProfileContainer(
           userBattleRoomDetails: userBattleRoomDetails,
-          isLeft: alignment == AlignmentDirectional.bottomStart || alignment == AlignmentDirectional.topStart,
-          animationController: opponentProgressAnimationControllers[opponentUserIndex],
+          isLeft: alignment == AlignmentDirectional.bottomStart ||
+              alignment == AlignmentDirectional.topStart,
+          animationController:
+              opponentProgressAnimationControllers[opponentUserIndex],
           progressColor: Theme.of(context).backgroundColor,
         ),
       ),
@@ -534,7 +638,11 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
       child: AnimatedBuilder(
         animation: messageBoxAnimationController,
         builder: (context, child) {
-          Color? buttonColor = messageBoxAnimation.drive(ColorTween(begin: Theme.of(context).colorScheme.secondary, end: Theme.of(context).backgroundColor)).value;
+          Color? buttonColor = messageBoxAnimation
+              .drive(ColorTween(
+                  begin: Theme.of(context).colorScheme.secondary,
+                  end: Theme.of(context).backgroundColor))
+              .value;
           return Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: IconButton(
@@ -571,10 +679,13 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
     return Align(
       alignment: Alignment.topCenter,
       child: SlideTransition(
-        position: messageBoxAnimation.drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
+        position: messageBoxAnimation
+            .drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
           battleRoomId: context.read<MultiUserBattleRoomCubit>().getRoomId(),
-          topPadding: MediaQuery.of(context).size.height * (0.095) + MediaQuery.of(context).padding.top + 15,
+          topPadding: MediaQuery.of(context).size.height * (0.095) +
+              MediaQuery.of(context).padding.top +
+              15,
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
           },
@@ -594,7 +705,9 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         alignment: Alignment(-0.5, 1.0), //-0.5 left side nad 0.5 is right side,
       ),
       start: userDetailsPadding,
-      bottom: MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2.4,
+      bottom: MediaQuery.of(context).size.height *
+              RectangleUserProfileContainer.userDetailsHeightPercentage +
+          userDetailsPadding * 2.4,
     );
   }
 
@@ -620,8 +733,17 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
         alignment: alignment, //-0.5 left side and 0.5 is right side,
       ),
       start: opponentUserIndex == 1 ? userDetailsPadding : null,
-      top: opponentUserIndex == 0 ? null : MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + MediaQuery.of(context).padding.top + userDetailsPadding * (1.375),
-      bottom: opponentUserIndex == 0 ? MediaQuery.of(context).size.height * RectangleUserProfileContainer.userDetailsHeightPercentage + userDetailsPadding * 2.4 : null,
+      top: opponentUserIndex == 0
+          ? null
+          : MediaQuery.of(context).size.height *
+                  RectangleUserProfileContainer.userDetailsHeightPercentage +
+              MediaQuery.of(context).padding.top +
+              userDetailsPadding * (1.375),
+      bottom: opponentUserIndex == 0
+          ? MediaQuery.of(context).size.height *
+                  RectangleUserProfileContainer.userDetailsHeightPercentage +
+              userDetailsPadding * 2.4
+          : null,
     );
   }
 
@@ -635,7 +757,9 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
           return Future.value(true);
         }
         //
-        if (battleRoomCubit.getUsers().length == 1 && battleRoomCubit.getUsers().first!.uid == context.read<UserDetailsCubit>().getUserId()) {
+        if (battleRoomCubit.getUsers().length == 1 &&
+            battleRoomCubit.getUsers().first!.uid ==
+                context.read<UserDetailsCubit>().getUserId()) {
           return Future.value(false);
         }
 
@@ -651,7 +775,8 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                       battleRoomCubit.deleteMultiUserBattleRoom();
                     } else {
                       //delete user from game room
-                      battleRoomCubit.deleteUserFromRoom(context.read<UserDetailsCubit>().getUserId());
+                      battleRoomCubit.deleteUserFromRoom(
+                          context.read<UserDetailsCubit>().getUserId());
                     }
                     deleteMessages(battleRoomCubit);
                     Navigator.of(context).pop();
@@ -694,25 +819,33 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                               key: Key("waitForOthers"),
                             )
                           : QuestionsContainer(
+                              timerAnimationController:
+                                  timerAnimationController,
                               topPadding: 16.5,
                               quizType: QuizTypes.groupPlay,
-                              toggleSettingDialog: toggleSettingDialog,
                               showAnswerCorrectness: true,
                               lifeLines: {},
-                              bookmarkButton: _buildBookmarkButton(battleRoomCubit),
+                              bookmarkButton:
+                                  _buildBookmarkButton(battleRoomCubit),
                               guessTheWordQuestionContainerKeys: [],
                               key: Key("questions"),
                               guessTheWordQuestions: [],
-                              hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
+                              hasSubmittedAnswerForCurrentQuestion:
+                                  hasSubmittedAnswerForCurrentQuestion,
                               questions: battleRoomCubit.getQuestions(),
                               submitAnswer: submitAnswer,
-                              questionContentAnimation: questionContentAnimation,
-                              questionScaleDownAnimation: questionScaleDownAnimation,
-                              questionScaleUpAnimation: questionScaleUpAnimation,
+                              questionContentAnimation:
+                                  questionContentAnimation,
+                              questionScaleDownAnimation:
+                                  questionScaleDownAnimation,
+                              questionScaleUpAnimation:
+                                  questionScaleUpAnimation,
                               questionSlideAnimation: questionSlideAnimation,
                               currentQuestionIndex: currentQuestionIndex,
-                              questionAnimationController: questionAnimationController,
-                              questionContentAnimationController: questionContentAnimationController,
+                              questionAnimationController:
+                                  questionAnimationController,
+                              questionContentAnimationController:
+                                  questionContentAnimationController,
                             ),
                     ),
                   )),
@@ -720,14 +853,19 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
               ...showUserLeftTheGame
                   ? []
                   : [
-                      _buildCurrentUserDetails(battleRoomCubit.getUser(context.read<UserDetailsCubit>().getUserId())!),
+                      _buildCurrentUserDetails(battleRoomCubit.getUser(
+                          context.read<UserDetailsCubit>().getUserId())!),
                       _buildCurrentUserMessageContainer(),
                       //
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: battleRoomCubit,
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            List<UserBattleRoomDetails?> opponentUsers =
+                                battleRoomCubit.getOpponentUsers(context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId());
                             return opponentUsers.length >= 1
                                 ? _buildOpponentUserDetails(
                                     questionsLength: state.questions.length,
@@ -741,11 +879,15 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                         },
                       ),
                       _buildOpponentUserMessageContainer(0),
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: battleRoomCubit,
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            List<UserBattleRoomDetails?> opponentUsers =
+                                battleRoomCubit.getOpponentUsers(context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId());
                             return opponentUsers.length >= 2
                                 ? _buildOpponentUserDetails(
                                     questionsLength: state.questions.length,
@@ -758,21 +900,31 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                           return Container();
                         },
                       ),
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: battleRoomCubit,
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
-                            return opponentUsers.length >= 2 ? _buildOpponentUserMessageContainer(1) : Container();
+                            List<UserBattleRoomDetails?> opponentUsers =
+                                battleRoomCubit.getOpponentUsers(context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId());
+                            return opponentUsers.length >= 2
+                                ? _buildOpponentUserMessageContainer(1)
+                                : Container();
                           }
                           return Container();
                         },
                       ),
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: battleRoomCubit,
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+                            List<UserBattleRoomDetails?> opponentUsers =
+                                battleRoomCubit.getOpponentUsers(context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId());
                             return opponentUsers.length >= 3
                                 ? _buildOpponentUserDetails(
                                     questionsLength: state.questions.length,
@@ -785,12 +937,18 @@ class _MultiUserBattleRoomQuizScreenState extends State<MultiUserBattleRoomQuizS
                           return Container();
                         },
                       ),
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: battleRoomCubit,
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            List<UserBattleRoomDetails?> opponentUsers = battleRoomCubit.getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
-                            return opponentUsers.length >= 3 ? _buildOpponentUserMessageContainer(2) : Container();
+                            List<UserBattleRoomDetails?> opponentUsers =
+                                battleRoomCubit.getOpponentUsers(context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId());
+                            return opponentUsers.length >= 3
+                                ? _buildOpponentUserMessageContainer(2)
+                                : Container();
                           }
                           return Container();
                         },

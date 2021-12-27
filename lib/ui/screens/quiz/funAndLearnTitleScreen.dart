@@ -18,7 +18,9 @@ class FunAndLearnTitleScreen extends StatefulWidget {
   final String type;
   final String typeId;
 
-  const FunAndLearnTitleScreen({Key? key, required this.type, required this.typeId}) : super(key: key);
+  const FunAndLearnTitleScreen(
+      {Key? key, required this.type, required this.typeId})
+      : super(key: key);
   @override
   _FunAndLearnTitleScreen createState() => _FunAndLearnTitleScreen();
   static Route<dynamic> route(RouteSettings routeSettings) {
@@ -62,7 +64,6 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
         padding: EdgeInsetsDirectional.only(top: 15.0, start: 20),
         child: CustomBackButton(
           iconColor: Theme.of(context).primaryColor,
-          isShowDialog: false,
         ),
       ),
     );
@@ -79,7 +80,8 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
             bloc: context.read<ComprehensionCubit>(),
             listener: (context, state) {},
             builder: (context, state) {
-              if (state is ComprehensionProgress || state is ComprehensionInitial) {
+              if (state is ComprehensionProgress ||
+                  state is ComprehensionInitial) {
                 return Center(
                   child: CircularProgressContainer(
                     useWhiteLoader: false,
@@ -88,7 +90,9 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
               }
               if (state is ComprehensionFailure) {
                 return ErrorContainer(
-                  errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+                  errorMessage: AppLocalization.of(context)!
+                      .getTranslatedValues(
+                          convertErrorCodeToLanguageKey(state.errorMessage)),
                   onTapRetry: () {
                     getComprehension();
                   },
@@ -96,7 +100,8 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                   errorMessageColor: Theme.of(context).primaryColor,
                 );
               }
-              final questions = (state as ComprehensionSuccess).getComprehension;
+              final questions =
+                  (state as ComprehensionSuccess).getComprehension;
               return ListView.builder(
                   shrinkWrap: true,
                   padding: EdgeInsets.only(bottom: 15.0),
@@ -104,7 +109,12 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.funAndLearn, arguments: {"detail": questions[index].detail, "id": questions[index].id, "quizType": QuizTypes.funAndLearn});
+                        Navigator.of(context)
+                            .pushNamed(Routes.funAndLearn, arguments: {
+                          "detail": questions[index].detail,
+                          "id": questions[index].id,
+                          "quizType": QuizTypes.funAndLearn
+                        });
                       },
                       child: Card(
                         margin: EdgeInsets.symmetric(
@@ -112,7 +122,8 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                           vertical: 10.0,
                         ),
                         color: Theme.of(context).primaryColor,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -133,12 +144,17 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                               width: 100,
                               padding: EdgeInsets.all(5),
                               child: Card(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
                                 child: Center(
                                     child: Text(
-                                  "${questions[index].noOfQue}\n" + AppLocalization.of(context)!.getTranslatedValues("questionLbl")!,
+                                  "${questions[index].noOfQue}\n" +
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues("questionLbl")!,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Theme.of(context).primaryColor, height: 1.0),
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      height: 1.0),
                                 )),
                               ),
                             )
@@ -160,7 +176,11 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
         top: MediaQuery.of(context).padding.top,
       ),
       child: Stack(
-        children: [PageBackgroundGradientContainer(), _buildBackButton(), _buildTitle()],
+        children: [
+          PageBackgroundGradientContainer(),
+          _buildBackButton(),
+          _buildTitle()
+        ],
       ),
     ));
   }

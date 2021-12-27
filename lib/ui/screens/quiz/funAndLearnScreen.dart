@@ -16,7 +16,8 @@ import 'package:flutterquiz/utils/stringLabels.dart';
 class FunAndLearnScreen extends StatefulWidget {
   final QuizTypes? quizType;
   final String? detail, id;
-  const FunAndLearnScreen({Key? key, this.quizType, this.detail, this.id}) : super(key: key);
+  const FunAndLearnScreen({Key? key, this.quizType, this.detail, this.id})
+      : super(key: key);
   @override
   _FunAndLearnScreen createState() => _FunAndLearnScreen();
   static Route<dynamic> route(RouteSettings routeSettings) {
@@ -30,15 +31,21 @@ class FunAndLearnScreen extends StatefulWidget {
   }
 }
 
-class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderStateMixin {
+class _FunAndLearnScreen extends State<FunAndLearnScreen>
+    with TickerProviderStateMixin {
   final double topPartHeightPrecentage = 0.275;
   final double userDetailsHeightPrecentage = 0.115;
   late AnimationController timerAnimationController;
 
   @override
   void initState() {
-    timerAnimationController = AnimationController(vsync: this, duration: Duration(seconds: comprehensionParagraphReadingTimeInSeconds));
-    timerAnimationController.forward().then((value) => navigateToQuestionScreen());
+    timerAnimationController = AnimationController(
+        vsync: this,
+        duration:
+            Duration(seconds: comprehensionParagraphReadingTimeInSeconds));
+    timerAnimationController
+        .forward()
+        .then((value) => navigateToQuestionScreen());
     super.initState();
   }
 
@@ -59,7 +66,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
 
   Widget _buildTimerContainer() {
     return Align(
-      alignment:Platform.isIOS? Alignment.topRight:Alignment.topCenter,
+      alignment: Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(top: 7.5),
         child: HorizontalTimerContainer(
@@ -81,7 +88,8 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
         child: CustomRoundedButton(
           widthPercentage: MediaQuery.of(context).size.width * (0.85),
           backgroundColor: Theme.of(context).primaryColor,
-          buttonTitle: AppLocalization.of(context)!.getTranslatedValues(letsStart)!,
+          buttonTitle:
+              AppLocalization.of(context)!.getTranslatedValues(letsStart)!,
           radius: 5,
           onTap: () {
             timerAnimationController.stop();
@@ -112,15 +120,16 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
           )),
     );
   }
-  Widget backButton(){
+
+  Widget backButton() {
     return Align(
         alignment: Alignment.topLeft,
-        child:Padding(
+        child: Padding(
             padding: EdgeInsets.only(left: 10),
-            child:CustomBackButton(iconColor: Theme.of(context).primaryColor,bgColor: Theme.of(context).backgroundColor,isShowDialog: false,)
-        )
-    );
+            child:
+                CustomBackButton(iconColor: Theme.of(context).primaryColor)));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,11 +139,9 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen> with TickerProviderSta
         children: [
           PageBackgroundGradientContainer(),
           _buildTimerContainer(),
-          Platform.isIOS?backButton():Container(),
+          Platform.isIOS ? backButton() : Container(),
           _buildParagraph(),
           _buildStartButton(),
-
-
         ],
       ),
     ));

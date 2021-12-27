@@ -38,7 +38,8 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
-  final GlobalKey<ExamTimerContainerState> timerKey = GlobalKey<ExamTimerContainerState>();
+  final GlobalKey<ExamTimerContainerState> timerKey =
+      GlobalKey<ExamTimerContainerState>();
 
   late PageController pageController = PageController();
 
@@ -85,12 +86,14 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   void initScreenshotAndScreenRecordDetectorInIos() async {
     _iosInsecureScreenDetector = IosInsecureScreenDetector();
     await _iosInsecureScreenDetector?.initialize();
-    _iosInsecureScreenDetector?.addListener(iosScreenshotCallback, iosScreenrecordCallback);
+    _iosInsecureScreenDetector?.addListener(
+        iosScreenshotCallback, iosScreenrecordCallback);
   }
 
   void iosScreenshotCallback() {
     print("User took screenshot");
-    iosCapturedScreenshotQuestionIds.add(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!);
+    iosCapturedScreenshotQuestionIds.add(
+        context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!);
   }
 
   void iosScreenrecordCallback(bool isRecording) {
@@ -165,7 +168,10 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
   }
 
   bool hasSubmittedAnswerForCurrentQuestion() {
-    return context.read<ExamCubit>().getQuestions()[currentQuestionIndex].attempted;
+    return context
+        .read<ExamCubit>()
+        .getQuestions()[currentQuestionIndex]
+        .attempted;
   }
 
   void submitResult() {
@@ -173,16 +179,22 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
         capturedQuestionIds: iosCapturedScreenshotQuestionIds,
         rulesViolated: iosCapturedScreenshotQuestionIds.isNotEmpty,
         userId: context.read<UserDetailsCubit>().getUserId(),
-        totalDuration: timerKey.currentState?.getCompletedExamDuration().toString() ?? "0");
+        totalDuration:
+            timerKey.currentState?.getCompletedExamDuration().toString() ??
+                "0");
   }
 
   void submitAnswer(String submittedAnswerId) {
     if (hasSubmittedAnswerForCurrentQuestion()) {
       if (context.read<ExamCubit>().canUserSubmitAnswerAgainInExam()) {
-        context.read<ExamCubit>().updateQuestionWithAnswer(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!, submittedAnswerId);
+        context.read<ExamCubit>().updateQuestionWithAnswer(
+            context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!,
+            submittedAnswerId);
       }
     } else {
-      context.read<ExamCubit>().updateQuestionWithAnswer(context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!, submittedAnswerId);
+      context.read<ExamCubit>().updateQuestionWithAnswer(
+          context.read<ExamCubit>().getQuestions()[currentQuestionIndex].id!,
+          submittedAnswerId);
     }
   }
 
@@ -201,7 +213,8 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
       "quizType": QuizTypes.exam,
       "exam": context.read<ExamCubit>().getExam(),
       "obtainedMarks": context.read<ExamCubit>().obtainedMarks(),
-      "examCompletedInMinutes": timerKey.currentState?.getCompletedExamDuration(),
+      "examCompletedInMinutes":
+          timerKey.currentState?.getCompletedExamDuration(),
       "correctExamAnswers": context.read<ExamCubit>().correctAnswers(),
       "incorrectExamAnswers": context.read<ExamCubit>().incorrectAnswers(),
       "numberOfPlayer": 1,
@@ -224,7 +237,9 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
             child: IconButton(
                 onPressed: () {
                   if (currentQuestionIndex != 0) {
-                    pageController.previousPage(duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+                    pageController.previousPage(
+                        duration: Duration(milliseconds: 250),
+                        curve: Curves.easeInOut);
                   }
                 },
                 icon: Icon(
@@ -242,17 +257,24 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
               radius: 20,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: SvgPicture.asset(UiUtils.getImagePath("moveto_icon.svg")),
+                child:
+                    SvgPicture.asset(UiUtils.getImagePath("moveto_icon.svg")),
               ),
             ),
           ),
           Spacer(),
           Opacity(
-            opacity: (context.read<ExamCubit>().getQuestions().length - 1) != currentQuestionIndex ? 1.0 : 0.5,
+            opacity: (context.read<ExamCubit>().getQuestions().length - 1) !=
+                    currentQuestionIndex
+                ? 1.0
+                : 0.5,
             child: IconButton(
                 onPressed: () {
-                  if (context.read<ExamCubit>().getQuestions().length - 1 != currentQuestionIndex) {
-                    pageController.nextPage(duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+                  if (context.read<ExamCubit>().getQuestions().length - 1 !=
+                      currentQuestionIndex) {
+                    pageController.nextPage(
+                        duration: Duration(milliseconds: 250),
+                        curve: Curves.easeInOut);
                   }
                 },
                 icon: Icon(
@@ -275,7 +297,6 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
               padding: EdgeInsetsDirectional.only(start: 20.0, bottom: 30.0),
               child: CustomBackButton(
                 removeSnackBars: false,
-                isShowDialog: false,
                 iconColor: Theme.of(context).primaryColor,
               ),
             ),
@@ -321,15 +342,22 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
               padding: EdgeInsetsDirectional.only(end: 20.0, bottom: 30.0),
               child: ExamTimerContainer(
                 navigateToResultScreen: navigateToResultScreen,
-                examDurationInMinutes: int.parse(context.read<ExamCubit>().getExam().duration),
+                examDurationInMinutes:
+                    int.parse(context.read<ExamCubit>().getExam().duration),
                 key: timerKey,
               ),
             ),
           ),
         ],
       ),
-      height: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage),
-      decoration: BoxDecoration(boxShadow: [UiUtils.buildAppbarShadow()], color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))),
+      height:
+          MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage),
+      decoration: BoxDecoration(
+          boxShadow: [UiUtils.buildAppbarShadow()],
+          color: Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20.0),
+              bottomRight: Radius.circular(20.0))),
     );
   }
 
@@ -344,7 +372,8 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
           color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
           child: AlertDialog(
             content: Text(
-              AppLocalization.of(context)!.getTranslatedValues(youLeftTheExamKey)!,
+              AppLocalization.of(context)!
+                  .getTranslatedValues(youLeftTheExamKey)!,
               style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
             actions: [
@@ -392,20 +421,27 @@ class _ExamScreenState extends State<ExamScreen> with WidgetsBindingObserver {
                         .map((option) => OptionContainer(
                             showAnswerCorrectness: false,
                             showAudiencePoll: false,
-                            hasSubmittedAnswerForCurrentQuestion: hasSubmittedAnswerForCurrentQuestion,
+                            hasSubmittedAnswerForCurrentQuestion:
+                                hasSubmittedAnswerForCurrentQuestion,
                             constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width * (0.85),
-                              maxHeight: MediaQuery.of(context).size.height * UiUtils.questionContainerHeightPercentage,
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * (0.85),
+                              maxHeight: MediaQuery.of(context).size.height *
+                                  UiUtils.questionContainerHeightPercentage,
                             ),
                             answerOption: option,
-                            correctOptionId: state.questions[index].correctAnswerOptionId!,
+                            correctOptionId:
+                                state.questions[index].correctAnswerOptionId!,
                             submitAnswer: submitAnswer,
-                            submittedAnswerId: state.questions[index].submittedAnswerId))
+                            submittedAnswerId:
+                                state.questions[index].submittedAnswerId))
                         .toList(),
                   ],
                 ),
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage) + 25,
+                  top: MediaQuery.of(context).size.height *
+                          (UiUtils.appBarHeightPercentage) +
+                      25,
                 ),
               );
             },

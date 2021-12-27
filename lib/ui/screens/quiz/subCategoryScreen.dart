@@ -16,7 +16,9 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 class SubCategoryScreen extends StatefulWidget {
   final String categoryId;
   final QuizTypes quizType;
-  const SubCategoryScreen({Key? key, required this.categoryId, required this.quizType}) : super(key: key);
+  const SubCategoryScreen(
+      {Key? key, required this.categoryId, required this.quizType})
+      : super(key: key);
 
   @override
   State<SubCategoryScreen> createState() => _SubCategoryScreenState();
@@ -25,7 +27,10 @@ class SubCategoryScreen extends StatefulWidget {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(
-              providers: [BlocProvider<SubCategoryCubit>(create: (_) => SubCategoryCubit(QuizRepository()))],
+              providers: [
+                BlocProvider<SubCategoryCubit>(
+                    create: (_) => SubCategoryCubit(QuizRepository()))
+              ],
               child: SubCategoryScreen(
                 categoryId: arguments['categoryId'],
                 quizType: arguments['quizType'],
@@ -54,7 +59,6 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         padding: EdgeInsetsDirectional.only(top: 15.0, start: 20),
         child: CustomBackButton(
           iconColor: Theme.of(context).primaryColor,
-          isShowDialog: false,
         ),
       ),
     );
@@ -65,7 +69,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         bloc: context.read<SubCategoryCubit>(),
         listener: (context, state) {},
         builder: (context, state) {
-          if (state is SubCategoryFetchInProgress || state is SubCategoryInitial) {
+          if (state is SubCategoryFetchInProgress ||
+              state is SubCategoryInitial) {
             return Center(
               child: CircularProgressContainer(
                 useWhiteLoader: false,
@@ -87,7 +92,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               ),
             );
           }
-          final subCategoryList = (state as SubCategoryFetchSuccess).subcategoryList;
+          final subCategoryList =
+              (state as SubCategoryFetchSuccess).subcategoryList;
           return Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -106,22 +112,28 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       height: 90,
                       alignment: Alignment.center,
                       margin: EdgeInsets.all(15),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0), color: Theme.of(context).primaryColor),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: Theme.of(context).primaryColor),
                       child: ListTile(
                         onTap: () {
                           if (widget.quizType == QuizTypes.guessTheWord) {
-                            Navigator.of(context).pushNamed(Routes.guessTheWord, arguments: {
+                            Navigator.of(context)
+                                .pushNamed(Routes.guessTheWord, arguments: {
                               "type": "subcategory",
                               "typeId": subCategoryList[index].id,
                             });
                           } else if (widget.quizType == QuizTypes.funAndLearn) {
-                            Navigator.of(context).pushNamed(Routes.funAndLearnTitle, arguments: {
+                            Navigator.of(context)
+                                .pushNamed(Routes.funAndLearnTitle, arguments: {
                               "type": "subcategory",
                               "typeId": subCategoryList[index].id,
                             });
-                          } else if (widget.quizType == QuizTypes.audioQuestions) {
+                          } else if (widget.quizType ==
+                              QuizTypes.audioQuestions) {
                             //
-                            Navigator.of(context).pushNamed(Routes.quiz, arguments: {
+                            Navigator.of(context)
+                                .pushNamed(Routes.quiz, arguments: {
                               "numberOfPlayer": 1,
                               "quizType": QuizTypes.audioQuestions,
                               "subcategoryId": subCategoryList[index].id,
@@ -136,7 +148,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                         ),
                         title: Text(
                           subCategoryList[index].subcategoryName!,
-                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                          style: TextStyle(
+                              color: Theme.of(context).backgroundColor),
                         ),
                       ));
                 },

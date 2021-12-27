@@ -12,9 +12,9 @@ import 'package:flutterquiz/ui/screens/quiz/quizScreen.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/audioQuestionContainer.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/optionContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionBackgroundCard.dart';
-import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/lifeLineOptions.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
@@ -40,14 +40,12 @@ class QuestionsContainer extends StatefulWidget {
   final String? level;
   final Map<String, LifelineStatus> lifeLines;
   final bool? showAnswerCorrectness;
-  final Function toggleSettingDialog;
-  final AnimationController? timerAnimationController;
+  final AnimationController timerAnimationController;
 
   const QuestionsContainer({
     Key? key,
     required this.submitAnswer,
     required this.quizType,
-    required this.toggleSettingDialog,
     required this.guessTheWordQuestionContainerKeys,
     required this.hasSubmittedAnswerForCurrentQuestion,
     required this.currentQuestionIndex,
@@ -63,7 +61,7 @@ class QuestionsContainer extends StatefulWidget {
     required this.lifeLines,
     this.audioQuestionContainerKeys,
     this.showAnswerCorrectness,
-    this.timerAnimationController,
+    required this.timerAnimationController,
     this.level,
     this.topPadding,
   }) : super(key: key);
@@ -77,14 +75,6 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
   List<int> percentages = [];
 
   double textSize = 14;
-  void settingDialog() {
-    widget.toggleSettingDialog();
-    showDialog(
-        context: context,
-        builder: (_) {
-          return SettingsDialogContainer();
-        }).then((value) => widget.toggleSettingDialog());
-  }
 
   //to get question length
   int getQuestionsLength() {
@@ -98,7 +88,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     if (widget.lifeLines.isNotEmpty) {
       if (widget.lifeLines[fiftyFifty] == LifelineStatus.using) {
         if (!question.attempted) {
-          fiftyFiftyAnswerOptions = LifeLineOptions.getFiftyFiftyOptions(question.answerOptions!, question.correctAnswerOptionId!);
+          fiftyFiftyAnswerOptions = LifeLineOptions.getFiftyFiftyOptions(
+              question.answerOptions!, question.correctAnswerOptionId!);
         }
         //build lifeline when using 50/50 lifelines
         return Column(
@@ -107,7 +98,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                       submittedAnswerId: question.submittedAnswerId,
                       showAnswerCorrectness: widget.showAnswerCorrectness!,
                       showAudiencePoll: false,
-                      hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
+                      hasSubmittedAnswerForCurrentQuestion:
+                          widget.hasSubmittedAnswerForCurrentQuestion,
                       constraints: constraints,
                       answerOption: answerOption,
                       correctOptionId: question.correctAnswerOptionId!,
@@ -118,7 +110,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
 
       if (widget.lifeLines[audiencePoll] == LifelineStatus.using) {
         if (!question.attempted) {
-          percentages = LifeLineOptions.getAudiencePollPercentage(question.answerOptions!, question.correctAnswerOptionId!);
+          percentages = LifeLineOptions.getAudiencePollPercentage(
+              question.answerOptions!, question.correctAnswerOptionId!);
         }
 
         //build options when using audience poll lifeline
@@ -130,7 +123,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
             showAnswerCorrectness: widget.showAnswerCorrectness!,
             showAudiencePoll: true,
             audiencePollPercentage: percentages[percentageIndex],
-            hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
+            hasSubmittedAnswerForCurrentQuestion:
+                widget.hasSubmittedAnswerForCurrentQuestion,
             constraints: constraints,
             answerOption: option,
             correctOptionId: question.correctAnswerOptionId!,
@@ -145,7 +139,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
             submittedAnswerId: question.submittedAnswerId,
             showAnswerCorrectness: widget.showAnswerCorrectness!,
             showAudiencePoll: false,
-            hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
+            hasSubmittedAnswerForCurrentQuestion:
+                widget.hasSubmittedAnswerForCurrentQuestion,
             constraints: constraints,
             answerOption: option,
             correctOptionId: question.correctAnswerOptionId!,
@@ -161,7 +156,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
           submittedAnswerId: question.submittedAnswerId,
           showAnswerCorrectness: widget.showAnswerCorrectness!,
           showAudiencePoll: false,
-          hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
+          hasSubmittedAnswerForCurrentQuestion:
+              widget.hasSubmittedAnswerForCurrentQuestion,
           constraints: constraints,
           answerOption: option,
           correctOptionId: question.correctAnswerOptionId!,
@@ -180,7 +176,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     }
     return Container(
       child: Text(
-        AppLocalization.of(context)!.getTranslatedValues("levelLbl")! + " : ${widget.level}",
+        AppLocalization.of(context)!.getTranslatedValues("levelLbl")! +
+            " : ${widget.level}",
         style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       ),
     );
@@ -195,15 +192,12 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
         builder: (context, state) {
           if (state is UserDetailsFetchSuccess) {
             return Align(
-              alignment: AlignmentDirectional.center,
-              child: Padding(
-                padding: EdgeInsetsDirectional.only(
-                  end: MediaQuery.of(context).size.width * (0.175),
-                ),
-                child: Text(
-                  AppLocalization.of(context)!.getTranslatedValues("coinsLbl")! + ":${state.userProfile.coins}",
-                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                ),
+              alignment: AlignmentDirectional.topEnd,
+              child: Text(
+                AppLocalization.of(context)!.getTranslatedValues("coinsLbl")! +
+                    " : ${state.userProfile.coins}",
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             );
           }
@@ -214,22 +208,23 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
   Widget _buildCurrentQuestionIndex() {
     return Align(
       alignment: AlignmentDirectional.center,
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(start: widget.lifeLines.isEmpty ? 0 : MediaQuery.of(context).size.width * (0.175)),
-        child: Text(
-          "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
-          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-        ),
+      child: Text(
+        "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       ),
     );
   }
 
-  Widget _buildQuesitonContainer(double scale, int index, bool showContent, BuildContext context) {
+  Widget _buildQuesitonContainer(
+      double scale, int index, bool showContent, BuildContext context) {
     Widget child = LayoutBuilder(builder: (context, constraints) {
       if (widget.questions.isEmpty) {
         return GuessTheWordQuestionContainer(
-          timerAnimationController: widget.timerAnimationController!,
-          key: showContent ? widget.guessTheWordQuestionContainerKeys[widget.currentQuestionIndex] : null,
+          timerAnimationController: widget.timerAnimationController,
+          key: showContent
+              ? widget.guessTheWordQuestionContainerKeys[
+                  widget.currentQuestionIndex]
+              : null,
           submitAnswer: widget.submitAnswer,
           constraints: constraints,
           currentQuestionIndex: widget.currentQuestionIndex,
@@ -238,13 +233,15 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       } else {
         if (widget.quizType == QuizTypes.audioQuestions) {
           return AudioQuestionContainer(
-            key: widget.audioQuestionContainerKeys![widget.currentQuestionIndex],
-            hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
+            key:
+                widget.audioQuestionContainerKeys![widget.currentQuestionIndex],
+            hasSubmittedAnswerForCurrentQuestion:
+                widget.hasSubmittedAnswerForCurrentQuestion,
             constraints: constraints,
             currentQuestionIndex: widget.currentQuestionIndex,
             questions: widget.questions,
             submitAnswer: widget.submitAnswer,
-            timerAnimationController: widget.timerAnimationController!,
+            timerAnimationController: widget.timerAnimationController,
           );
         }
         Question question = widget.questions[index];
@@ -255,7 +252,14 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                   ? SizedBox(
                       height: 22.5,
                     )
-                  : SizedBox(),
+                  : SizedBox(
+                      height: 17.5,
+                    ),
+              HorizontalTimerContainer(
+                  timerAnimationController: widget.timerAnimationController),
+              SizedBox(
+                height: 12.5,
+              ),
               Container(
                 child: Stack(
                   alignment: Alignment.center,
@@ -266,31 +270,23 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                     ),
                     _buildCurrentCoins(),
                     _buildCurrentQuestionIndex(),
-                    Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.only(end: widget.bookmarkButton.toString() == "Container" ? 0.0 : 30.0),
-                        child: IconButton(
-                          color: Theme.of(context).colorScheme.secondary,
-                          icon: Icon(Icons.settings),
-                          onPressed: () {
-                            settingDialog();
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: widget.bookmarkButton,
-                    ),
                   ],
                 ),
+              ),
+              Divider(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              SizedBox(
+                height: 5.0,
               ),
               Container(
                 alignment: Alignment.center,
                 child: Text(
                   "${question.question}",
-                  style: TextStyle(height: 1.125, color: Theme.of(context).colorScheme.secondary, fontSize: textSize),
+                  style: TextStyle(
+                      height: 1.125,
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: textSize),
                 ),
               ),
               question.imageUrl != null && question.imageUrl!.isNotEmpty
@@ -322,7 +318,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                           imageBuilder: (context, imageProvider) {
                             return Container(
                               decoration: BoxDecoration(
-                                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(25.0),
                               ),
                             );
@@ -353,7 +350,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     return Container(
       child: showContent
           ? SlideTransition(
-              position: widget.questionContentAnimation.drive(Tween<Offset>(begin: Offset(0.5, 0.0), end: Offset.zero)),
+              position: widget.questionContentAnimation.drive(
+                  Tween<Offset>(begin: Offset(0.5, 0.0), end: Offset.zero)),
               child: FadeTransition(
                 opacity: widget.questionContentAnimation,
                 child: child,
@@ -363,9 +361,13 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       transform: Matrix4.identity()..scale(scale),
       transformAlignment: Alignment.center,
       padding: EdgeInsets.symmetric(horizontal: 25.0),
-      width: MediaQuery.of(context).size.width * (0.85),
-      height: MediaQuery.of(context).size.height * UiUtils.questionContainerHeightPercentage,
-      decoration: BoxDecoration(color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(25)),
+      width: MediaQuery.of(context).size.width *
+          UiUtils.quesitonContainerWidthPercentage,
+      height: MediaQuery.of(context).size.height *
+          UiUtils.questionContainerHeightPercentage,
+      decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.circular(25)),
     );
   }
 
@@ -376,19 +378,27 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     //so we need to add animation that slide and fade this question
     if (widget.currentQuestionIndex == questionIndex) {
       return FadeTransition(
-          opacity: widget.questionSlideAnimation.drive(Tween<double>(begin: 1.0, end: 0.0)),
-          child: SlideTransition(child: _buildQuesitonContainer(1.0, questionIndex, true, context), position: widget.questionSlideAnimation.drive(Tween<Offset>(begin: Offset.zero, end: Offset(-1.5, 0.0)))));
+          opacity: widget.questionSlideAnimation
+              .drive(Tween<double>(begin: 1.0, end: 0.0)),
+          child: SlideTransition(
+              child: _buildQuesitonContainer(1.0, questionIndex, true, context),
+              position: widget.questionSlideAnimation.drive(
+                  Tween<Offset>(begin: Offset.zero, end: Offset(-1.5, 0.0)))));
     }
     //if the question is second or after current question
     //so we need to animation that scale this question
     //initial scale of this question is 0.95
 
-    else if (questionIndex > widget.currentQuestionIndex && (questionIndex == widget.currentQuestionIndex + 1)) {
+    else if (questionIndex > widget.currentQuestionIndex &&
+        (questionIndex == widget.currentQuestionIndex + 1)) {
       return AnimatedBuilder(
           animation: widget.questionAnimationController,
           builder: (context, child) {
-            double scale = 0.95 + widget.questionScaleUpAnimation.value - widget.questionScaleDownAnimation.value;
-            return _buildQuesitonContainer(scale, questionIndex, false, context);
+            double scale = 0.95 +
+                widget.questionScaleUpAnimation.value -
+                widget.questionScaleDownAnimation.value;
+            return _buildQuesitonContainer(
+                scale, questionIndex, false, context);
           });
     }
     //to build question except top 2
@@ -423,14 +433,16 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
         listener: (context, state) {
           if (state.settingsModel!.playAreaFontSize != textSize) {
             setState(() {
-              textSize = context.read<SettingsCubit>().getSettings().playAreaFontSize;
+              textSize =
+                  context.read<SettingsCubit>().getSettings().playAreaFontSize;
             });
           }
         },
         child: SingleChildScrollView(
             child: Padding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + (widget.topPadding ?? 7.5),
+            top:
+                MediaQuery.of(context).padding.top + (widget.topPadding ?? 7.5),
           ),
           child: Stack(
             alignment: Alignment.topCenter,

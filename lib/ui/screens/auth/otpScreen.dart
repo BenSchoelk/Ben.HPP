@@ -41,9 +41,11 @@ class _OtpScreen extends State<OtpScreen> {
   TextEditingController phoneNumberController = TextEditingController();
 
   CountryCode? selectedCountrycode;
-  final TextEditingController smsCodeEditingController = TextEditingController();
+  final TextEditingController smsCodeEditingController =
+      TextEditingController();
 
-  final GlobalKey<ResendOtpTimerContainerState> resendOtpTimerContainerKey = GlobalKey<ResendOtpTimerContainerState>();
+  final GlobalKey<ResendOtpTimerContainerState> resendOtpTimerContainerKey =
+      GlobalKey<ResendOtpTimerContainerState>();
 
   bool codeSent = false;
   bool hasError = false;
@@ -65,7 +67,11 @@ class _OtpScreen extends State<OtpScreen> {
         print("Firebase Auth error------------");
         print(e.message);
         print("---------------------");
-        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+        UiUtils.setSnackbar(
+            AppLocalization.of(context)!.getTranslatedValues(
+                convertErrorCodeToLanguageKey(defaultErrorMessageCode))!,
+            context,
+            false);
 
         setState(() {
           isLoading = false;
@@ -134,7 +140,8 @@ class _OtpScreen extends State<OtpScreen> {
             PageBackgroundGradientContainer(),
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.075)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * (0.075)),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -148,8 +155,12 @@ class _OtpScreen extends State<OtpScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * (0.04),
                     ),
-                    codeSent ? _buildSmsCodeContainer() : _buildMobileNumberWithCountryCode(),
-                    codeSent ? _buildSubmitOtpContainer() : _buildRequestOtpContainer(),
+                    codeSent
+                        ? _buildSmsCodeContainer()
+                        : _buildMobileNumberWithCountryCode(),
+                    codeSent
+                        ? _buildSubmitOtpContainer()
+                        : _buildRequestOtpContainer(),
                     codeSent ? _buildResendText() : Container(),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * (0.025),
@@ -172,14 +183,17 @@ class _OtpScreen extends State<OtpScreen> {
             flex: 1,
             child: CustomBackButton(
               iconColor: Theme.of(context).primaryColor,
-              isShowDialog: false,
             )),
         Expanded(
           flex: 10,
           child: Text(
-            AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,
+            AppLocalization.of(context)!
+                .getTranslatedValues('otpVerificationLbl')!,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
           ),
         ),
       ],
@@ -190,14 +204,19 @@ class _OtpScreen extends State<OtpScreen> {
     return Text(
       AppLocalization.of(context)!.getTranslatedValues('otpVerificationLbl')!,
       textAlign: TextAlign.center,
-      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.bold),
+      style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontSize: 22,
+          fontWeight: FontWeight.bold),
     );
   }
 
   Widget _buildClockAnimation() {
     return Container(
       transformAlignment: Alignment.topCenter,
-      child: Lottie.asset("assets/animations/login.json", height: MediaQuery.of(context).size.height * .25, width: MediaQuery.of(context).size.width * 3),
+      child: Lottie.asset("assets/animations/login.json",
+          height: MediaQuery.of(context).size.height * .25,
+          width: MediaQuery.of(context).size.width * 3),
     );
   }
 
@@ -241,7 +260,9 @@ class _OtpScreen extends State<OtpScreen> {
               focusedBorder: border,
               focusedErrorBorder: border,
               isDense: true,
-              hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
+              hintStyle: TextStyle(
+                  color:
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.6)),
               hintText: "+91 999-999-999",
             ),
           ),
@@ -292,13 +313,19 @@ class _OtpScreen extends State<OtpScreen> {
         }
 
         return Container(
-          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * (0.07), left: MediaQuery.of(context).size.width * (0.07), top: MediaQuery.of(context).size.width * (0.04)),
+          padding: EdgeInsets.only(
+              right: MediaQuery.of(context).size.width * (0.07),
+              left: MediaQuery.of(context).size.width * (0.07),
+              top: MediaQuery.of(context).size.width * (0.04)),
           width: MediaQuery.of(context).size.width,
           child: CupertinoButton(
             borderRadius: BorderRadius.circular(15),
             child: Text(
               AppLocalization.of(context)!.getTranslatedValues(submitBtn)!,
-              style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Theme.of(context).backgroundColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             color: Theme.of(context).primaryColor,
             onPressed: () async {
@@ -317,19 +344,28 @@ class _OtpScreen extends State<OtpScreen> {
       listener: (context, state) {
         if (state is SignInSuccess) {
           //update auth details
-          context.read<AuthCubit>().updateAuthDetails(authProvider: AuthProvider.mobile, authStatus: true, firebaseId: state.user.uid, isNewUser: state.isNewUser);
+          context.read<AuthCubit>().updateAuthDetails(
+              authProvider: AuthProvider.mobile,
+              authStatus: true,
+              firebaseId: state.user.uid,
+              isNewUser: state.isNewUser);
 
           if (state.isNewUser) {
             context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
             Navigator.of(context).pop();
-            Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
+            Navigator.of(context)
+                .pushReplacementNamed(Routes.selectProfile, arguments: true);
           } else {
             context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
             Navigator.of(context).pop();
             Navigator.of(context).pushReplacementNamed(Routes.home);
           }
         } else if (state is SignInFailure) {
-          UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, false);
+          UiUtils.setSnackbar(
+              AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!,
+              context,
+              false);
         }
       },
     );
@@ -343,23 +379,32 @@ class _OtpScreen extends State<OtpScreen> {
       );
     }
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * .07, vertical: MediaQuery.of(context).size.height * .04),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * .07,
+          vertical: MediaQuery.of(context).size.height * .04),
       width: MediaQuery.of(context).size.width,
       child: CupertinoButton(
         borderRadius: BorderRadius.circular(15),
         child: Text(
           AppLocalization.of(context)!.getTranslatedValues("requestOtpLbl")!,
-          style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Theme.of(context).backgroundColor,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
         ),
         color: Theme.of(context).primaryColor,
         onPressed: () async {
           if (phoneNumberController.text.trim().length < 6) {
-            UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(validMobMsg)!, context, false);
+            UiUtils.setSnackbar(
+                AppLocalization.of(context)!.getTranslatedValues(validMobMsg)!,
+                context,
+                false);
           } else {
             setState(() {
               isLoading = true;
             });
-            signInWithPhoneNumber(phoneNumber: phoneNumberController.text.trim());
+            signInWithPhoneNumber(
+                phoneNumber: phoneNumberController.text.trim());
           }
         },
       ),
@@ -387,12 +432,17 @@ class _OtpScreen extends State<OtpScreen> {
                       enableResendOtpButton = false;
                     });
                     resendOtpTimerContainerKey.currentState?.cancelOtpTimer();
-                    signInWithPhoneNumber(phoneNumber: phoneNumberController.text.trim());
+                    signInWithPhoneNumber(
+                        phoneNumber: phoneNumberController.text.trim());
                   }
                 : null,
             child: Text(
               AppLocalization.of(context)!.getTranslatedValues("resendBtn")!,
-              style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor, decoration: TextDecoration.underline, fontWeight: FontWeight.normal),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).primaryColor,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.normal),
             ),
           ),
         ],

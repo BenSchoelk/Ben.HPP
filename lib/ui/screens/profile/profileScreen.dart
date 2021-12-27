@@ -186,7 +186,6 @@ class ProfileScreen extends StatelessWidget {
                                     alignment: Alignment.topLeft,
                                     child: CustomBackButton(
                                       iconColor: Theme.of(context).primaryColor,
-                                      isShowDialog: false,
                                     ),
                                   ),
                                   Align(
