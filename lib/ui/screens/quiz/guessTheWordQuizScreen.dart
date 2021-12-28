@@ -207,7 +207,6 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
 
   //next question
   void changeQuestion() {
-    /*
     questionAnimationController.forward(from: 0.0).then((value) {
       //need to dispose the animation controllers
       questionAnimationController.dispose();
@@ -220,7 +219,6 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
       //load content(options, image etc) of question
       questionContentAnimationController.forward();
     });
-    */
   }
 
   Widget _buildQuesitons(GuessTheWordQuizCubit guessTheWordQuizCubit) {
