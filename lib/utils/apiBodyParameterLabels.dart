@@ -41,3 +41,4 @@ final String statisticsKey = "statistics";
 final String obtainedMarksKey = "obtained_marks";
 final String rulesViolatedKey = "rules_violated";
 final String capturedQuestionIdsKey = "captured_question_ids";
+final String titleKey = "title";

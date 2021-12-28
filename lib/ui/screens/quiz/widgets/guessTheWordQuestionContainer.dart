@@ -168,11 +168,13 @@ class GuessTheWordQuestionContainerState
           addCoin: true,
           coins: lifeLineDeductCoins,
         );
+
+    //TODO : Watched reward ad
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-          context.read<UserDetailsCubit>().getUserId(),
-          lifeLineDeductCoins,
-          true,
-        );
+        context.read<UserDetailsCubit>().getUserId(),
+        lifeLineDeductCoins,
+        true,
+        "Watched reward ad");
     widget.timerAnimationController
         .forward(from: widget.timerAnimationController.value);
   }
@@ -442,11 +444,12 @@ class GuessTheWordQuestionContainerState
                       addCoin: false,
                       coins: lifeLineDeductCoins,
                     );
+                //TODO : Use of lifeline - localization
                 context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                      context.read<UserDetailsCubit>().getUserId(),
-                      lifeLineDeductCoins,
-                      false,
-                    );
+                    context.read<UserDetailsCubit>().getUserId(),
+                    lifeLineDeductCoins,
+                    false,
+                    "Use of lifeline");
 
                 //change current selected answer box
                 changeCurrentSelectedAnswerBox(hintIndex);

@@ -487,11 +487,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           addCoin: true,
           coins: lifeLineDeductCoins,
         );
+
+    //TODO : Watched reward ad
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-          context.read<UserDetailsCubit>().getUserId(),
-          lifeLineDeductCoins,
-          true,
-        );
+        context.read<UserDetailsCubit>().getUserId(),
+        lifeLineDeductCoins,
+        true,
+        "Watched reward ad");
     timerAnimationController.forward(from: timerAnimationController.value);
   }
 
@@ -558,10 +560,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         //mark fiftyFifty lifeline as using
 
                         //update coins in cloud
+                        //TODO : Use of fifty-fifty lifeline
                         context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                             context.read<UserDetailsCubit>().getUserId(),
                             5,
-                            false);
+                            false,
+                            "Use of 50-50 lifeline");
                         setState(() {
                           lifelines[fiftyFifty] = LifelineStatus.using;
                         });
@@ -584,10 +588,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       context.read<UserDetailsCubit>().updateCoins(
                           addCoin: false, coins: lifeLineDeductCoins);
                       //update coins in cloud
+
+                      //TODO : Use of audience-poll lifeline
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
                           5,
-                          false);
+                          false,
+                          "Use of audience poll lifeline");
                       setState(() {
                         lifelines[audiencePoll] = LifelineStatus.using;
                       });
@@ -610,11 +617,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           addCoin: false, coins: lifeLineDeductCoins);
                       //mark fiftyFifty lifeline as using
 
+                      //TODO : Use of reset timer lifeline
                       //update coins in cloud
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,
-                          false);
+                          false,
+                          "Use of reset timer lifeline");
                       setState(() {
                         lifelines[resetTime] = LifelineStatus.using;
                       });
@@ -639,10 +648,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           .read<UserDetailsCubit>()
                           .updateCoins(addCoin: false, coins: 5);
                       //update coins in cloud
+
+                      //TODO : Use of skip lifeline
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,
-                          false);
+                          false,
+                          "Use of skip lifeline");
                       setState(() {
                         lifelines[skip] = LifelineStatus.using;
                       });

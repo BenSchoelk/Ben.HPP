@@ -253,6 +253,8 @@ class _ResultScreenState extends State<ResultScreen> {
               currentUser.points,
               true,
               earnedCoins,
+              //TODO : title for battle winner localization
+              "Won battle",
             );
         //update score locally and database
         context
@@ -375,6 +377,23 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
+  void _updateCoinsAndScore() {
+    //update score and coins for user
+    context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(
+        context.read<UserDetailsCubit>().getUserId(),
+        widget.myPoints!,
+        true,
+        _earnedCoins,
+        //TODO : Add title for quizzone coins update - localizaiton
+        "Unlocked new level - Quiz zone");
+    //update score locally and database
+    context
+        .read<UserDetailsCubit>()
+        .updateCoins(addCoin: true, coins: _earnedCoins);
+
+    context.read<UserDetailsCubit>().updateScore(widget.myPoints);
+  }
+
   //
   void _updateScoreAndCoinsDetails() {
     //we need to update score and coins only when quiz type is not self challenge, battle and contest
@@ -384,45 +403,43 @@ class _ResultScreenState extends State<ResultScreen> {
         widget.quizType != QuizTypes.exam) {
       //if percentage is more than 30 then update socre and coins
       if (_isWinner) {
-        //update score and coins for user
-        context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(
-              context.read<UserDetailsCubit>().getUserId(),
-              widget.myPoints!,
-              true,
-              _earnedCoins,
-            );
-        //update score locally and database
-        context
-            .read<UserDetailsCubit>()
-            .updateCoins(addCoin: true, coins: _earnedCoins);
-
-        context.read<UserDetailsCubit>().updateScore(widget.myPoints);
-
-        //if quizType is quizZone we need to update unlocked level
+        //
+        //if quizType is quizZone we need to update unlocked level,coins and score
+        //only one time
+        //
         if (widget.quizType == QuizTypes.quizZone) {
-          //if this level is not last level then update level
-          if (widget.subcategoryMaxLevel != widget.questions!.first.level) {
-            //if given level is same as unlocked level then update level
-            if (int.parse(widget.questions!.first.level!) ==
-                widget.unlockedLevel) {
-              int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
-              //update level
-              context.read<UpdateLevelCubit>().updateLevel(
-                  context.read<UserDetailsCubit>().getUserId(),
-                  widget.questions!.first.categoryId,
-                  widget.questions!.first.subcategoryId,
-                  updatedLevel.toString());
-            }
+          //if given level is same as unlocked level then update level
+          if (int.parse(widget.questions!.first.level!) ==
+              widget.unlockedLevel) {
+            int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
+            //update level
+            context.read<UpdateLevelCubit>().updateLevel(
+                context.read<UserDetailsCubit>().getUserId(),
+                widget.questions!.first.categoryId,
+                widget.questions!.first.subcategoryId,
+                updatedLevel.toString());
+            _updateCoinsAndScore();
+          } else {
+            print("Level already unlocked so no coins and score updates");
           }
         }
-      } else {
-        //update only score
-        context.read<UpdateScoreAndCoinsCubit>().updateScore(
-              context.read<UserDetailsCubit>().getUserId(),
-              widget.myPoints,
-            );
-        context.read<UserDetailsCubit>().updateScore(widget.myPoints);
+        //update coins for other quiz Type (except quizZone)
+        else {
+          _updateCoinsAndScore();
+        }
       }
+      //
+      // else {
+      //   //
+      //   if (widget.quizType != QuizTypes.quizZone) {
+      //     //update only score
+      //     context.read<UpdateScoreAndCoinsCubit>().updateScore(
+      //           context.read<UserDetailsCubit>().getUserId(),
+      //           widget.myPoints,
+      //         );
+      //     context.read<UserDetailsCubit>().updateScore(widget.myPoints);
+      //   }
+      // }
     }
   }
 
@@ -512,7 +529,12 @@ class _ResultScreenState extends State<ResultScreen> {
       return false;
     }
 
-    return true;
+    if (widget.quizType == QuizTypes.quizZone) {
+      return (int.parse(widget.questions!.first.level!) ==
+          widget.unlockedLevel);
+    }
+
+    return _isWinner;
   }
 
   int totalQuestions() {

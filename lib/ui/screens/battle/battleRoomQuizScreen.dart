@@ -137,10 +137,12 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
     //if battle is not from tournament then deduct coins
     if (!widget.isTournamentBattle) {
       Future.delayed(Duration.zero, () {
+        //TODO : Played battle  - localization
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(
             context.read<UserDetailsCubit>().getUserId(),
             context.read<BattleRoomCubit>().getEntryFee(),
-            false);
+            false,
+            "Played battle");
         context.read<UserDetailsCubit>().updateCoins(
             addCoin: false,
             coins: context.read<BattleRoomCubit>().getEntryFee());
@@ -828,10 +830,13 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                       return _buildYouWonContainer(() {
                         deleteMessages(
                             context.read<BattleRoomCubit>().getRoomId());
+                        //TODO : Won battle - localization
                         context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                            context.read<UserDetailsCubit>().getUserId(),
-                            context.read<BattleRoomCubit>().getEntryFee() * 2,
-                            true);
+                              context.read<UserDetailsCubit>().getUserId(),
+                              context.read<BattleRoomCubit>().getEntryFee() * 2,
+                              true,
+                              "Won battle",
+                            );
                         context.read<UserDetailsCubit>().updateCoins(
                             addCoin: true,
                             coins:

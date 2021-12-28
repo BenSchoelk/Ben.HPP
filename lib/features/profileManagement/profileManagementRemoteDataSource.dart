@@ -116,6 +116,7 @@ class ProfileManagementRemoteDataSource {
     required String userId,
     required String score,
     required String coins,
+    required String title,
     String? type,
   }) async {
     try {
@@ -125,7 +126,9 @@ class ProfileManagementRemoteDataSource {
         userIdKey: userId,
         coinsKey: coins,
         scoreKey: score,
-        typeKey: type ?? ""
+        typeKey: type ?? "",
+        titleKey: title,
+        statusKey: (int.parse(coins) < 0) ? "1" : "0",
       };
 
       if (body[typeKey]!.isEmpty) {
@@ -160,6 +163,7 @@ class ProfileManagementRemoteDataSource {
   Future<dynamic> updateCoins({
     required String userId,
     required String coins,
+    required String title,
     String? type, //dashing_debut, clash_winner
   }) async {
     try {
@@ -167,7 +171,9 @@ class ProfileManagementRemoteDataSource {
         accessValueKey: accessValue,
         userIdKey: userId,
         coinsKey: coins,
-        typeKey: type ?? ""
+        titleKey: title,
+        statusKey: (int.parse(coins) < 0) ? "1" : "0",
+        typeKey: type ?? "",
       };
       if (body[typeKey]!.isEmpty) {
         body.remove(typeKey);

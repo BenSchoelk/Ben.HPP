@@ -117,10 +117,13 @@ class _MultiUserBattleRoomQuizScreenState
   void initState() {
     //deduct coins of entry fee
     Future.delayed(Duration.zero, () {
+      //TODO : Played group battle
       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-          context.read<UserDetailsCubit>().getUserId(),
-          context.read<MultiUserBattleRoomCubit>().getEntryFee(),
-          false);
+            context.read<UserDetailsCubit>().getUserId(),
+            context.read<MultiUserBattleRoomCubit>().getEntryFee(),
+            false,
+            "Played group battle",
+          );
       context.read<UserDetailsCubit>().updateCoins(
           addCoin: false,
           coins: context.read<MultiUserBattleRoomCubit>().getEntryFee());
@@ -510,10 +513,14 @@ class _MultiUserBattleRoomQuizScreenState
                       context.read<UserDetailsCubit>().updateCoins(
                           addCoin: true, coins: battleRoomCubit.getEntryFee());
                       //add coins in database
+
+                      //TODO : Win amount to users * entry fee
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
-                          context.read<UserDetailsCubit>().getUserId(),
-                          battleRoomCubit.getEntryFee(),
-                          true);
+                            context.read<UserDetailsCubit>().getUserId(),
+                            battleRoomCubit.getEntryFee(),
+                            true,
+                            "Won group battle",
+                          );
 
                       //delete room
                       battleRoomCubit.deleteMultiUserBattleRoom();

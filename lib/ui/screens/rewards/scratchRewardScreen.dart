@@ -38,10 +38,13 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
       return;
     }
     context.read<BadgesCubit>().unlockReward(widget.reward.type);
+
+    //TODO : Earn reward by scratching card
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
           context.read<UserDetailsCubit>().getUserId(),
           int.parse(widget.reward.badgeReward),
           true,
+          "Reward by scratching card",
           type: widget.reward.type,
         );
     context.read<UserDetailsCubit>().updateCoins(
@@ -106,7 +109,8 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                         threshold: 50,
                         accuracy: ScratchAccuracy.low,
                         color: Theme.of(context).primaryColor,
-                        image: Image.asset(UiUtils.getImagePath("scratchCardCover.png")),
+                        image: Image.asset(
+                            UiUtils.getImagePath("scratchCardCover.png")),
                         child: UnlockedRewardContent(
                           reward: widget.reward,
                           increaseFont: true,
@@ -125,12 +129,18 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
                       child: Container(
                         child: Center(
                           child: Text(
-                            AppLocalization.of(context)!.getTranslatedValues(scratchHereKey)!,
-                            style: TextStyle(color: Theme.of(context).backgroundColor, fontSize: 18.0),
+                            AppLocalization.of(context)!
+                                .getTranslatedValues(scratchHereKey)!,
+                            style: TextStyle(
+                                color: Theme.of(context).backgroundColor,
+                                fontSize: 18.0),
                           ),
                         ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.6),
                         ),
                         height: MediaQuery.of(context).size.height * (0.075),
                         width: MediaQuery.of(context).size.width * (0.8),
