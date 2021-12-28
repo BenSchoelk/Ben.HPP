@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -178,43 +177,36 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: constraints.maxHeight * (0.025),
                         ),
-                        //Ios platform back button add
-                        Platform.isIOS
-                            ? Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: CustomBackButton(
-                                      iconColor: Theme.of(context).primaryColor,
-                                    ),
+                        Container(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: CustomBackButton(
+                                    iconColor: Theme.of(context).primaryColor,
                                   ),
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Text(
-                                      AppLocalization.of(context)!
-                                          .getTranslatedValues("profileLbl")!,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontSize: 20.0),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Text(
-                                AppLocalization.of(context)!
-                                    .getTranslatedValues(
-                                        accountKey)!, //profileLbl
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 20.0),
+                                ),
                               ),
-
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues("profileLbl")!,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 20.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(
                           height: constraints.maxHeight * (0.025),
                         ),
-
                         Stack(
                           alignment: Alignment.center,
                           children: [
@@ -291,7 +283,6 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: constraints.maxHeight * (0.025),
                         ),
-
                         _buildProfileTile(
                           canEditField: true,
                           boxConstraints: constraints,
@@ -363,7 +354,6 @@ class ProfileScreen extends StatelessWidget {
                           title: AppLocalization.of(context)!
                               .getTranslatedValues("emailLbl")!,
                         ),
-
                         SizedBox(
                           height: constraints.maxHeight * (0.025),
                         ),
@@ -376,7 +366,6 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: constraints.maxHeight * (0.01),
                         ),
-
                         MenuTile(
                           isSvgIcon: true,
                           onTap: () {

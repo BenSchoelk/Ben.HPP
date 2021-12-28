@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/optionContainer.dart';
-import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioQuestionContainer extends StatefulWidget {
@@ -51,9 +51,11 @@ class AudioQuestionContainerState extends State<AudioQuestionContainer> {
     _audioPlayer = AudioPlayer();
 
     try {
-      var result = await _audioPlayer.setUrl(widget.questions[widget.currentQuestionIndex].audio!);
+      var result = await _audioPlayer
+          .setUrl(widget.questions[widget.currentQuestionIndex].audio!);
       _audioDuration = result ?? Duration.zero;
-      _processingStateStreamSubscription = _audioPlayer.processingStateStream.listen(_processingStateListener);
+      _processingStateStreamSubscription =
+          _audioPlayer.processingStateStream.listen(_processingStateListener);
     } catch (e) {
       print(e.toString());
       _hasError = true;
@@ -166,6 +168,14 @@ class AudioQuestionContainerState extends State<AudioQuestionContainer> {
     return SingleChildScrollView(
         child: Column(
       children: [
+        SizedBox(
+          height: 17.5,
+        ),
+        HorizontalTimerContainer(
+            timerAnimationController: widget.timerAnimationController),
+        SizedBox(
+          height: 12.5,
+        ),
         Container(
           child: Stack(
             alignment: Alignment.center,
@@ -174,36 +184,41 @@ class AudioQuestionContainerState extends State<AudioQuestionContainer> {
                 alignment: Alignment.center,
                 child: Text(
                   "${widget.currentQuestionIndex + 1} | ${widget.questions.length}",
-                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                ),
-              ),
-              Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: IconButton(
-                  color: Theme.of(context).colorScheme.secondary,
-                  icon: Icon(Icons.settings),
-                  onPressed: () {
-                    showDialog(context: context, builder: (context) => SettingsDialogContainer());
-                  },
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
             ],
           ),
         ),
+
+        Divider(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        SizedBox(
+          height: 5.0,
+        ),
         Container(
           alignment: Alignment.center,
           child: Text(
             "${question.question}",
-            style: TextStyle(height: 1.125, fontSize: textSize, color: Theme.of(context).colorScheme.secondary),
+            style: TextStyle(
+                height: 1.125,
+                fontSize: textSize,
+                color: Theme.of(context).colorScheme.secondary),
           ),
         ),
+
         SizedBox(
           height: widget.constraints.maxHeight * (0.04),
         ),
         Container(
           width: widget.constraints.maxWidth * 1.2,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).primaryColor.withOpacity(0.1)),
-          padding: EdgeInsets.symmetric(horizontal: widget.constraints.maxWidth * (0.05), vertical: 10.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).primaryColor.withOpacity(0.1)),
+          padding: EdgeInsets.symmetric(
+              horizontal: widget.constraints.maxWidth * (0.05), vertical: 10.0),
           child: Column(
             children: [
               Row(
@@ -261,7 +276,8 @@ class AudioQuestionContainerState extends State<AudioQuestionContainer> {
                     submittedAnswerId: question.submittedAnswerId,
                     showAnswerCorrectness: true,
                     showAudiencePoll: false,
-                    hasSubmittedAnswerForCurrentQuestion: widget.hasSubmittedAnswerForCurrentQuestion,
+                    hasSubmittedAnswerForCurrentQuestion:
+                        widget.hasSubmittedAnswerForCurrentQuestion,
                     constraints: widget.constraints,
                     answerOption: option,
                     correctOptionId: question.correctAnswerOptionId!,
@@ -275,14 +291,16 @@ class AudioQuestionContainerState extends State<AudioQuestionContainer> {
                           child: Center(
                             child: Text(
                               "-",
-                              style: TextStyle(color: Theme.of(context).backgroundColor),
+                              style: TextStyle(
+                                  color: Theme.of(context).backgroundColor),
                             ),
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Theme.of(context).colorScheme.secondary,
                           ),
-                          margin: EdgeInsets.only(top: widget.constraints.maxHeight * (0.015)),
+                          margin: EdgeInsets.only(
+                              top: widget.constraints.maxHeight * (0.015)),
                           height: widget.constraints.maxHeight * (0.105),
                           width: widget.constraints.maxWidth * (0.95),
                         ))
@@ -299,20 +317,25 @@ class CurrentDurationSliderContainer extends StatefulWidget {
   final AudioPlayer audioPlayer;
   final Duration duration;
 
-  CurrentDurationSliderContainer({Key? key, required this.audioPlayer, required this.duration}) : super(key: key);
+  CurrentDurationSliderContainer(
+      {Key? key, required this.audioPlayer, required this.duration})
+      : super(key: key);
 
   @override
-  _CurrentDurationSliderContainerState createState() => _CurrentDurationSliderContainerState();
+  _CurrentDurationSliderContainerState createState() =>
+      _CurrentDurationSliderContainerState();
 }
 
-class _CurrentDurationSliderContainerState extends State<CurrentDurationSliderContainer> {
+class _CurrentDurationSliderContainerState
+    extends State<CurrentDurationSliderContainer> {
   double currentValue = 0.0;
 
   late StreamSubscription<Duration> streamSubscription;
 
   @override
   void initState() {
-    streamSubscription = widget.audioPlayer.positionStream.listen(currentDurationListener);
+    streamSubscription =
+        widget.audioPlayer.positionStream.listen(currentDurationListener);
     super.initState();
   }
 
@@ -362,10 +385,12 @@ class _CurrentDurationSliderContainerState extends State<CurrentDurationSliderCo
 class BufferedDurationContainer extends StatefulWidget {
   final AudioPlayer audioPlayer;
 
-  BufferedDurationContainer({Key? key, required this.audioPlayer}) : super(key: key);
+  BufferedDurationContainer({Key? key, required this.audioPlayer})
+      : super(key: key);
 
   @override
-  _BufferedDurationContainerState createState() => _BufferedDurationContainerState();
+  _BufferedDurationContainerState createState() =>
+      _BufferedDurationContainerState();
 }
 
 class _BufferedDurationContainerState extends State<BufferedDurationContainer> {
@@ -375,13 +400,16 @@ class _BufferedDurationContainerState extends State<BufferedDurationContainer> {
 
   @override
   void initState() {
-    streamSubscription = widget.audioPlayer.bufferedPositionStream.listen(bufferedDurationListener);
+    streamSubscription = widget.audioPlayer.bufferedPositionStream
+        .listen(bufferedDurationListener);
     super.initState();
   }
 
   void bufferedDurationListener(Duration duration) {
     var audioDuration = widget.audioPlayer.duration ?? Duration.zero;
-    bufferedPercentage = audioDuration.inSeconds == 0 ? 0.0 : (duration.inSeconds / audioDuration.inSeconds);
+    bufferedPercentage = audioDuration.inSeconds == 0
+        ? 0.0
+        : (duration.inSeconds / audioDuration.inSeconds);
     setState(() {});
   }
 
@@ -406,10 +434,12 @@ class _BufferedDurationContainerState extends State<BufferedDurationContainer> {
 
 class CurrentDurationContainer extends StatefulWidget {
   final AudioPlayer audioPlayer;
-  CurrentDurationContainer({Key? key, required this.audioPlayer}) : super(key: key);
+  CurrentDurationContainer({Key? key, required this.audioPlayer})
+      : super(key: key);
 
   @override
-  _CurrentDurationContainerState createState() => _CurrentDurationContainerState();
+  _CurrentDurationContainerState createState() =>
+      _CurrentDurationContainerState();
 }
 
 class _CurrentDurationContainerState extends State<CurrentDurationContainer> {
@@ -419,7 +449,8 @@ class _CurrentDurationContainerState extends State<CurrentDurationContainer> {
   @override
   void initState() {
     super.initState();
-    currentAudioDurationStreamSubscription = widget.audioPlayer.positionStream.listen(currentDurationListener);
+    currentAudioDurationStreamSubscription =
+        widget.audioPlayer.positionStream.listen(currentDurationListener);
   }
 
   void currentDurationListener(Duration duration) {
@@ -459,6 +490,7 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
     bool isDiscrete = false,
     double additionalActiveTrackHeight = 0,
   }) {
-    return Offset(offset.dx, offset.dy) & Size(parentBox.size.width, sliderTheme.trackHeight!);
+    return Offset(offset.dx, offset.dy) &
+        Size(parentBox.size.width, sliderTheme.trackHeight!);
   } //
 }

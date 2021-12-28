@@ -25,7 +25,8 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BattleRoomFindOpponentScreen extends StatefulWidget {
   final String categoryId;
-  BattleRoomFindOpponentScreen({Key? key, required this.categoryId}) : super(key: key);
+  BattleRoomFindOpponentScreen({Key? key, required this.categoryId})
+      : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
@@ -35,18 +36,35 @@ class BattleRoomFindOpponentScreen extends StatefulWidget {
   }
 
   @override
-  _BattleRoomFindOpponentScreenState createState() => _BattleRoomFindOpponentScreenState();
+  _BattleRoomFindOpponentScreenState createState() =>
+      _BattleRoomFindOpponentScreenState();
 }
 
-class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
+class _BattleRoomFindOpponentScreenState
+    extends State<BattleRoomFindOpponentScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late ScrollController scrollController = ScrollController();
-  late AnimationController letterAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 4));
-  late AnimationController quizCountDownAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 4));
-  late Animation<int> quizCountDownAnimation = IntTween(begin: 3, end: 0).animate(quizCountDownAnimationController);
-  late AnimationController animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 950))..forward();
-  late Animation<double> mapAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animationController, curve: Interval(0.0, 0.4, curve: Curves.easeInOut)));
-  late Animation<double> playerDetailsAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animationController, curve: Interval(0.4, 0.7, curve: Curves.easeInOut)));
-  late Animation<double> findingOpponentStatusAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animationController, curve: Interval(0.7, 1.0, curve: Curves.easeInOut)));
+  late AnimationController letterAnimationController =
+      AnimationController(vsync: this, duration: Duration(seconds: 4));
+  late AnimationController quizCountDownAnimationController =
+      AnimationController(vsync: this, duration: Duration(seconds: 4));
+  late Animation<int> quizCountDownAnimation =
+      IntTween(begin: 3, end: 0).animate(quizCountDownAnimationController);
+  late AnimationController animationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 950))
+        ..forward();
+  late Animation<double> mapAnimation = Tween<double>(begin: 0.0, end: 1.0)
+      .animate(CurvedAnimation(
+          parent: animationController,
+          curve: Interval(0.0, 0.4, curve: Curves.easeInOut)));
+  late Animation<double> playerDetailsAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: animationController,
+          curve: Interval(0.4, 0.7, curve: Curves.easeInOut)));
+  late Animation<double> findingOpponentStatusAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: animationController,
+          curve: Interval(0.7, 1.0, curve: Curves.easeInOut)));
 
   //to store images of map so we can simulate the mapSlideAnimation
   late List<String> images = [];
@@ -146,7 +164,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
         startScrollImageAnimation();
       }
 
-      scrollController.animateTo(scrollController.position.maxScrollExtent, duration: Duration(seconds: 20), curve: Curves.linear);
+      scrollController.animateTo(scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: 20), curve: Curves.linear);
     }
   }
 
@@ -175,10 +194,15 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
           children: [
             //
             Container(
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColor),
               height: MediaQuery.of(context).size.height * (0.15),
             ),
-            CircularImageContainer(height: MediaQuery.of(context).size.height * (0.14), imagePath: profileUrl, width: MediaQuery.of(context).size.width * (0.3)),
+            CircularImageContainer(
+                height: MediaQuery.of(context).size.height * (0.14),
+                imagePath: profileUrl,
+                width: MediaQuery.of(context).size.width * (0.3)),
           ],
         ),
         SizedBox(
@@ -191,7 +215,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
             name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18.0),
+            style: TextStyle(
+                color: Theme.of(context).primaryColor, fontSize: 18.0),
           ),
         )
       ],
@@ -203,7 +228,9 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
       margin: EdgeInsetsDirectional.only(
         end: MediaQuery.of(context).size.width * (0.45),
       ),
-      child: _buildUserDetails(context.read<UserDetailsCubit>().getUserProfile().name!, context.read<UserDetailsCubit>().getUserProfile().profileUrl!),
+      child: _buildUserDetails(
+          context.read<UserDetailsCubit>().getUserProfile().name!,
+          context.read<UserDetailsCubit>().getUserProfile().profileUrl!),
     );
   }
 
@@ -227,7 +254,9 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
                       color: Theme.of(context).backgroundColor,
                     ),
                   ),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).primaryColor),
                   height: MediaQuery.of(context).size.height * (0.15),
                 ),
                 SizedBox(
@@ -240,21 +269,27 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
                     "....",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18.0),
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 18.0),
                   ),
                 )
               ],
             );
           }
           if (state is BattleRoomUserFound) {
-            UserBattleRoomDetails opponentUserDetails = context.read<BattleRoomCubit>().getOpponentUserDetails(context.read<UserDetailsCubit>().getUserId());
-            return _buildUserDetails(opponentUserDetails.name, opponentUserDetails.profileUrl);
+            UserBattleRoomDetails opponentUserDetails = context
+                .read<BattleRoomCubit>()
+                .getOpponentUserDetails(
+                    context.read<UserDetailsCubit>().getUserId());
+            return _buildUserDetails(
+                opponentUserDetails.name, opponentUserDetails.profileUrl);
           }
 
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FindOpponentLetterAnimation(animationController: letterAnimationController),
+              FindOpponentLetterAnimation(
+                  animationController: letterAnimationController),
               SizedBox(
                 height: 2.5,
               ),
@@ -265,7 +300,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
                   "....",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18.0),
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor, fontSize: 18.0),
                 ),
               )
             ],
@@ -280,41 +316,45 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
     return FadeTransition(
       opacity: findingOpponentStatusAnimation,
       child: SlideTransition(
-        position: findingOpponentStatusAnimation.drive(Tween<Offset>(begin: Offset(0.075, 0.0), end: Offset.zero)),
+        position: findingOpponentStatusAnimation
+            .drive(Tween<Offset>(begin: Offset(0.075, 0.0), end: Offset.zero)),
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-              margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height * (0.05),
-              ),
-              child: waitForOpponent
-                  ? BlocBuilder<BattleRoomCubit, BattleRoomState>(
-                      bloc: context.read<BattleRoomCubit>(),
-                      builder: (context, state) {
-                        if (state is BattleRoomFailure) {
-                          return Container();
-                        }
-                        if (state is! BattleRoomUserFound) {
-                          return Text(
-                            AppLocalization.of(context)!.getTranslatedValues('findingOpponentLbl')!,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        }
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height * (0.05),
+            ),
+            child: waitForOpponent
+                ? BlocBuilder<BattleRoomCubit, BattleRoomState>(
+                    bloc: context.read<BattleRoomCubit>(),
+                    builder: (context, state) {
+                      if (state is BattleRoomFailure) {
+                        return Container();
+                      }
+                      if (state is! BattleRoomUserFound) {
                         return Text(
-                          AppLocalization.of(context)!.getTranslatedValues('foundOpponentLbl')!,
+                          AppLocalization.of(context)!
+                              .getTranslatedValues('findingOpponentLbl')!,
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           ),
                         );
-                      },
-                    )
-                  : Container()),
+                      }
+                      return Text(
+                        AppLocalization.of(context)!
+                            .getTranslatedValues('foundOpponentLbl')!,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
+          ),
         ),
       ),
     );
@@ -357,7 +397,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * (0.05)),
               Text(
-                AppLocalization.of(context)!.getTranslatedValues('getReadyLbl')!,
+                AppLocalization.of(context)!
+                    .getTranslatedValues('getReadyLbl')!,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 25,
@@ -368,7 +409,10 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
                   animation: quizCountDownAnimationController,
                   builder: (context, child) {
                     return Text(
-                      quizCountDownAnimation.value == 0 ? AppLocalization.of(context)!.getTranslatedValues('bestOfLuckLbl')! : "${quizCountDownAnimation.value}",
+                      quizCountDownAnimation.value == 0
+                          ? AppLocalization.of(context)!
+                              .getTranslatedValues('bestOfLuckLbl')!
+                          : "${quizCountDownAnimation.value}",
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontSize: 40,
@@ -395,7 +439,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * (0.05)),
             Text(
-              AppLocalization.of(context)!.getTranslatedValues('opponentNotFoundLbl')!,
+              AppLocalization.of(context)!
+                  .getTranslatedValues('opponentNotFoundLbl')!,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
@@ -410,7 +455,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
                       CustomRoundedButton(
                         widthPercentage: 0.375,
                         backgroundColor: Theme.of(context).primaryColor,
-                        buttonTitle: AppLocalization.of(context)!.getTranslatedValues('retryLbl')!,
+                        buttonTitle: AppLocalization.of(context)!
+                            .getTranslatedValues('retryLbl')!,
                         radius: 5,
                         showBorder: false,
                         height: 40,
@@ -438,7 +484,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
                 : CustomRoundedButton(
                     widthPercentage: 0.375,
                     backgroundColor: Theme.of(context).primaryColor,
-                    buttonTitle: AppLocalization.of(context)!.getTranslatedValues('retryLbl')!,
+                    buttonTitle: AppLocalization.of(context)!
+                        .getTranslatedValues('retryLbl')!,
                     radius: 5,
                     showBorder: false,
                     height: 40,
@@ -467,7 +514,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
           if (state is BattleRoomFailure) {
             child = ErrorContainer(
                 showBackButton: true,
-                errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode))!,
+                errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                    convertErrorCodeToLanguageKey(state.errorMessageCode))!,
                 errorMessageColor: Theme.of(context).primaryColor,
                 onTapRetry: () {
                   retryToSearchBattleRoom();
@@ -477,7 +525,9 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
           if (state is BattleRoomUserFound) {
             child = _buildUserFoundDetails();
           }
-          return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: waitForOpponent ? child : _buildOpponentNotFoundDetails());
+          return AnimatedSwitcher(
+              duration: Duration(milliseconds: 500),
+              child: waitForOpponent ? child : _buildOpponentNotFoundDetails());
         },
       ),
     );
@@ -496,7 +546,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
     return FadeTransition(
       opacity: playerDetailsAnimation,
       child: SlideTransition(
-        position: playerDetailsAnimation.drive(Tween<Offset>(begin: Offset(0.075, 0.0), end: Offset.zero)),
+        position: playerDetailsAnimation
+            .drive(Tween<Offset>(begin: Offset(0.075, 0.0), end: Offset.zero)),
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -554,7 +605,8 @@ class _BattleRoomFindOpponentScreenState extends State<BattleRoomFindOpponentScr
               waitForOpponentTimer?.cancel();
               await Future.delayed(Duration(milliseconds: 500));
               await quizCountDownAnimationController.forward();
-              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": "", "isTournamentBattle": false});
+              Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz,
+                  arguments: {"battleLbl": "", "isTournamentBattle": false});
             }
           },
           child: Stack(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +18,15 @@ import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BookmarkQuizScreen extends StatefulWidget {
   //final List<Question> questions;
@@ -186,15 +187,48 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
     super.dispose();
   }
 
-  Widget backButton() {
+  void onTapBackButton() {
+    isExitDialogOpen = true;
+    showDialog(context: context, builder: (context) => ExitGameDailog())
+        .then((value) => isExitDialogOpen = false);
+  }
+
+  Widget _buildTopMenu() {
     return Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).padding.top - 10),
-            child: CustomBackButton(
-              iconColor: Theme.of(context).primaryColor,
-            )));
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            left: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            top: MediaQuery.of(context).padding.top - 12.5),
+        child: Row(
+          children: [
+            CustomBackButton(
+              onTap: () {
+                if (completedQuiz) {
+                  Navigator.of(context).pop();
+                  return;
+                }
+
+                onTapBackButton();
+              },
+              iconColor: Theme.of(context).backgroundColor,
+            ),
+            Spacer(),
+            SettingButton(onPressed: () {
+              toggleSettingDialog();
+              showDialog(
+                  context: context,
+                  builder: (_) => SettingsDialogContainer()).then((value) {
+                toggleSettingDialog();
+              });
+            }),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -202,9 +236,10 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
     final quesCubit = context.read<QuestionsCubit>();
     return WillPopScope(
         onWillPop: () {
-          isExitDialogOpen = true;
-          showDialog(context: context, builder: (context) => ExitGameDailog())
-              .then((value) => isExitDialogOpen = false);
+          if (completedQuiz) {
+            return Future.value(true);
+          }
+          onTapBackButton();
           return Future.value(false);
         },
         child: Scaffold(
@@ -215,20 +250,6 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
                 alignment: Alignment.topCenter,
                 child: QuizPlayAreaBackgroundContainer(),
               ),
-              completedQuiz
-                  ? Container()
-                  : Align(
-                      alignment: Platform.isIOS
-                          ? Alignment.topRight
-                          : Alignment.topCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).padding.top + 7.5),
-                        child: HorizontalTimerContainer(
-                          timerAnimationController: timerAnimationController,
-                        ),
-                      ),
-                    ),
               AnimatedSwitcher(
                 duration: Duration(milliseconds: 500),
                 child: completedQuiz
@@ -344,7 +365,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
                               ));
                         }),
               ),
-              Platform.isIOS ? backButton() : Container(),
+              _buildTopMenu(),
             ],
           ),
         ));

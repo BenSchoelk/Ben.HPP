@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +20,11 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
-import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
@@ -249,6 +249,12 @@ class _SelfChallengeQuestionsScreenState
     );
   }
 
+  void onTapBackButton() {
+    isExitDialogOpen = true;
+    showDialog(context: context, builder: (context) => ExitGameDailog())
+        .then((value) => isExitDialogOpen = false);
+  }
+
   void openBottomSheet(List<Question> questions) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -373,6 +379,40 @@ class _SelfChallengeQuestionsScreenState
     });
   }
 
+  Widget _buildTopMenu() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            left: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            top: MediaQuery.of(context).padding.top - 12.5),
+        child: Row(
+          children: [
+            CustomBackButton(
+              onTap: () {
+                onTapBackButton();
+              },
+              iconColor: Theme.of(context).backgroundColor,
+            ),
+            Spacer(),
+            SettingButton(onPressed: () {
+              toggleSettingDialog();
+              showDialog(
+                  context: context,
+                  builder: (_) => SettingsDialogContainer()).then((value) {
+                toggleSettingDialog();
+              });
+            }),
+            _buildBookmarkButton(context.read<QuestionsCubit>()),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBottomMenu(BuildContext context) {
     return BlocBuilder<QuestionsCubit, QuestionsState>(
       bloc: context.read<QuestionsCubit>(),
@@ -438,7 +478,7 @@ class _SelfChallengeQuestionsScreenState
             ),
           );
         }
-        return Container();
+        return SizedBox();
       },
     );
   }
@@ -451,7 +491,7 @@ class _SelfChallengeQuestionsScreenState
           return BookmarkButton(
             question: state.questions[currentQuestionIndex],
           );
-        return Container();
+        return SizedBox();
       },
     );
   }
@@ -472,9 +512,7 @@ class _SelfChallengeQuestionsScreenState
     final quesCubit = context.read<QuestionsCubit>();
     return WillPopScope(
       onWillPop: () {
-        isExitDialogOpen = true;
-        showDialog(context: context, builder: (context) => ExitGameDailog())
-            .then((value) => isExitDialogOpen = false);
+        onTapBackButton();
         return Future.value(false);
       },
       child: Scaffold(
@@ -485,17 +523,6 @@ class _SelfChallengeQuestionsScreenState
               alignment: Alignment.topCenter,
               child: QuizPlayAreaBackgroundContainer(
                 heightPercentage: 0.9,
-              ),
-            ),
-            Align(
-              alignment:
-                  Platform.isIOS ? Alignment.topRight : Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 7.5),
-                child: HorizontalTimerContainer(
-                  timerAnimationController: timerAnimationController,
-                ),
               ),
             ),
             BlocConsumer<QuestionsCubit, QuestionsState>(
@@ -568,10 +595,10 @@ class _SelfChallengeQuestionsScreenState
                     child: _buildBottomMenu(context),
                   );
                 }
-                return Container();
+                return SizedBox();
               },
             ),
-            Platform.isIOS ? backButton() : Container()
+            _buildTopMenu(),
           ],
         ),
       ),
