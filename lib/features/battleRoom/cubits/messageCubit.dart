@@ -22,16 +22,26 @@ class MessageAddedFailure extends MessageState {
 
 class MessageCubit extends Cubit<MessageState> {
   final BattleRoomRepository _battleRoomRepository;
-  MessageCubit(this._battleRoomRepository) : super(MessageFetchedSuccess(List<Message>.from([])));
+  MessageCubit(this._battleRoomRepository)
+      : super(MessageFetchedSuccess(List<Message>.from([])));
 
   late StreamSubscription streamSubscription;
 
   //subscribe to messages stream
   void subscribeToMessages(String roomId) {
-    streamSubscription = _battleRoomRepository.subscribeToMessages(roomId: roomId).listen((message) {
+    streamSubscription = _battleRoomRepository
+        .subscribeToMessages(roomId: roomId)
+        .listen((message) {
       if (message.messageId.isNotEmpty) {
-        final messages = List<Message>.from((state as MessageFetchedSuccess).messages);
-        bool isNewMessage = messages.where((element) => element.messageId == message.messageId).toList().isEmpty;
+        final messages =
+            List<Message>.from((state as MessageFetchedSuccess).messages);
+
+        bool isNewMessage = messages
+            .where((element) => element.messageId == message.messageId)
+            .toList()
+            .isEmpty;
+
+        print(message.toJson());
         if (isNewMessage) {
           messages.add(message);
           emit(MessageFetchedSuccess(messages));
@@ -40,7 +50,11 @@ class MessageCubit extends Cubit<MessageState> {
     });
   }
 
-  void addMessage({required String message, required by, required roomId, required isTextMessage}) async {
+  void addMessage(
+      {required String message,
+      required by,
+      required roomId,
+      required isTextMessage}) async {
     try {
       Message messageModel = Message(
         by: by,
@@ -63,7 +77,8 @@ class MessageCubit extends Cubit<MessageState> {
   Message getUserLatestMessage(String userId) {
     if (state is MessageFetchedSuccess) {
       final messages = (state as MessageFetchedSuccess).messages;
-      return messages.lastWhere((element) => element.by == userId, orElse: () => Message.buildEmptyMessage());
+      return messages.lastWhere((element) => element.by == userId,
+          orElse: () => Message.buildEmptyMessage());
     }
     return Message.buildEmptyMessage();
   }

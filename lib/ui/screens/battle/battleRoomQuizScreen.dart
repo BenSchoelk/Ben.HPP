@@ -23,10 +23,13 @@ import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.da
 import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
 import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/ui/widgets/userDetailsWithTimerContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
@@ -68,8 +71,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController timerAnimationController = AnimationController(
       vsync: this, duration: Duration(seconds: questionDurationInSeconds))
-    ..addStatusListener(currentUserTimerAnimationStatusListener);
-  //..forward();
+    ..addStatusListener(currentUserTimerAnimationStatusListener)
+    ..forward();
+
   late AnimationController opponentUserTimerAnimationController =
       AnimationController(
           vsync: this, duration: Duration(seconds: questionDurationInSeconds))
@@ -594,7 +598,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
           //means timer is running
           if (currentUserMessageDisappearTimeInSeconds > 0 &&
               currentUserMessageDisappearTimeInSeconds < 4) {
-            print(currentUserMessageDisappearTimeInSeconds);
             currentUserMessageDisappearTimer?.cancel();
             setCurrentUserMessageDisappearTimer();
           } else {
@@ -607,7 +610,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
           //means timer is running
           if (opponentUserMessageDisappearTimeInSeconds > 0 &&
               opponentUserMessageDisappearTimeInSeconds < 4) {
-            print(opponentUserMessageDisappearTimeInSeconds);
             opponentUserMessageDisappearTimer?.cancel();
             setOpponentUserMessageDisappearTimer();
           } else {
@@ -890,7 +892,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
           return BookmarkButton(
             question: state.questions[currentQuestionIndex],
           );
-        return Container();
+        return SizedBox();
       },
     );
   }
@@ -932,12 +934,78 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
         position: messageBoxAnimation
             .drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
+          topPadding: 32.5 + MediaQuery.of(context).padding.top,
           battleRoomId: widget.isTournamentBattle
               ? context.read<TournamentBattleCubit>().getRoomId()
               : context.read<BattleRoomCubit>().getRoomId(),
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopMenu() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            left: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            top: MediaQuery.of(context).padding.top - 10.5),
+        child: Row(
+          children: [
+            CustomBackButton(
+              onTap: () {
+                BattleRoomCubit battleRoomCubit =
+                    context.read<BattleRoomCubit>();
+                //
+                //if user left the game
+                if (showYouLeftQuiz) {
+                  Navigator.of(context).pop();
+                }
+                //if user already won the game
+                if (battleRoomCubit.opponentLeftTheGame(
+                    context.read<UserDetailsCubit>().getUserId())) {
+                  return;
+                }
+
+                isExitDialogOpen = true;
+                //show warning
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ExitGameDailog(
+                        onTapYes: () {
+                          //
+                          timerAnimationController.stop();
+                          opponentUserTimerAnimationController.stop();
+                          //delete messages
+                          deleteMessages(battleRoomCubit.getRoomId());
+                          //delete battle room
+                          battleRoomCubit.deleteBattleRoom(false);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    }).then((value) => isExitDialogOpen = false);
+              },
+              iconColor: Theme.of(context).backgroundColor,
+            ),
+            Spacer(),
+            SettingButton(onPressed: () {
+              toggleSettingDialog();
+              showDialog(
+                  context: context,
+                  builder: (_) => SettingsDialogContainer()).then((value) {
+                toggleSettingDialog();
+              });
+            }),
+            _buildBookmarkButton(context.read<BattleRoomCubit>()),
+          ],
         ),
       ),
     );
@@ -1024,6 +1092,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
               Align(
                 alignment: Alignment.topCenter,
                 child: QuestionsContainer(
+                  topPadding: 32.5,
                   timerAnimationController: timerAnimationController,
                   quizType: QuizTypes.battle,
                   showAnswerCorrectness: true,
@@ -1053,6 +1122,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
               _buildMessageButton(),
               _buildYouWonGameDailog(),
               _buildCurrentUserLeftTheGame(),
+              _buildTopMenu(),
             ],
           ),
         ),

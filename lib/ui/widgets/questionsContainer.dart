@@ -255,11 +255,16 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
                   : SizedBox(
                       height: 17.5,
                     ),
-              HorizontalTimerContainer(
-                  timerAnimationController: widget.timerAnimationController),
-              SizedBox(
-                height: 12.5,
-              ),
+              widget.quizType == QuizTypes.battle
+                  ? SizedBox()
+                  : HorizontalTimerContainer(
+                      timerAnimationController:
+                          widget.timerAnimationController),
+              widget.quizType == QuizTypes.battle
+                  ? SizedBox()
+                  : SizedBox(
+                      height: 12.5,
+                    ),
               Container(
                 child: Stack(
                   alignment: Alignment.center,
@@ -449,12 +454,12 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
             children: [
               QuestionBackgroundCard(
                 opacity: 0.7,
-                topMarginPercentage: 0.05,
+                topMarginPercentage: 0.035,
                 widthPercentage: 0.65,
               ),
               QuestionBackgroundCard(
                 opacity: 0.85,
-                topMarginPercentage: 0.03,
+                topMarginPercentage: 0.02,
                 widthPercentage: 0.75,
               ),
               ..._buildQuesitons(context),

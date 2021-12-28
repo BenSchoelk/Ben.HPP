@@ -41,6 +41,7 @@ class UpdateScoreAndCoinsCubit extends Cubit<UpdateScoreAndCoinsState> {
               coins: result['coins'], score: result['score'])),
         )
         .catchError((e) {
+      // print(e.toString());
       emit(UpdateScoreAndCoinsFailure(e.toString()));
     });
   }

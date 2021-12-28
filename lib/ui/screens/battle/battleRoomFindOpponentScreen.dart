@@ -15,6 +15,7 @@ import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/findingOpponentLetterAnimation.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/userFoundMapContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
@@ -145,10 +146,11 @@ class _BattleRoomFindOpponentScreenState
         if (scrollController.hasClients) {
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
         }
-        timer.cancel();
         setState(() {
           waitForOpponent = false;
         });
+
+        timer.cancel();
       } else {
         waitingTime--;
       }
@@ -313,19 +315,19 @@ class _BattleRoomFindOpponentScreenState
 
   //to show user status of process (opponent found or finding opponent etc)
   Widget _buildFindingOpponentStatus() {
-    return FadeTransition(
-      opacity: findingOpponentStatusAnimation,
-      child: SlideTransition(
-        position: findingOpponentStatusAnimation
-            .drive(Tween<Offset>(begin: Offset(0.075, 0.0), end: Offset.zero)),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height * (0.05),
-            ),
-            child: waitForOpponent
-                ? BlocBuilder<BattleRoomCubit, BattleRoomState>(
+    return waitForOpponent
+        ? FadeTransition(
+            opacity: findingOpponentStatusAnimation,
+            child: SlideTransition(
+              position: findingOpponentStatusAnimation.drive(
+                  Tween<Offset>(begin: Offset(0.075, 0.0), end: Offset.zero)),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).size.height * (0.05),
+                  ),
+                  child: BlocBuilder<BattleRoomCubit, BattleRoomState>(
                     bloc: context.read<BattleRoomCubit>(),
                     builder: (context, state) {
                       if (state is BattleRoomFailure) {
@@ -352,12 +354,12 @@ class _BattleRoomFindOpponentScreenState
                         ),
                       );
                     },
-                  )
-                : Container(),
-          ),
-        ),
-      ),
-    );
+                  ),
+                ),
+              ),
+            ),
+          )
+        : SizedBox();
   }
 
   //to display map animation
@@ -365,21 +367,24 @@ class _BattleRoomFindOpponentScreenState
     return Align(
       key: Key("userFinding"),
       alignment: Alignment.topCenter,
-      child: IgnorePointer(
-        ignoring: true,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-              height: MediaQuery.of(context).size.height * (0.6),
-              child: Row(
-                children: images
-                    .map((e) => Image.asset(
-                          e,
-                          fit: BoxFit.cover,
-                        ))
-                    .toList(),
-              )),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: IgnorePointer(
+          ignoring: true,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+                height: MediaQuery.of(context).size.height * (0.6),
+                child: Row(
+                  children: images
+                      .map((e) => Image.asset(
+                            e,
+                            fit: BoxFit.cover,
+                          ))
+                      .toList(),
+                )),
+          ),
         ),
       ),
     );
@@ -569,6 +574,36 @@ class _BattleRoomFindOpponentScreenState
     );
   }
 
+  Widget _buildBackButton() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: 20.0, top: MediaQuery.of(context).padding.top - 10),
+        child: CustomBackButton(
+            onTap: () {
+              //
+              final battleRoomCubit = context.read<BattleRoomCubit>();
+              //if user has found opponent then do not allow to go back
+              if (battleRoomCubit.state is BattleRoomUserFound) {
+                return;
+              }
+
+              showDialog(
+                  context: context,
+                  builder: (context) => ExitGameDailog(
+                        onTapYes: () {
+                          battleRoomCubit.deleteBattleRoom(false);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      ));
+            },
+            iconColor: Theme.of(context).colorScheme.secondary),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -589,7 +624,7 @@ class _BattleRoomFindOpponentScreenState
                   },
                 ));
 
-        return Future.value(true);
+        return Future.value(false);
       },
       child: Scaffold(
         body: BlocListener<BattleRoomCubit, BattleRoomState>(
@@ -615,6 +650,7 @@ class _BattleRoomFindOpponentScreenState
               _buildFindingOpponentMapDetails(),
               _buildPlayersDetails(),
               _buildFindingOpponentStatus(),
+              _buildBackButton(),
             ],
           ),
         ),
