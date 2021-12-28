@@ -9,7 +9,14 @@ class CustomDialog extends StatelessWidget {
   final Function? onBackButtonPress;
   final Function? onWillPop;
   final double? topPadding;
-  CustomDialog({Key? key, this.height, required this.child, this.topPadding, this.onBackButtonPress, this.onWillPop}) : super(key: key);
+  CustomDialog(
+      {Key? key,
+      this.height,
+      required this.child,
+      this.topPadding,
+      this.onBackButtonPress,
+      this.onWillPop})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,8 @@ class CustomDialog extends StatelessWidget {
             }
           : onWillPop as Future<bool> Function()?,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: UiUtils.dailogBlurSigma, sigmaY: UiUtils.dailogBlurSigma),
+        filter: ImageFilter.blur(
+            sigmaX: UiUtils.dailogBlurSigma, sigmaY: UiUtils.dailogBlurSigma),
         child: Material(
           type: MaterialType.transparency,
           child: Container(
@@ -32,7 +40,7 @@ class CustomDialog extends StatelessWidget {
                 Padding(
                     padding: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * (0.075),
-                      top: 25.0,
+                      top: 20.0,
                     ),
                     child: IconButton(
                         onPressed: onBackButtonPress == null
@@ -46,14 +54,20 @@ class CustomDialog extends StatelessWidget {
                           color: Theme.of(context).primaryColor,
                         ))),
                 SizedBox(
-                  height: topPadding ?? MediaQuery.of(context).size.height * (0.02),
+                  height:
+                      topPadding ?? MediaQuery.of(context).size.height * (0.02),
                 ),
                 Center(
                   child: Container(
                     child: child,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(UiUtils.dailogRadius)),
-                    height: height ?? MediaQuery.of(context).size.height * UiUtils.dailogHeightPercentage,
-                    width: MediaQuery.of(context).size.width * UiUtils.dailogWidthPercentage,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(UiUtils.dailogRadius)),
+                    height: height ??
+                        MediaQuery.of(context).size.height *
+                            UiUtils.dailogHeightPercentage,
+                    width: MediaQuery.of(context).size.width *
+                        UiUtils.dailogWidthPercentage,
                   ),
                 )
               ],

@@ -11,8 +11,8 @@ class RectangleUserProfileContainer extends StatelessWidget {
   final Color progressColor;
   final bool isLeft;
 
-  static final userDetailsHeightPercentage = (0.0675);
-  static final userDetailsWidthPercentage = (0.135);
+  static final userDetailsHeightPercentage = (0.039);
+  static final userDetailsWidthPercentage = (0.12);
   const RectangleUserProfileContainer({
     Key? key,
     required this.animationController,
@@ -27,8 +27,10 @@ class RectangleUserProfileContainer extends StatelessWidget {
       children: [
         CustomPaint(
           child: Container(
-            width: MediaQuery.of(context).size.width * userDetailsWidthPercentage,
-            height: MediaQuery.of(context).size.height * userDetailsHeightPercentage,
+            width:
+                MediaQuery.of(context).size.width * userDetailsWidthPercentage,
+            height: MediaQuery.of(context).size.height *
+                userDetailsHeightPercentage,
           ),
           painter: RectanglePainter(
             color: Theme.of(context).colorScheme.secondary,
@@ -38,7 +40,8 @@ class RectangleUserProfileContainer extends StatelessWidget {
             curveRadius: 10,
           ),
         ),
-        RectangleTimerProgressContainer(animationController: animationController, color: progressColor),
+        RectangleTimerProgressContainer(
+            animationController: animationController, color: progressColor),
         CustomPaint(
           child: Container(
             child: ClipRRect(
@@ -51,8 +54,10 @@ class RectangleUserProfileContainer extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
-            width: MediaQuery.of(context).size.width * (0.135),
-            height: MediaQuery.of(context).size.height * (0.0675),
+            width:
+                MediaQuery.of(context).size.width * userDetailsWidthPercentage,
+            height: MediaQuery.of(context).size.height *
+                userDetailsHeightPercentage,
           ),
           painter: RectanglePainter(
             color: Theme.of(context).primaryColor,
@@ -88,7 +93,8 @@ class RectangleUserProfileContainer extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+          mainAxisAlignment:
+              isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
           children: [
             isLeft ? _buildProfileContainer(context) : _buildUserName(context),
             SizedBox(
@@ -106,13 +112,18 @@ class RectanglePainter extends CustomPainter {
   final List<double> points;
   final double animationControllerValue;
   final double curveRadius;
-  RectanglePainter({required this.color, required this.points, required this.animationControllerValue, required this.curveRadius, required this.paintingStyle});
+  RectanglePainter(
+      {required this.color,
+      required this.points,
+      required this.animationControllerValue,
+      required this.curveRadius,
+      required this.paintingStyle});
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = color
       ..style = paintingStyle
-      ..strokeWidth = 8.0;
+      ..strokeWidth = 6.0;
 
     Path path = Path();
 
@@ -121,78 +132,211 @@ class RectanglePainter extends CustomPainter {
     if (paintingStyle == PaintingStyle.stroke) {
       if (points.isEmpty) {
         path.lineTo((size.width - curveRadius), 0);
-        path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, pi / 2);
+        path.addArc(
+            Rect.fromCircle(
+                center: Offset(size.width - curveRadius, curveRadius),
+                radius: curveRadius),
+            3 * pi / 2,
+            pi / 2);
         path.lineTo(size.width, (size.height - curveRadius));
-        path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, pi / 2);
+        path.addArc(
+            Rect.fromCircle(
+                center:
+                    Offset(size.width - curveRadius, size.height - curveRadius),
+                radius: curveRadius),
+            0,
+            pi / 2);
         path.lineTo(curveRadius, size.height);
-        path.addArc(Rect.fromCircle(center: Offset(curveRadius, size.height - curveRadius), radius: curveRadius), pi / 2, pi / 2);
+        path.addArc(
+            Rect.fromCircle(
+                center: Offset(curveRadius, size.height - curveRadius),
+                radius: curveRadius),
+            pi / 2,
+            pi / 2);
         path.lineTo(0, curveRadius);
-        path.addArc(Rect.fromCircle(center: Offset(curveRadius, curveRadius), radius: curveRadius), pi, pi / 2);
+        path.addArc(
+            Rect.fromCircle(
+                center: Offset(curveRadius, curveRadius), radius: curveRadius),
+            pi,
+            pi / 2);
       } else {
         if (animationControllerValue <= 0.2) {
-          path.lineTo(curveRadius + size.width * points.first - (2 * curveRadius * points.first), 0);
-        } else if (animationControllerValue > 0.2 && animationControllerValue <= 0.25) {
+          path.lineTo(
+              curveRadius +
+                  size.width * points.first -
+                  (2 * curveRadius * points.first),
+              0);
+        } else if (animationControllerValue > 0.2 &&
+            animationControllerValue <= 0.25) {
           path.lineTo(size.width - curveRadius, 0);
 
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, (pi / 180) * points[1]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              (pi / 180) * points[1]);
           //
-        } else if (animationControllerValue > 0.25 && animationControllerValue <= 0.45) {
+        } else if (animationControllerValue > 0.25 &&
+            animationControllerValue <= 0.45) {
           //add animation here
           path.lineTo((size.width - curveRadius) * points.first, 0);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, pi / 2);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              pi / 2);
           //second line
-          path.lineTo(size.width, curveRadius + (size.height * points[2]) - (2 * curveRadius * points[2]));
-        } else if (animationControllerValue > 0.45 && animationControllerValue <= 0.5) {
+          path.lineTo(
+              size.width,
+              curveRadius +
+                  (size.height * points[2]) -
+                  (2 * curveRadius * points[2]));
+        } else if (animationControllerValue > 0.45 &&
+            animationControllerValue <= 0.5) {
           path.lineTo((size.width - curveRadius) * points.first, 0);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, (pi / 180) * points[1]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              (pi / 180) * points[1]);
           path.lineTo(size.width, (size.height - curveRadius) * points[2]);
           //second curve
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, (pi / 180) * points[3]);
-        } else if (animationControllerValue > 0.5 && animationControllerValue <= 0.7) {
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(
+                      size.width - curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              0,
+              (pi / 180) * points[3]);
+        } else if (animationControllerValue > 0.5 &&
+            animationControllerValue <= 0.7) {
           path.lineTo((size.width - curveRadius) * points.first, 0);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, (pi / 180) * points[1]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              (pi / 180) * points[1]);
           path.lineTo(size.width, (size.height - curveRadius) * points[2]);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, (pi / 180) * points[3]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(
+                      size.width - curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              0,
+              (pi / 180) * points[3]);
           //third line
 
-          path.lineTo(size.width - curveRadius - (size.width) * points[4] + 2 * (curveRadius) * points[4], size.height);
-        } else if (animationControllerValue > 0.7 && animationControllerValue <= 0.75) {
+          path.lineTo(
+              size.width -
+                  curveRadius -
+                  (size.width) * points[4] +
+                  2 * (curveRadius) * points[4],
+              size.height);
+        } else if (animationControllerValue > 0.7 &&
+            animationControllerValue <= 0.75) {
           path.lineTo((size.width - curveRadius) * points.first, 0);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, (pi / 180) * points[1]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              (pi / 180) * points[1]);
 
           path.lineTo(size.width, (size.height - curveRadius) * points[2]);
 
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, pi / 2);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(
+                      size.width - curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              0,
+              pi / 2);
 
           path.lineTo(curveRadius, size.height);
 
           //third curve
-          path.addArc(Rect.fromCircle(center: Offset(curveRadius, size.height - curveRadius), radius: curveRadius), pi / 2, (pi / 180) * points[5]);
-        } else if (animationControllerValue > 0.75 && animationControllerValue <= 0.95) {
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              pi / 2,
+              (pi / 180) * points[5]);
+        } else if (animationControllerValue > 0.75 &&
+            animationControllerValue <= 0.95) {
           path.lineTo((size.width - curveRadius) * points.first, 0);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, (pi / 180) * points[1]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              (pi / 180) * points[1]);
           path.lineTo(size.width, (size.height - curveRadius) * points[2]);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, pi / 2);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(
+                      size.width - curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              0,
+              pi / 2);
           path.lineTo(curveRadius, size.height);
-          path.addArc(Rect.fromCircle(center: Offset(curveRadius, size.height - curveRadius), radius: curveRadius), pi / 2, pi / 2);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              pi / 2,
+              pi / 2);
           //fourth line
 
-          path.lineTo(0, size.height - curveRadius + (2 * curveRadius * points[6]) - (size.height * points[6])); //points[6]
-        } else if (animationControllerValue > 0.95 && animationControllerValue <= 1.0) {
+          path.lineTo(
+              0,
+              size.height -
+                  curveRadius +
+                  (2 * curveRadius * points[6]) -
+                  (size.height * points[6])); //points[6]
+        } else if (animationControllerValue > 0.95 &&
+            animationControllerValue <= 1.0) {
           path.lineTo((size.width - curveRadius) * points.first, 0);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, curveRadius), radius: curveRadius), 3 * pi / 2, (pi / 180) * points[1]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(size.width - curveRadius, curveRadius),
+                  radius: curveRadius),
+              3 * pi / 2,
+              (pi / 180) * points[1]);
           path.lineTo(size.width, (size.height - curveRadius) * points[2]);
-          path.addArc(Rect.fromCircle(center: Offset(size.width - curveRadius, size.height - curveRadius), radius: curveRadius), 0, pi / 2);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(
+                      size.width - curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              0,
+              pi / 2);
           path.lineTo(curveRadius, size.height);
-          path.addArc(Rect.fromCircle(center: Offset(curveRadius, size.height - curveRadius), radius: curveRadius), pi / 2, pi / 2);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(curveRadius, size.height - curveRadius),
+                  radius: curveRadius),
+              pi / 2,
+              pi / 2);
           path.lineTo(0, curveRadius);
-          path.addArc(Rect.fromCircle(center: Offset(curveRadius, curveRadius), radius: curveRadius), pi, (pi / 180) * points[7]);
+          path.addArc(
+              Rect.fromCircle(
+                  center: Offset(curveRadius, curveRadius),
+                  radius: curveRadius),
+              pi,
+              (pi / 180) * points[7]);
         }
       }
 
       canvas.drawPath(path, paint);
     } else {
-      canvas.drawRRect(RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(curveRadius)), paint);
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Offset.zero & size, Radius.circular(curveRadius)),
+          paint);
     }
   }
 

@@ -18,19 +18,27 @@ import 'package:share_plus/share_plus.dart';
 class WaitingForPlayesDialog extends StatefulWidget {
   final QuizTypes quizType;
   final String? battleLbl;
-  WaitingForPlayesDialog({Key? key, required this.quizType, this.battleLbl}) : super(key: key);
+  WaitingForPlayesDialog({Key? key, required this.quizType, this.battleLbl})
+      : super(key: key);
 
   @override
   State<WaitingForPlayesDialog> createState() => _WaitingForPlayesDialogState();
 }
 
 class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
-  Widget profileAndNameContainer(BuildContext context, BoxConstraints constraints, String name, String profileUrl, Color borderColor) {
+  Widget profileAndNameContainer(
+      BuildContext context,
+      BoxConstraints constraints,
+      String name,
+      String profileUrl,
+      Color borderColor) {
     return Column(
       children: [
         Container(
           width: constraints.maxWidth * (0.285),
-          decoration: BoxDecoration(border: Border.all(color: Theme.of(context).colorScheme.secondary)),
+          decoration: BoxDecoration(
+              border:
+                  Border.all(color: Theme.of(context).colorScheme.secondary)),
           height: constraints.maxHeight * (0.15),
           padding: EdgeInsets.symmetric(
             horizontal: 2.5,
@@ -56,7 +64,10 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
             horizontal: 5.0,
           ),
           child: Text(
-            name.isEmpty ? AppLocalization.of(context)!.getTranslatedValues('waitingLbl')! : name,
+            name.isEmpty
+                ? AppLocalization.of(context)!
+                    .getTranslatedValues('waitingLbl')!
+                : name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -83,8 +94,10 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
             },
             child: AlertDialog(
               content: Text(
-                AppLocalization.of(context)!.getTranslatedValues('roomDeletedOwnerLbl')!,
-                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                AppLocalization.of(context)!
+                    .getTranslatedValues('roomDeletedOwnerLbl')!,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
               actions: [
                 TextButton(
@@ -93,7 +106,8 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      AppLocalization.of(context)!.getTranslatedValues('okayLbl')!,
+                      AppLocalization.of(context)!
+                          .getTranslatedValues('okayLbl')!,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ))
               ],
@@ -102,7 +116,8 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
 
   Function? onBackEvent() {
     if (widget.quizType == QuizTypes.battle) {
-      if (context.read<BattleRoomCubit>().state is BattleRoomCreated || context.read<BattleRoomCubit>().state is BattleRoomUserFound) {
+      if (context.read<BattleRoomCubit>().state is BattleRoomCreated ||
+          context.read<BattleRoomCubit>().state is BattleRoomUserFound) {
         //if user
         showDialog(
             context: context,
@@ -110,16 +125,36 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                   onTapYes: () {
                     bool createdRoom = false;
 
-                    if (context.read<BattleRoomCubit>().state is BattleRoomUserFound) {
-                      createdRoom = (context.read<BattleRoomCubit>().state as BattleRoomUserFound).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                    if (context.read<BattleRoomCubit>().state
+                        is BattleRoomUserFound) {
+                      createdRoom = (context.read<BattleRoomCubit>().state
+                                  as BattleRoomUserFound)
+                              .battleRoom
+                              .user1!
+                              .uid ==
+                          context
+                              .read<UserDetailsCubit>()
+                              .getUserProfile()
+                              .userId;
                     } else {
-                      createdRoom = (context.read<BattleRoomCubit>().state as BattleRoomCreated).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                      createdRoom = (context.read<BattleRoomCubit>().state
+                                  as BattleRoomCreated)
+                              .battleRoom
+                              .user1!
+                              .uid ==
+                          context
+                              .read<UserDetailsCubit>()
+                              .getUserProfile()
+                              .userId;
                     }
                     //if room is created by current user then delete room
                     if (createdRoom) {
-                      context.read<BattleRoomCubit>().deleteBattleRoom(false); // : context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+                      context.read<BattleRoomCubit>().deleteBattleRoom(
+                          false); // : context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
                     } else {
-                      context.read<BattleRoomCubit>().removeOpponentFromBattleRoom();
+                      context
+                          .read<BattleRoomCubit>()
+                          .removeOpponentFromBattleRoom();
                     }
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -132,14 +167,26 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
           context: context,
           builder: (context) => ExitGameDailog(
                 onTapYes: () {
-                  bool createdRoom = (context.read<MultiUserBattleRoomCubit>().state as MultiUserBattleRoomSuccess).battleRoom.user1!.uid == context.read<UserDetailsCubit>().getUserProfile().userId;
+                  bool createdRoom = (context
+                              .read<MultiUserBattleRoomCubit>()
+                              .state as MultiUserBattleRoomSuccess)
+                          .battleRoom
+                          .user1!
+                          .uid ==
+                      context.read<UserDetailsCubit>().getUserProfile().userId;
 
                   //if room is created by current user then delete room
                   if (createdRoom) {
-                    context.read<MultiUserBattleRoomCubit>().deleteMultiUserBattleRoom();
+                    context
+                        .read<MultiUserBattleRoomCubit>()
+                        .deleteMultiUserBattleRoom();
                   } else {
                     //if room is not created by current user then remove user from room
-                    context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(context.read<UserDetailsCubit>().getUserProfile().userId!);
+                    context.read<MultiUserBattleRoomCubit>().deleteUserFromRoom(
+                        context
+                            .read<UserDetailsCubit>()
+                            .getUserProfile()
+                            .userId!);
                   }
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -156,9 +203,14 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
         return Future.value(false);
       },
       onBackButtonPress: onBackEvent,
-      height: MediaQuery.of(context).size.height * (0.8),
+      height: MediaQuery.of(context).size.height * (0.79),
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(UiUtils.dailogRadius), gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UiUtils.dailogRadius),
+            gradient: UiUtils.buildLinerGradient([
+              Theme.of(context).scaffoldBackgroundColor,
+              Theme.of(context).canvasColor
+            ], Alignment.topCenter, Alignment.bottomCenter)),
         child: widget.quizType == QuizTypes.battle
             ? BlocListener<BattleRoomCubit, BattleRoomState>(
                 bloc: context.read<BattleRoomCubit>(),
@@ -167,14 +219,27 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                     //if game is ready to play
                     if (state.battleRoom.readyToPlay!) {
                       //if user has joined room then navigate to quiz screen
-                      if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                        Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false});
+                      if (state.battleRoom.user1!.uid !=
+                          context
+                              .read<UserDetailsCubit>()
+                              .getUserProfile()
+                              .userId) {
+                        Navigator.of(context).pushReplacementNamed(
+                            Routes.battleRoomQuiz,
+                            arguments: {
+                              "battleLbl": widget.battleLbl,
+                              "isTournamentBattle": false
+                            });
                       }
                     }
 
                     //if owner deleted the room then show this dialog
                     if (!state.isRoomExist) {
-                      if (context.read<UserDetailsCubit>().getUserProfile().userId != state.battleRoom.user1!.uid) {
+                      if (context
+                              .read<UserDetailsCubit>()
+                              .getUserProfile()
+                              .userId !=
+                          state.battleRoom.user1!.uid) {
                         //Room destroyed by owner
                         showRoomDestroyed(context);
                       }
@@ -201,7 +266,10 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                               Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<BattleRoomCubit>().getEntryFee()}",
+                                  AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              'entryAmountLbl')! +
+                                      " : ${context.read<BattleRoomCubit>().getEntryFee()}",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Theme.of(context).backgroundColor,
@@ -215,10 +283,17 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                   child: IconButton(
                                     onPressed: () {
                                       try {
-                                        String inviteMessage = "$groupBattleInviteMessage${context.read<BattleRoomCubit>().getRoomCode()}";
+                                        String inviteMessage =
+                                            "$groupBattleInviteMessage${context.read<BattleRoomCubit>().getRoomCode()}";
                                         Share.share(inviteMessage);
                                       } catch (e) {
-                                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+                                        UiUtils.setSnackbar(
+                                            AppLocalization.of(context)!
+                                                .getTranslatedValues(
+                                                    convertErrorCodeToLanguageKey(
+                                                        defaultErrorMessageCode))!,
+                                            context,
+                                            false);
                                       }
                                     },
                                     iconSize: 20,
@@ -245,12 +320,18 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                 children: [
                                   Expanded(
                                     //
-                                    child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<BattleRoomCubit>().getRoomCode()}",
+                                    child: Text(
+                                        AppLocalization.of(context)!
+                                                .getTranslatedValues(
+                                                    'roomCodeLbl')! +
+                                            " : ${context.read<BattleRoomCubit>().getRoomCode()}",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 18.0,
-                                          color: Theme.of(context).colorScheme.secondary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           height: 1.2,
                                         )),
                                   ),
@@ -260,18 +341,22 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                             SizedBox(
                               height: 5.0,
                             ),
-                            Text(AppLocalization.of(context)!.getTranslatedValues('shareRoomCodeLbl')!,
+                            Text(
+                                AppLocalization.of(context)!
+                                    .getTranslatedValues('shareRoomCodeLbl')!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 13.5,
                                   height: 1.2,
-                                  color: Theme.of(context).colorScheme.secondary,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 )),
                           ],
                         ),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.secondary),
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
@@ -282,12 +367,23 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                         bloc: context.read<BattleRoomCubit>(),
                         builder: (context, state) {
                           if (state is BattleRoomUserFound) {
-                            return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
+                            return profileAndNameContainer(
+                                context,
+                                constraints,
+                                state.battleRoom.user1!.name,
+                                state.battleRoom.user1!.profileUrl,
+                                Theme.of(context).backgroundColor);
                           }
                           if (state is BattleRoomCreated) {
-                            return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
+                            return profileAndNameContainer(
+                                context,
+                                constraints,
+                                state.battleRoom.user1!.name,
+                                state.battleRoom.user1!.profileUrl,
+                                Theme.of(context).backgroundColor);
                           }
-                          return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
+                          return profileAndNameContainer(context, constraints,
+                              "", "", Theme.of(context).backgroundColor);
                         },
                       ),
                       SizedBox(
@@ -296,8 +392,10 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                       CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColor,
                         child: Text(
-                          AppLocalization.of(context)!.getTranslatedValues('vsLbl')!,
-                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                          AppLocalization.of(context)!
+                              .getTranslatedValues('vsLbl')!,
+                          style: TextStyle(
+                              color: Theme.of(context).backgroundColor),
                         ),
                       ),
                       SizedBox(
@@ -312,12 +410,22 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
+                                  profileAndNameContainer(
+                                      context,
+                                      constraints,
+                                      state.battleRoom.user2!.name,
+                                      state.battleRoom.user2!.profileUrl,
+                                      Colors.black54),
                                 ],
                               );
                             }
                             if (state is BattleRoomCreated) {
-                              return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
+                              return profileAndNameContainer(
+                                  context,
+                                  constraints,
+                                  "",
+                                  "",
+                                  Theme.of(context).backgroundColor);
                             }
                             return Container();
                           },
@@ -333,19 +441,39 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                 //need minimum 2 player to start the game
                                 //mark as ready to play in database
                                 if (state.battleRoom.user2!.uid.isEmpty) {
-                                  UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
+                                  UiUtils.errorMessageDialog(
+                                      context,
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              convertErrorCodeToLanguageKey(
+                                                  canNotStartGameCode)));
                                 } else {
                                   context.read<BattleRoomCubit>().startGame();
-                                  await Future.delayed(Duration(milliseconds: 500));
+                                  await Future.delayed(
+                                      Duration(milliseconds: 500));
                                   //navigate to quiz screen
-                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false});
+                                  Navigator.of(context).pushReplacementNamed(
+                                      Routes.battleRoomQuiz,
+                                      arguments: {
+                                        "battleLbl": widget.battleLbl,
+                                        "isTournamentBattle": false
+                                      });
                                 }
                               },
-                              child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
+                              child: Text(
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues('startLbl')!,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: Theme.of(context).primaryColor)),
                             );
                           }
                           if (state is BattleRoomUserFound) {
-                            if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
+                            if (state.battleRoom.user1!.uid !=
+                                context
+                                    .read<UserDetailsCubit>()
+                                    .getUserProfile()
+                                    .userId) {
                               return Container();
                             }
 
@@ -354,15 +482,31 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                 //need minimum 2 player to start the game
                                 //mark as ready to play in database
                                 if (state.battleRoom.user2!.uid.isEmpty) {
-                                  UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
+                                  UiUtils.errorMessageDialog(
+                                      context,
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              convertErrorCodeToLanguageKey(
+                                                  canNotStartGameCode)));
                                 } else {
                                   context.read<BattleRoomCubit>().startGame();
-                                  await Future.delayed(Duration(milliseconds: 500));
+                                  await Future.delayed(
+                                      Duration(milliseconds: 500));
                                   //navigate to quiz screen
-                                  Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false});
+                                  Navigator.of(context).pushReplacementNamed(
+                                      Routes.battleRoomQuiz,
+                                      arguments: {
+                                        "battleLbl": widget.battleLbl,
+                                        "isTournamentBattle": false
+                                      });
                                 }
                               },
-                              child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
+                              child: Text(
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues('startLbl')!,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: Theme.of(context).primaryColor)),
                             );
                           }
                           return Container();
@@ -381,14 +525,23 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                     //if game is ready to play
                     if (state.battleRoom.readyToPlay!) {
                       //if user has joined room then navigate to quiz screen
-                      if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
-                        Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
+                      if (state.battleRoom.user1!.uid !=
+                          context
+                              .read<UserDetailsCubit>()
+                              .getUserProfile()
+                              .userId) {
+                        Navigator.of(context).pushReplacementNamed(
+                            Routes.multiUserBattleRoomQuiz);
                       }
                     }
 
                     //if owner deleted the room then show this dialog
                     if (!state.isRoomExist) {
-                      if (context.read<UserDetailsCubit>().getUserProfile().userId != state.battleRoom.user1!.uid) {
+                      if (context
+                              .read<UserDetailsCubit>()
+                              .getUserProfile()
+                              .userId !=
+                          state.battleRoom.user1!.uid) {
                         //Room destroyed by owner
                         showRoomDestroyed(context);
                       }
@@ -399,7 +552,7 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                   return Column(
                     children: [
                       Container(
-                        height: constraints.maxHeight * (0.11),
+                        height: constraints.maxHeight * (0.10),
                         width: constraints.maxWidth,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -415,7 +568,10 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                               Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  AppLocalization.of(context)!.getTranslatedValues('entryAmountLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getEntryFee()}",
+                                  AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              'entryAmountLbl')! +
+                                      " : ${context.read<MultiUserBattleRoomCubit>().getEntryFee()}",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Theme.of(context).backgroundColor,
@@ -429,10 +585,17 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                   child: IconButton(
                                     onPressed: () {
                                       try {
-                                        String inviteMessage = "$groupBattleInviteMessage${context.read<MultiUserBattleRoomCubit>().getRoomCode()}";
+                                        String inviteMessage =
+                                            "$groupBattleInviteMessage${context.read<MultiUserBattleRoomCubit>().getRoomCode()}";
                                         Share.share(inviteMessage);
                                       } catch (e) {
-                                        UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(defaultErrorMessageCode))!, context, false);
+                                        UiUtils.setSnackbar(
+                                            AppLocalization.of(context)!
+                                                .getTranslatedValues(
+                                                    convertErrorCodeToLanguageKey(
+                                                        defaultErrorMessageCode))!,
+                                            context,
+                                            false);
                                       }
                                     },
                                     iconSize: 20,
@@ -459,12 +622,18 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                 children: [
                                   Expanded(
                                     //
-                                    child: Text(AppLocalization.of(context)!.getTranslatedValues('roomCodeLbl')! + " : ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
+                                    child: Text(
+                                        AppLocalization.of(context)!
+                                                .getTranslatedValues(
+                                                    'roomCodeLbl')! +
+                                            " : ${context.read<MultiUserBattleRoomCubit>().getRoomCode()}",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 18.0,
-                                          color: Theme.of(context).colorScheme.secondary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           height: 1.2,
                                         )),
                                   ),
@@ -474,31 +643,42 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                             SizedBox(
                               height: 5.0,
                             ),
-                            Text(AppLocalization.of(context)!.getTranslatedValues('shareRoomCodeLbl')!,
+                            Text(
+                                AppLocalization.of(context)!
+                                    .getTranslatedValues('shareRoomCodeLbl')!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 13.5,
                                   height: 1.2,
-                                  color: Theme.of(context).colorScheme.secondary,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 )),
                           ],
                         ),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.secondary),
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
                       SizedBox(
                         height: constraints.maxHeight * (0.0275),
                       ),
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: context.read<MultiUserBattleRoomCubit>(),
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            return profileAndNameContainer(context, constraints, state.battleRoom.user1!.name, state.battleRoom.user1!.profileUrl, Theme.of(context).backgroundColor);
+                            return profileAndNameContainer(
+                                context,
+                                constraints,
+                                state.battleRoom.user1!.name,
+                                state.battleRoom.user1!.profileUrl,
+                                Theme.of(context).backgroundColor);
                           }
-                          return profileAndNameContainer(context, constraints, "", "", Theme.of(context).backgroundColor);
+                          return profileAndNameContainer(context, constraints,
+                              "", "", Theme.of(context).backgroundColor);
                         },
                       ),
                       SizedBox(
@@ -507,8 +687,10 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                       CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColor,
                         child: Text(
-                          AppLocalization.of(context)!.getTranslatedValues('vsLbl')!,
-                          style: TextStyle(color: Theme.of(context).backgroundColor),
+                          AppLocalization.of(context)!
+                              .getTranslatedValues('vsLbl')!,
+                          style: TextStyle(
+                              color: Theme.of(context).backgroundColor),
                         ),
                       ),
                       SizedBox(
@@ -516,23 +698,46 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5),
-                        child: BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                        child: BlocBuilder<MultiUserBattleRoomCubit,
+                            MultiUserBattleRoomState>(
                           bloc: context.read<MultiUserBattleRoomCubit>(),
                           builder: (context, state) {
                             if (state is MultiUserBattleRoomSuccess) {
                               return widget.quizType == QuizTypes.battle
                                   ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
+                                        profileAndNameContainer(
+                                            context,
+                                            constraints,
+                                            state.battleRoom.user2!.name,
+                                            state.battleRoom.user2!.profileUrl,
+                                            Colors.black54),
                                       ],
                                     )
                                   : Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                        profileAndNameContainer(context, constraints, state.battleRoom.user2!.name, state.battleRoom.user2!.profileUrl, Colors.black54),
-                                        profileAndNameContainer(context, constraints, state.battleRoom.user3!.name, state.battleRoom.user3!.profileUrl, Colors.black54),
-                                        profileAndNameContainer(context, constraints, state.battleRoom.user4!.name, state.battleRoom.user4!.profileUrl, Colors.black54),
+                                        profileAndNameContainer(
+                                            context,
+                                            constraints,
+                                            state.battleRoom.user2!.name,
+                                            state.battleRoom.user2!.profileUrl,
+                                            Colors.black54),
+                                        profileAndNameContainer(
+                                            context,
+                                            constraints,
+                                            state.battleRoom.user3!.name,
+                                            state.battleRoom.user3!.profileUrl,
+                                            Colors.black54),
+                                        profileAndNameContainer(
+                                            context,
+                                            constraints,
+                                            state.battleRoom.user4!.name,
+                                            state.battleRoom.user4!.profileUrl,
+                                            Colors.black54),
                                       ],
                                     );
                             } else {
@@ -542,11 +747,16 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                         ),
                       ),
                       Spacer(),
-                      BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
+                      BlocBuilder<MultiUserBattleRoomCubit,
+                          MultiUserBattleRoomState>(
                         bloc: context.read<MultiUserBattleRoomCubit>(),
                         builder: (context, state) {
                           if (state is MultiUserBattleRoomSuccess) {
-                            if (state.battleRoom.user1!.uid != context.read<UserDetailsCubit>().getUserProfile().userId) {
+                            if (state.battleRoom.user1!.uid !=
+                                context
+                                    .read<UserDetailsCubit>()
+                                    .getUserProfile()
+                                    .userId) {
                               return Container();
                             }
                             return TextButton(
@@ -554,17 +764,37 @@ class _WaitingForPlayesDialogState extends State<WaitingForPlayesDialog> {
                                 //need minimum 2 player to start the game
                                 //mark as ready to play in database
                                 if (state.battleRoom.user2!.uid.isEmpty) {
-                                  UiUtils.errorMessageDialog(context, AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(canNotStartGameCode)));
+                                  UiUtils.errorMessageDialog(
+                                      context,
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              convertErrorCodeToLanguageKey(
+                                                  canNotStartGameCode)));
                                 } else {
                                   //start quiz
-                                  /*    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().startGame():*/ context.read<MultiUserBattleRoomCubit>().startGame();
+                                  /*    widget.quizType==QuizTypes.battle?context.read<BattleRoomCubit>().startGame():*/ context
+                                      .read<MultiUserBattleRoomCubit>()
+                                      .startGame();
                                   //navigate to quiz screen
                                   widget.quizType == QuizTypes.battle
-                                      ? Navigator.of(context).pushReplacementNamed(Routes.battleRoomQuiz, arguments: {"battleLbl": widget.battleLbl, "isTournamentBattle": false})
-                                      : Navigator.of(context).pushReplacementNamed(Routes.multiUserBattleRoomQuiz);
+                                      ? Navigator.of(context)
+                                          .pushReplacementNamed(
+                                              Routes.battleRoomQuiz,
+                                              arguments: {
+                                              "battleLbl": widget.battleLbl,
+                                              "isTournamentBattle": false
+                                            })
+                                      : Navigator.of(context)
+                                          .pushReplacementNamed(
+                                              Routes.multiUserBattleRoomQuiz);
                                 }
                               },
-                              child: Text(AppLocalization.of(context)!.getTranslatedValues('startLbl')!, style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor)),
+                              child: Text(
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues('startLbl')!,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: Theme.of(context).primaryColor)),
                             );
                           }
                           return Container();

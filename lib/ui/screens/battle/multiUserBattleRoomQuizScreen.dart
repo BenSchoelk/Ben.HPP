@@ -24,11 +24,15 @@ import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/waitForOthersContainer.dart';
 import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/normalizeNumber.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class MultiUserBattleRoomQuizScreen extends StatefulWidget {
   MultiUserBattleRoomQuizScreen({Key? key}) : super(key: key);
@@ -111,7 +115,8 @@ class _MultiUserBattleRoomQuizScreenState
   List<Timer?> opponentsMessageDisappearTimer = [];
   List<int> opponentsMessageDisappearTimeInSeconds = [];
 
-  double userDetailsPadding = 15;
+  late double userDetaislHorizontalPaddingPercentage =
+      (1.0 - UiUtils.quesitonContainerWidthPercentage) * (0.5);
 
   @override
   void initState() {
@@ -580,8 +585,11 @@ class _MultiUserBattleRoomQuizScreenState
       alignment: AlignmentDirectional.bottomStart,
       child: Padding(
         padding: EdgeInsetsDirectional.only(
-          start: userDetailsPadding,
-          bottom: userDetailsPadding,
+          start: MediaQuery.of(context).size.width *
+              (userDetaislHorizontalPaddingPercentage),
+          bottom: MediaQuery.of(context).size.height *
+              RectangleUserProfileContainer.userDetailsHeightPercentage *
+              1.25,
         ),
         child: RectangleUserProfileContainer(
           userBattleRoomDetails: userBattleRoomDetails,
@@ -616,15 +624,23 @@ class _MultiUserBattleRoomQuizScreenState
           start: alignment == AlignmentDirectional.bottomEnd ||
                   alignment == AlignmentDirectional.topEnd
               ? 0
-              : userDetailsPadding,
+              : MediaQuery.of(context).size.width *
+                  userDetaislHorizontalPaddingPercentage,
           end: alignment == AlignmentDirectional.bottomEnd ||
                   alignment == AlignmentDirectional.topEnd
-              ? userDetailsPadding
+              ? MediaQuery.of(context).size.width *
+                  userDetaislHorizontalPaddingPercentage
               : 0,
-          bottom: userDetailsPadding,
+          bottom: MediaQuery.of(context).size.height *
+              RectangleUserProfileContainer.userDetailsHeightPercentage *
+              (1.25),
           top: alignment == AlignmentDirectional.topStart ||
                   alignment == AlignmentDirectional.topEnd
-              ? MediaQuery.of(context).padding.top + userDetailsPadding * (0.25)
+              ? MediaQuery.of(context).padding.top +
+                  MediaQuery.of(context).size.height *
+                      RectangleUserProfileContainer
+                          .userDetailsHeightPercentage *
+                      (1.25)
               : 0,
         ),
         child: RectangleUserProfileContainer(
@@ -651,7 +667,7 @@ class _MultiUserBattleRoomQuizScreenState
                   end: Theme.of(context).backgroundColor))
               .value;
           return Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
+            padding: const EdgeInsets.only(bottom: 20.0),
             child: IconButton(
               onPressed: () {
                 if (messageBoxAnimationController.isCompleted) {
@@ -682,6 +698,7 @@ class _MultiUserBattleRoomQuizScreenState
     );
   }
 
+  //TODO : Add correct padding as quesiton container
   Widget _buildMessageBoxContainer() {
     return Align(
       alignment: Alignment.topCenter,
@@ -690,9 +707,11 @@ class _MultiUserBattleRoomQuizScreenState
             .drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
           battleRoomId: context.read<MultiUserBattleRoomCubit>().getRoomId(),
-          topPadding: MediaQuery.of(context).size.height * (0.095) +
-              MediaQuery.of(context).padding.top +
-              15,
+          topPadding: MediaQuery.of(context).padding.top +
+              (MediaQuery.of(context).size.height *
+                  RectangleUserProfileContainer.userDetailsHeightPercentage *
+                  2.75) +
+              MediaQuery.of(context).padding.top,
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
           },
@@ -709,15 +728,18 @@ class _MultiUserBattleRoomQuizScreenState
           quizType: QuizTypes.groupPlay,
           isCurrentUser: true,
         ),
-        alignment: Alignment(-0.5, 1.0), //-0.5 left side nad 0.5 is right side,
+        alignment:
+            Alignment(-0.5, -1.0), //-0.5 left side and 0.5 is right side,
       ),
-      start: userDetailsPadding,
+      start: MediaQuery.of(context).size.width *
+          userDetaislHorizontalPaddingPercentage,
       bottom: MediaQuery.of(context).size.height *
-              RectangleUserProfileContainer.userDetailsHeightPercentage +
-          userDetailsPadding * 2.4,
+          RectangleUserProfileContainer.userDetailsHeightPercentage *
+          2.9,
     );
   }
 
+  //TODO : Add proper padding
   Widget _buildOpponentUserMessageContainer(int opponentUserIndex) {
     Alignment alignment = Alignment(-0.5, 1.0);
     if (opponentUserIndex == 0) {
@@ -729,7 +751,10 @@ class _MultiUserBattleRoomQuizScreenState
     }
 
     return PositionedDirectional(
-      end: opponentUserIndex == 1 ? null : userDetailsPadding,
+      end: opponentUserIndex == 1
+          ? null
+          : MediaQuery.of(context).size.width *
+              userDetaislHorizontalPaddingPercentage,
       child: ScaleTransition(
         scale: opponentMessageAnimations[opponentUserIndex],
         child: MessageContainer(
@@ -739,18 +764,87 @@ class _MultiUserBattleRoomQuizScreenState
         ),
         alignment: alignment, //-0.5 left side and 0.5 is right side,
       ),
-      start: opponentUserIndex == 1 ? userDetailsPadding : null,
+      start: opponentUserIndex == 1
+          ? MediaQuery.of(context).size.width *
+              userDetaislHorizontalPaddingPercentage
+          : null,
       top: opponentUserIndex == 0
           ? null
-          : MediaQuery.of(context).size.height *
-                  RectangleUserProfileContainer.userDetailsHeightPercentage +
-              MediaQuery.of(context).padding.top +
-              userDetailsPadding * (1.375),
+          : (MediaQuery.of(context).size.height *
+                  RectangleUserProfileContainer.userDetailsHeightPercentage *
+                  2.6) +
+              MediaQuery.of(context).padding.top,
       bottom: opponentUserIndex == 0
           ? MediaQuery.of(context).size.height *
-                  RectangleUserProfileContainer.userDetailsHeightPercentage +
-              userDetailsPadding * 2.4
+              RectangleUserProfileContainer.userDetailsHeightPercentage *
+              (2.9)
           : null,
+    );
+  }
+
+  Widget _buildTopMenu() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            left: MediaQuery.of(context).size.width *
+                ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
+            top: MediaQuery.of(context).padding.top - 10.5),
+        child: Row(
+          children: [
+            CustomBackButton(
+              onTap: () {
+                MultiUserBattleRoomCubit battleRoomCubit =
+                    context.read<MultiUserBattleRoomCubit>();
+                //if user hasleft the game
+                if (showUserLeftTheGame) {
+                  Navigator.of(context).pop();
+                }
+                //
+                if (battleRoomCubit.getUsers().length == 1 &&
+                    battleRoomCubit.getUsers().first!.uid ==
+                        context.read<UserDetailsCubit>().getUserId()) {
+                  return;
+                }
+
+                //if user is playing game then show
+                //exit game dialog
+
+                isExitDialogOpen = true;
+                showDialog(
+                    context: context,
+                    builder: (_) => ExitGameDailog(
+                          onTapYes: () {
+                            if (battleRoomCubit.getUsers().length == 1) {
+                              battleRoomCubit.deleteMultiUserBattleRoom();
+                            } else {
+                              //delete user from game room
+                              battleRoomCubit.deleteUserFromRoom(
+                                  context.read<UserDetailsCubit>().getUserId());
+                            }
+                            deleteMessages(battleRoomCubit);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                        )).then((value) => isExitDialogOpen = true);
+              },
+              iconColor: Theme.of(context).backgroundColor,
+            ),
+            Spacer(),
+            SettingButton(onPressed: () {
+              toggleSettingDialog();
+              showDialog(
+                  context: context,
+                  builder: (_) => SettingsDialogContainer()).then((value) {
+                toggleSettingDialog();
+              });
+            }),
+            _buildBookmarkButton(context.read<MultiUserBattleRoomCubit>()),
+          ],
+        ),
+      ),
     );
   }
 
@@ -815,20 +909,20 @@ class _MultiUserBattleRoomQuizScreenState
             children: [
               Align(
                   alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * (0.08),
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 500),
-                      child: showWaitForOthers
-                          ? WaitForOthersContainer(
-                              key: Key("waitForOthers"),
-                            )
-                          : QuestionsContainer(
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 500),
+                    child: showWaitForOthers
+                        ? WaitForOthersContainer(
+                            key: Key("waitForOthers"),
+                          )
+                        : Container(
+                            child: QuestionsContainer(
+                              topPadding: MediaQuery.of(context).size.height *
+                                  RectangleUserProfileContainer
+                                      .userDetailsHeightPercentage *
+                                  2.75,
                               timerAnimationController:
                                   timerAnimationController,
-                              topPadding: 16.5,
                               quizType: QuizTypes.groupPlay,
                               showAnswerCorrectness: true,
                               lifeLines: {},
@@ -854,7 +948,7 @@ class _MultiUserBattleRoomQuizScreenState
                               questionContentAnimationController:
                                   questionContentAnimationController,
                             ),
-                    ),
+                          ),
                   )),
               _buildMessageBoxContainer(),
               ...showUserLeftTheGame
@@ -964,6 +1058,7 @@ class _MultiUserBattleRoomQuizScreenState
               _buildMessageButton(),
               _buildYouWonContainer(battleRoomCubit),
               _buildUserLeftTheGame(),
+              _buildTopMenu(),
             ],
           ),
         ),

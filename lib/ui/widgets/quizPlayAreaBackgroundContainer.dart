@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class QuizPlayAreaBackgroundContainer extends StatelessWidget {
   final double? heightPercentage;
-  QuizPlayAreaBackgroundContainer({Key? key, this.heightPercentage}) : super(key: key);
+  QuizPlayAreaBackgroundContainer({Key? key, this.heightPercentage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,8 @@ class QuizPlayAreaBackgroundContainer extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadiusDirectional.only(bottomEnd: Radius.circular(100)),
+        borderRadius:
+            BorderRadiusDirectional.only(bottomEnd: Radius.circular(100)),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.3),

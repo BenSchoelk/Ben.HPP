@@ -248,19 +248,17 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
         return SingleChildScrollView(
           child: Column(
             children: [
-              widget.quizType == QuizTypes.groupPlay
-                  ? SizedBox(
-                      height: 22.5,
-                    )
-                  : SizedBox(
-                      height: 17.5,
-                    ),
-              widget.quizType == QuizTypes.battle
+              SizedBox(
+                height: 17.5,
+              ),
+              widget.quizType == QuizTypes.battle ||
+                      widget.quizType == QuizTypes.groupPlay
                   ? SizedBox()
                   : HorizontalTimerContainer(
                       timerAnimationController:
                           widget.timerAnimationController),
-              widget.quizType == QuizTypes.battle
+              widget.quizType == QuizTypes.battle ||
+                      widget.quizType == QuizTypes.groupPlay
                   ? SizedBox()
                   : SizedBox(
                       height: 12.5,
@@ -369,7 +367,8 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
       width: MediaQuery.of(context).size.width *
           UiUtils.quesitonContainerWidthPercentage,
       height: MediaQuery.of(context).size.height *
-          UiUtils.questionContainerHeightPercentage,
+          (UiUtils.questionContainerHeightPercentage -
+              0.045 * (widget.quizType == QuizTypes.groupPlay ? 1.0 : 0.0)),
       decoration: BoxDecoration(
           color: Theme.of(context).backgroundColor,
           borderRadius: BorderRadius.circular(25)),
@@ -443,8 +442,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
             });
           }
         },
-        child: SingleChildScrollView(
-            child: Padding(
+        child: Padding(
           padding: EdgeInsets.only(
             top:
                 MediaQuery.of(context).padding.top + (widget.topPadding ?? 7.5),
@@ -453,18 +451,24 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
             alignment: Alignment.topCenter,
             children: [
               QuestionBackgroundCard(
+                heightPercentage: widget.quizType == QuizTypes.groupPlay
+                    ? UiUtils.questionContainerHeightPercentage - 0.045
+                    : UiUtils.questionContainerHeightPercentage,
                 opacity: 0.7,
-                topMarginPercentage: 0.035,
+                topMarginPercentage: 0.02,
                 widthPercentage: 0.65,
               ),
               QuestionBackgroundCard(
+                heightPercentage: widget.quizType == QuizTypes.groupPlay
+                    ? UiUtils.questionContainerHeightPercentage - 0.045
+                    : UiUtils.questionContainerHeightPercentage,
                 opacity: 0.85,
-                topMarginPercentage: 0.02,
+                topMarginPercentage: 0.01,
                 widthPercentage: 0.75,
               ),
               ..._buildQuesitons(context),
             ],
           ),
-        )));
+        ));
   }
 }

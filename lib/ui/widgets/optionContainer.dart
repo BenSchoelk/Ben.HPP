@@ -34,24 +34,41 @@ class OptionContainer extends StatefulWidget {
   _OptionContainerState createState() => _OptionContainerState();
 }
 
-class _OptionContainerState extends State<OptionContainer> with TickerProviderStateMixin {
-  late AnimationController animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 90));
-  late Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeInQuad));
+class _OptionContainerState extends State<OptionContainer>
+    with TickerProviderStateMixin {
+  late AnimationController animationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 90));
+  late Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
+      .animate(CurvedAnimation(
+          parent: animationController, curve: Curves.easeInQuad));
 
-  late AnimationController topContainerAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 180));
-  late Animation<double> topContainerOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+  late AnimationController topContainerAnimationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 180));
+  late Animation<double> topContainerOpacityAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
     parent: topContainerAnimationController,
     curve: Interval(0.0, 0.25, curve: Curves.easeInQuad),
   ));
 
-  late Animation<double> topContainerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: topContainerAnimationController, curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
+  late Animation<double> topContainerAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: topContainerAnimationController,
+          curve: Interval(0.0, 0.5, curve: Curves.easeInQuad)));
 
-  late Animation<double> answerCorrectnessAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: topContainerAnimationController, curve: Interval(0.5, 1.0, curve: Curves.easeInQuad)));
+  late Animation<double> answerCorrectnessAnimation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: topContainerAnimationController,
+          curve: Interval(0.5, 1.0, curve: Curves.easeInQuad)));
 
   late double heightPercentage = 0.105;
   late AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
 
-  late TextSpan textSpan = TextSpan(text: widget.answerOption.title, style: TextStyle(color: Theme.of(context).backgroundColor, height: 1.0, fontSize: 17.0));
+  late TextSpan textSpan = TextSpan(
+      text: widget.answerOption.title,
+      style: TextStyle(
+          color: Theme.of(context).backgroundColor,
+          height: 1.0,
+          fontSize: 16.0));
 
   @override
   void dispose() {
@@ -78,7 +95,8 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
   }
 
   int calculateMaxLines() {
-    TextPainter textPainter = TextPainter(text: textSpan, textDirection: Directionality.of(context));
+    TextPainter textPainter =
+        TextPainter(text: textSpan, textDirection: Directionality.of(context));
 
     textPainter.layout(
       maxWidth: widget.constraints.maxWidth * (0.85),
@@ -91,7 +109,8 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
     if (widget.showAnswerCorrectness) {
       return Theme.of(context).colorScheme.secondary;
     }
-    if (widget.hasSubmittedAnswerForCurrentQuestion() && widget.submittedAnswerId == widget.answerOption.id) {
+    if (widget.hasSubmittedAnswerForCurrentQuestion() &&
+        widget.submittedAnswerId == widget.answerOption.id) {
       return Theme.of(context).primaryColor;
     }
     return Theme.of(context).colorScheme.secondary;
@@ -100,7 +119,9 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
   Widget _buildOptionDetails(double optionWidth) {
     int maxLines = calculateMaxLines();
     if (!widget.hasSubmittedAnswerForCurrentQuestion()) {
-      heightPercentage = maxLines > 2 ? (heightPercentage + (0.03 * (maxLines - 2))) : heightPercentage;
+      heightPercentage = maxLines > 2
+          ? (heightPercentage + (0.03 * (maxLines - 2)))
+          : heightPercentage;
     }
 
     return AnimatedBuilder(
@@ -121,7 +142,8 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
             alignment: Alignment.center,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: maxLines > 2 ? 7.50 : 0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 15.0, vertical: maxLines > 2 ? 7.50 : 0),
                 color: _buildOptionBackgroundColor(),
                 alignment: AlignmentDirectional.centerStart,
                 child: RichText(text: textSpan),
@@ -131,10 +153,17 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
                       ignoring: true,
                       child: AnimatedBuilder(
                         builder: (context, child) {
-                          final height = topContainerAnimation.drive(Tween<double>(begin: 0.085, end: heightPercentage)).value;
-                          final width = topContainerAnimation.drive(Tween<double>(begin: 0.2, end: 1.0)).value;
+                          final height = topContainerAnimation
+                              .drive(Tween<double>(
+                                  begin: 0.085, end: heightPercentage))
+                              .value;
+                          final width = topContainerAnimation
+                              .drive(Tween<double>(begin: 0.2, end: 1.0))
+                              .value;
 
-                          final borderRadius = topContainerAnimation.drive(Tween<double>(begin: 40.0, end: 20)).value;
+                          final borderRadius = topContainerAnimation
+                              .drive(Tween<double>(begin: 40.0, end: 20))
+                              .value;
 
                           return Opacity(
                             opacity: topContainerOpacityAnimation.value,
@@ -144,10 +173,20 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
                                 scale: answerCorrectnessAnimation.value,
                                 child: Opacity(
                                   opacity: answerCorrectnessAnimation.value,
-                                  child: widget.answerOption.id == widget.correctOptionId ? Icon(Icons.check, color: Theme.of(context).backgroundColor) : Icon(Icons.close, color: Theme.of(context).backgroundColor),
+                                  child: widget.answerOption.id ==
+                                          widget.correctOptionId
+                                      ? Icon(Icons.check,
+                                          color:
+                                              Theme.of(context).backgroundColor)
+                                      : Icon(Icons.close,
+                                          color: Theme.of(context)
+                                              .backgroundColor),
                                 ),
                               ),
-                              decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(borderRadius)),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius:
+                                      BorderRadius.circular(borderRadius)),
                               width: optionWidth * width,
                               height: widget.constraints.maxHeight * height,
                             ),
@@ -166,7 +205,12 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    textSpan = TextSpan(text: widget.answerOption.title, style: TextStyle(color: Theme.of(context).backgroundColor, height: 1.0, fontSize: 17.0));
+    textSpan = TextSpan(
+        text: widget.answerOption.title,
+        style: TextStyle(
+            color: Theme.of(context).backgroundColor,
+            height: 1.0,
+            fontSize: 16.0));
     return GestureDetector(
       onTapCancel: () {
         animationController.reverse();
@@ -208,7 +252,9 @@ class _OptionContainerState extends State<OptionContainer> with TickerProviderSt
                 ),
                 Text(
                   "${widget.audiencePollPercentage}%",
-                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 16.0),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 16.0),
                 ),
               ],
             )

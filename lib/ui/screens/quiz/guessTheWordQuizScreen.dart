@@ -282,7 +282,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
           return Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).size.height * (0.025)),
               child: CustomRoundedButton(
                 widthPercentage: 0.5,
                 backgroundColor: Theme.of(context).primaryColor,

@@ -535,7 +535,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       return Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            padding: EdgeInsets.only(bottom: 15.0),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * (0.025)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
