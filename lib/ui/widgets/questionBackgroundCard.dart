@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
 
 class QuestionBackgroundCard extends StatelessWidget {
   final double opacity;

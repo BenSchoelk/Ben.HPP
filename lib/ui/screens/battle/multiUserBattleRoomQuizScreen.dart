@@ -9,6 +9,7 @@ import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
+import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
@@ -118,8 +119,16 @@ class _MultiUserBattleRoomQuizScreenState
   late double userDetaislHorizontalPaddingPercentage =
       (1.0 - UiUtils.quesitonContainerWidthPercentage) * (0.5);
 
+  late List<Message> latestMessagesByUsers = [];
+
   @override
   void initState() {
+    //add empty messages ofr every user
+
+    for (var i = 0; i < maxUsersInGroupBatle; i++) {
+      latestMessagesByUsers.add(Message.buildEmptyMessage());
+    }
+
     //deduct coins of entry fee
     Future.delayed(Duration.zero, () {
       //TODO : Played group battle
@@ -210,7 +219,8 @@ class _MultiUserBattleRoomQuizScreenState
   }
 
   void initOpponentConfig() {
-    for (var i = 0; i < 3; i++) {
+    //
+    for (var i = 0; i < (maxUsersInGroupBatle - 1); i++) {
       opponentMessageAnimationControllers.add(AnimationController(
           vsync: this, duration: Duration(milliseconds: 300)));
       opponentProgressAnimationControllers
@@ -375,24 +385,73 @@ class _MultiUserBattleRoomQuizScreenState
   void messagesListener(MessageState state) async {
     if (state is MessageFetchedSuccess) {
       if (state.messages.isNotEmpty) {
-        if (state.messages.last.by ==
-            context.read<UserDetailsCubit>().getUserId()) {
-          //current user message
-          //
+        //current user message
+
+        if (context
+            .read<MessageCubit>()
+            .getUserLatestMessage(
+                //fetch user id
+                context.read<UserDetailsCubit>().getUserId(),
+                messageId: latestMessagesByUsers[0].messageId
+                //latest user message id
+                )
+            .messageId
+            .isNotEmpty) {
+          //Assign latest message
+          latestMessagesByUsers[0] = context
+              .read<MessageCubit>()
+              .getUserLatestMessage(
+                  context.read<UserDetailsCubit>().getUserId(),
+                  messageId: latestMessagesByUsers[0].messageId);
+          print(
+              "Current user latest message : ${latestMessagesByUsers[0].message}");
+
+          //Display latest message by current user
           //means timer is running
           if (currentUserMessageDisappearTimeInSeconds > 0 &&
               currentUserMessageDisappearTimeInSeconds < 4) {
-            print(currentUserMessageDisappearTimeInSeconds);
             currentUserMessageDisappearTimer?.cancel();
             setCurrentUserMessageDisappearTimer();
           } else {
             messageAnimationController.forward();
             setCurrentUserMessageDisappearTimer();
           }
-        } else {
-          List<UserBattleRoomDetails?> opponentUsers = context
-              .read<MultiUserBattleRoomCubit>()
-              .getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+        }
+
+        //display opponent user messages
+
+        List<UserBattleRoomDetails?> opponentUsers = context
+            .read<MultiUserBattleRoomCubit>()
+            .getOpponentUsers(context.read<UserDetailsCubit>().getUserId());
+
+        for (var i = 0; i < opponentUsers.length; i++) {
+          if (context
+              .read<MessageCubit>()
+              .getUserLatestMessage(
+                  //opponent user id
+                  opponentUsers[i]!.uid,
+                  messageId: latestMessagesByUsers[i + 1].messageId
+                  //latest user message id
+                  )
+              .messageId
+              .isNotEmpty) {
+            //if new message by opponent
+            if (opponentsMessageDisappearTimeInSeconds[i] > 0 &&
+                opponentsMessageDisappearTimeInSeconds[i] < 4) {
+              //
+              opponentsMessageDisappearTimer[i]?.cancel();
+              setOpponentUserMessageDisappearTimer(i);
+            } else {
+              opponentMessageAnimationControllers[i].forward();
+              setOpponentUserMessageDisappearTimer(i);
+            }
+          }
+        }
+
+        /*
+
+
+
           int opponentUserIndex = opponentUsers
               .indexWhere((element) => state.messages.last.by == element!.uid);
 
@@ -410,7 +469,8 @@ class _MultiUserBattleRoomQuizScreenState
               setOpponentUserMessageDisappearTimer(opponentUserIndex);
             }
           }
-        }
+
+        */
       }
     }
   }

@@ -259,3 +259,5 @@ const List<String> examRules = [
 //This ensure that torunament will start only if 8 users are ready to play
 //
 const int numberOfPlayerForTournament = 8;
+
+const int maxUsersInGroupBatle = 4;
