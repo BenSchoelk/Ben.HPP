@@ -599,12 +599,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
-        //Navigator.of(context).pushNamed(Routes.selfChallenge);
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-          return BlocProvider<MessageCubit>(
-              child: PlayGroundScreen(),
-              create: (_) => MessageCubit(BattleRoomRepository()));
-        }));
+        Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
         alignment: Alignment.topCenter,
