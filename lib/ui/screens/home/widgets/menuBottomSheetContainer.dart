@@ -38,6 +38,17 @@ class MenuBottomSheetContainer extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * (0.025),
             ),
+
+            MenuTile(
+              isSvgIcon: true,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.wallet);
+              },
+              title: walletKey,
+              leadingIcon: "coin_store.svg",
+            ),
+
             MenuTile(
               isSvgIcon: true,
               onTap: () {

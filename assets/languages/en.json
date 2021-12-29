@@ -377,7 +377,9 @@
   "deletingAccount" : "Deleting Account...",
   "accountDeletedSuccessfully" : "Account deleted successfully",
   "coinHistory" : "Coin History",
-  "wallet" : "Wallet"
+  "wallet" : "Wallet",
+  "request" : "Request",
+  "transaction" : "Transaction"
 
   
   

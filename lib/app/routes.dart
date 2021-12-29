@@ -46,6 +46,7 @@ import 'package:flutterquiz/ui/screens/splashScreen.dart';
 import 'package:flutterquiz/ui/screens/statisticsScreen.dart';
 import 'package:flutterquiz/ui/screens/tournament/tournamentDetailsScreen.dart';
 import 'package:flutterquiz/ui/screens/tournament/tournamentScreen.dart';
+import 'package:flutterquiz/ui/screens/wallet/walletScreen.dart';
 
 class Routes {
   static const home = "/";
@@ -97,6 +98,7 @@ class Routes {
   static const otpScreen = "/otpScreen";
   static const statistics = "/statistics";
   static const coinHistory = "/coinHistory";
+  static const wallet = "/wallet";
 
   static String currentRoute = splash;
 
@@ -124,6 +126,9 @@ class Routes {
         return SelectProfilePictureScreen.route(routeSettings);
       case quiz:
         return QuizScreen.route(routeSettings);
+
+      case wallet:
+        return WalletScreen.route(routeSettings);
 
       case coinStore:
         return CoinStoreScreen.route(routeSettings);

@@ -367,3 +367,5 @@ String deletingAccountKey = "deletingAccount";
 String accountDeletedSuccessfullyKey = "accountDeletedSuccessfully";
 String coinHistoryKey = "coinHistory";
 String walletKey = "wallet";
+String requestKey = "request";
+String transactionKey = "transaction";
