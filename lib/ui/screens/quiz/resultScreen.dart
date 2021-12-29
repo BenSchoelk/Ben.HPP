@@ -287,8 +287,13 @@ class _ResultScreenState extends State<ResultScreen> {
         int badgeEarnPoints =
             (correctAnswerPointsForBattle + extraPointForQuickestAnswer) *
                 totalQuestions();
+
         //if user's points is same as highest points
-        if (widget.myPoints! == badgeEarnPoints) {
+        UserBattleRoomDetails currentUser =
+            widget.battleRoom!.user1!.uid == userId
+                ? widget.battleRoom!.user1!
+                : widget.battleRoom!.user2!;
+        if (currentUser.points == badgeEarnPoints) {
           badgesCubit.setBadge(badgeType: "ultimate_player", userId: userId);
         }
       }
