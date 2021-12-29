@@ -35,9 +35,6 @@ class BookmarkQuizScreen extends StatefulWidget {
   @override
   _BookmarkQuizScreenState createState() => _BookmarkQuizScreenState();
   static Route<dynamic> route(RouteSettings routeSettings) {
-    //keys of arguments are numberOfPlayer and quizType (required)
-    //if quizType is quizZone then need to pass following keys
-    //categoryId, subcategoryId, level, subcategoryMaxLevel and unlockedLevel
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(providers: [
               //for quesitons and points

@@ -25,7 +25,10 @@ class MenuBottomSheetContainer extends StatelessWidget {
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
           ),
-          gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+          gradient: UiUtils.buildLinerGradient([
+            Theme.of(context).scaffoldBackgroundColor,
+            Theme.of(context).canvasColor
+          ], Alignment.topCenter, Alignment.bottomCenter)),
       child: Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: Column(
@@ -35,6 +38,16 @@ class MenuBottomSheetContainer extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * (0.025),
             ),
+            MenuTile(
+              isSvgIcon: true,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.coinHistory);
+              },
+              title: coinHistoryKey,
+              leadingIcon: "coin_store.svg",
+            ),
+
             MenuTile(
               isSvgIcon: true,
               onTap: () {
@@ -69,7 +82,9 @@ class MenuBottomSheetContainer extends StatelessWidget {
                     isSvgIcon: true,
                     onTap: () {
                       Navigator.of(context).pop();
-                      showDialog(context: context, builder: (_) => LanguageDailogContainer());
+                      showDialog(
+                          context: context,
+                          builder: (_) => LanguageDailogContainer());
                     },
                     title: languageKey,
                     leadingIcon: "language_icon.svg",
@@ -125,7 +140,8 @@ class MenuBottomSheetContainer extends StatelessWidget {
               isSvgIcon: true,
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(Routes.appSettings, arguments: howToPlayLbl);
+                Navigator.of(context)
+                    .pushNamed(Routes.appSettings, arguments: howToPlayLbl);
               },
               title: howToPlayLbl,
               leadingIcon: "howtoplay_icon.svg", //theme icon
@@ -161,9 +177,22 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pop();
                 try {
                   if (Platform.isAndroid) {
-                    Share.share(appName + " \nhttps://play.google.com/store/apps/details?id=" + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText);
+                    Share.share(appName +
+                        " \nhttps://play.google.com/store/apps/details?id=" +
+                        packageName +
+                        "\n" +
+                        context
+                            .read<SystemConfigCubit>()
+                            .getSystemDetails()
+                            .shareappText);
                   } else {
-                    Share.share(appName + packageName + "\n" + context.read<SystemConfigCubit>().getSystemDetails().shareappText);
+                    Share.share(appName +
+                        packageName +
+                        "\n" +
+                        context
+                            .read<SystemConfigCubit>()
+                            .getSystemDetails()
+                            .shareappText);
                   }
                 } catch (e) {
                   UiUtils.setSnackbar(e.toString(), context, false);

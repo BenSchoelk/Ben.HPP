@@ -8,6 +8,7 @@ import 'package:flutterquiz/ui/screens/auth/signUpScreen.dart';
 import 'package:flutterquiz/ui/screens/badgesScreen.dart';
 import 'package:flutterquiz/ui/screens/battle/battleRoomFindOpponentScreen.dart';
 import 'package:flutterquiz/ui/screens/bookmarkScreen.dart';
+import 'package:flutterquiz/ui/screens/coinHistoryScreen.dart';
 import 'package:flutterquiz/ui/screens/coinStoreScreen.dart';
 import 'package:flutterquiz/ui/screens/exam/examScreen.dart';
 import 'package:flutterquiz/ui/screens/exam/examsScreen.dart';
@@ -95,6 +96,7 @@ class Routes {
   static const tournamentDetails = "/tournamentDetails";
   static const otpScreen = "/otpScreen";
   static const statistics = "/statistics";
+  static const coinHistory = "/coinHistory";
 
   static String currentRoute = splash;
 
@@ -180,6 +182,9 @@ class Routes {
 
       case levels:
         return LevelsScreen.route(routeSettings);
+
+      case coinHistory:
+        return CoinHistoryScreen.route(routeSettings);
 
       case aboutApp:
         return CupertinoPageRoute(builder: (context) => AboutAppScreen());

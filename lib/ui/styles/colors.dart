@@ -14,5 +14,6 @@ final Color darkCanvasColor = Color(0xff5A5A5A);
 
 //it will be same for both light and dark theme
 final Color badgeLockedColor = Colors.grey;
+final Color addCoinColor = Colors.green;
 final Color hurryUpTimerColor = Colors.red;//timer color when 25% time left
 

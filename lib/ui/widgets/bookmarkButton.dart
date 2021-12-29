@@ -95,10 +95,10 @@ class BookmarkButton extends StatelessWidget {
             );
           }
           if (state is BookmarkFetchFailure) {
-            return Container();
+            return SizedBox();
           }
 
-          return Container();
+          return SizedBox();
         },
       ),
     );
