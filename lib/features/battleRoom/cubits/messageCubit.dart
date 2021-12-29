@@ -12,6 +12,7 @@ class MessageAddInProgress extends MessageState {}
 
 class MessageFetchedSuccess extends MessageState {
   final List<Message> messages;
+
   MessageFetchedSuccess(this.messages);
 }
 
@@ -31,22 +32,9 @@ class MessageCubit extends Cubit<MessageState> {
   void subscribeToMessages(String roomId) {
     streamSubscription = _battleRoomRepository
         .subscribeToMessages(roomId: roomId)
-        .listen((message) {
-      if (message.messageId.isNotEmpty) {
-        final messages =
-            List<Message>.from((state as MessageFetchedSuccess).messages);
-
-        bool isNewMessage = messages
-            .where((element) => element.messageId == message.messageId)
-            .toList()
-            .isEmpty;
-
-        print(message.toJson());
-        if (isNewMessage) {
-          messages.add(message);
-          emit(MessageFetchedSuccess(messages));
-        }
-      }
+        .listen((messages) {
+      //messages
+      emit(MessageFetchedSuccess(messages));
     });
   }
 
@@ -71,14 +59,32 @@ class MessageCubit extends Cubit<MessageState> {
   }
 
   void deleteMessages(String roomId, String by) {
+    streamSubscription.cancel();
     _battleRoomRepository.deleteMessagesByUserId(roomId, by);
   }
 
-  Message getUserLatestMessage(String userId) {
+  Message getUserLatestMessage(String userId, {String? messageId}) {
     if (state is MessageFetchedSuccess) {
       final messages = (state as MessageFetchedSuccess).messages;
-      return messages.lastWhere((element) => element.by == userId,
-          orElse: () => Message.buildEmptyMessage());
+      final messagesByUser = messages.where((element) => element.by == userId);
+
+      if (messagesByUser.isEmpty) {
+        return Message.buildEmptyMessage();
+      }
+      //If message id is passed that means we are checking for latest message
+      //else we are fetching latest message to diplay
+
+      //messageId is null means we are fethcing latest message to display
+      if (messageId == null) {
+        return messagesByUser.first;
+      }
+
+      //messageId is not null so we are checking if there is any latest message or not
+
+      //
+      return messagesByUser.first.messageId == messageId
+          ? Message.buildEmptyMessage()
+          : messagesByUser.first;
     }
     return Message.buildEmptyMessage();
   }

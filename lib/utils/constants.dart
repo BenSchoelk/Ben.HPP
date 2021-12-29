@@ -208,6 +208,12 @@ final List<String> predefinedMessages = [
   "What a performance..!!",
   "Thanks..",
   "Welcome..",
+  "Merry Christmas",
+  "Happy new year",
+  "Happy Diwali",
+  "Good night",
+  "Hurry Up",
+  "Dudeeee"
 ];
 
 //constants for badges and rewards

@@ -28,7 +28,7 @@ class Message {
     );
   }
 
-  static Message fromJson(DocumentSnapshot documentSnapshot) {
+  static Message fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = Map.from(documentSnapshot.data() as Map);
     return Message(
       by: json['by'] ?? "",

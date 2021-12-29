@@ -18,8 +18,12 @@ class BattleRoomRemoteDataSource {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   //While starting app
-  static Future<void> deleteBattleRoomCreatedByUser(String currentUserId) async {
-    FirebaseFirestore.instance.collection(battleRoomCollection).get().then((value) => null);
+  static Future<void> deleteBattleRoomCreatedByUser(
+      String currentUserId) async {
+    FirebaseFirestore.instance
+        .collection(battleRoomCollection)
+        .get()
+        .then((value) => null);
   }
 
   /*
@@ -29,7 +33,11 @@ class BattleRoomRemoteDataSource {
   category:1 
   */
 
-  Future<List?> getQuestions({required String languageId, required String categoryId, required String matchId, required String destroyRoom}) async {
+  Future<List?> getQuestions(
+      {required String languageId,
+      required String categoryId,
+      required String matchId,
+      required String destroyRoom}) async {
     try {
       Map<String, String> body = {
         accessValueKey: accessValue,
@@ -45,11 +53,13 @@ class BattleRoomRemoteDataSource {
         body.remove(languageIdKey);
       }
 
-      final response = await http.post(Uri.parse(getQuestionForOneToOneBattle), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getQuestionForOneToOneBattle),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        throw BattleRoomException(errorMessageCode: responseJson['message']); //error
+        throw BattleRoomException(
+            errorMessageCode: responseJson['message']); //error
       }
       return responseJson['data'];
     } on SocketException catch (_) {
@@ -63,12 +73,17 @@ class BattleRoomRemoteDataSource {
 
   Future<List?> getMultiUserBattleQuestions(String? roomCode) async {
     try {
-      Map<String, String?> body = {accessValueKey: accessValue, roomIdKey: roomCode};
+      Map<String, String?> body = {
+        accessValueKey: accessValue,
+        roomIdKey: roomCode
+      };
 
-      final response = await http.post(Uri.parse(getQuestionForMultiUserBattle), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getQuestionForMultiUserBattle),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
-        throw BattleRoomException(errorMessageCode: responseJson['message']); //error
+        throw BattleRoomException(
+            errorMessageCode: responseJson['message']); //error
       }
       return responseJson['data'];
     } on SocketException catch (_) {
@@ -81,17 +96,33 @@ class BattleRoomRemoteDataSource {
   }
 
   //subscribe to battle room
-  Stream<DocumentSnapshot> subscribeToBattleRoom(String? battleRoomDocumentId, bool forMultiUser) {
+  Stream<DocumentSnapshot> subscribeToBattleRoom(
+      String? battleRoomDocumentId, bool forMultiUser) {
     if (forMultiUser) {
-      return _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(battleRoomDocumentId).snapshots();
+      return _firebaseFirestore
+          .collection(multiUserBattleRoomCollection)
+          .doc(battleRoomDocumentId)
+          .snapshots();
     }
-    return _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).snapshots();
+    return _firebaseFirestore
+        .collection(battleRoomCollection)
+        .doc(battleRoomDocumentId)
+        .snapshots();
   }
 
   Future<void> removeOpponentFromBattleRoom(String roomId) async {
     try {
-      await _firebaseFirestore.collection(battleRoomCollection).doc(roomId).update({
-        "user2": {"name": "", "correctAnswers": 0, "answers": [], "uid": "", "profileUrl": ""},
+      await _firebaseFirestore
+          .collection(battleRoomCollection)
+          .doc(roomId)
+          .update({
+        "user2": {
+          "name": "",
+          "correctAnswers": 0,
+          "answers": [],
+          "uid": "",
+          "profileUrl": ""
+        },
       });
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
@@ -103,7 +134,8 @@ class BattleRoomRemoteDataSource {
   }
 
   //to find room to play quiz
-  Future<List<DocumentSnapshot>> searchBattleRoom(String categoryId, String questionLanguageId) async {
+  Future<List<DocumentSnapshot>> searchBattleRoom(
+      String categoryId, String questionLanguageId) async {
     try {
       QuerySnapshot querySnapshot;
       if (await InternetConnectivity.isUserOffline()) {
@@ -132,18 +164,26 @@ class BattleRoomRemoteDataSource {
   }
 
   //delete battle room
-  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser, {String? roomCode}) async {
+  Future<void> deleteBattleRoom(String? documentId, bool forMultiUser,
+      {String? roomCode}) async {
     try {
       if (forMultiUser) {
         Map<String, String> body = {
           accessValueKey: accessValue,
           roomIdKey: roomCode!,
         };
-        await _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(documentId).delete();
-        await http.post(Uri.parse(deleteMultiUserBattleRoom), body: body, headers: ApiUtils.getHeaders());
+        await _firebaseFirestore
+            .collection(multiUserBattleRoomCollection)
+            .doc(documentId)
+            .delete();
+        await http.post(Uri.parse(deleteMultiUserBattleRoom),
+            body: body, headers: ApiUtils.getHeaders());
         print("Room deleted successfully");
       } else {
-        await _firebaseFirestore.collection(battleRoomCollection).doc(documentId).delete();
+        await _firebaseFirestore
+            .collection(battleRoomCollection)
+            .doc(documentId)
+            .delete();
       }
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
@@ -155,12 +195,22 @@ class BattleRoomRemoteDataSource {
   }
 
   //get battle room
-  Future<Map<String, List<DocumentSnapshot>>> getRoomCreatedByUser(String userId) async {
+  Future<Map<String, List<DocumentSnapshot>>> getRoomCreatedByUser(
+      String userId) async {
     try {
-      QuerySnapshot multiUserBattleQuerySnapshot = await _firebaseFirestore.collection(multiUserBattleRoomCollection).where("createdBy", isEqualTo: userId).get();
-      QuerySnapshot battleQuerySnapshot = await _firebaseFirestore.collection(battleRoomCollection).where("createdBy", isEqualTo: userId).get();
+      QuerySnapshot multiUserBattleQuerySnapshot = await _firebaseFirestore
+          .collection(multiUserBattleRoomCollection)
+          .where("createdBy", isEqualTo: userId)
+          .get();
+      QuerySnapshot battleQuerySnapshot = await _firebaseFirestore
+          .collection(battleRoomCollection)
+          .where("createdBy", isEqualTo: userId)
+          .get();
 
-      return {"battle": battleQuerySnapshot.docs, "groupBattle": multiUserBattleQuerySnapshot.docs};
+      return {
+        "battle": battleQuerySnapshot.docs,
+        "groupBattle": multiUserBattleQuerySnapshot.docs
+      };
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
     } on PlatformException catch (_) {
@@ -183,15 +233,28 @@ class BattleRoomRemoteDataSource {
   }) async {
     try {
       //hasLeft,categoryId
-      DocumentReference documentReference = await _firebaseFirestore.collection(battleRoomCollection).add({
+      DocumentReference documentReference =
+          await _firebaseFirestore.collection(battleRoomCollection).add({
         "createdBy": uid,
         "categoryId": categoryId,
         "languageId": questionLanguageId,
         "roomCode": roomCode ?? "",
         "entryFee": entryFee ?? 0,
         "readyToPlay": false,
-        "user1": {"name": name, "points": 0, "answers": [], "uid": uid, "profileUrl": profileUrl},
-        "user2": {"name": "", "points": 0, "answers": [], "uid": "", "profileUrl": ""},
+        "user1": {
+          "name": name,
+          "points": 0,
+          "answers": [],
+          "uid": uid,
+          "profileUrl": profileUrl
+        },
+        "user2": {
+          "name": "",
+          "points": 0,
+          "answers": [],
+          "uid": "",
+          "profileUrl": ""
+        },
         "createdAt": Timestamp.now(),
       });
       return await documentReference.get();
@@ -205,33 +268,77 @@ class BattleRoomRemoteDataSource {
   }
 
   //create mutliUserBattleRoom
-  Future<DocumentSnapshot> createMutliUserBattleRoom({required String categoryId, String? name, String? profileUrl, String? uid, String? roomCode, String? roomType, int? entryFee, String? questionLanguageId}) async {
+  Future<DocumentSnapshot> createMutliUserBattleRoom(
+      {required String categoryId,
+      String? name,
+      String? profileUrl,
+      String? uid,
+      String? roomCode,
+      String? roomType,
+      int? entryFee,
+      String? questionLanguageId}) async {
     try {
-      Map<String, String> body = {accessValueKey: accessValue, userIdKey: uid!, roomIdKey: roomCode!, roomTypeKey: roomType!, categoryKey: categoryId, numberOfQuestionsKey: "10", languageIdKey: questionLanguageId!};
+      Map<String, String> body = {
+        accessValueKey: accessValue,
+        userIdKey: uid!,
+        roomIdKey: roomCode!,
+        roomTypeKey: roomType!,
+        categoryKey: categoryId,
+        numberOfQuestionsKey: "10",
+        languageIdKey: questionLanguageId!
+      };
       if (categoryId.isEmpty) {
         body.remove(categoryKey);
       }
       if (questionLanguageId.isEmpty) {
         body.remove(languageIdKey);
       }
-      final response = await http.post(Uri.parse(createMultiUserBattleRoom), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(createMultiUserBattleRoom),
+          body: body, headers: ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        throw BattleRoomException(errorMessageCode: responseJson['message']); //error
+        throw BattleRoomException(
+            errorMessageCode: responseJson['message']); //error
       }
 
-      DocumentReference documentReference = await _firebaseFirestore.collection(multiUserBattleRoomCollection).add({
+      DocumentReference documentReference = await _firebaseFirestore
+          .collection(multiUserBattleRoomCollection)
+          .add({
         "createdBy": uid,
         "categoryId": categoryId,
         "roomCode": roomCode,
         "entryFee": entryFee,
         "readyToPlay": false,
-        "user1": {"name": name, "correctAnswers": 0, "answers": [], "uid": uid, "profileUrl": profileUrl},
-        "user2": {"name": "", "correctAnswers": 0, "answers": [], "uid": "", "profileUrl": ""},
-        "user3": {"name": "", "correctAnswers": 0, "answers": [], "uid": "", "profileUrl": ""},
-        "user4": {"name": "", "correctAnswers": 0, "answers": [], "uid": "", "profileUrl": ""},
+        "user1": {
+          "name": name,
+          "correctAnswers": 0,
+          "answers": [],
+          "uid": uid,
+          "profileUrl": profileUrl
+        },
+        "user2": {
+          "name": "",
+          "correctAnswers": 0,
+          "answers": [],
+          "uid": "",
+          "profileUrl": ""
+        },
+        "user3": {
+          "name": "",
+          "correctAnswers": 0,
+          "answers": [],
+          "uid": "",
+          "profileUrl": ""
+        },
+        "user4": {
+          "name": "",
+          "correctAnswers": 0,
+          "answers": [],
+          "uid": "",
+          "profileUrl": ""
+        },
         "createdAt": Timestamp.now(),
       });
       return documentReference.get();
@@ -247,14 +354,23 @@ class BattleRoomRemoteDataSource {
   }
 
   //to create room to play quiz
-  Future<bool> joinBattleRoom({String? name, String? profileUrl, String? uid, String? battleRoomDocumentId}) async {
+  Future<bool> joinBattleRoom(
+      {String? name,
+      String? profileUrl,
+      String? uid,
+      String? battleRoomDocumentId}) async {
     try {
-      DocumentReference documentReference = (await _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).get()).reference;
+      DocumentReference documentReference = (await _firebaseFirestore
+              .collection(battleRoomCollection)
+              .doc(battleRoomDocumentId)
+              .get())
+          .reference;
       print("Join user here ");
       return FirebaseFirestore.instance.runTransaction((transaction) async {
         //get latest document
         DocumentSnapshot documentSnapshot = await documentReference.get();
-        Map user2Details = Map.from(documentSnapshot.data() as Map<String, dynamic>)['user2'];
+        Map user2Details =
+            Map.from(documentSnapshot.data() as Map<String, dynamic>)['user2'];
         print("User 2 : $user2Details");
         if (user2Details['uid'].toString().isEmpty) {
           //print("Join user");
@@ -278,9 +394,15 @@ class BattleRoomRemoteDataSource {
   }
 
   //get room by roomCode (multiUserBattleRoom)
-  Future<QuerySnapshot> getMultiUserBattleRoom(String? roomCode, String? type) async {
+  Future<QuerySnapshot> getMultiUserBattleRoom(
+      String? roomCode, String? type) async {
     try {
-      QuerySnapshot querySnapshot = await _firebaseFirestore.collection(type == "battle" ? battleRoomCollection : multiUserBattleRoomCollection).where("roomCode", isEqualTo: roomCode).get();
+      QuerySnapshot querySnapshot = await _firebaseFirestore
+          .collection(type == "battle"
+              ? battleRoomCollection
+              : multiUserBattleRoomCollection)
+          .where("roomCode", isEqualTo: roomCode)
+          .get();
       return querySnapshot;
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
@@ -292,12 +414,21 @@ class BattleRoomRemoteDataSource {
   }
 
   //submit answer
-  Future<void> submitAnswer({required Map<String, dynamic> submitAnswer, String? battleRoomDocumentId, required bool forMultiUser}) async {
+  Future<void> submitAnswer(
+      {required Map<String, dynamic> submitAnswer,
+      String? battleRoomDocumentId,
+      required bool forMultiUser}) async {
     try {
       if (forMultiUser) {
-        await _firebaseFirestore.collection(multiUserBattleRoomCollection).doc(battleRoomDocumentId).update(submitAnswer);
+        await _firebaseFirestore
+            .collection(multiUserBattleRoomCollection)
+            .doc(battleRoomDocumentId)
+            .update(submitAnswer);
       } else {
-        await _firebaseFirestore.collection(battleRoomCollection).doc(battleRoomDocumentId).update(submitAnswer);
+        await _firebaseFirestore
+            .collection(battleRoomCollection)
+            .doc(battleRoomDocumentId)
+            .update(submitAnswer);
       }
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
@@ -309,9 +440,15 @@ class BattleRoomRemoteDataSource {
   }
 
   //delete user from multiple user room
-  Future<void> updateMultiUserRoom(String? documentId, Map<String, dynamic> updatedData, String battle) async {
+  Future<void> updateMultiUserRoom(String? documentId,
+      Map<String, dynamic> updatedData, String battle) async {
     try {
-      _firebaseFirestore.collection(battle == "battle" ? battleRoomCollection : multiUserBattleRoomCollection).doc(documentId).update(updatedData);
+      _firebaseFirestore
+          .collection(battle == "battle"
+              ? battleRoomCollection
+              : multiUserBattleRoomCollection)
+          .doc(documentId)
+          .update(updatedData);
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
     } on PlatformException catch (_) {
@@ -332,14 +469,15 @@ class BattleRoomRemoteDataSource {
           "timestamp",
           descending: true,
         )
-        .limit(1)
         .snapshots();
   }
 
   //add message
   Future<String> addMessage(Map<String, dynamic> data) async {
     try {
-      DocumentReference documentReference = await _firebaseFirestore.collection(messagesCollection).add(data);
+      DocumentReference documentReference =
+          await _firebaseFirestore.collection(messagesCollection).add(data);
+
       return documentReference.id;
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);
@@ -364,9 +502,14 @@ class BattleRoomRemoteDataSource {
   }
 
   //to get all messages by it's roomId
-  Future<List<DocumentSnapshot>> getMessagesByUserId(String roomId, String by) async {
+  Future<List<DocumentSnapshot>> getMessagesByUserId(
+      String roomId, String by) async {
     try {
-      QuerySnapshot querySnapshot = await _firebaseFirestore.collection(messagesCollection).where("roomId", isEqualTo: roomId).where("by", isEqualTo: by).get();
+      QuerySnapshot querySnapshot = await _firebaseFirestore
+          .collection(messagesCollection)
+          .where("roomId", isEqualTo: roomId)
+          .where("by", isEqualTo: by)
+          .get();
       return querySnapshot.docs;
     } on SocketException catch (_) {
       throw BattleRoomException(errorMessageCode: noInternetCode);

@@ -6,6 +6,7 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
+import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
@@ -136,8 +137,17 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
   Timer? opponentUserMessageDisappearTimer;
   int opponentUserMessageDisappearTimeInSeconds = 4;
 
+  //To track users latest message
+
+  List<Message> latestMessagesByUsers = [];
+
   @override
   void initState() {
+    //Add empty latest messages
+    latestMessagesByUsers.add(Message.buildEmptyMessage());
+    latestMessagesByUsers.add(Message.buildEmptyMessage());
+    //
+
     //if battle is not from tournament then deduct coins
     if (!widget.isTournamentBattle) {
       Future.delayed(Duration.zero, () {
@@ -590,32 +600,78 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
 
   void messagesListener(MessageState state) async {
     if (state is MessageFetchedSuccess) {
-      if (state.messages.isNotEmpty) {
-        if (state.messages.last.by ==
-            context.read<UserDetailsCubit>().getUserId()) {
-          //current user message
-          //
-          //means timer is running
-          if (currentUserMessageDisappearTimeInSeconds > 0 &&
-              currentUserMessageDisappearTimeInSeconds < 4) {
-            currentUserMessageDisappearTimer?.cancel();
-            setCurrentUserMessageDisappearTimer();
-          } else {
-            messageAnimationController.forward();
-            setCurrentUserMessageDisappearTimer();
-          }
+      //current user message
+
+      if (context
+          .read<MessageCubit>()
+          .getUserLatestMessage(
+              //fetch user id
+              context.read<UserDetailsCubit>().getUserId(),
+              messageId: latestMessagesByUsers[0].messageId
+              //latest user message id
+              )
+          .messageId
+          .isNotEmpty) {
+        //Assign latest message
+        latestMessagesByUsers[0] = context
+            .read<MessageCubit>()
+            .getUserLatestMessage(context.read<UserDetailsCubit>().getUserId(),
+                messageId: latestMessagesByUsers[0].messageId);
+        print(
+            "Current user latest message : ${latestMessagesByUsers[0].message}");
+
+        //Display latest message by current user
+        //means timer is running
+        if (currentUserMessageDisappearTimeInSeconds > 0 &&
+            currentUserMessageDisappearTimeInSeconds < 4) {
+          currentUserMessageDisappearTimer?.cancel();
+          setCurrentUserMessageDisappearTimer();
         } else {
-          //opponent message
-          //
-          //means timer is running
-          if (opponentUserMessageDisappearTimeInSeconds > 0 &&
-              opponentUserMessageDisappearTimeInSeconds < 4) {
-            opponentUserMessageDisappearTimer?.cancel();
-            setOpponentUserMessageDisappearTimer();
-          } else {
-            opponentMessageAnimationController.forward();
-            setOpponentUserMessageDisappearTimer();
-          }
+          messageAnimationController.forward();
+          setCurrentUserMessageDisappearTimer();
+        }
+      }
+
+      //opponrt user message
+
+      if (context
+          .read<MessageCubit>()
+          .getUserLatestMessage(
+              //fetch opponent user id
+              context
+                  .read<BattleRoomCubit>()
+                  .getOpponentUserDetails(
+                      context.read<UserDetailsCubit>().getUserId())
+                  .uid,
+              messageId: latestMessagesByUsers[1].messageId
+              //latest user message id
+              )
+          .messageId
+          .isNotEmpty) {
+        //Assign latest message
+        latestMessagesByUsers[1] = context
+            .read<MessageCubit>()
+            .getUserLatestMessage(
+                context
+                    .read<BattleRoomCubit>()
+                    .getOpponentUserDetails(
+                        context.read<UserDetailsCubit>().getUserId())
+                    .uid,
+                messageId: latestMessagesByUsers[1].messageId);
+        print(
+            "Opponent user latest message : ${latestMessagesByUsers[1].message}");
+
+        //Display latest message by opponent user
+        //means timer is running
+
+        //means timer is running
+        if (opponentUserMessageDisappearTimeInSeconds > 0 &&
+            opponentUserMessageDisappearTimeInSeconds < 4) {
+          opponentUserMessageDisappearTimer?.cancel();
+          setOpponentUserMessageDisappearTimer();
+        } else {
+          opponentMessageAnimationController.forward();
+          setOpponentUserMessageDisappearTimer();
         }
       }
     }
@@ -724,7 +780,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                 TournamentPlayerDetails opponentUserDetails =
                     tournamentBattleCubit.getOpponentUserDetails(
                         context.read<UserDetailsCubit>().getUserId());
-                print("Opponent user name ${opponentUserDetails.name}");
                 //it contains correct answer by respective user and user name
                 return UserDetailsWithTimerContainer(
                   points: opponentUserDetails.points.toString(),
@@ -934,6 +989,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
         position: messageBoxAnimation
             .drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
+          quizType: QuizTypes.battle,
           topPadding: 32.5 + MediaQuery.of(context).padding.top,
           battleRoomId: widget.isTournamentBattle
               ? context.read<TournamentBattleCubit>().getRoomId()

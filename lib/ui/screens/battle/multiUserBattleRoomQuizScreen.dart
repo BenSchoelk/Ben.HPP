@@ -706,9 +706,9 @@ class _MultiUserBattleRoomQuizScreenState
         position: messageBoxAnimation
             .drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
+          quizType: QuizTypes.groupPlay,
           battleRoomId: context.read<MultiUserBattleRoomCubit>().getRoomId(),
-          topPadding: MediaQuery.of(context).padding.top +
-              (MediaQuery.of(context).size.height *
+          topPadding: (MediaQuery.of(context).size.height *
                   RectangleUserProfileContainer.userDetailsHeightPercentage *
                   2.75) +
               MediaQuery.of(context).padding.top,
@@ -957,7 +957,9 @@ class _MultiUserBattleRoomQuizScreenState
                       _buildCurrentUserDetails(battleRoomCubit.getUser(
                           context.read<UserDetailsCubit>().getUserId())!),
                       _buildCurrentUserMessageContainer(),
-                      //
+
+                      //Optimize for more user code
+                      //use for loop not add manual user like this
                       BlocBuilder<MultiUserBattleRoomCubit,
                           MultiUserBattleRoomState>(
                         bloc: battleRoomCubit,
