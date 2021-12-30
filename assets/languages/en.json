@@ -379,7 +379,14 @@
   "coinHistory" : "Coin History",
   "wallet" : "Wallet",
   "request" : "Request",
-  "transaction" : "Transaction"
+  "transaction" : "Transaction",
+  "redeemableAmount" : "Redeemable Amount",
+  "totalCoins" : "Total Coins",
+  "redeemNow" : "Redeem Now",
+  "minimumRedeemableAmount" : "Minimum redeemable amount is",
+  "notEnoughCoinsToRedeemAmount" : "You don't have enough coins to redeem this amount",
+  "totalEarnings" : "Total Earnings",
+  "redeemRequest" : "Redeem Request"
 
   
   

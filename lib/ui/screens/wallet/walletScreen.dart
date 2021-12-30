@@ -220,7 +220,8 @@ class _WalletScreenState extends State<WalletScreen> {
           Container(
             alignment: Alignment.center,
             child: Text(
-              "Redeemable Amount",
+              AppLocalization.of(context)!
+                  .getTranslatedValues(redeemableAmountKey)!, //
               style: TextStyle(
                   color: Theme.of(context).primaryColor, fontSize: 20.0),
             ),
@@ -265,7 +266,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Container(
             alignment: Alignment.center,
             child: Text(
-              "Total Coins",
+              AppLocalization.of(context)!.getTranslatedValues(totalCoinsKey)!,
               style: TextStyle(
                   color: Theme.of(context).primaryColor.withOpacity(0.75),
                   fontSize: 20.0),
@@ -286,7 +287,9 @@ class _WalletScreenState extends State<WalletScreen> {
           CustomRoundedButton(
             widthPercentage: 0.4,
             backgroundColor: Theme.of(context).primaryColor,
-            buttonTitle: "Redeem Now",
+            buttonTitle: AppLocalization.of(context)!
+                    .getTranslatedValues(redeemNowKey) ??
+                "",
             radius: 15.0,
             showBorder: false,
             titleColor: Theme.of(context).backgroundColor,
@@ -303,7 +306,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 //
 
                 UiUtils.setSnackbar(
-                    "Minimum redeemable amount is \$$minimumRedeemableAmountInDollar ",
+                    "${AppLocalization.of(context)!.getTranslatedValues(minimumRedeemableAmountKey)} \$$minimumRedeemableAmountInDollar ",
                     context,
                     false);
                 return;
@@ -319,7 +322,8 @@ class _WalletScreenState extends State<WalletScreen> {
                 //
 
                 UiUtils.setSnackbar(
-                    "You don't have enough coins to redeem this amount",
+                    AppLocalization.of(context)!
+                        .getTranslatedValues(notEnoughCoinsToRedeemAmountKey)!,
                     context,
                     false);
                 return;
@@ -360,7 +364,8 @@ class _WalletScreenState extends State<WalletScreen> {
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Note",
+                      AppLocalization.of(context)!
+                          .getTranslatedValues(notesKey)!,
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 18.0),
@@ -398,7 +403,8 @@ class _WalletScreenState extends State<WalletScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Redeem Request",
+                      AppLocalization.of(context)!
+                          .getTranslatedValues(redeemRequestKey)!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -503,7 +509,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Container(
             alignment: Alignment.center,
             child: Text(
-              "Total Earnings : \$1000",
+              "${AppLocalization.of(context)!.getTranslatedValues(totalEarningsKey)!} : \$1000",
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 18.0,

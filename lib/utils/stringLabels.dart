@@ -369,3 +369,12 @@ String coinHistoryKey = "coinHistory";
 String walletKey = "wallet";
 String requestKey = "request";
 String transactionKey = "transaction";
+String redeemableAmountKey = "redeemableAmount";
+String totalCoinsKey = "totalCoins";
+String redeemNowKey = "redeemNow";
+String minimumRedeemableAmountKey = "minimumRedeemableAmount";
+String notEnoughCoinsToRedeemAmountKey = "notEnoughCoinsToRedeemAmount";
+String totalEarningsKey = "totalEarnings";
+String redeemRequestKey = "redeemRequest";
+
+//coins type
