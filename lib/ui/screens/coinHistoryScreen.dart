@@ -139,16 +139,16 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
                   color: Theme.of(context).backgroundColor,
                   alignment: Alignment.center,
                   height: boxConstraints.maxHeight * (0.6),
-                  width: 40.0,
+                  width: MediaQuery.of(context).size.width * (0.1275),
                   child: Text(
-                    coinHistory.points.length == 1
-                        ? "+${coinHistory.points}"
-                        : coinHistory.points,
+                    coinHistory.status == "0"
+                        ? "+${UiUtils.formatNumber(int.parse(coinHistory.points))}"
+                        : UiUtils.formatNumber(int.parse(coinHistory.points)),
                     style: TextStyle(
                         color: coinHistory.status == "1"
                             ? hurryUpTimerColor
                             : addCoinColor,
-                        fontSize: 18.0),
+                        fontSize: 17.0),
                   ),
                 ),
               ],

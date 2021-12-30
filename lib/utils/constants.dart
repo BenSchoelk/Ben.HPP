@@ -141,6 +141,7 @@ final String getExamModuleQuestionsUrl = "${baseUrl}get_exam_module_questions";
 final String setExamModuleResultUrl = "${baseUrl}set_exam_module_result";
 final String deleteUserAccountUrl = "${baseUrl}delete_user_account";
 final String getCoinHistoryUrl = "${baseUrl}get_tracker_data";
+final String makePaymentRequestUrl = "${baseUrl}set_paymet_request";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;
@@ -255,6 +256,17 @@ const List<String> examRules = [
   "In Android screenshot capturing is prohibited",
   "In ios, if you take screenshot then rules will violate and it will inform to examinator"
 ];
+
+//
+//Add notes for wallet request
+//
+
+const int minimumRedeemableAmountInDollar = 10;
+const List<String> walletRequestNotes = [
+  "Payout will take 3 - 5 working days",
+  "Minimum Redeemable amount is \$$minimumRedeemableAmountInDollar",
+];
+
 //
 //Please do not change this if you do torunament will not work as expected.
 //This ensure that torunament will start only if 8 users are ready to play
