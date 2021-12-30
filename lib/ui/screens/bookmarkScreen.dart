@@ -20,7 +20,10 @@ class BookmarkScreen extends StatelessWidget {
   const BookmarkScreen({Key? key}) : super(key: key);
 
   void openBottomSheet(BuildContext context, Question question) {
-    String? correctAnswer = question.answerOptions![question.answerOptions!.indexWhere((element) => element.id == question.correctAnswerOptionId)].title;
+    String? correctAnswer = question
+        .answerOptions![question.answerOptions!.indexWhere(
+            (element) => element.id == question.correctAnswerOptionId)]
+        .title;
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -41,7 +44,10 @@ class BookmarkScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * (0.9),
                   child: Text(
                     "${question.question}",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0, color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
                 Divider(),
@@ -51,8 +57,14 @@ class BookmarkScreen extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width * (0.9),
                   child: Text(
-                    AppLocalization.of(context)!.getTranslatedValues("yourAnsLbl")! + ":" + " ${context.read<BookmarkCubit>().getSubmittedAnswerForQuestion(question.id)}",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0, color: Theme.of(context).colorScheme.secondary),
+                    AppLocalization.of(context)!
+                            .getTranslatedValues("yourAnsLbl")! +
+                        ":" +
+                        " ${context.read<BookmarkCubit>().getSubmittedAnswerForQuestion(question.id)}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15.0,
+                        color: Theme.of(context).colorScheme.secondary),
                   ),
                 ),
                 SizedBox(
@@ -61,9 +73,15 @@ class BookmarkScreen extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width * (0.9),
                   child: Text(
-                    AppLocalization.of(context)!.getTranslatedValues("correctAndLbl")! + ":" + " $correctAnswer",
+                    AppLocalization.of(context)!
+                            .getTranslatedValues("correctAndLbl")! +
+                        ":" +
+                        " $correctAnswer",
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0, color: Theme.of(context).colorScheme.secondary),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15.0,
+                        color: Theme.of(context).colorScheme.secondary),
                   ),
                 ),
                 SizedBox(
@@ -85,17 +103,21 @@ class BookmarkScreen extends StatelessWidget {
           PageBackgroundGradientContainer(),
           Align(
             alignment: Alignment.topCenter,
-            child: RoundedAppbar(title: AppLocalization.of(context)!.getTranslatedValues("bookmarkLbl")!),
+            child: RoundedAppbar(
+                title: AppLocalization.of(context)!
+                    .getTranslatedValues("bookmarkLbl")!),
           ),
           Align(
             alignment: Alignment.topCenter,
             child: Container(
-              child: BlocBuilder<BookmarkCubit, BookmarkState>(builder: (context, state) {
+              child: BlocBuilder<BookmarkCubit, BookmarkState>(
+                  builder: (context, state) {
                 if (state is BookmarkFetchSuccess) {
                   if (state.questions.isEmpty) {
                     return Center(
                       child: Text(
-                        AppLocalization.of(context)!.getTranslatedValues("noBookmarkQueLbl")!,
+                        AppLocalization.of(context)!
+                            .getTranslatedValues("noBookmarkQueLbl")!,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 20.0,
@@ -105,23 +127,36 @@ class BookmarkScreen extends StatelessWidget {
                   }
 
                   return ListView.builder(
-                    padding: EdgeInsetsDirectional.only(top: 25.0, start: MediaQuery.of(context).size.width * (0.075), end: MediaQuery.of(context).size.width * (0.075), bottom: 100),
+                    padding: EdgeInsetsDirectional.only(
+                        top: 25.0,
+                        start: MediaQuery.of(context).size.width * (0.075),
+                        end: MediaQuery.of(context).size.width * (0.075),
+                        bottom: 100),
                     itemBuilder: (context, index) {
                       Question question = state.questions[index];
 
                       //providing updateBookmarkCubit to every bookmarekd question
                       return BlocProvider<UpdateBookmarkCubit>(
-                        create: (context) => UpdateBookmarkCubit(BookmarkRepository()),
+                        create: (context) =>
+                            UpdateBookmarkCubit(BookmarkRepository()),
                         //using builder so we can access the recently provided cubit
                         child: Builder(
-                          builder: (context) => BlocConsumer<UpdateBookmarkCubit, UpdateBookmarkState>(
+                          builder: (context) => BlocConsumer<
+                              UpdateBookmarkCubit, UpdateBookmarkState>(
                             bloc: context.read<UpdateBookmarkCubit>(),
                             listener: (context, state) {
                               if (state is UpdateBookmarkSuccess) {
-                                bookmarkCubit.removeBookmarkQuestion(question.id);
+                                bookmarkCubit
+                                    .removeBookmarkQuestion(question.id);
                               }
                               if (state is UpdateBookmarkFailure) {
-                                UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(updateBookmarkFailureCode))!, context, false);
+                                UiUtils.setSnackbar(
+                                    AppLocalization.of(context)!
+                                        .getTranslatedValues(
+                                            convertErrorCodeToLanguageKey(
+                                                updateBookmarkFailureCode))!,
+                                    context,
+                                    false);
                               }
                             },
                             builder: (context, state) {
@@ -130,13 +165,26 @@ class BookmarkScreen extends StatelessWidget {
                                   openBottomSheet(context, question);
                                 },
                                 child: CustomListTile(
-                                  opacity: state is UpdateBookmarkInProgress ? 0.5 : 1.0,
-                                  trailingButtonOnTap: state is UpdateBookmarkInProgress
+                                  opacity: state is UpdateBookmarkInProgress
+                                      ? 0.5
+                                      : 1.0,
+                                  trailingButtonOnTap: state
+                                          is UpdateBookmarkInProgress
                                       ? () {}
                                       : () {
-                                          context.read<UpdateBookmarkCubit>().updateBookmark(context.read<UserDetailsCubit>().getUserId(), question.id!, "0");
+                                          context
+                                              .read<UpdateBookmarkCubit>()
+                                              .updateBookmark(
+                                                  context
+                                                      .read<UserDetailsCubit>()
+                                                      .getUserId(),
+                                                  question.id!,
+                                                  "0");
                                         },
-                                  subtitle: AppLocalization.of(context)!.getTranslatedValues("yourAnsLbl")! + ":" + " ${context.read<BookmarkCubit>().getSubmittedAnswerForQuestion(question.id)}",
+                                  subtitle: AppLocalization.of(context)!
+                                          .getTranslatedValues("yourAnsLbl")! +
+                                      ":" +
+                                      " ${context.read<BookmarkCubit>().getSubmittedAnswerForQuestion(question.id)}",
                                   title: question.question,
                                   leadingChild: Text(
                                     "${index + 1}",
@@ -157,10 +205,14 @@ class BookmarkScreen extends StatelessWidget {
                 }
                 if (state is BookmarkFetchFailure) {
                   return ErrorContainer(
-                    errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode)),
+                    errorMessage: AppLocalization.of(context)!
+                        .getTranslatedValues(convertErrorCodeToLanguageKey(
+                            state.errorMessageCode)),
                     showErrorImage: true,
+                    errorMessageColor: Theme.of(context).primaryColor,
                     onTapRetry: () {
-                      context.read<BookmarkCubit>().getBookmark(context.read<UserDetailsCubit>().getUserId());
+                      context.read<BookmarkCubit>().getBookmark(
+                          context.read<UserDetailsCubit>().getUserId());
                     },
                   );
                 }
@@ -168,7 +220,8 @@ class BookmarkScreen extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * (0.16)),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * (0.16)),
             ),
           ),
           Align(
@@ -177,11 +230,13 @@ class BookmarkScreen extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 25.0),
               child: BlocBuilder<BookmarkCubit, BookmarkState>(
                 builder: (context, state) {
-                  if (state is BookmarkFetchSuccess && state.questions.isNotEmpty) {
+                  if (state is BookmarkFetchSuccess &&
+                      state.questions.isNotEmpty) {
                     return CustomRoundedButton(
                       widthPercentage: 0.85,
                       backgroundColor: Theme.of(context).primaryColor,
-                      buttonTitle: AppLocalization.of(context)!.getTranslatedValues("playBookmarkBtn")!,
+                      buttonTitle: AppLocalization.of(context)!
+                          .getTranslatedValues("playBookmarkBtn")!,
                       radius: 5.0,
                       showBorder: false,
                       fontWeight: FontWeight.w500,

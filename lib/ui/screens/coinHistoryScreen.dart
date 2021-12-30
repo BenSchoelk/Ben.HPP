@@ -8,6 +8,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.d
 import 'package:flutterquiz/ui/styles/colors.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
@@ -139,7 +140,7 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
                   color: Theme.of(context).backgroundColor,
                   alignment: Alignment.center,
                   height: boxConstraints.maxHeight * (0.6),
-                  width: MediaQuery.of(context).size.width * (0.1275),
+                  width: MediaQuery.of(context).size.width * (0.125),
                   child: Text(
                     coinHistory.status == "0"
                         ? "+${UiUtils.formatNumber(int.parse(coinHistory.points))}"
@@ -160,7 +161,7 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(10.0)),
-      height: MediaQuery.of(context).size.height * (0.085),
+      height: MediaQuery.of(context).size.height * (0.1),
       margin: EdgeInsets.symmetric(vertical: 10.0),
     );
   }
@@ -219,6 +220,7 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          PageBackgroundGradientContainer(),
           Align(
             alignment: Alignment.topCenter,
             child: _buildCoinHistory(),

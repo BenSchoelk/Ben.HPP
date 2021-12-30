@@ -7,6 +7,7 @@ import 'package:flutterquiz/features/wallet/walletRepository.dart';
 import 'package:flutterquiz/ui/screens/wallet/widgets/redeemAmountRequestBottomSheetContainer.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
@@ -124,7 +125,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Align(
             alignment: AlignmentDirectional.bottomStart,
             child: Padding(
-              padding: EdgeInsetsDirectional.only(start: 25.0, bottom: 37.5),
+              padding: EdgeInsetsDirectional.only(start: 25.0, bottom: 35.0),
               child: CustomBackButton(
                 removeSnackBars: false,
                 iconColor: Theme.of(context).primaryColor,
@@ -377,8 +378,159 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildTransactionContainer() {
-    return Container();
+  Widget _buildTransactionContainer(int index) {
+    return GestureDetector(
+      onTap: () {
+        //
+        print(MediaQuery.of(context).size.height);
+      },
+      child: LayoutBuilder(builder: (context, boxConstraints) {
+        return Container(
+          child: Row(
+            children: [
+              Container(
+                // decoration: BoxDecoration(
+                //   border: Border.all(),
+                // ),
+                width: boxConstraints.maxWidth * (0.6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Redeem Request",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                          fontSize: 16.5),
+                    ),
+                    Spacer(),
+                    Row(
+                      children: [
+                        Text("Paypal",
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                color: Theme.of(context)
+                                    .backgroundColor
+                                    .withOpacity(0.875))),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * (0.0225),
+                        ),
+                        CircleAvatar(
+                          backgroundColor: Theme.of(context).backgroundColor,
+                          radius: 2.75,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * (0.0225),
+                        ),
+                        Text(
+                          "30-12-2021",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Theme.of(context)
+                                  .backgroundColor
+                                  .withOpacity(0.875)),
+                        ),
+                        Text(
+                          "  3:56 PM",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Theme.of(context)
+                                  .backgroundColor
+                                  .withOpacity(0.875)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Spacer(),
+              Container(
+                width: boxConstraints.maxWidth * 0.3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 1.0),
+                      margin: EdgeInsets.only(
+                          left: boxConstraints.maxWidth * 0.3 * (0.4)),
+                      color: Theme.of(context).backgroundColor,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "\$${UiUtils.formatNumber(500)}",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 15),
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      index == 1 ? "Pending" : "Rejected",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                          fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * (0.03),
+              vertical: 15),
+          decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(10.0)),
+          height: MediaQuery.of(context).size.height *
+              UiUtils.getTransactionContainerHeight(
+                  MediaQuery.of(context).size.height), //
+          margin: EdgeInsets.symmetric(vertical: 10.0),
+        );
+      }),
+    );
+  }
+
+  Widget _buildTransactionListContainer() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          //
+
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              "Total Earnings : \$1000",
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 18.0,
+              ),
+            ),
+            width: MediaQuery.of(context).size.width * (0.75),
+            height: MediaQuery.of(context).size.height * (0.065),
+            decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                borderRadius: BorderRadius.circular(20.0)),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * (0.015),
+          ),
+
+          Column(
+            children:
+                [1, 2, 3].map((e) => _buildTransactionContainer(e)).toList(),
+          )
+        ],
+      ),
+      padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height *
+              (UiUtils.appBarHeightPercentage + 0.025),
+          left: MediaQuery.of(context).size.width * (0.05),
+          right: MediaQuery.of(context).size.width * (0.05)),
+    );
   }
 
   @override
@@ -386,11 +538,12 @@ class _WalletScreenState extends State<WalletScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          PageBackgroundGradientContainer(),
           Align(
             alignment: Alignment.topCenter,
             child: _currentSelectedTab == 1
                 ? _buildRequestContainer()
-                : _buildTransactionContainer(),
+                : _buildTransactionListContainer(),
           ),
           Align(
             alignment: Alignment.topCenter,

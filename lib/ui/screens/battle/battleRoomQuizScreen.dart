@@ -1060,7 +1060,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                 toggleSettingDialog();
               });
             }),
-            _buildBookmarkButton(context.read<BattleRoomCubit>()),
           ],
         ),
       ),

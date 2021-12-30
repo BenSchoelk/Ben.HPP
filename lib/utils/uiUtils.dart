@@ -158,6 +158,19 @@ class UiUtils {
     return defaultQuestionLanguageId;
   }
 
+  static double getTransactionContainerHeight(double dheight) {
+    if (dheight >= 800) {
+      return 0.1;
+    }
+    if (dheight >= 700) {
+      return 0.11;
+    }
+    if (dheight >= 600) {
+      return 0.12;
+    }
+    return 0.1275;
+  }
+
   static Locale getLocaleFromLanguageCode(String languageCode) {
     List<String> result = languageCode.split("-");
     return result.length == 1

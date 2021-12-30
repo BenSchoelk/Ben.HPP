@@ -406,7 +406,6 @@ class _SelfChallengeQuestionsScreenState
                 toggleSettingDialog();
               });
             }),
-            _buildBookmarkButton(context.read<QuestionsCubit>()),
           ],
         ),
       ),

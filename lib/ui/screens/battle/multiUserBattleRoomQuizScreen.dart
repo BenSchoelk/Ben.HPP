@@ -901,7 +901,6 @@ class _MultiUserBattleRoomQuizScreenState
                 toggleSettingDialog();
               });
             }),
-            _buildBookmarkButton(context.read<MultiUserBattleRoomCubit>()),
           ],
         ),
       ),
