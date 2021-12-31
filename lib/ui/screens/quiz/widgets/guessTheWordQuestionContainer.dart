@@ -169,7 +169,6 @@ class GuessTheWordQuestionContainerState
           coins: lifeLineDeductCoins,
         );
 
-    //TODO : Watched reward ad
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,
@@ -444,7 +443,6 @@ class GuessTheWordQuestionContainerState
                       addCoin: false,
                       coins: lifeLineDeductCoins,
                     );
-                //TODO : Use of lifeline - localization
                 context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                     context.read<UserDetailsCubit>().getUserId(),
                     lifeLineDeductCoins,

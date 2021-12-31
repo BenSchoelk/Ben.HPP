@@ -21,7 +21,12 @@ class SystemConfigFetchSuccess extends SystemConfigState {
 
   final List<String> defaultProfileImages;
 
-  SystemConfigFetchSuccess({required this.systemConfigModel, required this.defaultProfileImages, required this.introSliderImages, required this.supportedLanguages, required this.emojis});
+  SystemConfigFetchSuccess(
+      {required this.systemConfigModel,
+      required this.defaultProfileImages,
+      required this.introSliderImages,
+      required this.supportedLanguages,
+      required this.emojis});
 }
 
 class SystemConfigFetchFailure extends SystemConfigState {
@@ -39,12 +44,16 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     try {
       List<SupportedLanguage> supporatedLanguages = [];
       final systemConfig = await _systemConfigRepository.getSystemConfig();
-      final introSliderImages = await _systemConfigRepository.getImagesFromFile("assets/files/introSliderImages.json");
-      final defaultProfileImages = await _systemConfigRepository.getImagesFromFile("assets/files/defaultProfileImages.json");
-      final emojis = await _systemConfigRepository.getImagesFromFile("assets/files/emojis.json");
+      final introSliderImages = await _systemConfigRepository
+          .getImagesFromFile("assets/files/introSliderImages.json");
+      final defaultProfileImages = await _systemConfigRepository
+          .getImagesFromFile("assets/files/defaultProfileImages.json");
+      final emojis = await _systemConfigRepository
+          .getImagesFromFile("assets/files/emojis.json");
 
       if (systemConfig.languageMode == "1") {
-        supporatedLanguages = await _systemConfigRepository.getSupportedQuestionLanguages();
+        supporatedLanguages =
+            await _systemConfigRepository.getSupportedQuestionLanguages();
       }
       emit(SystemConfigFetchSuccess(
         systemConfigModel: systemConfig,
@@ -88,14 +97,18 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   String? getIsCategoryEnableForBattle() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.battleRandomCategoryMode;
+      return (state as SystemConfigFetchSuccess)
+          .systemConfigModel
+          .battleRandomCategoryMode;
     }
     return "0";
   }
 
   String? getIsCategoryEnableForGroupBattle() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.battleGroupCategoryMode;
+      return (state as SystemConfigFetchSuccess)
+          .systemConfigModel
+          .battleGroupCategoryMode;
     }
     return "0";
   }
@@ -109,7 +122,9 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   String? getIsDailyQuizAvailable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.dailyQuizMode;
+      return (state as SystemConfigFetchSuccess)
+          .systemConfigModel
+          .dailyQuizMode;
     }
     return "0";
   }
@@ -123,14 +138,17 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   String? getIsFunNLearnAvailable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.funNLearnMode;
+      return (state as SystemConfigFetchSuccess)
+          .systemConfigModel
+          .funNLearnMode;
     }
     return "0";
   }
 
   String? getIsExamAvailable() {
     if (state is SystemConfigFetchSuccess) {
-      print("Exam mode is : ${(state as SystemConfigFetchSuccess).systemConfigModel.examMode}");
+      print(
+          "Exam mode is : ${(state as SystemConfigFetchSuccess).systemConfigModel.examMode}");
       return (state as SystemConfigFetchSuccess).systemConfigModel.examMode;
     }
     return "0";
@@ -138,14 +156,18 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   String? getIsGuessTheWordAvailable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.guessTheWordMode;
+      return (state as SystemConfigFetchSuccess)
+          .systemConfigModel
+          .guessTheWordMode;
     }
     return "0";
   }
 
   String? getIsAudioQuestionAvailable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.audioQuestionMode;
+      return (state as SystemConfigFetchSuccess)
+          .systemConfigModel
+          .audioQuestionMode;
     }
     return "0";
   }
@@ -153,7 +175,9 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String getAppVersion() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.appVersionIos;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .appVersionIos;
       }
       return (state as SystemConfigFetchSuccess).systemConfigModel.appVersion;
     }
@@ -212,10 +236,14 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String googleBannerId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidBannerId;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .androidBannerId;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosBannerId;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .iosBannerId;
       }
     }
     return "";
@@ -224,10 +252,14 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String googleInterstitialAdId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidInterstitialId;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .androidInterstitialId;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosInterstitialId;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .iosInterstitialId;
       }
     }
     return "";
@@ -236,10 +268,14 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
   String googleRewardedAdId() {
     if (state is SystemConfigFetchSuccess) {
       if (Platform.isAndroid) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.androidRewardedId;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .androidRewardedId;
       }
       if (Platform.isIOS) {
-        return (state as SystemConfigFetchSuccess).systemConfigModel.iosRewardedId;
+        return (state as SystemConfigFetchSuccess)
+            .systemConfigModel
+            .iosRewardedId;
       }
     }
     return "";
@@ -247,21 +283,60 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
 
   bool isForceUpdateEnable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.forceUpdate == "1";
+      return (state as SystemConfigFetchSuccess)
+              .systemConfigModel
+              .forceUpdate ==
+          "1";
     }
     return false;
   }
 
   bool isAdsEnable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.adsEnabled == "1";
+      return (state as SystemConfigFetchSuccess).systemConfigModel.adsEnabled ==
+          "1";
     }
     return false;
   }
 
+  bool isPaymentRequestEnable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess)
+              .systemConfigModel
+              .paymentMode ==
+          "1";
+    }
+    return false;
+  }
+
+  int perCoin() {
+    if (state is SystemConfigFetchSuccess) {
+      return int.parse(
+          (state as SystemConfigFetchSuccess).systemConfigModel.perCoin);
+    }
+    return 0;
+  }
+
+  int coinAmount() {
+    if (state is SystemConfigFetchSuccess) {
+      return int.parse(
+          (state as SystemConfigFetchSuccess).systemConfigModel.coinAmount);
+    }
+    return 0;
+  }
+
+  int minimumcoinLimit() {
+    if (state is SystemConfigFetchSuccess) {
+      return int.parse(
+          (state as SystemConfigFetchSuccess).systemConfigModel.coinLimit);
+    }
+    return 0;
+  }
+
   bool isGoogleAdEnable() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.adsType == "1";
+      return (state as SystemConfigFetchSuccess).systemConfigModel.adsType ==
+          "1";
     }
     return false;
   }

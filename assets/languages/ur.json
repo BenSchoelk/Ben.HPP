@@ -422,6 +422,7 @@
   "wonContest" : "Won Contest",
   "playedContest" : "Played Contest",
   "playedBattle" : "Played Battle",
-  "redeemedAmount" : "Redeemed Amount"
+  "redeemedAmount" : "Redeemed Amount",
+  "usedReferCode" : "Used Refer Code"
 
 }

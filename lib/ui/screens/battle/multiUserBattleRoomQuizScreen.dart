@@ -132,7 +132,6 @@ class _MultiUserBattleRoomQuizScreenState
 
     //deduct coins of entry fee
     Future.delayed(Duration.zero, () {
-      //TODO : Played group battle
       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
             context.read<UserDetailsCubit>().getUserId(),
             context.read<MultiUserBattleRoomCubit>().getEntryFee(),
@@ -580,7 +579,6 @@ class _MultiUserBattleRoomQuizScreenState
                           addCoin: true, coins: battleRoomCubit.getEntryFee());
                       //add coins in database
 
-                      //TODO : Win amount to users * entry fee
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                             context.read<UserDetailsCubit>().getUserId(),
                             battleRoomCubit.getEntryFee(),
@@ -759,7 +757,6 @@ class _MultiUserBattleRoomQuizScreenState
     );
   }
 
-  //TODO : Add correct padding as quesiton container
   Widget _buildMessageBoxContainer() {
     return Align(
       alignment: Alignment.topCenter,
@@ -800,7 +797,6 @@ class _MultiUserBattleRoomQuizScreenState
     );
   }
 
-  //TODO : Add proper padding
   Widget _buildOpponentUserMessageContainer(int opponentUserIndex) {
     Alignment alignment = Alignment(-0.5, 1.0);
     if (opponentUserIndex == 0) {

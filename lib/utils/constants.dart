@@ -1,3 +1,5 @@
+import 'package:flutterquiz/features/wallet/models/payoutMethod.dart';
+
 final String appName = "Elite Quiz";
 final String packageName = "com.wrteam.flutterquiz";
 
@@ -261,10 +263,42 @@ const List<String> examRules = [
 //Add notes for wallet request
 //
 
-const int minimumRedeemableAmountInDollar = 10;
-const List<String> walletRequestNotes = [
-  "Payout will take 3 - 5 working days",
-  "Minimum Redeemable amount is \$$minimumRedeemableAmountInDollar",
+const List<String> walletRequestNotes = ["Payout will take 3 - 5 working days"];
+
+//To add more payout methods here
+final List<PayoutMethod> payoutMethods = [
+  //Paypal
+  PayoutMethod(
+
+      //Specify the input parameters label here
+      inputDetailsFromUser: [
+        "Enter paypal id",
+      ], image: "assets/images/paypal.svg", type: "Paypal"),
+
+  //Paytm
+  PayoutMethod(
+
+      //Specify the input parameters label here
+      inputDetailsFromUser: ["Enter mobile number"],
+      image: "assets/images/paytm.svg",
+      type: "Paytm"),
+
+  //UPI
+  PayoutMethod(
+
+      //Specify the input parameters label here
+      inputDetailsFromUser: [
+        "Enter upi id",
+      ], image: "assets/images/paypal.svg", type: "UPI"),
+
+  //Bank Transfer
+  PayoutMethod(
+      //Specify the input parameters label here
+      inputDetailsFromUser: [
+        "Enter bank name",
+        "Enter account number ",
+        "Enter bank ifsc code",
+      ], image: "assets/images/paytm.svg", type: "Bank Transfer"), //
 ];
 
 //

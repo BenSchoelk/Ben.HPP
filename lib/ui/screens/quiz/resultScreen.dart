@@ -253,7 +253,6 @@ class _ResultScreenState extends State<ResultScreen> {
               currentUser.points,
               true,
               earnedCoins,
-              //TODO : title for battle winner localization
               wonBattleKey,
             );
         //update score locally and database
@@ -412,7 +411,6 @@ class _ResultScreenState extends State<ResultScreen> {
         widget.myPoints!,
         true,
         _earnedCoins,
-        //TODO : Add title for quizzone coins update - localizaiton
         _getCoinUpdateTypeBasedOnQuizZone());
     //update score locally and database
     context

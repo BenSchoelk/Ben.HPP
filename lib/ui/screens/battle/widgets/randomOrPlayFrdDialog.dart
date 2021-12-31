@@ -265,7 +265,6 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           coins: lifeLineDeductCoins,
         );
 
-    //TODO : Watched reward ad
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,

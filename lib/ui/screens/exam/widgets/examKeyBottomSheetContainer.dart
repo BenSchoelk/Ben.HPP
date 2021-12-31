@@ -14,13 +14,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ExamKeyBottomSheetContainer extends StatefulWidget {
   final Exam exam;
   final Function navigateToExamScreen;
-  ExamKeyBottomSheetContainer({Key? key, required this.exam, required this.navigateToExamScreen}) : super(key: key);
+  ExamKeyBottomSheetContainer(
+      {Key? key, required this.exam, required this.navigateToExamScreen})
+      : super(key: key);
 
   @override
-  _ExamKeyBottomSheetContainerState createState() => _ExamKeyBottomSheetContainerState();
+  _ExamKeyBottomSheetContainerState createState() =>
+      _ExamKeyBottomSheetContainerState();
 }
 
-class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContainer> {
+class _ExamKeyBottomSheetContainerState
+    extends State<ExamKeyBottomSheetContainer> {
   late TextEditingController textEditingController = TextEditingController();
 
   late String errorMessage = "";
@@ -36,7 +40,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
   Widget _buildAcceptRulesContainer() {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * (horizontalPaddingPercentage),
+        horizontal:
+            MediaQuery.of(context).size.width * (horizontalPaddingPercentage),
         vertical: 10.0,
       ),
       alignment: Alignment.center,
@@ -65,10 +70,14 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
               height: 20,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: rulesAccepted ? Theme.of(context).primaryColor : Colors.transparent,
+                color: rulesAccepted
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
                 border: Border.all(
                   width: 1.5,
-                  color: rulesAccepted ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
+                  color: rulesAccepted
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ),
@@ -77,7 +86,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
             width: 10.0,
           ),
           Text(
-            AppLocalization.of(context)!.getTranslatedValues(iAgreeWithExamRulesKey)!,
+            AppLocalization.of(context)!
+                .getTranslatedValues(iAgreeWithExamRulesKey)!,
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
             ),
@@ -97,7 +107,9 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
             margin: EdgeInsets.only(top: 7.5),
             width: 6,
             height: 6,
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(3)),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(3)),
           ),
           SizedBox(
             width: 10.0,
@@ -131,7 +143,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
     if (showAllExamRules) {
       allExamRules = examRules;
     } else {
-      allExamRules = examRules.length >= 2 ? examRules.sublist(0, 2) : examRules;
+      allExamRules =
+          examRules.length >= 2 ? examRules.sublist(0, 2) : examRules;
     }
 
     return Column(
@@ -154,10 +167,12 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
             alignment: Alignment.topLeft,
             padding: EdgeInsets.only(left: 15, top: 10),
             margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * horizontalPaddingPercentage,
+              horizontal: MediaQuery.of(context).size.width *
+                  horizontalPaddingPercentage,
             ),
             child: Text(
-              AppLocalization.of(context)!.getTranslatedValues(viewAllRulesKey)!,
+              AppLocalization.of(context)!
+                  .getTranslatedValues(viewAllRulesKey)!,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryColor,
@@ -184,7 +199,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
         listener: (context, state) {
           if (state is ExamFetchFailure) {
             setState(() {
-              errorMessage = AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!;
+              errorMessage = AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!;
             });
           } else if (state is ExamFetchSuccess) {
             widget.navigateToExamScreen();
@@ -199,7 +215,10 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                 topLeft: Radius.circular(20.0),
                 topRight: Radius.circular(20.0),
               ),
-              gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+              gradient: UiUtils.buildLinerGradient([
+                Theme.of(context).scaffoldBackgroundColor,
+                Theme.of(context).canvasColor
+              ], Alignment.topCenter, Alignment.bottomCenter)),
           child: Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: SingleChildScrollView(
@@ -214,7 +233,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                         alignment: Alignment.centerRight,
                         child: IconButton(
                             onPressed: () {
-                              if (context.read<ExamCubit>().state is! ExamFetchInProgress) {
+                              if (context.read<ExamCubit>().state
+                                  is! ExamFetchInProgress) {
                                 Navigator.of(context).pop();
                               }
                             },
@@ -231,7 +251,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * horizontalPaddingPercentage,
+                      horizontal: MediaQuery.of(context).size.width *
+                          horizontalPaddingPercentage,
                     ),
                     padding: EdgeInsetsDirectional.only(start: 20.0),
                     height: 60.0,
@@ -246,7 +267,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                       ),
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        hintText: AppLocalization.of(context)!.getTranslatedValues(enterExamKey)!,
+                        hintText: AppLocalization.of(context)!
+                            .getTranslatedValues(enterExamKey)!,
                         hintStyle: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),
@@ -266,7 +288,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                         horizontal: MediaQuery.of(context).size.width * (0.127),
                       ),
                       child: Text(
-                        AppLocalization.of(context)!.getTranslatedValues(examRulesKey)!,
+                        AppLocalization.of(context)!
+                            .getTranslatedValues(examRulesKey)!,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 19.0,
@@ -276,7 +299,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
 
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * horizontalPaddingPercentage,
+                      horizontal: MediaQuery.of(context).size.width *
+                          horizontalPaddingPercentage,
                     ),
                     child: _buildExamRules(),
                   ),
@@ -307,7 +331,8 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                   ),
 
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * (errorMessage.isEmpty ? 0 : 0.02),
+                    height: MediaQuery.of(context).size.height *
+                        (errorMessage.isEmpty ? 0 : 0.02),
                   ),
                   //show submit button
                   BlocBuilder<ExamCubit, ExamState>(
@@ -320,7 +345,11 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                         child: CustomRoundedButton(
                           widthPercentage: MediaQuery.of(context).size.width,
                           backgroundColor: Theme.of(context).primaryColor,
-                          buttonTitle: state is ExamFetchInProgress ? AppLocalization.of(context)!.getTranslatedValues(submittingButton)! : AppLocalization.of(context)!.getTranslatedValues(submitBtn)!,
+                          buttonTitle: state is ExamFetchInProgress
+                              ? AppLocalization.of(context)!
+                                  .getTranslatedValues(submittingButton)!
+                              : AppLocalization.of(context)!
+                                  .getTranslatedValues(submitBtn)!,
                           radius: 10.0,
                           showBorder: false,
                           onTap: state is ExamFetchInProgress
@@ -328,13 +357,25 @@ class _ExamKeyBottomSheetContainerState extends State<ExamKeyBottomSheetContaine
                               : () {
                                   if (!rulesAccepted) {
                                     setState(() {
-                                      errorMessage = AppLocalization.of(context)!.getTranslatedValues(pleaseAcceptExamRulesKey)!;
+                                      errorMessage =
+                                          AppLocalization.of(context)!
+                                              .getTranslatedValues(
+                                                  pleaseAcceptExamRulesKey)!;
                                     });
-                                  } else if (textEditingController.text.trim() == widget.exam.examKey) {
-                                    context.read<ExamCubit>().startExam(exam: widget.exam, userId: context.read<UserDetailsCubit>().getUserId());
+                                  } else if (textEditingController.text
+                                          .trim() ==
+                                      widget.exam.examKey) {
+                                    context.read<ExamCubit>().startExam(
+                                        exam: widget.exam,
+                                        userId: context
+                                            .read<UserDetailsCubit>()
+                                            .getUserId());
                                   } else {
                                     setState(() {
-                                      errorMessage = AppLocalization.of(context)!.getTranslatedValues(enterValidExamKey)!;
+                                      errorMessage =
+                                          AppLocalization.of(context)!
+                                              .getTranslatedValues(
+                                                  enterValidExamKey)!;
                                     });
                                   }
                                 },

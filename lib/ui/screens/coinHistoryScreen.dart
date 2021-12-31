@@ -105,66 +105,72 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
         }
       }
     }
-    return Container(
-      child: Row(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * (0.69),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalization.of(context)!
-                          .getTranslatedValues(coinHistory.type) ??
-                      "-",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: Theme.of(context).backgroundColor, fontSize: 16.5),
-                ),
-                SizedBox(
-                  height: 2.5,
-                ),
-                Text(
-                  coinHistory.date,
-                  style: TextStyle(color: Theme.of(context).backgroundColor),
-                ),
-              ],
-            ),
-          ),
-          Spacer(),
-          LayoutBuilder(builder: (context, boxConstraints) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  color: Theme.of(context).backgroundColor,
-                  alignment: Alignment.center,
-                  height: boxConstraints.maxHeight * (0.6),
-                  width: MediaQuery.of(context).size.width * (0.125),
-                  child: Text(
-                    coinHistory.status == "0"
-                        ? "+${UiUtils.formatNumber(int.parse(coinHistory.points))}"
-                        : UiUtils.formatNumber(int.parse(coinHistory.points)),
+    return GestureDetector(
+      onTap: () {
+        print(coinHistory.type);
+      },
+      child: Container(
+        child: Row(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * (0.69),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalization.of(context)!
+                            .getTranslatedValues(coinHistory.type) ??
+                        "-",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: coinHistory.status == "1"
-                            ? hurryUpTimerColor
-                            : addCoinColor,
-                        fontSize: 17.0),
+                        color: Theme.of(context).backgroundColor,
+                        fontSize: 16.5),
                   ),
-                ),
-              ],
-            );
-          })
-        ],
+                  SizedBox(
+                    height: 2.5,
+                  ),
+                  Text(
+                    coinHistory.date,
+                    style: TextStyle(color: Theme.of(context).backgroundColor),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            LayoutBuilder(builder: (context, boxConstraints) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    color: Theme.of(context).backgroundColor,
+                    alignment: Alignment.center,
+                    height: boxConstraints.maxHeight * (0.6),
+                    width: MediaQuery.of(context).size.width * (0.125),
+                    child: Text(
+                      coinHistory.status == "0"
+                          ? "+${UiUtils.formatNumber(int.parse(coinHistory.points))}"
+                          : UiUtils.formatNumber(int.parse(coinHistory.points)),
+                      style: TextStyle(
+                          color: coinHistory.status == "1"
+                              ? hurryUpTimerColor
+                              : addCoinColor,
+                          fontSize: 17.0),
+                    ),
+                  ),
+                ],
+              );
+            })
+          ],
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(10.0)),
+        height: MediaQuery.of(context).size.height * (0.1),
+        margin: EdgeInsets.symmetric(vertical: 10.0),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-      decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(10.0)),
-      height: MediaQuery.of(context).size.height * (0.1),
-      margin: EdgeInsets.symmetric(vertical: 10.0),
     );
   }
 

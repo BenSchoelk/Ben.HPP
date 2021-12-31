@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/features/wallet/cubits/paymentRequestCubit.dart';
 import 'package:flutterquiz/features/wallet/walletRepository.dart';
 import 'package:flutterquiz/ui/screens/wallet/widgets/redeemAmountRequestBottomSheetContainer.dart';
@@ -12,6 +13,7 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class WalletScreen extends StatefulWidget {
   WalletScreen({Key? key}) : super(key: key);
@@ -41,29 +43,42 @@ class _WalletScreenState extends State<WalletScreen> {
       //
       redeemableAmountTextEditingController = TextEditingController(
         text: _calculateAmountPerCoins(
-                userCoins:
-                    int.parse(context.read<UserDetailsCubit>().getCoins()!),
-                amount: 1,
-                coins: 100)
-            .toString(),
+          userCoins: int.parse(context.read<UserDetailsCubit>().getCoins()!),
+          amount: context
+              .read<SystemConfigCubit>()
+              .coinAmount(), //per x coin y amount
+          coins: context.read<SystemConfigCubit>().perCoin(), //per x coins
+        ).toString(),
       );
 
       setState(() {});
     });
   }
 
-  //
+  //calculate amount per coins based on users coins
   double _calculateAmountPerCoins(
       {required int userCoins, required int amount, required int coins}) {
     return (amount * userCoins) / coins;
   }
 
+  //calculate coins based on entered amount
   int _calculateDeductedCoinsForRedeemableAmount(
       {required double userEnteredAmount,
       required int amount,
       required int coins}) {
     return (coins * userEnteredAmount) ~/ amount;
   }
+
+  //
+  double _minimumReedemableAmount() {
+    return _calculateAmountPerCoins(
+      userCoins: context.read<SystemConfigCubit>().minimumcoinLimit(),
+      amount: context.read<SystemConfigCubit>().coinAmount(),
+      coins: context.read<SystemConfigCubit>().perCoin(),
+    );
+  }
+
+  //
 
   @override
   void dispose() {
@@ -74,7 +89,7 @@ class _WalletScreenState extends State<WalletScreen> {
   void showRedeemRequestAmountBottomSheet(
       {required int deductedCoins, required double redeemableAmount}) {
     //
-    showModalBottomSheet(
+    showModalBottomSheet<bool>(
         isDismissible: false,
         enableDrag: false,
         isScrollControlled: true,
@@ -92,7 +107,21 @@ class _WalletScreenState extends State<WalletScreen> {
             deductedCoins: deductedCoins,
             redeemableAmount: redeemableAmount,
           );
+        }).then((value) {
+      if (value != null && value) {
+        //TODO : Update transaction
+        redeemableAmountTextEditingController?.text = _calculateAmountPerCoins(
+                userCoins:
+                    int.parse(context.read<UserDetailsCubit>().getCoins()!),
+                amount: context.read<SystemConfigCubit>().coinAmount(),
+                coins: context.read<SystemConfigCubit>().perCoin())
+            .toString();
+
+        setState(() {
+          _currentSelectedTab = 2;
         });
+      }
+    });
   }
 
   Widget _buildTabContainer(String title, int index) {
@@ -272,13 +301,22 @@ class _WalletScreenState extends State<WalletScreen> {
                   fontSize: 20.0),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              "${context.read<UserDetailsCubit>().getCoins()}",
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor, fontSize: 20.0),
-            ),
+          BlocBuilder<UserDetailsCubit, UserDetailsState>(
+            bloc: context.read<UserDetailsCubit>(),
+            builder: (context, state) {
+              if (state is UserDetailsFetchSuccess) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${context.read<UserDetailsCubit>().getCoins()}",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 20.0),
+                  ),
+                );
+              }
+
+              return SizedBox();
+            },
           ),
 
           SizedBox(
@@ -302,20 +340,24 @@ class _WalletScreenState extends State<WalletScreen> {
 
               if (double.parse(
                       redeemableAmountTextEditingController!.text.trim()) <
-                  minimumRedeemableAmountInDollar.toDouble()) {
+                  _minimumReedemableAmount()) {
                 //
 
                 UiUtils.setSnackbar(
-                    "${AppLocalization.of(context)!.getTranslatedValues(minimumRedeemableAmountKey)} \$$minimumRedeemableAmountInDollar ",
+                    "${AppLocalization.of(context)!.getTranslatedValues(minimumRedeemableAmountKey)} \$${_minimumReedemableAmount()} ",
                     context,
                     false);
                 return;
               }
               double maxRedeemableAmount = _calculateAmountPerCoins(
-                  userCoins:
-                      int.parse(context.read<UserDetailsCubit>().getCoins()!),
-                  amount: 1,
-                  coins: 100);
+                userCoins:
+                    int.parse(context.read<UserDetailsCubit>().getCoins()!),
+                amount: context
+                    .read<SystemConfigCubit>()
+                    .coinAmount(), //per x coin y amount
+                coins:
+                    context.read<SystemConfigCubit>().perCoin(), //per x coins
+              );
               if (double.parse(
                       redeemableAmountTextEditingController!.text.trim()) >
                   maxRedeemableAmount) {
@@ -331,10 +373,15 @@ class _WalletScreenState extends State<WalletScreen> {
 
               showRedeemRequestAmountBottomSheet(
                 deductedCoins: _calculateDeductedCoinsForRedeemableAmount(
-                    amount: 1,
-                    coins: 100,
-                    userEnteredAmount: double.parse(
-                        redeemableAmountTextEditingController!.text.trim())),
+                  amount: context
+                      .read<SystemConfigCubit>()
+                      .coinAmount(), //per x coin y amount
+                  coins:
+                      context.read<SystemConfigCubit>().perCoin(), //per x coins
+                  userEnteredAmount: double.parse(
+                    redeemableAmountTextEditingController!.text.trim(),
+                  ),
+                ),
                 redeemableAmount: double.parse(
                     redeemableAmountTextEditingController!.text.trim()),
               );
@@ -377,7 +424,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -394,9 +441,6 @@ class _WalletScreenState extends State<WalletScreen> {
           child: Row(
             children: [
               Container(
-                // decoration: BoxDecoration(
-                //   border: Border.all(),
-                // ),
                 width: boxConstraints.maxWidth * (0.6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -102,7 +102,6 @@ class _MultiUserBattleRoomResultScreenState
 
         //add coins
         //update coins
-        //TODO : Won group battle
         context.read<UpdateScoreAndCoinsCubit>().updateCoins(
               context.read<UserDetailsCubit>().getUserId(),
               winAmount.toInt(),

@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/wallet/cubits/paymentRequestCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class RedeemAmountRequestBottomSheetContainer extends StatefulWidget {
   final double redeemableAmount;
@@ -24,21 +31,49 @@ class RedeemAmountRequestBottomSheetContainer extends StatefulWidget {
 class _RedeemAmountRequestBottomSheetContainerState
     extends State<RedeemAmountRequestBottomSheetContainer>
     with TickerProviderStateMixin {
+  //
+  late List<TextEditingController> _inputDetailsControllers =
+      payoutMethods[_selectedPaymentMethodIndex]
+          .inputDetailsFromUser
+          .map((e) => TextEditingController())
+          .toList();
+  //
   late double _selectPaymentMethodDx = 0;
 
   late int _selectedPaymentMethodIndex = 0;
   late int _enterPayoutMethodDx = 1;
+  late String _errorMessage = "";
+
+  @override
+  void dispose() {
+    _inputDetailsControllers.forEach((element) {
+      element.dispose();
+    });
+    super.dispose();
+  }
 
   Widget _buildPaymentSelectMethodContainer({required int paymentMethodIndex}) {
     return GestureDetector(
       onTap: () {
         setState(() {
           _selectedPaymentMethodIndex = paymentMethodIndex;
+          _inputDetailsControllers.clear();
+          payoutMethods[_selectedPaymentMethodIndex]
+              .inputDetailsFromUser
+              .forEach((element) {
+            _inputDetailsControllers.add(TextEditingController());
+          });
         });
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * (0.16),
-        height: MediaQuery.of(context).size.width * (0.16),
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.symmetric(horizontal: 5.0),
+        child: SvgPicture.asset(
+          payoutMethods[paymentMethodIndex].image,
+          color: Theme.of(context).backgroundColor,
+        ),
+        width: MediaQuery.of(context).size.width * (0.175),
+        height: MediaQuery.of(context).size.width * (0.175),
         color: _selectedPaymentMethodIndex == paymentMethodIndex
             ? Theme.of(context).primaryColor
             : Theme.of(context).colorScheme.secondary,
@@ -46,97 +81,220 @@ class _RedeemAmountRequestBottomSheetContainerState
     );
   }
 
-  Widget _buildEnterPayoutMethodIdContainer() {
+  Widget _buildInputDetailsContainer(int inputDetailsIndex) {
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+      margin: EdgeInsets.symmetric(
+          vertical: 5.0, horizontal: MediaQuery.of(context).size.width * (0.1)),
+      decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.circular(25.0)),
+      height: MediaQuery.of(context).size.height * (0.05),
+      child: TextField(
+        controller: _inputDetailsControllers[inputDetailsIndex],
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Theme.of(context).primaryColor),
+        cursorColor: Theme.of(context).primaryColor,
+        decoration: InputDecoration(
+            isDense: true,
+            border: InputBorder.none,
+            hintText: payoutMethods[_selectedPaymentMethodIndex]
+                .inputDetailsFromUser[inputDetailsIndex],
+            hintStyle: TextStyle(
+              fontSize: 16.0,
+              color: Theme.of(context).primaryColor,
+            )),
+      ),
+    );
+  }
+
+  Widget _buildEnterPayoutMethodDetailsContainer() {
     return AnimatedContainer(
       curve: Curves.easeInOut,
       transform: Matrix4.identity()
         ..setEntry(
             0, 3, MediaQuery.of(context).size.width * _enterPayoutMethodDx),
       duration: Duration(milliseconds: 500),
-      child: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * (0.015),
-          ),
-          //
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              "Payout method - $_selectedPaymentMethodIndex",
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor, fontSize: 20.0),
-            ),
-          ),
+      child: BlocConsumer<PaymentRequestCubit, PaymentRequestState>(
+        listener: (context, state) {
+          if (state is PaymentRequestFailure) {
+            setState(() {
+              _errorMessage = AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!;
+            });
+          } else if (state is PaymentRequestSuccess) {
+            context.read<UserDetailsCubit>().updateCoins(
+                  addCoin: false,
+                  coins: widget.deductedCoins,
+                );
+          }
+        },
+        bloc: widget.paymentRequestCubit,
+        builder: (context, state) {
+          if (state is PaymentRequestSuccess) {
+            return Column(
+              children: [
+                //
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * (0.025),
+                ),
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Successfully requested",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20.0),
+                    )),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * (0.025),
+                ),
+                Container(
+                  child: LottieBuilder.asset(
+                    "assets/animations/success.json",
+                    fit: BoxFit.cover,
+                    animate: true,
+                    height: MediaQuery.of(context).size.height * (0.2),
+                  ),
+                ),
 
-          SizedBox(
-            height: MediaQuery.of(context).size.height * (0.025),
-          ),
-
-          Container(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-            margin: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * (0.1)),
-            decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                borderRadius: BorderRadius.circular(25.0)),
-            height: MediaQuery.of(context).size.height * (0.05),
-            child: TextField(
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Theme.of(context).primaryColor),
-              cursorColor: Theme.of(context).primaryColor,
-              decoration: InputDecoration(
-                  isDense: true,
-                  border: InputBorder.none,
-                  hintText: "Enter id",
-                  hintStyle: TextStyle(
-                    fontSize: 16.0,
-                    color: Theme.of(context).primaryColor,
-                  )),
-            ),
-          ),
-
-          SizedBox(
-            height: MediaQuery.of(context).size.height * (0.025),
-          ),
-
-          CustomRoundedButton(
-            widthPercentage: 0.4,
-            backgroundColor: Theme.of(context).primaryColor,
-            buttonTitle: "Make Request",
-            radius: 15.0,
-            showBorder: false,
-            titleColor: Theme.of(context).backgroundColor,
-            fontWeight: FontWeight.bold,
-            textSize: 17.0,
-            onTap: () {
-              widget.paymentRequestCubit.makePaymentRequest(
-                  userId: context.read<UserDetailsCubit>().getUserId(),
-                  paymentType: "upi",
-                  paymentAddress: "test@oxaxis",
-                  paymentAmount: widget.redeemableAmount.toString(),
-                  coinUsed: widget.deductedCoins.toString(),
-                  details: "Redeem Request");
-            },
-            height: 40.0,
-          ),
-
-          Container(
-            child: TextButton(
-                onPressed: () {
-                  //
-                  setState(() {
-                    _selectPaymentMethodDx = 0;
-                    _enterPayoutMethodDx = 1;
-                  });
-                },
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * (0.025),
+                ),
+                CustomRoundedButton(
+                  widthPercentage: 0.4,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  buttonTitle: "Track Request",
+                  radius: 15.0,
+                  showBorder: false,
+                  titleColor: Theme.of(context).backgroundColor,
+                  fontWeight: FontWeight.bold,
+                  textSize: 17.0,
+                  onTap: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  height: 40.0,
+                ),
+              ],
+            );
+          }
+          return Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * (0.015),
+              ),
+              //
+              Container(
+                alignment: Alignment.center,
                 child: Text(
-                  "Change payout method",
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                )),
-          )
-        ],
+                  "Payout method - ${payoutMethods[_selectedPaymentMethodIndex].type}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor, fontSize: 20.0),
+                ),
+              ),
+
+              SizedBox(
+                height: MediaQuery.of(context).size.height * (0.025),
+              ),
+
+              for (var i = 0;
+                  i <
+                      payoutMethods[_selectedPaymentMethodIndex]
+                          .inputDetailsFromUser
+                          .length;
+                  i++)
+                _buildInputDetailsContainer(i),
+
+              SizedBox(
+                height: MediaQuery.of(context).size.height * (0.01),
+              ),
+
+              AnimatedOpacity(
+                  opacity: _errorMessage.isEmpty ? 0 : 1.0,
+                  duration: Duration(milliseconds: 250),
+                  child: Text(
+                    _errorMessage,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary),
+                  )),
+
+              SizedBox(
+                height: MediaQuery.of(context).size.height * (0.01),
+              ),
+
+              CustomRoundedButton(
+                widthPercentage: 0.4,
+                backgroundColor: Theme.of(context).primaryColor,
+                buttonTitle: state is PaymentRequestInProgress
+                    ? "Requesting..."
+                    : "Make Request",
+                radius: 15.0,
+                showBorder: false,
+                titleColor: Theme.of(context).backgroundColor,
+                fontWeight: FontWeight.bold,
+                textSize: 17.0,
+                onTap: () {
+                  bool isAnyInputFieldEmpty = false;
+                  for (var textEditingController in _inputDetailsControllers) {
+                    if (textEditingController.text.trim().isEmpty) {
+                      isAnyInputFieldEmpty = true;
+
+                      break;
+                    }
+                  }
+
+                  if (isAnyInputFieldEmpty) {
+                    setState(() {
+                      _errorMessage = "Please fill all data";
+                    });
+                    return;
+                  }
+
+                  widget.paymentRequestCubit.makePaymentRequest(
+                      userId: context.read<UserDetailsCubit>().getUserId(),
+                      paymentType:
+                          payoutMethods[_selectedPaymentMethodIndex].type,
+                      paymentAddress: _inputDetailsControllers.length == 1
+                          ? _inputDetailsControllers.first.text.trim()
+                          : jsonEncode(_inputDetailsControllers
+                              .map((e) => e.text.trim())
+                              .toList()),
+                      paymentAmount: widget.redeemableAmount.toString(),
+                      coinUsed: widget.deductedCoins.toString(),
+                      details: "Redeem Request");
+                },
+                height: 40.0,
+              ),
+
+              Container(
+                child: TextButton(
+                    onPressed: () {
+                      //
+                      setState(() {
+                        _selectPaymentMethodDx = 0;
+                        _enterPayoutMethodDx = 1;
+                        _errorMessage = "";
+                      });
+                    },
+                    child: Text(
+                      "Change payout method",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )),
+              )
+            ],
+          );
+        },
       ),
     );
+  }
+
+  List<Widget> _buildPayoutSelectMethosContainer() {
+    List<Widget> children = [];
+    for (var i = 0; i < payoutMethods.length; i++) {
+      children.add(_buildPaymentSelectMethodContainer(paymentMethodIndex: i));
+    }
+    return children;
   }
 
   Widget _buildSelectPayoutOption() {
@@ -203,9 +361,7 @@ class _RedeemAmountRequestBottomSheetContainerState
             padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Wrap(
               alignment: WrapAlignment.center,
-              children: [
-                _buildPaymentSelectMethodContainer(paymentMethodIndex: 0),
-              ],
+              children: _buildPayoutSelectMethosContainer(),
             ),
           ),
           SizedBox(
@@ -248,41 +404,48 @@ class _RedeemAmountRequestBottomSheetContainerState
             Theme.of(context).scaffoldBackgroundColor,
             Theme.of(context).canvasColor
           ], Alignment.topCenter, Alignment.bottomCenter)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+      child: Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                margin: EdgeInsets.all(10.0),
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                    onPressed: () {
-                      if (widget.paymentRequestCubit.state
-                          is PaymentRequestInProgress) {
-                        return;
-                      }
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      size: 28.0,
-                      color: Theme.of(context).primaryColor,
-                    )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                        onPressed: () {
+                          if (widget.paymentRequestCubit.state
+                              is PaymentRequestInProgress) {
+                            return;
+                          }
+                          //if state is PaymentRequestSuccess then update coins and transaction
+                          Navigator.of(context).pop(widget.paymentRequestCubit
+                              .state is PaymentRequestSuccess);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: 28.0,
+                          color: Theme.of(context).primaryColor,
+                        )),
+                  ),
+                ],
+              ),
+              Stack(
+                children: [
+                  _buildSelectPayoutOption(),
+                  _buildEnterPayoutMethodDetailsContainer(),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * (0.05),
               ),
             ],
           ),
-          Stack(
-            children: [
-              _buildSelectPayoutOption(),
-              _buildEnterPayoutMethodIdContainer(),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * (0.05),
-          ),
-        ],
+        ),
       ),
     );
   }

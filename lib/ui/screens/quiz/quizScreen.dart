@@ -488,7 +488,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           coins: lifeLineDeductCoins,
         );
 
-    //TODO : Watched reward ad
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,
@@ -561,7 +560,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         //mark fiftyFifty lifeline as using
 
                         //update coins in cloud
-                        //TODO : Use of fifty-fifty lifeline
                         context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                             context.read<UserDetailsCubit>().getUserId(),
                             lifeLineDeductCoins,
@@ -590,7 +588,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           addCoin: false, coins: lifeLineDeductCoins);
                       //update coins in cloud
 
-                      //TODO : Use of audience-poll lifeline
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,
@@ -618,7 +615,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           addCoin: false, coins: lifeLineDeductCoins);
                       //mark fiftyFifty lifeline as using
 
-                      //TODO : Use of reset timer lifeline
                       //update coins in cloud
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
@@ -650,7 +646,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           .updateCoins(addCoin: false, coins: 5);
                       //update coins in cloud
 
-                      //TODO : Use of skip lifeline
                       context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,

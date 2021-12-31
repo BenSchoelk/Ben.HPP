@@ -159,7 +159,6 @@ class _CoinStoreScreenState extends State<CoinStoreScreen>
                           addCoin: true,
                           coins: coins,
                         );
-                    //TODO : In-app purchase coin
                     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
                           context.read<UserDetailsCubit>().getUserId(),
                           coins,

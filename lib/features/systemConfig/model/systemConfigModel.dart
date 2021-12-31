@@ -41,8 +41,18 @@ class SystemConfigModel {
   late String iosFbInterstitialId;
   late String iosFbRewardedId;
   late String examMode;
+  late String paymentMode;
+  late String paymentMessage;
+  late String perCoin;
+  late String coinAmount;
+  late String coinLimit;
 
   SystemConfigModel({
+    required this.coinLimit,
+    required this.coinAmount,
+    required this.perCoin,
+    required this.paymentMessage,
+    required this.paymentMode,
     required this.examMode,
     required this.adsEnabled,
     required this.adsType,
@@ -130,5 +140,10 @@ class SystemConfigModel {
     iosFbInterstitialId = json['ios_fb_interstitial_id'] ?? "";
     iosFbRewardedId = json['ios_fb_rewarded_id'] ?? "";
     examMode = json['exam_module'] ?? "0";
+    paymentMode = json['payment_mode'] ?? "0";
+    paymentMessage = json['payment_message'] ?? "";
+    perCoin = json['per_coin'] ?? "0";
+    coinAmount = json['coin_amount'] ?? "0";
+    coinLimit = json['coin_limit'] ?? "0";
   }
 }

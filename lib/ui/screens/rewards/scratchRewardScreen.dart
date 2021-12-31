@@ -39,7 +39,6 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
     }
     context.read<BadgesCubit>().unlockReward(widget.reward.type);
 
-    //TODO : Earn reward by scratching card
     context.read<UpdateScoreAndCoinsCubit>().updateCoins(
           context.read<UserDetailsCubit>().getUserId(),
           int.parse(widget.reward.badgeReward),
