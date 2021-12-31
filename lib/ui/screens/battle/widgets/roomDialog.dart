@@ -67,8 +67,7 @@ class _RoomDialogState extends State<RoomDialog> {
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,
         true,
-        AppLocalization.of(context)!.getTranslatedValues(watchedRewardAdKey) ??
-            "-");
+        watchedRewardAdKey);
   }
 
   void showAdDialog() {

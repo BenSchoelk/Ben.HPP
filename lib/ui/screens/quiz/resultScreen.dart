@@ -254,8 +254,7 @@ class _ResultScreenState extends State<ResultScreen> {
               true,
               earnedCoins,
               //TODO : title for battle winner localization
-              AppLocalization.of(context)!.getTranslatedValues(wonBattleKey) ??
-                  "-",
+              wonBattleKey,
             );
         //update score locally and database
         context
@@ -385,33 +384,22 @@ class _ResultScreenState extends State<ResultScreen> {
 
   String _getCoinUpdateTypeBasedOnQuizZone() {
     if (widget.quizType == QuizTypes.quizZone) {
-      return AppLocalization.of(context)!.getTranslatedValues(wonQuizZoneKey) ??
-          "-";
+      return wonQuizZoneKey;
     }
     if (widget.quizType == QuizTypes.guessTheWord) {
-      return AppLocalization.of(context)!
-              .getTranslatedValues(wonGuessTheWordKey) ??
-          "-";
+      return wonGuessTheWordKey;
     }
     if (widget.quizType == QuizTypes.trueAndFalse) {
-      return AppLocalization.of(context)!
-              .getTranslatedValues(wonTrueFalseKey) ??
-          "-";
+      return wonTrueFalseKey;
     }
     if (widget.quizType == QuizTypes.dailyQuiz) {
-      return AppLocalization.of(context)!
-              .getTranslatedValues(wonDailyQuizKey) ??
-          "-";
+      return wonDailyQuizKey;
     }
     if (widget.quizType == QuizTypes.audioQuestions) {
-      return AppLocalization.of(context)!
-              .getTranslatedValues(wonAudioQuizKey) ??
-          "-";
+      return wonAudioQuizKey;
     }
     if (widget.quizType == QuizTypes.funAndLearn) {
-      return AppLocalization.of(context)!
-              .getTranslatedValues(wonFunNLearnKey) ??
-          "-";
+      return wonFunNLearnKey;
     }
 
     return "-";

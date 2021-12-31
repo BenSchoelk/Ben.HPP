@@ -493,8 +493,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,
         true,
-        AppLocalization.of(context)!.getTranslatedValues(watchedRewardAdKey) ??
-            "-");
+        watchedRewardAdKey);
     timerAnimationController.forward(from: timerAnimationController.value);
   }
 
@@ -567,9 +566,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                             context.read<UserDetailsCubit>().getUserId(),
                             lifeLineDeductCoins,
                             false,
-                            AppLocalization.of(context)!
-                                    .getTranslatedValues(used5050lifelineKey) ??
-                                "-");
+                            used5050lifelineKey);
                         setState(() {
                           lifelines[fiftyFifty] = LifelineStatus.using;
                         });
@@ -598,9 +595,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,
                           false,
-                          AppLocalization.of(context)!.getTranslatedValues(
-                                  usedAudiencePolllifelineKey) ??
-                              "-");
+                          usedAudiencePolllifelineKey);
                       setState(() {
                         lifelines[audiencePoll] = LifelineStatus.using;
                       });
@@ -629,9 +624,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,
                           false,
-                          AppLocalization.of(context)!.getTranslatedValues(
-                                  usedResetTimerlifelineKey) ??
-                              "-");
+                          usedResetTimerlifelineKey);
                       setState(() {
                         lifelines[resetTime] = LifelineStatus.using;
                       });
@@ -662,9 +655,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           context.read<UserDetailsCubit>().getUserId(),
                           lifeLineDeductCoins,
                           false,
-                          AppLocalization.of(context)!
-                                  .getTranslatedValues(usedSkiplifelineKey) ??
-                              "-");
+                          usedSkiplifelineKey);
                       setState(() {
                         lifelines[skip] = LifelineStatus.using;
                       });

@@ -164,9 +164,7 @@ class _CoinStoreScreenState extends State<CoinStoreScreen>
                           context.read<UserDetailsCubit>().getUserId(),
                           coins,
                           true,
-                          AppLocalization.of(context)!
-                                  .getTranslatedValues(boughtCoinsKey) ??
-                              "-",
+                          boughtCoinsKey,
                         );
                     UiUtils.setSnackbar(
                         AppLocalization.of(context)!

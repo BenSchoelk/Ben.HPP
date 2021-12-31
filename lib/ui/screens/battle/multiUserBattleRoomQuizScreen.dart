@@ -137,9 +137,7 @@ class _MultiUserBattleRoomQuizScreenState
             context.read<UserDetailsCubit>().getUserId(),
             context.read<MultiUserBattleRoomCubit>().getEntryFee(),
             false,
-            AppLocalization.of(context)!
-                    .getTranslatedValues(playedGroupBattleKey) ??
-                "-",
+            playedGroupBattleKey,
           );
       context.read<UserDetailsCubit>().updateCoins(
           addCoin: false,
@@ -587,9 +585,7 @@ class _MultiUserBattleRoomQuizScreenState
                             context.read<UserDetailsCubit>().getUserId(),
                             battleRoomCubit.getEntryFee(),
                             true,
-                            AppLocalization.of(context)!
-                                    .getTranslatedValues(wonGroupBattleKey) ??
-                                "-",
+                            wonGroupBattleKey,
                           );
 
                       //delete room

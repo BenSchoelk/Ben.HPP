@@ -157,8 +157,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
             context.read<UserDetailsCubit>().getUserId(),
             context.read<BattleRoomCubit>().getEntryFee(),
             false,
-            AppLocalization.of(context)!.getTranslatedValues(playedBattleKey) ??
-                "-");
+            playedBattleKey);
         context.read<UserDetailsCubit>().updateCoins(
             addCoin: false,
             coins: context.read<BattleRoomCubit>().getEntryFee());
@@ -894,9 +893,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                               context.read<UserDetailsCubit>().getUserId(),
                               context.read<BattleRoomCubit>().getEntryFee() * 2,
                               true,
-                              AppLocalization.of(context)!
-                                      .getTranslatedValues(wonBattleKey) ??
-                                  "-",
+                              wonBattleKey,
                             );
                         context.read<UserDetailsCubit>().updateCoins(
                             addCoin: true,
