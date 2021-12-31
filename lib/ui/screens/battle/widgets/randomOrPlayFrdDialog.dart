@@ -270,7 +270,8 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,
         true,
-        "Watched reward ad");
+        AppLocalization.of(context)!.getTranslatedValues(watchedRewardAdKey) ??
+            "-");
   }
 
   Widget letsGoButton(BoxConstraints boxConstraints) {

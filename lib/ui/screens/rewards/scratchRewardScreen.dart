@@ -44,7 +44,9 @@ class _ScratchRewardScreenState extends State<ScratchRewardScreen> {
           context.read<UserDetailsCubit>().getUserId(),
           int.parse(widget.reward.badgeReward),
           true,
-          "Reward by scratching card",
+          AppLocalization.of(context)!
+                  .getTranslatedValues(rewardByScratchingCardKey) ??
+              "-",
           type: widget.reward.type,
         );
     context.read<UserDetailsCubit>().updateCoins(

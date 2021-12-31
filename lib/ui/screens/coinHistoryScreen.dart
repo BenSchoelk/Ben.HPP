@@ -115,7 +115,9 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  coinHistory.type,
+                  AppLocalization.of(context)!
+                          .getTranslatedValues(coinHistory.type) ??
+                      "-",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

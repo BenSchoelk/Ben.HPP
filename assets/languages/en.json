@@ -386,7 +386,32 @@
   "minimumRedeemableAmount" : "Minimum redeemable amount is",
   "notEnoughCoinsToRedeemAmount" : "You don't have enough coins to redeem this amount",
   "totalEarnings" : "Total Earnings",
-  "redeemRequest" : "Redeem Request"
+  "redeemRequest" : "Redeem Request",
+
+  "wonQuizZone" : "Won Quiz Zone Quiz",
+  "wonBattle" : "Won Battle",
+  "usedSkiplifeline" : "Used Skip lifeline",
+  "usedAudiencePolllifeline" : "Used Audience-poll lifeline",
+  "usedResetTimerlifeline" : "Used Reset-timer lifeline",
+  "used5050lifeline" : "Used 50-50 lifeline",
+  "usedHintLifeline" : "Used Hint lifeline",
+  "referredCodeToFriend" : "Referred Code To Friend",
+  "rewardByScratchingCard" : "Reward By Scratching Card",
+  "boughtCoins" : "Bought Coins",
+  "watchedRewardAd" : "Watched Reward Ad",
+  "wonAudioQuiz" : "Won Audio Quiz",
+  "wonDailyQuiz" : "Won Daily Quiz",
+  "wonTrueFalse" : "Won True / False Quiz",
+  "wonFunNLearn" : "Won Fun N Learn Quiz",
+  "wonGuessTheWord" : "Won Guess The Word Quiz",
+  "wonGroupBattle" : "Won Group Battle",
+  "playedGroupBattle" : "Played Group Battle",
+  "wonContest" : "Won Contest",
+  "playedContest" : "Played Contest",
+  "playedBattle" : "Played Battle",
+  "redeemedAmount" : "Redeemed Amount"
+
+  
 
   
   

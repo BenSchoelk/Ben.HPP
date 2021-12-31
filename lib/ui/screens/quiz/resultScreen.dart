@@ -254,7 +254,8 @@ class _ResultScreenState extends State<ResultScreen> {
               true,
               earnedCoins,
               //TODO : title for battle winner localization
-              "Won battle",
+              AppLocalization.of(context)!.getTranslatedValues(wonBattleKey) ??
+                  "-",
             );
         //update score locally and database
         context
@@ -382,6 +383,40 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
+  String _getCoinUpdateTypeBasedOnQuizZone() {
+    if (widget.quizType == QuizTypes.quizZone) {
+      return AppLocalization.of(context)!.getTranslatedValues(wonQuizZoneKey) ??
+          "-";
+    }
+    if (widget.quizType == QuizTypes.guessTheWord) {
+      return AppLocalization.of(context)!
+              .getTranslatedValues(wonGuessTheWordKey) ??
+          "-";
+    }
+    if (widget.quizType == QuizTypes.trueAndFalse) {
+      return AppLocalization.of(context)!
+              .getTranslatedValues(wonTrueFalseKey) ??
+          "-";
+    }
+    if (widget.quizType == QuizTypes.dailyQuiz) {
+      return AppLocalization.of(context)!
+              .getTranslatedValues(wonDailyQuizKey) ??
+          "-";
+    }
+    if (widget.quizType == QuizTypes.audioQuestions) {
+      return AppLocalization.of(context)!
+              .getTranslatedValues(wonAudioQuizKey) ??
+          "-";
+    }
+    if (widget.quizType == QuizTypes.funAndLearn) {
+      return AppLocalization.of(context)!
+              .getTranslatedValues(wonFunNLearnKey) ??
+          "-";
+    }
+
+    return "-";
+  }
+
   void _updateCoinsAndScore() {
     //update score and coins for user
     context.read<UpdateScoreAndCoinsCubit>().updateCoinsAndScore(
@@ -390,7 +425,7 @@ class _ResultScreenState extends State<ResultScreen> {
         true,
         _earnedCoins,
         //TODO : Add title for quizzone coins update - localizaiton
-        "Unlocked new level - Quiz zone");
+        _getCoinUpdateTypeBasedOnQuizZone());
     //update score locally and database
     context
         .read<UserDetailsCubit>()

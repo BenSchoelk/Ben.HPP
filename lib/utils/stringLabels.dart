@@ -378,3 +378,25 @@ String totalEarningsKey = "totalEarnings";
 String redeemRequestKey = "redeemRequest";
 
 //coins type
+String wonQuizZoneKey = "wonQuizZone";
+String wonBattleKey = "wonBattle";
+String playedBattleKey = "playedBattle";
+String playedContestKey = "playedContest";
+String wonContestKey = "wonContest";
+String playedGroupBattleKey = "playedGroupBattle";
+String wonGroupBattleKey = "wonGroupBattle";
+String wonGuessTheWordKey = "wonGuessTheWord";
+String wonFunNLearnKey = "wonFunNLearn";
+String wonTrueFalseKey = "wonTrueFalse";
+String wonDailyQuizKey = "wonDailyQuiz";
+String wonAudioQuizKey = "wonAudioQuiz";
+String watchedRewardAdKey = "watchedRewardAd";
+String boughtCoinsKey = "boughtCoins";
+String rewardByScratchingCardKey = "rewardByScratchingCard";
+String referredCodeToFriendKey = "referredCodeToFriend";
+String used5050lifelineKey = "used5050lifeline";
+String usedResetTimerlifelineKey = "usedResetTimerlifeline";
+String usedAudiencePolllifelineKey = "usedAudiencePolllifeline";
+String usedSkiplifelineKey = "usedSkiplifeline";
+String usedHintLifelineKey = "usedHintLifeline";
+String redeemedAmountkey = "redeemedAmount";

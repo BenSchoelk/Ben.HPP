@@ -174,7 +174,8 @@ class GuessTheWordQuestionContainerState
         context.read<UserDetailsCubit>().getUserId(),
         lifeLineDeductCoins,
         true,
-        "Watched reward ad");
+        AppLocalization.of(context)!.getTranslatedValues(watchedRewardAdKey) ??
+            "-");
     widget.timerAnimationController
         .forward(from: widget.timerAnimationController.value);
   }
@@ -449,7 +450,9 @@ class GuessTheWordQuestionContainerState
                     context.read<UserDetailsCubit>().getUserId(),
                     lifeLineDeductCoins,
                     false,
-                    "Use of lifeline");
+                    AppLocalization.of(context)!
+                            .getTranslatedValues(usedHintLifelineKey) ??
+                        "-");
 
                 //change current selected answer box
                 changeCurrentSelectedAnswerBox(hintIndex);

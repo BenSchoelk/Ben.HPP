@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/contestCubit.dart';
 import 'package:flutterquiz/features/quiz/models/contest.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
@@ -15,6 +17,7 @@ import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ContestScreen extends StatefulWidget {
@@ -22,10 +25,15 @@ class ContestScreen extends StatefulWidget {
   _ContestScreen createState() => _ContestScreen();
   static Route<dynamic> route(RouteSettings routeSettings) {
     return CupertinoPageRoute(
-        builder: (_) => BlocProvider<ContestCubit>(
-              create: (_) => ContestCubit(QuizRepository()),
-              child: ContestScreen(),
-            ));
+        builder: (_) => MultiBlocProvider(providers: [
+              BlocProvider<ContestCubit>(
+                create: (_) => ContestCubit(QuizRepository()),
+              ),
+              BlocProvider<UpdateScoreAndCoinsCubit>(
+                create: (_) =>
+                    UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+              ),
+            ], child: ContestScreen()));
   }
 }
 
@@ -474,6 +482,21 @@ class _ContestScreen extends State<ContestScreen>
                                             .getCoins()!) >=
                                         int.parse(data
                                             .contestDetails[index].entry!)) {
+                                      context
+                                          .read<UpdateScoreAndCoinsCubit>()
+                                          .updateCoins(
+                                            context
+                                                .read<UserDetailsCubit>()
+                                                .getUserId(),
+                                            int.parse(data
+                                                .contestDetails[index].entry!),
+                                            false,
+                                            AppLocalization.of(context)!
+                                                    .getTranslatedValues(
+                                                        playedContestKey) ??
+                                                "-",
+                                          );
+
                                       context
                                           .read<UserDetailsCubit>()
                                           .updateCoins(

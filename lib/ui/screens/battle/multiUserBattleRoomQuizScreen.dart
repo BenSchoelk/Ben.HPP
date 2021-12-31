@@ -33,6 +33,7 @@ import 'package:flutterquiz/ui/widgets/settingButton.dart';
 import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/normalizeNumber.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class MultiUserBattleRoomQuizScreen extends StatefulWidget {
@@ -136,7 +137,9 @@ class _MultiUserBattleRoomQuizScreenState
             context.read<UserDetailsCubit>().getUserId(),
             context.read<MultiUserBattleRoomCubit>().getEntryFee(),
             false,
-            "Played group battle",
+            AppLocalization.of(context)!
+                    .getTranslatedValues(playedGroupBattleKey) ??
+                "-",
           );
       context.read<UserDetailsCubit>().updateCoins(
           addCoin: false,
@@ -584,7 +587,9 @@ class _MultiUserBattleRoomQuizScreenState
                             context.read<UserDetailsCubit>().getUserId(),
                             battleRoomCubit.getEntryFee(),
                             true,
-                            "Won group battle",
+                            AppLocalization.of(context)!
+                                    .getTranslatedValues(wonGroupBattleKey) ??
+                                "-",
                           );
 
                       //delete room

@@ -107,7 +107,9 @@ class _MultiUserBattleRoomResultScreenState
               context.read<UserDetailsCubit>().getUserId(),
               winAmount.toInt(),
               true,
-              "Won group battle",
+              AppLocalization.of(context)!
+                      .getTranslatedValues(wonGroupBattleKey) ??
+                  "-",
             );
         context.read<UserDetailsCubit>().updateCoins(
               addCoin: true,

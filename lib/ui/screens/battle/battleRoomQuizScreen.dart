@@ -33,6 +33,7 @@ import 'package:flutterquiz/ui/widgets/settingButton.dart';
 import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
 import 'package:flutterquiz/ui/widgets/userDetailsWithTimerContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BattleRoomQuizScreen extends StatefulWidget {
@@ -156,7 +157,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
             context.read<UserDetailsCubit>().getUserId(),
             context.read<BattleRoomCubit>().getEntryFee(),
             false,
-            "Played battle");
+            AppLocalization.of(context)!.getTranslatedValues(playedBattleKey) ??
+                "-");
         context.read<UserDetailsCubit>().updateCoins(
             addCoin: false,
             coins: context.read<BattleRoomCubit>().getEntryFee());
@@ -892,7 +894,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                               context.read<UserDetailsCubit>().getUserId(),
                               context.read<BattleRoomCubit>().getEntryFee() * 2,
                               true,
-                              "Won battle",
+                              AppLocalization.of(context)!
+                                      .getTranslatedValues(wonBattleKey) ??
+                                  "-",
                             );
                         context.read<UserDetailsCubit>().updateCoins(
                             addCoin: true,
