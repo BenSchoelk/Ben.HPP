@@ -1,3 +1,4 @@
+import 'package:flutterquiz/features/wallet/models/paymentRequest.dart';
 import 'package:flutterquiz/features/wallet/walletException.dart';
 import 'package:flutterquiz/features/wallet/walletRemoteDataSource.dart';
 
@@ -30,6 +31,25 @@ class WalletRepository {
           paymentAmount: paymentAmount,
           coinUsed: coinUsed,
           details: details);
+    } catch (e) {
+      throw WalletException(errorMessageCode: e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> getTransactions({
+    required String userId,
+    required String limit,
+    required String offset,
+  }) async {
+    try {
+      final result = await _walletRemoteDataSource.getTransactions(
+          userId: userId, limit: limit, offset: offset);
+      return {
+        "total": result['total'],
+        "transactions": (result['data'] as List)
+            .map((e) => PaymentRequest.fromJson(e))
+            .toList(),
+      };
     } catch (e) {
       throw WalletException(errorMessageCode: e.toString());
     }

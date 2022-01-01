@@ -9,6 +9,7 @@ import 'package:flutterquiz/features/wallet/cubits/paymentRequestCubit.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:lottie/lottie.dart';
 
@@ -141,7 +142,8 @@ class _RedeemAmountRequestBottomSheetContainerState
                 Container(
                     alignment: Alignment.center,
                     child: Text(
-                      "Successfully requested",
+                      AppLocalization.of(context)!
+                          .getTranslatedValues(successfullyRequestedKey)!,
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 20.0),
@@ -164,7 +166,8 @@ class _RedeemAmountRequestBottomSheetContainerState
                 CustomRoundedButton(
                   widthPercentage: 0.4,
                   backgroundColor: Theme.of(context).primaryColor,
-                  buttonTitle: "Track Request",
+                  buttonTitle: AppLocalization.of(context)!
+                      .getTranslatedValues(trackRequestKey),
                   radius: 15.0,
                   showBorder: false,
                   titleColor: Theme.of(context).backgroundColor,
@@ -187,7 +190,7 @@ class _RedeemAmountRequestBottomSheetContainerState
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  "Payout method - ${payoutMethods[_selectedPaymentMethodIndex].type}",
+                  "${AppLocalization.of(context)!.getTranslatedValues(payoutMethodKey)!} - ${payoutMethods[_selectedPaymentMethodIndex].type}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Theme.of(context).primaryColor, fontSize: 20.0),
@@ -227,8 +230,10 @@ class _RedeemAmountRequestBottomSheetContainerState
                 widthPercentage: 0.4,
                 backgroundColor: Theme.of(context).primaryColor,
                 buttonTitle: state is PaymentRequestInProgress
-                    ? "Requesting..."
-                    : "Make Request",
+                    ? AppLocalization.of(context)!
+                        .getTranslatedValues(requestingKey)
+                    : AppLocalization.of(context)!
+                        .getTranslatedValues(makeRequestKey),
                 radius: 15.0,
                 showBorder: false,
                 titleColor: Theme.of(context).backgroundColor,
@@ -246,7 +251,8 @@ class _RedeemAmountRequestBottomSheetContainerState
 
                   if (isAnyInputFieldEmpty) {
                     setState(() {
-                      _errorMessage = "Please fill all data";
+                      _errorMessage = AppLocalization.of(context)!
+                          .getTranslatedValues(pleaseFillAllDataKey)!;
                     });
                     return;
                   }
@@ -278,7 +284,8 @@ class _RedeemAmountRequestBottomSheetContainerState
                       });
                     },
                     child: Text(
-                      "Change payout method",
+                      AppLocalization.of(context)!
+                          .getTranslatedValues(changePayoutMethodKey)!,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     )),
               )
@@ -313,7 +320,8 @@ class _RedeemAmountRequestBottomSheetContainerState
                 Container(
                   alignment: Alignment.center,
                   child: Text(
-                    "Redeemable Amount",
+                    AppLocalization.of(context)!
+                        .getTranslatedValues(redeemableAmountKey)!,
                     style: TextStyle(
                         color: Theme.of(context).primaryColor, fontSize: 20.0),
                   ),
@@ -329,7 +337,7 @@ class _RedeemAmountRequestBottomSheetContainerState
                 Container(
                   alignment: Alignment.center,
                   child: Text(
-                    "${widget.deductedCoins} coins will be deducted",
+                    "${widget.deductedCoins} ${AppLocalization.of(context)!.getTranslatedValues(coinsWillBeDeductedKey)}",
                     style: TextStyle(
                         color: Theme.of(context).primaryColor, fontSize: 20.0),
                   ),
@@ -349,7 +357,8 @@ class _RedeemAmountRequestBottomSheetContainerState
           Container(
             alignment: Alignment.center,
             child: Text(
-              "Select payout option",
+              AppLocalization.of(context)!
+                  .getTranslatedValues(selectPayoutOptionKey)!,
               style: TextStyle(
                   color: Theme.of(context).primaryColor, fontSize: 20.0),
             ),
@@ -370,7 +379,8 @@ class _RedeemAmountRequestBottomSheetContainerState
           CustomRoundedButton(
             widthPercentage: 0.4,
             backgroundColor: Theme.of(context).primaryColor,
-            buttonTitle: "Continue",
+            buttonTitle:
+                AppLocalization.of(context)!.getTranslatedValues(continueLbl),
             radius: 15.0,
             showBorder: false,
             titleColor: Theme.of(context).backgroundColor,

@@ -423,6 +423,23 @@
   "playedContest" : "Played Contest",
   "playedBattle" : "Played Battle",
   "redeemedAmount" : "Redeemed Amount",
-  "usedReferCode" : "Used Refer Code"
+  "usedReferCode" : "Used Refer Code",
+  "pending" : "Pending",
+  "completed" : "Completed",
+  "wrongDetails" : "Wrong Details",
+  "coinsWillBeDeducted" : "Coins will be deducted",
+
+  "selectPayoutOption" : "Select payout option",
+
+  "successfullyRequested" : "Successfully requested",
+  "trackRequest" : "Track Request",
+
+  "payoutMethod" : "Payout method",
+
+  "requesting" : "Requesting...",
+  "makeRequest" : "Make Request",
+
+  "pleaseFillAllData" : "Please fill all data",
+  "noTransactions" : "No Transactions"
 
 }

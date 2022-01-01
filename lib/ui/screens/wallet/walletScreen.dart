@@ -4,16 +4,21 @@ import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/features/wallet/cubits/paymentRequestCubit.dart';
+import 'package:flutterquiz/features/wallet/cubits/transactionsCubit.dart';
+import 'package:flutterquiz/features/wallet/models/paymentRequest.dart';
 import 'package:flutterquiz/features/wallet/walletRepository.dart';
 import 'package:flutterquiz/ui/screens/wallet/widgets/redeemAmountRequestBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 class WalletScreen extends StatefulWidget {
   WalletScreen({Key? key}) : super(key: key);
@@ -26,7 +31,16 @@ class WalletScreen extends StatefulWidget {
         builder: (_) => MultiBlocProvider(providers: [
               //
               BlocProvider<PaymentRequestCubit>(
-                  create: (_) => PaymentRequestCubit(WalletRepository())),
+                create: (_) => PaymentRequestCubit(
+                  WalletRepository(),
+                ),
+              ),
+
+              BlocProvider<TransactionsCubit>(
+                create: (_) => TransactionsCubit(
+                  WalletRepository(),
+                ),
+              ),
             ], child: WalletScreen()));
   }
 }
@@ -36,10 +50,34 @@ class _WalletScreenState extends State<WalletScreen> {
 
   TextEditingController? redeemableAmountTextEditingController;
 
+  late ScrollController _transactionsScrollController = ScrollController()
+    ..addListener(hasMoreTransactionsScrollListener);
+
+  void hasMoreTransactionsScrollListener() {
+    if (_transactionsScrollController.position.maxScrollExtent ==
+        _transactionsScrollController.offset) {
+      print("At the end of the list");
+      if (context.read<TransactionsCubit>().hasMoreTransactions()) {
+        //
+        context.read<TransactionsCubit>().getMoreTransactions(
+            userId: context.read<UserDetailsCubit>().getUserId());
+      } else {
+        print("No more transactions");
+      }
+    }
+  }
+
+  void fetchTransactions() {
+    context
+        .read<TransactionsCubit>()
+        .getTransactions(userId: context.read<UserDetailsCubit>().getUserId());
+  }
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
+      fetchTransactions();
       //
       redeemableAmountTextEditingController = TextEditingController(
         text: _calculateAmountPerCoins(
@@ -83,6 +121,9 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void dispose() {
     redeemableAmountTextEditingController?.dispose();
+    _transactionsScrollController
+        .removeListener(hasMoreTransactionsScrollListener);
+    _transactionsScrollController.dispose();
     super.dispose();
   }
 
@@ -109,7 +150,7 @@ class _WalletScreenState extends State<WalletScreen> {
           );
         }).then((value) {
       if (value != null && value) {
-        //TODO : Update transaction
+        fetchTransactions();
         redeemableAmountTextEditingController?.text = _calculateAmountPerCoins(
                 userCoins:
                     int.parse(context.read<UserDetailsCubit>().getCoins()!),
@@ -235,6 +276,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
+  //Build request tab
   Widget _buildRequestContainer() {
     return SingleChildScrollView(
       padding: EdgeInsets.only(
@@ -245,12 +287,11 @@ class _WalletScreenState extends State<WalletScreen> {
       ),
       child: Column(
         children: [
-          //
           Container(
             alignment: Alignment.center,
             child: Text(
               AppLocalization.of(context)!
-                  .getTranslatedValues(redeemableAmountKey)!, //
+                  .getTranslatedValues(redeemableAmountKey)!,
               style: TextStyle(
                   color: Theme.of(context).primaryColor, fontSize: 20.0),
             ),
@@ -301,6 +342,8 @@ class _WalletScreenState extends State<WalletScreen> {
                   fontSize: 20.0),
             ),
           ),
+
+          //User's coins
           BlocBuilder<UserDetailsCubit, UserDetailsState>(
             bloc: context.read<UserDetailsCubit>(),
             builder: (context, state) {
@@ -322,6 +365,7 @@ class _WalletScreenState extends State<WalletScreen> {
           SizedBox(
             height: MediaQuery.of(context).size.height * (0.025),
           ),
+          //
           CustomRoundedButton(
             widthPercentage: 0.4,
             backgroundColor: Theme.of(context).primaryColor,
@@ -430,64 +474,93 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildTransactionContainer(int index) {
+  Widget _buildTransactionContainer({
+    required PaymentRequest paymentRequest,
+    required int index,
+    required int totalTransactions,
+    required bool hasMoreTransactionsFetchError,
+    required bool hasMore,
+  }) {
+    if (index == totalTransactions - 1) {
+      //check if hasMore
+      if (hasMore) {
+        if (hasMoreTransactionsFetchError) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+              child: IconButton(
+                  onPressed: () {
+                    context.read<TransactionsCubit>().getMoreTransactions(
+                        userId: context.read<UserDetailsCubit>().getUserId());
+                  },
+                  icon: Icon(
+                    Icons.error,
+                    color: Theme.of(context).primaryColor,
+                  )),
+            ),
+          );
+        } else {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+              child: CircularProgressContainer(
+                useWhiteLoader: false,
+                heightAndWidth: 40,
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    //
     return GestureDetector(
       onTap: () {
         //
-        print(MediaQuery.of(context).size.height);
       },
       child: LayoutBuilder(builder: (context, boxConstraints) {
         return Container(
           child: Row(
             children: [
               Container(
-                width: boxConstraints.maxWidth * (0.6),
+                width: boxConstraints.maxWidth * (0.65),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      AppLocalization.of(context)!
-                          .getTranslatedValues(redeemRequestKey)!,
+                      paymentRequest.details,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: Theme.of(context).backgroundColor,
+                          color: Theme.of(context).primaryColor,
                           fontSize: 16.5),
                     ),
                     Spacer(),
                     Row(
                       children: [
-                        Text("Paypal",
+                        Text(paymentRequest.paymentType,
                             style: TextStyle(
                                 fontSize: 12.0,
                                 color: Theme.of(context)
-                                    .backgroundColor
+                                    .primaryColor
                                     .withOpacity(0.875))),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * (0.0225),
+                          width: MediaQuery.of(context).size.width * (0.0175),
                         ),
                         CircleAvatar(
-                          backgroundColor: Theme.of(context).backgroundColor,
-                          radius: 2.75,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          radius: 2,
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * (0.0225),
+                          width: MediaQuery.of(context).size.width * (0.0175),
                         ),
                         Text(
-                          "30-12-2021",
+                          paymentRequest.date,
                           style: TextStyle(
                               fontSize: 12.0,
                               color: Theme.of(context)
-                                  .backgroundColor
-                                  .withOpacity(0.875)),
-                        ),
-                        Text(
-                          "  3:56 PM",
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              color: Theme.of(context)
-                                  .backgroundColor
+                                  .primaryColor
                                   .withOpacity(0.875)),
                         ),
                       ],
@@ -497,7 +570,7 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
               Spacer(),
               Container(
-                width: boxConstraints.maxWidth * 0.3,
+                width: boxConstraints.maxWidth * 0.29,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -506,22 +579,31 @@ class _WalletScreenState extends State<WalletScreen> {
                       padding: EdgeInsets.symmetric(vertical: 1.0),
                       margin: EdgeInsets.only(
                           left: boxConstraints.maxWidth * 0.3 * (0.4)),
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).primaryColor,
                       alignment: Alignment.center,
                       child: Text(
-                        "\$${UiUtils.formatNumber(500)}",
+                        "\$${UiUtils.formatNumber(double.parse(paymentRequest.paymentAmount).toInt())}",
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).backgroundColor,
                             fontSize: 15),
                       ),
                     ),
                     Spacer(),
                     Text(
-                      index == 1 ? "Pending" : "Rejected",
+                      AppLocalization.of(context)!
+                          .getTranslatedValues(paymentRequest.status == "0"
+                              ? pendingKey
+                              : paymentRequest.status == "1"
+                                  ? completedKey
+                                  : wrongDetailsKey)!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: Theme.of(context).backgroundColor,
+                          color: paymentRequest.status == "0"
+                              ? Theme.of(context).primaryColor
+                              : paymentRequest.status == "1"
+                                  ? addCoinColor
+                                  : hurryUpTimerColor,
                           fontSize: 12.0),
                     ),
                   ],
@@ -530,10 +612,19 @@ class _WalletScreenState extends State<WalletScreen> {
             ],
           ),
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * (0.03),
+              horizontal: MediaQuery.of(context).size.width * (0.0265),
               vertical: 15),
           decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 3.5,
+                    offset: Offset(2.5, 3.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.15))
+              ],
+              color: Theme.of(context).backgroundColor,
               borderRadius: BorderRadius.circular(10.0)),
           height: MediaQuery.of(context).size.height *
               UiUtils.getTransactionContainerHeight(
@@ -545,41 +636,82 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Widget _buildTransactionListContainer() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          //
+    return BlocBuilder<TransactionsCubit, TransactionsState>(
+      builder: (context, state) {
+        if (state is TransactionsFetchInProgress ||
+            state is TransactionsFetchInitial) {
+          return Center(
+            child: CircularProgressContainer(useWhiteLoader: false),
+          );
+        }
+        if (state is TransactionsFetchFailure) {
+          return Center(
+            child: ErrorContainer(
+                errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                    convertErrorCodeToLanguageKey(state.errorMessage)),
+                onTapRetry: () {
+                  fetchTransactions();
+                },
+                showErrorImage: true),
+          );
+        }
 
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              "${AppLocalization.of(context)!.getTranslatedValues(totalEarningsKey)!} : \$1000",
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 18.0,
+        return SingleChildScrollView(
+          controller: _transactionsScrollController,
+          child: Column(
+            children: [
+              //
+
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "${AppLocalization.of(context)!.getTranslatedValues(totalEarningsKey)!} : \$${context.read<TransactionsCubit>().calculateTotalEarnings()}",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 18.0,
+                  ),
+                ),
+                width: MediaQuery.of(context).size.width * (0.75),
+                height: MediaQuery.of(context).size.height * (0.065),
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 3.5,
+                          offset: Offset(2.5, 2.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.15))
+                    ],
+                    color: Theme.of(context).backgroundColor,
+                    borderRadius: BorderRadius.circular(20.0)),
               ),
-            ),
-            width: MediaQuery.of(context).size.width * (0.75),
-            height: MediaQuery.of(context).size.height * (0.065),
-            decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                borderRadius: BorderRadius.circular(20.0)),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * (0.015),
-          ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * (0.015),
+              ),
 
-          Column(
-            children:
-                [1, 2, 3].map((e) => _buildTransactionContainer(e)).toList(),
-          )
-        ],
-      ),
-      padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height *
-              (UiUtils.appBarHeightPercentage + 0.025),
-          left: MediaQuery.of(context).size.width * (0.05),
-          right: MediaQuery.of(context).size.width * (0.05)),
+              for (var i = 0;
+                  i <
+                      (state as TransactionsFetchSuccess)
+                          .paymentRequests
+                          .length;
+                  i++)
+                _buildTransactionContainer(
+                    paymentRequest: state.paymentRequests[i],
+                    index: i,
+                    totalTransactions: state.paymentRequests.length,
+                    hasMoreTransactionsFetchError: state.hasMoreFetchError,
+                    hasMore: state.hasMore)
+            ],
+          ),
+          padding: EdgeInsets.only(
+              bottom: 20.0,
+              top: MediaQuery.of(context).size.height *
+                  (UiUtils.appBarHeightPercentage + 0.025),
+              left: MediaQuery.of(context).size.width * (0.05),
+              right: MediaQuery.of(context).size.width * (0.05)),
+        );
+      },
     );
   }
 

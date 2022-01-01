@@ -63,4 +63,41 @@ class WalletRemoteDataSource {
       throw WalletException(errorMessageCode: defaultErrorMessageCode);
     }
   }
+
+  Future<dynamic> getTransactions({
+    required String userId,
+    required String limit,
+    required String offset,
+  }) async {
+    try {
+      //body of post request
+      final body = {
+        accessValueKey: accessValue,
+        userIdKey: userId,
+        limitKey: limit,
+        offsetKey: offset,
+      };
+
+      final response = await http.post(Uri.parse(getTransactionsUrl),
+          body: body, headers: ApiUtils.getHeaders());
+
+      final responseJson = jsonDecode(response.body);
+
+      if (responseJson['error']) {
+        throw WalletException(
+          errorMessageCode: responseJson['message'] == "102"
+              ? noTransactionsCode
+              : responseJson['message'],
+        );
+      }
+
+      return responseJson;
+    } on SocketException catch (_) {
+      throw WalletException(errorMessageCode: noInternetCode);
+    } on WalletException catch (e) {
+      throw WalletException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw WalletException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
 }

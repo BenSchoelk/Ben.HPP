@@ -52,6 +52,7 @@ final String alreadyInExamKey = "alreadyInExam";
 final String noExamForTodayKey = "noExamForToday";
 final String haveNotCompletedExamKey = "haveNotCompletedExam";
 final String requireRecentLoginKey = "requires-recent-login";
+final String noTransactionsKey = "noTransactions";
 
 //
 //error message code that is not given from api
@@ -77,6 +78,7 @@ final String alreadyInExamCode = "152";
 final String noExamForTodayCode = "153";
 final String haveNotCompletedExamCode = "154";
 final String requireRecentLoginCode = "155";
+final String noTransactionsCode = "156";
 
 //
 //firebase auth exceptions code
@@ -247,6 +249,10 @@ String convertErrorCodeToLanguageKey(String code) {
 
     case "155":
       return requireRecentLoginKey;
+
+    case "156":
+      return noTransactionsKey;
+
     default:
       {
         return defaultErrorMessageKey;

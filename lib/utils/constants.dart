@@ -144,6 +144,7 @@ final String setExamModuleResultUrl = "${baseUrl}set_exam_module_result";
 final String deleteUserAccountUrl = "${baseUrl}delete_user_account";
 final String getCoinHistoryUrl = "${baseUrl}get_tracker_data";
 final String makePaymentRequestUrl = "${baseUrl}set_paymet_request";
+final String getTransactionsUrl = "${baseUrl}get_payment_request";
 
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;

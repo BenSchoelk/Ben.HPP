@@ -49,6 +49,8 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
 
   @override
   void dispose() {
+    _coinHistoryScrollController
+        .removeListener(hasMoreCoinHistoryScrollListener);
     _coinHistoryScrollController.dispose();
     super.dispose();
   }

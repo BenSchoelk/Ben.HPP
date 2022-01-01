@@ -400,3 +400,16 @@ String usedAudiencePolllifelineKey = "usedAudiencePolllifeline";
 String usedSkiplifelineKey = "usedSkiplifeline";
 String usedHintLifelineKey = "usedHintLifeline";
 String redeemedAmountkey = "redeemedAmount";
+String pendingKey = "pending";
+String coinsWillBeDeductedKey = "coinsWillBeDeducted";
+String selectPayoutOptionKey = "selectPayoutOption";
+String successfullyRequestedKey = "successfullyRequested";
+String trackRequestKey = "trackRequest";
+String payoutMethodKey = "payoutMethod";
+String makeRequestKey = "makeRequest";
+String requestingKey = "requesting";
+
+String completedKey = "completed";
+String wrongDetailsKey = "wrongDetails";
+String pleaseFillAllDataKey = "pleaseFillAllData";
+String changePayoutMethodKey = "changePayoutMethod";
