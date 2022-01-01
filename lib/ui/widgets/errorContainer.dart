@@ -51,8 +51,7 @@ class ErrorContainer extends StatelessWidget {
               "$errorMessage :(",
               style: TextStyle(
                   fontSize: 18.0,
-                  color:
-                      errorMessageColor ?? Theme.of(context).backgroundColor),
+                  color: errorMessageColor ?? Theme.of(context).primaryColor),
               textAlign: TextAlign.center,
             ),
           ),

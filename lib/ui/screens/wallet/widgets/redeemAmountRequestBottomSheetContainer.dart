@@ -164,7 +164,7 @@ class _RedeemAmountRequestBottomSheetContainerState
                   height: MediaQuery.of(context).size.height * (0.025),
                 ),
                 CustomRoundedButton(
-                  widthPercentage: 0.4,
+                  widthPercentage: 0.525,
                   backgroundColor: Theme.of(context).primaryColor,
                   buttonTitle: AppLocalization.of(context)!
                       .getTranslatedValues(trackRequestKey),
@@ -227,7 +227,7 @@ class _RedeemAmountRequestBottomSheetContainerState
               ),
 
               CustomRoundedButton(
-                widthPercentage: 0.4,
+                widthPercentage: 0.525,
                 backgroundColor: Theme.of(context).primaryColor,
                 buttonTitle: state is PaymentRequestInProgress
                     ? AppLocalization.of(context)!
