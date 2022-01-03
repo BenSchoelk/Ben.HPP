@@ -123,7 +123,7 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
                   Text(
                     AppLocalization.of(context)!
                             .getTranslatedValues(coinHistory.type) ??
-                        "-",
+                        coinHistory.type,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

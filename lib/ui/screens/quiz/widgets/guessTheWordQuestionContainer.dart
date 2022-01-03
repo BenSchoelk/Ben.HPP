@@ -592,7 +592,8 @@ class GuessTheWordQuestionContainerState
                   children: [
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
-                      child: _buildCurrentCoins(),
+                      child:
+                          widget.showHint ? _buildCurrentCoins() : SizedBox(),
                     ),
                     Align(
                       alignment: AlignmentDirectional.center,
