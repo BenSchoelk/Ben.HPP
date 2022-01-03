@@ -24,9 +24,11 @@ class GuessTheWordQuestionContainer extends StatefulWidget {
   final List<GuessTheWordQuestion> questions;
   final Function submitAnswer;
   final AnimationController timerAnimationController;
+  final bool showHint;
   GuessTheWordQuestionContainer(
       {Key? key,
       required this.currentQuestionIndex,
+      required this.showHint,
       required this.questions,
       required this.constraints,
       required this.submitAnswer,
@@ -393,8 +395,9 @@ class GuessTheWordQuestionContainerState
     for (var i = 0; i < answerOptions.length; i++) {
       listOfWidgets.add(_optionContainer(answerOptions[i], i));
     }
-
-    listOfWidgets.add(_buildHintButton());
+    if (widget.showHint) {
+      listOfWidgets.add(_buildHintButton());
+    }
 
     return Wrap(
       children: listOfWidgets,

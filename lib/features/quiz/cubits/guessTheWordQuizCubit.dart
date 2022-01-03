@@ -20,7 +20,8 @@ class GuessTheWordQuizFetchSuccess extends GuessTheWordQuizState {
   final List<GuessTheWordQuestion> questions;
   final int currentPoints;
 
-  GuessTheWordQuizFetchSuccess({required this.questions, required this.currentPoints});
+  GuessTheWordQuizFetchSuccess(
+      {required this.questions, required this.currentPoints});
 }
 
 class GuessTheWordQuizCubit extends Cubit<GuessTheWordQuizState> {
@@ -41,7 +42,8 @@ class GuessTheWordQuizCubit extends Cubit<GuessTheWordQuizState> {
     )
         .then(
       (questions) {
-        emit(GuessTheWordQuizFetchSuccess(questions: questions, currentPoints: 0));
+        emit(GuessTheWordQuizFetchSuccess(
+            questions: questions, currentPoints: 0));
       },
     ).catchError((e) {
       emit(GuessTheWordQuizFetchFailure(e.toString()));
@@ -51,13 +53,18 @@ class GuessTheWordQuizCubit extends Cubit<GuessTheWordQuizState> {
   void updateAnswer(String answer, int answerIndex, String questionId) {
     if (state is GuessTheWordQuizFetchSuccess) {
       var questions = (state as GuessTheWordQuizFetchSuccess).questions;
-      var questionIndex = questions.indexWhere((element) => element.id == questionId);
+      var questionIndex =
+          questions.indexWhere((element) => element.id == questionId);
       var question = questions[questionIndex];
       var updatedAnswer = question.submittedAnswer;
       updatedAnswer[answerIndex] = answer;
-      questions[questionIndex] = question.copyWith(updatedAnswer: updatedAnswer);
+      questions[questionIndex] =
+          question.copyWith(updatedAnswer: updatedAnswer);
 
-      emit(GuessTheWordQuizFetchSuccess(questions: questions, currentPoints: (state as GuessTheWordQuizFetchSuccess).currentPoints));
+      emit(GuessTheWordQuizFetchSuccess(
+          questions: questions,
+          currentPoints:
+              (state as GuessTheWordQuizFetchSuccess).currentPoints));
     }
   }
 
@@ -81,11 +88,13 @@ class GuessTheWordQuizCubit extends Cubit<GuessTheWordQuizState> {
     if (state is GuessTheWordQuizFetchSuccess) {
       var currentState = (state as GuessTheWordQuizFetchSuccess);
       var questions = currentState.questions;
-      var questionIndex = questions.indexWhere((element) => element.id == questionId);
+      var questionIndex =
+          questions.indexWhere((element) => element.id == questionId);
       var question = questions[questionIndex];
       var updatedPoints = currentState.currentPoints;
 
-      questions[questionIndex] = question.copyWith(hasAnswerGiven: true, updatedAnswer: answer);
+      questions[questionIndex] =
+          question.copyWith(hasAnswerGiven: true, updatedAnswer: answer);
 
       //check correctness of answer and update current points
       if (UiUtils.buildGuessTheWordQuestionAnswer(answer) == question.answer) {
@@ -94,7 +103,12 @@ class GuessTheWordQuizCubit extends Cubit<GuessTheWordQuizState> {
         updatedPoints = updatedPoints - guessTheWordWrongAnswerDeductPoints;
       }
 
-      emit(GuessTheWordQuizFetchSuccess(questions: questions, currentPoints: updatedPoints));
+      emit(GuessTheWordQuizFetchSuccess(
+          questions: questions, currentPoints: updatedPoints));
     }
+  }
+
+  void updateState(GuessTheWordQuizState updatedState) {
+    emit(updatedState);
   }
 }

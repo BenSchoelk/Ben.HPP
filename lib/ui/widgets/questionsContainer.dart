@@ -40,6 +40,7 @@ class QuestionsContainer extends StatefulWidget {
   final Map<String, LifelineStatus> lifeLines;
   final bool? showAnswerCorrectness;
   final AnimationController timerAnimationController;
+  final bool? showGuessTheWordHint;
 
   const QuestionsContainer({
     Key? key,
@@ -57,6 +58,7 @@ class QuestionsContainer extends StatefulWidget {
     required this.questionSlideAnimation,
     required this.questions,
     required this.lifeLines,
+    this.showGuessTheWordHint,
     this.audioQuestionContainerKeys,
     this.showAnswerCorrectness,
     required this.timerAnimationController,
@@ -218,6 +220,7 @@ class _QuestionsContainerState extends State<QuestionsContainer> {
     Widget child = LayoutBuilder(builder: (context, constraints) {
       if (widget.questions.isEmpty) {
         return GuessTheWordQuestionContainer(
+          showHint: widget.showGuessTheWordHint ?? true,
           timerAnimationController: widget.timerAnimationController,
           key: showContent
               ? widget.guessTheWordQuestionContainerKeys[

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
 
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
@@ -9,9 +10,11 @@ import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 
 import 'package:flutterquiz/ui/widgets/customListTile.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/errorContainer.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 
@@ -386,6 +389,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           builder: (context, state) {
                             return GestureDetector(
                               onTap: () {
+                                //TODO : Add audio in bottom sheet
                                 openBottomSheet(
                                   question: question.question!,
                                   yourAnswer: bookmarkCubit
@@ -591,6 +595,113 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     );
   }
 
+  Widget _buildPlayButton() {
+    if (_currentSelectedTab == 1) {
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 25.0),
+          child: BlocBuilder<BookmarkCubit, BookmarkState>(
+            builder: (context, state) {
+              if (state is BookmarkFetchSuccess && state.questions.isNotEmpty) {
+                return CustomRoundedButton(
+                  widthPercentage: 0.85,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  buttonTitle: AppLocalization.of(context)!
+                      .getTranslatedValues("playBookmarkBtn")!,
+                  radius: 5.0,
+                  showBorder: false,
+                  fontWeight: FontWeight.w500,
+                  height: 50.0,
+                  titleColor: Theme.of(context).backgroundColor,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      Routes.bookmarkQuiz,
+                      arguments: QuizTypes.quizZone,
+                    );
+                  },
+                  elevation: 6.5,
+                  textSize: 17.0,
+                );
+              }
+              return Container();
+            },
+          ),
+        ),
+      );
+    }
+    if (_currentSelectedTab == 2) {
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 25.0),
+          child:
+              BlocBuilder<GuessTheWordBookmarkCubit, GuessTheWordBookmarkState>(
+            builder: (context, state) {
+              if (state is GuessTheWordBookmarkFetchSuccess &&
+                  state.questions.isNotEmpty) {
+                return CustomRoundedButton(
+                  widthPercentage: 0.85,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  buttonTitle: AppLocalization.of(context)!
+                      .getTranslatedValues("playBookmarkBtn")!,
+                  radius: 5.0,
+                  showBorder: false,
+                  fontWeight: FontWeight.w500,
+                  height: 50.0,
+                  titleColor: Theme.of(context).backgroundColor,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      Routes.bookmarkQuiz,
+                      arguments: QuizTypes.guessTheWord,
+                    );
+                  },
+                  elevation: 6.5,
+                  textSize: 17.0,
+                );
+              }
+              return Container();
+            },
+          ),
+        ),
+      );
+    }
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 25.0),
+        child:
+            BlocBuilder<AudioQuestionBookmarkCubit, AudioQuestionBookMarkState>(
+          builder: (context, state) {
+            if (state is AudioQuestionBookmarkFetchSuccess &&
+                state.questions.isNotEmpty) {
+              return CustomRoundedButton(
+                widthPercentage: 0.85,
+                backgroundColor: Theme.of(context).primaryColor,
+                buttonTitle: AppLocalization.of(context)!
+                    .getTranslatedValues("playBookmarkBtn")!,
+                radius: 5.0,
+                showBorder: false,
+                fontWeight: FontWeight.w500,
+                height: 50.0,
+                titleColor: Theme.of(context).backgroundColor,
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    Routes.bookmarkQuiz,
+                    arguments: QuizTypes.audioQuestions,
+                  );
+                },
+                elevation: 6.5,
+                textSize: 17.0,
+              );
+            }
+            return Container();
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -605,6 +716,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     ? _buildGuessTheWordQuestions()
                     : _buildAudioQuestions(),
           ),
+          _buildPlayButton(),
           Align(
             alignment: Alignment.topCenter,
             child: _buildAppBar(),
@@ -614,42 +726,3 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     );
   }
 }
-
-
-/*
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 25.0),
-              child: BlocBuilder<BookmarkCubit, BookmarkState>(
-                builder: (context, state) {
-                  if (state is BookmarkFetchSuccess &&
-                      state.questions.isNotEmpty) {
-                    return CustomRoundedButton(
-                      widthPercentage: 0.85,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      buttonTitle: AppLocalization.of(context)!
-                          .getTranslatedValues("playBookmarkBtn")!,
-                      radius: 5.0,
-                      showBorder: false,
-                      fontWeight: FontWeight.w500,
-                      height: 50.0,
-                      titleColor: Theme.of(context).backgroundColor,
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          Routes.bookmarkQuiz,
-                        );
-                      },
-                      elevation: 6.5,
-                      textSize: 17.0,
-                    );
-                  }
-                  return Container();
-                },
-              ),
-            ),
-          );
-
-
- */
