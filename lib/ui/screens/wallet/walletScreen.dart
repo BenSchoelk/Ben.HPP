@@ -523,7 +523,7 @@ class _WalletScreenState extends State<WalletScreen> {
           child: Row(
             children: [
               Container(
-                width: boxConstraints.maxWidth * (0.65),
+                width: boxConstraints.maxWidth * (0.66),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -556,7 +556,9 @@ class _WalletScreenState extends State<WalletScreen> {
                           width: MediaQuery.of(context).size.width * (0.0175),
                         ),
                         Text(
-                          paymentRequest.date,
+                          paymentRequest.date.length < 11
+                              ? paymentRequest.date
+                              : paymentRequest.date.substring(0, 11),
                           style: TextStyle(
                               fontSize: 12.0,
                               color: Theme.of(context)
@@ -570,7 +572,7 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
               Spacer(),
               Container(
-                width: boxConstraints.maxWidth * 0.29,
+                width: boxConstraints.maxWidth * 0.28,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -389,7 +389,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           builder: (context, state) {
                             return GestureDetector(
                               onTap: () {
-                                //TODO : Add audio in bottom sheet
                                 openBottomSheet(
                                   question: question.question!,
                                   yourAnswer: bookmarkCubit
