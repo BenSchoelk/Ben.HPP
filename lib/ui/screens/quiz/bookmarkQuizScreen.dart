@@ -340,7 +340,6 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
                                 topPadding: 30.0,
                                 showAnswerCorrectness: true,
                                 lifeLines: {},
-                                bookmarkButton: Container(),
                                 hasSubmittedAnswerForCurrentQuestion:
                                     hasSubmittedAnswerForCurrentQuestion,
                                 questions: questions,

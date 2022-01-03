@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
@@ -274,12 +275,19 @@ class UiUtils {
 
   static void fetchBookmarkAndBadges(
       {required BuildContext context, required String userId}) {
-    //fetch bookmark
+    //fetch bookmark quiz zone
     if (context.read<BookmarkCubit>().state is! BookmarkFetchSuccess) {
       print("Fetch bookmark details");
       context.read<BookmarkCubit>().getBookmark(userId);
       //delete any unused gruop battle room which is created by this user
       BattleRoomRepository().deleteUnusedBattleRoom(userId);
+    }
+
+    //fetch guess the word bookmark
+    if (context.read<GuessTheWordBookmarkCubit>().state
+        is! GuessTheWordBookmarkFetchSuccess) {
+      print("Fetch guess the word bookmark details");
+      context.read<GuessTheWordBookmarkCubit>().getBookmark(userId);
     }
 
     if (context.read<BadgesCubit>().state is! BadgesFetchSuccess) {

@@ -10,14 +10,20 @@ import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 class BookmarkRemoteDataSource {
-  Future<List<dynamic>> getBookmark(String? userId) async {
+  Future<List<dynamic>> getBookmark(String userId, String type) async {
     try {
+      //type is 1 - Quiz zone 3- Guess the word 4 - Audio question
       //body of post request
-      final body = {accessValueKey: accessValue, userIdKey: userId};
+      final body = {
+        accessValueKey: accessValue,
+        userIdKey: userId,
+        typeKey: type
+      };
 
-      final response = await http.post(Uri.parse(getBookmarkUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getBookmarkUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
-
+      print("Response of bookmark : $responseJson");
       if (responseJson['error']) {
         throw BookmarkException(errorMessageCode: responseJson['message']);
       }
@@ -31,12 +37,19 @@ class BookmarkRemoteDataSource {
     }
   }
 
-  Future<dynamic> updateBookmark(String userId, String questionId, String status) async {
+  Future<dynamic> updateBookmark(
+      String userId, String questionId, String status, String type) async {
     try {
-      print(questionId);
       //body of post request
-      final body = {accessValueKey: accessValue, userIdKey: userId, statusKey: status, questionIdKey: questionId};
-      final response = await http.post(Uri.parse(updateBookmarkUrl), body: body, headers: ApiUtils.getHeaders());
+      final body = {
+        accessValueKey: accessValue,
+        userIdKey: userId,
+        statusKey: status,
+        questionIdKey: questionId,
+        typeKey: type, //1 - Quiz zone 3 - Guess the word 4 - Audio quesitons
+      };
+      final response = await http.post(Uri.parse(updateBookmarkUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {

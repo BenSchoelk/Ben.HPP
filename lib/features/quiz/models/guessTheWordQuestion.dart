@@ -59,7 +59,32 @@ class GuessTheWordQuestion {
     hasAnswered = false;
   }
 
-  GuessTheWordQuestion copyWith({List<String>? updatedAnswer, bool? hasAnswerGiven}) {
+  GuessTheWordQuestion.fromBookmarkJson(Map<String, dynamic> json) {
+    List<String> submittedAns = [];
+    List<String> initialOptions = [];
+    String correctAnswer = json['answer'].toString().split(" ").join();
+    correctAnswer = correctAnswer.toUpperCase();
+    for (int i = 0; i < correctAnswer.length; i++) {
+      submittedAns.add("");
+      initialOptions.add(correctAnswer.substring(i, i + 1));
+    }
+    initialOptions.shuffle();
+    initialOptions.add("!");
+
+    id = json['question_id'];
+    languageId = json['language_id'];
+    image = json['image'];
+    question = json['question'];
+    subcategory = json['subcategory'];
+    category = json['category'];
+    answer = correctAnswer;
+    submittedAnswer = submittedAns;
+    options = initialOptions;
+    hasAnswered = false;
+  }
+
+  GuessTheWordQuestion copyWith(
+      {List<String>? updatedAnswer, bool? hasAnswerGiven}) {
     return GuessTheWordQuestion(
       category: this.category,
       subcategory: this.subcategory,

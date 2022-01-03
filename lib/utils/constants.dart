@@ -19,6 +19,7 @@ final String initialSelectedCountryCode = 'IN';
 final String authBox = "auth";
 final String settingsBox = "settings";
 final String bookmarkBox = "bookmark";
+final String guessTheWordBookmarkBox = "guessTheWordBookmarkBox";
 final String userdetailsBox = "userdetails";
 final String examBox = "exam";
 

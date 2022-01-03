@@ -6,11 +6,13 @@ import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BookmarkButton extends StatelessWidget {
   final Question question;
+  final QuizTypes quizType;
   final Color? bookmarkButtonColor;
   final Color? bookmarkFillColor;
 
@@ -18,8 +20,19 @@ class BookmarkButton extends StatelessWidget {
       {Key? key,
       required this.question,
       this.bookmarkFillColor,
+      required this.quizType,
       this.bookmarkButtonColor})
       : super(key: key);
+
+  String _getBookmarkType() {
+    if (quizType == QuizTypes.quizZone) {
+      return "1";
+    }
+    if (quizType == QuizTypes.guessTheWord) {
+      return "3";
+    }
+    return "4";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +76,16 @@ class BookmarkButton extends StatelessWidget {
                   updateBookmarkcubit.updateBookmark(
                       context.read<UserDetailsCubit>().getUserId(),
                       question.id!,
-                      "0");
+                      "0",
+                      _getBookmarkType());
                 } else {
                   //add
                   bookmarkCubit.addBookmarkQuestion(question);
                   updateBookmarkcubit.updateBookmark(
                       context.read<UserDetailsCubit>().getUserId(),
                       question.id!,
-                      "1");
+                      "1",
+                      _getBookmarkType());
                 }
               },
               child: Container(

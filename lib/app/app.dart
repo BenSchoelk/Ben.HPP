@@ -17,6 +17,7 @@ import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/exam/examRepository.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
@@ -99,8 +100,12 @@ class MyApp extends StatelessWidget {
             create: (_) => AppLocalizationCubit(SettingsLocalDataSource())),
         BlocProvider<UserDetailsCubit>(
             create: (_) => UserDetailsCubit(ProfileManagementRepository())),
+        //bookmark quesitons of quiz zone
         BlocProvider<BookmarkCubit>(
             create: (_) => BookmarkCubit(BookmarkRepository())),
+        //bookmark quesitons of guess the word
+        BlocProvider<GuessTheWordBookmarkCubit>(
+            create: (_) => GuessTheWordBookmarkCubit(BookmarkRepository())),
         //it will be use in multiple dialogs and screen
         BlocProvider<MultiUserBattleRoomCubit>(
             create: (_) => MultiUserBattleRoomCubit(BattleRoomRepository())),

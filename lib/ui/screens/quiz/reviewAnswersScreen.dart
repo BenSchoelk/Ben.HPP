@@ -14,7 +14,6 @@ import 'package:flutterquiz/features/reportQuestion/reportQuestionRepository.dar
 import 'package:flutterquiz/ui/screens/quiz/widgets/musicPlayerContainer.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/questionContainer.dart';
 
-import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
@@ -25,7 +24,9 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 class ReviewAnswersScreen extends StatefulWidget {
   final List<Question> questions;
   final List<GuessTheWordQuestion> guessTheWordQuestions;
-  ReviewAnswersScreen({Key? key, required this.questions, required this.guessTheWordQuestions}) : super(key: key);
+  ReviewAnswersScreen(
+      {Key? key, required this.questions, required this.guessTheWordQuestions})
+      : super(key: key);
 
   static Route<dynamic> route(RouteSettings routeSettings) {
     final arguments = routeSettings.arguments as Map?;
@@ -35,12 +36,16 @@ class ReviewAnswersScreen extends StatefulWidget {
         builder: (_) => MultiBlocProvider(
                 providers: [
                   BlocProvider<UpdateBookmarkCubit>(
-                    create: (context) => UpdateBookmarkCubit(BookmarkRepository()),
+                    create: (context) =>
+                        UpdateBookmarkCubit(BookmarkRepository()),
                   ),
-                  BlocProvider<ReportQuestionCubit>(create: (_) => ReportQuestionCubit(ReportQuestionRepository())),
+                  BlocProvider<ReportQuestionCubit>(
+                      create: (_) =>
+                          ReportQuestionCubit(ReportQuestionRepository())),
                 ],
                 child: ReviewAnswersScreen(
-                  guessTheWordQuestions: arguments!['guessTheWordQuestions'] ?? List<GuessTheWordQuestion>.from([]),
+                  guessTheWordQuestions: arguments!['guessTheWordQuestions'] ??
+                      List<GuessTheWordQuestion>.from([]),
                   questions: arguments['questions'] ?? List<Question>.from([]),
                 )));
   }
@@ -75,14 +80,19 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
 
   void showNotes() {
     if (widget.questions[_currentIndex].note!.isEmpty) {
-      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(notesNotAvailableCode))!, context, false);
+      UiUtils.setSnackbar(
+          AppLocalization.of(context)!.getTranslatedValues(
+              convertErrorCodeToLanguageKey(notesNotAvailableCode))!,
+          context,
+          false);
       return;
     }
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (context) => Container(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.6)),
+          constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * (0.6)),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -91,17 +101,24 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
                 ),
                 Text(
                   AppLocalization.of(context)!.getTranslatedValues("notesLbl")!,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Theme.of(context).primaryColor),
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).primaryColor),
                 ),
                 SizedBox(
                   height: 10.0,
                 ),
                 Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * (0.1)),
                   child: Text(
                     "${widget.questions[_currentIndex].question}",
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
                 SizedBox(
@@ -110,10 +127,12 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
                 Divider(),
                 Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * (0.1)),
                   child: Text(
                     "${widget.questions[_currentIndex].note}",
-                    style: TextStyle(fontSize: 17.0, color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                        fontSize: 17.0, color: Theme.of(context).primaryColor),
                   ),
                 ),
                 SizedBox(
@@ -202,14 +221,18 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(horizontal: 5.0),
-      decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 5.0)], color: Theme.of(context).backgroundColor),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 5.0)
+      ], color: Theme.of(context).backgroundColor),
       height: MediaQuery.of(context).size.height * UiUtils.bottomMenuPercentage,
       child: Row(
         children: [
           IconButton(
               onPressed: () {
                 if (_currentIndex != 0) {
-                  _pageController!.animateToPage(_currentIndex - 1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                  _pageController!.animateToPage(_currentIndex - 1,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut);
                 }
               },
               icon: Icon(
@@ -219,13 +242,16 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           Spacer(),
           Text(
             "${_currentIndex + 1}/${getQuestionsLength()}",
-            style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18.0),
+            style: TextStyle(
+                color: Theme.of(context).primaryColor, fontSize: 18.0),
           ),
           Spacer(),
           IconButton(
               onPressed: () {
                 if (_currentIndex != (getQuestionsLength() - 1)) {
-                  _pageController!.animateToPage(_currentIndex + 1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                  _pageController!.animateToPage(_currentIndex + 1,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut);
                 }
               },
               icon: Icon(
@@ -262,9 +288,11 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
     );
   }
 
-  Widget _buildGuessTheWordOptionAndAnswer(GuessTheWordQuestion guessTheWordQuestion) {
+  Widget _buildGuessTheWordOptionAndAnswer(
+      GuessTheWordQuestion guessTheWordQuestion) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.1)),
+      margin: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * (0.1)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -274,17 +302,31 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 0.0),
             child: Text(
-              AppLocalization.of(context)!.getTranslatedValues("yourAnsLbl")! + " : " + "${UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer)}",
-              style: TextStyle(fontSize: 18.0, color: UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer) == guessTheWordQuestion.answer ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
+              AppLocalization.of(context)!.getTranslatedValues("yourAnsLbl")! +
+                  " : " +
+                  "${UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer)}",
+              style: TextStyle(
+                  fontSize: 18.0,
+                  color: UiUtils.buildGuessTheWordQuestionAnswer(
+                              guessTheWordQuestion.submittedAnswer) ==
+                          guessTheWordQuestion.answer
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).colorScheme.secondary),
             ),
           ),
-          UiUtils.buildGuessTheWordQuestionAnswer(guessTheWordQuestion.submittedAnswer) == guessTheWordQuestion.answer
+          UiUtils.buildGuessTheWordQuestionAnswer(
+                      guessTheWordQuestion.submittedAnswer) ==
+                  guessTheWordQuestion.answer
               ? SizedBox()
               : Padding(
                   padding: const EdgeInsetsDirectional.only(start: 0.0),
                   child: Text(
-                    AppLocalization.of(context)!.getTranslatedValues("correctAndLbl")! + ":" + " ${guessTheWordQuestion.answer}",
-                    style: TextStyle(fontSize: 18.0, color: Theme.of(context).primaryColor),
+                    AppLocalization.of(context)!
+                            .getTranslatedValues("correctAndLbl")! +
+                        ":" +
+                        " ${guessTheWordQuestion.answer}",
+                    style: TextStyle(
+                        fontSize: 18.0, color: Theme.of(context).primaryColor),
                   ),
                 )
         ],
@@ -301,7 +343,12 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalization.of(context)!.getTranslatedValues(notesKey)!, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18.0)),
+                Text(
+                    AppLocalization.of(context)!.getTranslatedValues(notesKey)!,
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0)),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -316,7 +363,11 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
 
   Widget _buildQuestionAndOptions(Question question, int index) {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 35.0, bottom: MediaQuery.of(context).size.height * UiUtils.bottomMenuPercentage + 25),
+      padding: EdgeInsets.only(
+          top: 35.0,
+          bottom: MediaQuery.of(context).size.height *
+                  UiUtils.bottomMenuPercentage +
+              25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -345,7 +396,11 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
 
   Widget _buildGuessTheWordQuestionAndOptions(GuessTheWordQuestion question) {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 35.0, bottom: MediaQuery.of(context).size.height * UiUtils.bottomMenuPercentage + 25),
+      padding: EdgeInsets.only(
+          top: 35.0,
+          bottom: MediaQuery.of(context).size.height *
+                  UiUtils.bottomMenuPercentage +
+              25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -384,7 +439,8 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
           itemCount: getQuestionsLength(),
           itemBuilder: (context, index) {
             if (widget.questions.isEmpty) {
-              return _buildGuessTheWordQuestionAndOptions(widget.guessTheWordQuestions[index]);
+              return _buildGuessTheWordQuestionAndOptions(
+                  widget.guessTheWordQuestions[index]);
             }
             return _buildQuestionAndOptions(widget.questions[index], index);
           }),
@@ -406,7 +462,11 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
                 enableDrag: false,
                 isScrollControlled: true,
                 context: context,
-                builder: (_) => ReportQuestionBottomSheetContainer(questionId: isGuessTheWordQuizModule() ? widget.guessTheWordQuestions[_currentIndex].id : widget.questions[_currentIndex].id!, reportQuestionCubit: reportQuestionCubit));
+                builder: (_) => ReportQuestionBottomSheetContainer(
+                    questionId: isGuessTheWordQuizModule()
+                        ? widget.guessTheWordQuestions[_currentIndex].id
+                        : widget.questions[_currentIndex].id!,
+                    reportQuestionCubit: reportQuestionCubit));
           },
           icon: Icon(
             Icons.report_problem,
@@ -419,7 +479,8 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
     return Align(
       alignment: Alignment.topCenter,
       child: RoundedAppbar(
-        title: AppLocalization.of(context)!.getTranslatedValues("reviewAnswerLbl")!,
+        title: AppLocalization.of(context)!
+            .getTranslatedValues("reviewAnswerLbl")!,
         trailingWidget: widget.questions.isEmpty
             ? _buildReportButton(context.read<ReportQuestionCubit>())
             : widget.questions.first.audio!.isNotEmpty
@@ -428,14 +489,14 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Transform.translate(
-                        offset: Offset(5.0, 10.0),
-                        child: BookmarkButton(
-                          bookmarkButtonColor: Theme.of(context).primaryColor,
-                          bookmarkFillColor: Theme.of(context).primaryColor,
-                          question: widget.questions[_currentIndex],
-                        ),
-                      ),
+                      // Transform.translate(
+                      //   offset: Offset(5.0, 10.0),
+                      //   child: BookmarkButton(
+                      //     bookmarkButtonColor: Theme.of(context).primaryColor,
+                      //     bookmarkFillColor: Theme.of(context).primaryColor,
+                      //     question: widget.questions[_currentIndex],
+                      //   ),
+                      // ),
                       _buildReportButton(context.read<ReportQuestionCubit>()),
                     ],
                   ),
@@ -454,7 +515,8 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage,
+                top: MediaQuery.of(context).size.height *
+                    UiUtils.appBarHeightPercentage,
               ),
               child: _buildQuestions(),
             ),
@@ -472,19 +534,24 @@ class _ReviewAnswersScreenState extends State<ReviewAnswersScreen> {
 class ReportQuestionBottomSheetContainer extends StatefulWidget {
   final ReportQuestionCubit reportQuestionCubit;
   final String questionId;
-  ReportQuestionBottomSheetContainer({Key? key, required this.reportQuestionCubit, required this.questionId}) : super(key: key);
+  ReportQuestionBottomSheetContainer(
+      {Key? key, required this.reportQuestionCubit, required this.questionId})
+      : super(key: key);
 
   @override
-  _ReportQuestionBottomSheetContainerState createState() => _ReportQuestionBottomSheetContainerState();
+  _ReportQuestionBottomSheetContainerState createState() =>
+      _ReportQuestionBottomSheetContainerState();
 }
 
-class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBottomSheetContainer> {
+class _ReportQuestionBottomSheetContainerState
+    extends State<ReportQuestionBottomSheetContainer> {
   final TextEditingController textEditingController = TextEditingController();
   late String errorMessage = "";
 
   String _buildButtonTitle(ReportQuestionState state) {
     if (state is ReportQuestionInProgress) {
-      return AppLocalization.of(context)!.getTranslatedValues(submittingButton)!;
+      return AppLocalization.of(context)!
+          .getTranslatedValues(submittingButton)!;
     }
     if (state is ReportQuestionFailure) {
       return AppLocalization.of(context)!.getTranslatedValues(retryLbl)!;
@@ -502,7 +569,8 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
         }
         if (state is ReportQuestionFailure) {
           setState(() {
-            errorMessage = AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessageCode))!;
+            errorMessage = AppLocalization.of(context)!.getTranslatedValues(
+                convertErrorCodeToLanguageKey(state.errorMessageCode))!;
           });
         }
       },
@@ -519,7 +587,10 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                 topLeft: Radius.circular(20.0),
                 topRight: Radius.circular(20.0),
               ),
-              gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+              gradient: UiUtils.buildLinerGradient([
+                Theme.of(context).scaffoldBackgroundColor,
+                Theme.of(context).canvasColor
+              ], Alignment.topCenter, Alignment.bottomCenter)),
           child: Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Column(
@@ -532,7 +603,8 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                       margin: EdgeInsets.all(10.0),
                       child: IconButton(
                           onPressed: () {
-                            if (widget.reportQuestionCubit.state is! ReportQuestionInProgress) {
+                            if (widget.reportQuestionCubit.state
+                                is! ReportQuestionInProgress) {
                               Navigator.of(context).pop();
                             }
                           },
@@ -549,8 +621,12 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                   padding: EdgeInsets.symmetric(horizontal: 5.0),
                   alignment: Alignment.center,
                   child: Text(
-                    AppLocalization.of(context)!.getTranslatedValues(reportQuestionKey)!,
-                    style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                    AppLocalization.of(context)!
+                        .getTranslatedValues(reportQuestionKey)!,
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
@@ -575,7 +651,8 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                     ),
                     controller: textEditingController,
                     decoration: InputDecoration(
-                      hintText: AppLocalization.of(context)!.getTranslatedValues(enterReasonKey)!,
+                      hintText: AppLocalization.of(context)!
+                          .getTranslatedValues(enterReasonKey)!,
                       hintStyle: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -624,7 +701,12 @@ class _ReportQuestionBottomSheetContainerState extends State<ReportQuestionBotto
                         showBorder: false,
                         onTap: () {
                           if (state is! ReportQuestionInProgress) {
-                            widget.reportQuestionCubit.reportQuestion(message: textEditingController.text.trim(), questionId: widget.questionId, userId: context.read<UserDetailsCubit>().getUserId());
+                            widget.reportQuestionCubit.reportQuestion(
+                                message: textEditingController.text.trim(),
+                                questionId: widget.questionId,
+                                userId: context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId());
                           }
                         },
                         fontWeight: FontWeight.bold,

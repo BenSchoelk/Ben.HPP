@@ -24,7 +24,7 @@ import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/waitForOthersContainer.dart';
-import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
+
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
@@ -744,19 +744,6 @@ class _MultiUserBattleRoomQuizScreenState
     );
   }
 
-  Widget _buildBookmarkButton(MultiUserBattleRoomCubit battleRoomCubit) {
-    return BlocBuilder<MultiUserBattleRoomCubit, MultiUserBattleRoomState>(
-      bloc: battleRoomCubit,
-      builder: (context, state) {
-        if (state is MultiUserBattleRoomSuccess)
-          return BookmarkButton(
-            question: state.questions[currentQuestionIndex],
-          );
-        return Container();
-      },
-    );
-  }
-
   Widget _buildMessageBoxContainer() {
     return Align(
       alignment: Alignment.topCenter,
@@ -982,8 +969,6 @@ class _MultiUserBattleRoomQuizScreenState
                               quizType: QuizTypes.groupPlay,
                               showAnswerCorrectness: true,
                               lifeLines: {},
-                              bookmarkButton:
-                                  _buildBookmarkButton(battleRoomCubit),
                               guessTheWordQuestionContainerKeys: [],
                               key: Key("questions"),
                               guessTheWordQuestions: [],

@@ -23,7 +23,7 @@ import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
-import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
+
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
@@ -939,19 +939,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
         : Container();
   }
 
-  Widget _buildBookmarkButton(BattleRoomCubit battleRoomCubit) {
-    return BlocBuilder<BattleRoomCubit, BattleRoomState>(
-      bloc: battleRoomCubit,
-      builder: (context, state) {
-        if (state is BattleRoomUserFound)
-          return BookmarkButton(
-            question: state.questions[currentQuestionIndex],
-          );
-        return SizedBox();
-      },
-    );
-  }
-
   Widget _buildMessageButton() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -1152,7 +1139,6 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                   quizType: QuizTypes.battle,
                   showAnswerCorrectness: true,
                   lifeLines: {},
-                  bookmarkButton: _buildBookmarkButton(battleRoomCubit),
                   guessTheWordQuestionContainerKeys: [],
                   guessTheWordQuestions: [],
                   hasSubmittedAnswerForCurrentQuestion:

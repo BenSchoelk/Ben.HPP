@@ -47,7 +47,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                       Navigator.of(context).pushNamed(Routes.wallet);
                     },
                     title: walletKey,
-                    leadingIcon: "coin_store.svg",
+                    leadingIcon: "wallet.svg",
                   )
                 : SizedBox(),
 
@@ -58,7 +58,7 @@ class MenuBottomSheetContainer extends StatelessWidget {
                 Navigator.of(context).pushNamed(Routes.coinHistory);
               },
               title: coinHistoryKey,
-              leadingIcon: "coin_store.svg",
+              leadingIcon: "coinhistory.svg",
             ),
 
             MenuTile(

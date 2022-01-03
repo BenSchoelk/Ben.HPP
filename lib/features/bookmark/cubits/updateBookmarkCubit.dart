@@ -21,10 +21,12 @@ class UpdateBookmarkCubit extends Cubit<UpdateBookmarkState> {
   final BookmarkRepository _bookmarkRepository;
   UpdateBookmarkCubit(this._bookmarkRepository) : super(UpdateBookmarkIntial());
 
-  void updateBookmark(String userId, String questionId, String status) async {
+  void updateBookmark(
+      String userId, String questionId, String status, String type) async {
     emit(UpdateBookmarkInProgress());
     try {
-      await _bookmarkRepository.updateBookmark(userId, questionId, status);
+      await _bookmarkRepository.updateBookmark(
+          userId, questionId, status, type);
       emit(UpdateBookmarkSuccess());
     } catch (e) {
       print(e.toString());

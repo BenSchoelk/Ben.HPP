@@ -36,7 +36,6 @@ class QuestionsContainer extends StatefulWidget {
   final List<Question> questions;
   final List<GuessTheWordQuestion> guessTheWordQuestions;
   final double? topPadding;
-  final Widget bookmarkButton;
   final String? level;
   final Map<String, LifelineStatus> lifeLines;
   final bool? showAnswerCorrectness;
@@ -57,7 +56,6 @@ class QuestionsContainer extends StatefulWidget {
     required this.questionScaleUpAnimation,
     required this.questionSlideAnimation,
     required this.questions,
-    required this.bookmarkButton,
     required this.lifeLines,
     this.audioQuestionContainerKeys,
     this.showAnswerCorrectness,

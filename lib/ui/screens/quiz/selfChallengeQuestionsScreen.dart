@@ -14,7 +14,6 @@ import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 
-import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -482,18 +481,19 @@ class _SelfChallengeQuestionsScreenState
     );
   }
 
-  Widget _buildBookmarkButton(QuestionsCubit questionsCubit) {
-    return BlocBuilder<QuestionsCubit, QuestionsState>(
-      bloc: questionsCubit,
-      builder: (context, state) {
-        if (state is QuestionsFetchSuccess)
-          return BookmarkButton(
-            question: state.questions[currentQuestionIndex],
-          );
-        return SizedBox();
-      },
-    );
-  }
+  // Widget _buildBookmarkButton(QuestionsCubit questionsCubit) {
+  //   return BlocBuilder<QuestionsCubit, QuestionsState>(
+  //     bloc: questionsCubit,
+  //     builder: (context, state) {
+  //       if (state is QuestionsFetchSuccess)
+  //         return BookmarkButton(
+  //           quizType: QuizTypes.quizZone, //Since quesitons coming from quizzone
+  //           question: state.questions[currentQuestionIndex],
+  //         );
+  //       return SizedBox();
+  //     },
+  //   );
+  // }
 
   Widget backButton() {
     return Align(
@@ -565,7 +565,6 @@ class _SelfChallengeQuestionsScreenState
                         quizType: QuizTypes.selfChallenge,
                         showAnswerCorrectness: false,
                         lifeLines: {},
-                        bookmarkButton: _buildBookmarkButton(quesCubit),
                         topPadding: 30.0,
                         hasSubmittedAnswerForCurrentQuestion:
                             hasSubmittedAnswerForCurrentQuestion,

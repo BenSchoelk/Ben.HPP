@@ -18,7 +18,6 @@ import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/audioQuestionContainer.dart';
 
-import 'package:flutterquiz/ui/widgets/bookmarkButton.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -423,10 +422,102 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return BlocBuilder<QuestionsCubit, QuestionsState>(
       bloc: questionsCubit,
       builder: (context, state) {
-        if (state is QuestionsFetchSuccess)
-          return BookmarkButton(
-            question: state.questions[currentQuestionIndex],
+        if (state is QuestionsFetchSuccess) {
+          //
+
+          final bookmarkCubit = context.read<BookmarkCubit>();
+          final updateBookmarkcubit = context.read<UpdateBookmarkCubit>();
+          return BlocListener<UpdateBookmarkCubit, UpdateBookmarkState>(
+            bloc: updateBookmarkcubit,
+            listener: (context, state) {
+              //if failed to update bookmark status
+              if (state is UpdateBookmarkFailure) {
+                //remove bookmark question
+                if (state.failedStatus == "0") {
+                  //if unable to remove question from bookmark then add question
+                  //add again
+                  bookmarkCubit.addBookmarkQuestion(
+                      questionsCubit.questions()[currentQuestionIndex]);
+                } else {
+                  //remove again
+                  //if unable to add question to bookmark then remove question
+                  bookmarkCubit.removeBookmarkQuestion(
+                      questionsCubit.questions()[currentQuestionIndex].id);
+                }
+                UiUtils.setSnackbar(
+                    AppLocalization.of(context)!.getTranslatedValues(
+                        convertErrorCodeToLanguageKey(
+                            updateBookmarkFailureCode))!,
+                    context,
+                    false);
+              }
+              if (state is UpdateBookmarkSuccess) {
+                print("Success");
+              }
+            },
+            child: BlocBuilder<BookmarkCubit, BookmarkState>(
+              bloc: bookmarkCubit,
+              builder: (context, state) {
+                if (state is BookmarkFetchSuccess) {
+                  return InkWell(
+                    onTap: () {
+                      if (bookmarkCubit.hasQuestionBookmarked(questionsCubit
+                          .questions()[currentQuestionIndex]
+                          .id)) {
+                        //remove
+                        bookmarkCubit.removeBookmarkQuestion(questionsCubit
+                            .questions()[currentQuestionIndex]
+                            .id);
+                        updateBookmarkcubit.updateBookmark(
+                            context.read<UserDetailsCubit>().getUserId(),
+                            questionsCubit
+                                .questions()[currentQuestionIndex]
+                                .id!,
+                            "0",
+                            "1");
+                      } else {
+                        //add
+                        bookmarkCubit.addBookmarkQuestion(
+                            questionsCubit.questions()[currentQuestionIndex]);
+                        updateBookmarkcubit.updateBookmark(
+                            context.read<UserDetailsCubit>().getUserId(),
+                            questionsCubit
+                                .questions()[currentQuestionIndex]
+                                .id!,
+                            "1",
+                            "1");
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent),
+                      ),
+                      child: bookmarkCubit.hasQuestionBookmarked(questionsCubit
+                              .questions()[currentQuestionIndex]
+                              .id)
+                          ? Icon(
+                              CupertinoIcons.bookmark_fill,
+                              color: Theme.of(context).backgroundColor,
+                              size: 20,
+                            )
+                          : Icon(
+                              CupertinoIcons.bookmark,
+                              color: Theme.of(context).backgroundColor,
+                              size: 20,
+                            ),
+                    ),
+                  );
+                }
+                if (state is BookmarkFetchFailure) {
+                  return SizedBox();
+                }
+
+                return SizedBox();
+              },
+            ),
           );
+        }
         return SizedBox();
       },
     );
@@ -780,7 +871,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       showAnswerCorrectness: true,
                       lifeLines: getLifeLines(),
                       timerAnimationController: timerAnimationController,
-                      bookmarkButton: _buildBookmarkButton(quesCubit),
                       topPadding: 32.5,
                       hasSubmittedAnswerForCurrentQuestion:
                           hasSubmittedAnswerForCurrentQuestion,

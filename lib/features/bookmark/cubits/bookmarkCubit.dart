@@ -28,14 +28,17 @@ class BookmarkCubit extends Cubit<BookmarkState> {
   final BookmarkRepository _bookmarkRepository;
   BookmarkCubit(this._bookmarkRepository) : super(BookmarkInitial());
 
-  void getBookmark(String? userId) async {
+  void getBookmark(String userId) async {
     emit(BookmarkFetchInProgress());
 
     try {
-      List<Question> questions = await _bookmarkRepository.getBookmark(userId);
-      print(questions.length);
+      List<Question> questions = await _bookmarkRepository.getBookmark(
+          userId, "1") as List<Question>; //type 1 is for quiz zone
+
       //coming from local database (hive)
-      List<String> submittedAnswerIds = await _bookmarkRepository.getSubmittedAnswerOfBookmarkedQuestions(questions);
+      List<String> submittedAnswerIds =
+          await _bookmarkRepository.getSubmittedAnswerOfBookmarkedQuestions(
+              questions.map((e) => e.id!).toList());
 
       emit(BookmarkFetchSuccess(questions, submittedAnswerIds));
     } catch (e) {
@@ -53,14 +56,18 @@ class BookmarkCubit extends Cubit<BookmarkState> {
   }
 
   void addBookmarkQuestion(Question question) {
-    print("Added question id ${question.id} and answer id is ${question.submittedAnswerId}");
+    print(
+        "Added question id ${question.id} and answer id is ${question.submittedAnswerId}");
     if (state is BookmarkFetchSuccess) {
       final currentState = (state as BookmarkFetchSuccess);
       //set submitted answer for given index initially submitted answer will be empty
-      _bookmarkRepository.setAnswerForBookmarkedQuestion(question.id!, question.submittedAnswerId);
+      _bookmarkRepository.setAnswerForBookmarkedQuestion(
+          question.id!, question.submittedAnswerId);
       emit(BookmarkFetchSuccess(
-        List.from(currentState.questions)..insert(0, question.updateQuestionWithAnswer(submittedAnswerId: "")),
-        List.from(currentState.submittedAnswerIds)..insert(0, question.submittedAnswerId),
+        List.from(currentState.questions)
+          ..insert(0, question.updateQuestionWithAnswer(submittedAnswerId: "")),
+        List.from(currentState.submittedAnswerIds)
+          ..insert(0, question.submittedAnswerId),
       ));
     }
   }
@@ -71,9 +78,13 @@ class BookmarkCubit extends Cubit<BookmarkState> {
     if (state is BookmarkFetchSuccess) {
       final currentState = (state as BookmarkFetchSuccess);
       print("Submitted AnswerId : ${question.submittedAnswerId}");
-      _bookmarkRepository.setAnswerForBookmarkedQuestion(question.id!, question.submittedAnswerId);
-      List<String> updatedSubmittedAnswerIds = List.from(currentState.submittedAnswerIds);
-      updatedSubmittedAnswerIds[currentState.questions.indexWhere((element) => element.id == question.id)] = question.submittedAnswerId;
+      _bookmarkRepository.setAnswerForBookmarkedQuestion(
+          question.id!, question.submittedAnswerId);
+      List<String> updatedSubmittedAnswerIds =
+          List.from(currentState.submittedAnswerIds);
+      updatedSubmittedAnswerIds[currentState.questions
+              .indexWhere((element) => element.id == question.id)] =
+          question.submittedAnswerId;
       emit(BookmarkFetchSuccess(
         List.from(currentState.questions),
         updatedSubmittedAnswerIds,
@@ -86,9 +97,11 @@ class BookmarkCubit extends Cubit<BookmarkState> {
     if (state is BookmarkFetchSuccess) {
       final currentState = (state as BookmarkFetchSuccess);
       List<Question> updatedQuestions = List.from(currentState.questions);
-      List<String> submittedAnswerIds = List.from(currentState.submittedAnswerIds);
+      List<String> submittedAnswerIds =
+          List.from(currentState.submittedAnswerIds);
 
-      int index = updatedQuestions.indexWhere((element) => element.id == questionId);
+      int index =
+          updatedQuestions.indexWhere((element) => element.id == questionId);
       updatedQuestions.removeAt(index);
       submittedAnswerIds.removeAt(index);
       _bookmarkRepository.removeBookmarkedAnswer(questionId);
@@ -111,14 +124,18 @@ class BookmarkCubit extends Cubit<BookmarkState> {
     if (state is BookmarkFetchSuccess) {
       final currentState = (state as BookmarkFetchSuccess);
       //current question
-      int index = currentState.questions.indexWhere((element) => element.id == questionId);
-      if (currentState.submittedAnswerIds[index].isEmpty || currentState.submittedAnswerIds[index] == "-1" || currentState.submittedAnswerIds[index] == "0") {
+      int index = currentState.questions
+          .indexWhere((element) => element.id == questionId);
+      if (currentState.submittedAnswerIds[index].isEmpty ||
+          currentState.submittedAnswerIds[index] == "-1" ||
+          currentState.submittedAnswerIds[index] == "0") {
         return "Un-attempted";
       }
 
       Question question = currentState.questions[index];
 
-      int submittedAnswerOptionIndex = question.answerOptions!.indexWhere((element) => element.id == currentState.submittedAnswerIds[index]);
+      int submittedAnswerOptionIndex = question.answerOptions!.indexWhere(
+          (element) => element.id == currentState.submittedAnswerIds[index]);
 
       return question.answerOptions![submittedAnswerOptionIndex].title!;
     }

@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/guessTheWordQuizCubit.dart';
 
@@ -45,6 +49,8 @@ class GuessTheWordQuizScreen extends StatefulWidget {
                   create: (_) =>
                       UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
                 ),
+                BlocProvider<UpdateBookmarkCubit>(
+                    create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
                 BlocProvider<GuessTheWordQuizCubit>(
                     create: (_) => GuessTheWordQuizCubit(QuizRepository()))
               ],
@@ -147,6 +153,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
   //listener for current user timer
   void currentUserTimerAnimationStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
+      updateBookmarkAnswer();
       submitAnswer(questionContainerKeys[_currentQuestionIndex]
           .currentState!
           .getSubmittedAnswer());
@@ -221,6 +228,28 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
     });
   }
 
+  //
+  void updateBookmarkAnswer() {
+    //update bookmark answer
+    if (context.read<GuessTheWordBookmarkCubit>().hasQuestionBookmarked(context
+        .read<GuessTheWordQuizCubit>()
+        .getQuestions()[_currentQuestionIndex]
+        .id)) {
+      context.read<GuessTheWordBookmarkCubit>().updateSubmittedAnswer(
+            questionId: context
+                .read<GuessTheWordQuizCubit>()
+                .getQuestions()[_currentQuestionIndex]
+                .id,
+            submittedAnswer: UiUtils.buildGuessTheWordQuestionAnswer(
+                questionContainerKeys[_currentQuestionIndex]
+                    .currentState!
+                    .getSubmittedAnswer()),
+          );
+    } else {
+      print("Quesiton not bookmarked");
+    }
+  }
+
   Widget _buildQuesitons(GuessTheWordQuizCubit guessTheWordQuizCubit) {
     return BlocBuilder<GuessTheWordQuizCubit, GuessTheWordQuizState>(
         builder: (context, state) {
@@ -240,7 +269,6 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
             quizType: QuizTypes.guessTheWord,
             showAnswerCorrectness: true,
             lifeLines: {},
-            bookmarkButton: Container(),
             guessTheWordQuestionContainerKeys: questionContainerKeys,
             topPadding: 30.0,
             guessTheWordQuestions: state.questions,
@@ -295,6 +323,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                 titleColor: Theme.of(context).backgroundColor,
                 fontWeight: FontWeight.bold,
                 onTap: () {
+                  //
+                  updateBookmarkAnswer();
                   submitAnswer(questionContainerKeys[_currentQuestionIndex]
                       .currentState!
                       .getSubmittedAnswer());
@@ -315,6 +345,118 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
     isExitDialogOpen = true;
     showDialog(context: context, builder: (_) => ExitGameDailog())
         .then((value) => isExitDialogOpen = false);
+  }
+
+  Widget _buildBookmarkButton(GuessTheWordQuizCubit guessTheWordQuizCubit) {
+    return BlocBuilder<GuessTheWordQuizCubit, GuessTheWordQuizState>(
+      bloc: guessTheWordQuizCubit,
+      builder: (context, state) {
+        if (state is GuessTheWordQuizFetchSuccess) {
+          //
+
+          final bookmarkCubit = context.read<GuessTheWordBookmarkCubit>();
+          final updateBookmarkcubit = context.read<UpdateBookmarkCubit>();
+          return BlocListener<UpdateBookmarkCubit, UpdateBookmarkState>(
+            bloc: updateBookmarkcubit,
+            listener: (context, state) {
+              //if failed to update bookmark status
+              if (state is UpdateBookmarkFailure) {
+                //remove bookmark question
+                if (state.failedStatus == "0") {
+                  //if unable to remove question from bookmark then add question
+                  //add again
+                  bookmarkCubit.addBookmarkQuestion(guessTheWordQuizCubit
+                      .getQuestions()[_currentQuestionIndex]);
+                } else {
+                  //remove again
+                  //if unable to add question to bookmark then remove question
+                  bookmarkCubit.removeBookmarkQuestion(guessTheWordQuizCubit
+                      .getQuestions()[_currentQuestionIndex]
+                      .id);
+                }
+                UiUtils.setSnackbar(
+                    AppLocalization.of(context)!.getTranslatedValues(
+                        convertErrorCodeToLanguageKey(
+                            updateBookmarkFailureCode))!,
+                    context,
+                    false);
+              }
+              if (state is UpdateBookmarkSuccess) {
+                print("Success");
+              }
+            },
+            child: BlocBuilder<GuessTheWordBookmarkCubit,
+                GuessTheWordBookmarkState>(
+              bloc: context.read<GuessTheWordBookmarkCubit>(),
+              builder: (context, state) {
+                print("State is $state");
+                if (state is GuessTheWordBookmarkFetchSuccess) {
+                  return InkWell(
+                    onTap: () {
+                      if (bookmarkCubit.hasQuestionBookmarked(
+                          guessTheWordQuizCubit
+                              .getQuestions()[_currentQuestionIndex]
+                              .id)) {
+                        //remove
+                        bookmarkCubit.removeBookmarkQuestion(
+                            guessTheWordQuizCubit
+                                .getQuestions()[_currentQuestionIndex]
+                                .id);
+                        updateBookmarkcubit.updateBookmark(
+                          context.read<UserDetailsCubit>().getUserId(),
+                          guessTheWordQuizCubit
+                              .getQuestions()[_currentQuestionIndex]
+                              .id,
+                          "0",
+                          "3", //type is 3 for guess the word questions
+                        );
+                      } else {
+                        //add
+                        bookmarkCubit.addBookmarkQuestion(guessTheWordQuizCubit
+                            .getQuestions()[_currentQuestionIndex]);
+                        updateBookmarkcubit.updateBookmark(
+                            context.read<UserDetailsCubit>().getUserId(),
+                            guessTheWordQuizCubit
+                                .getQuestions()[_currentQuestionIndex]
+                                .id,
+                            "1",
+                            "3");
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent),
+                      ),
+                      child: bookmarkCubit.hasQuestionBookmarked(
+                              guessTheWordQuizCubit
+                                  .getQuestions()[_currentQuestionIndex]
+                                  .id)
+                          ? Icon(
+                              CupertinoIcons.bookmark_fill,
+                              color: Theme.of(context).backgroundColor,
+                              size: 20,
+                            )
+                          : Icon(
+                              CupertinoIcons.bookmark,
+                              color: Theme.of(context).backgroundColor,
+                              size: 20,
+                            ),
+                    ),
+                  );
+                }
+                if (state is GuessTheWordBookmarkFetchFailure) {
+                  return SizedBox();
+                }
+
+                return SizedBox();
+              },
+            ),
+          );
+        }
+        return SizedBox();
+      },
+    );
   }
 
   Widget _buildTopMenu() {
@@ -344,6 +486,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                 toggleSettingDialog();
               });
             }),
+            _buildBookmarkButton(context.read<GuessTheWordQuizCubit>()),
           ],
         ),
       ),

@@ -11,7 +11,8 @@ class Question {
   final String? note;
   final String? languageId;
   final String submittedAnswerId;
-  final String? questionType; //multiple option if type is 1, binary options type 2
+  final String?
+      questionType; //multiple option if type is 1, binary options type 2
   final List<AnswerOption>? answerOptions;
   final bool attempted;
   final String? audio;
@@ -75,6 +76,38 @@ class Question {
 
     return Question(
         id: questionJson['id'],
+        categoryId: questionJson['category'] ?? "",
+        imageUrl: questionJson['image'],
+        languageId: questionJson['language_id'],
+        subcategoryId: questionJson['subcategory'] ?? "",
+        correctAnswerOptionId: questionJson['answer'],
+        level: questionJson['level'] ?? "",
+        question: questionJson['question'],
+        note: questionJson['note'] ?? "",
+        questionType: questionJson['question_type'] ?? "",
+        audio: questionJson['audio'] ?? "",
+        audioType: questionJson['audio_type'] ?? "",
+        marks: questionJson['marks'] ?? "",
+        answerOptions: options);
+  }
+
+  static Question fromBookmarkJson(Map questionJson) {
+    //answer options is fix up to e and correct answer
+    //identified this optionId (ex. a)
+    List<String> optionIds = ["a", "b", "c", "d", "e"];
+    List<AnswerOption> options = [];
+
+    //creating answerOption model
+    optionIds.forEach((optionId) {
+      String optionTitle = questionJson["option$optionId"].toString();
+      if (optionTitle.isNotEmpty) {
+        options.add(AnswerOption(id: optionId, title: optionTitle));
+      }
+    });
+    options.shuffle();
+
+    return Question(
+        id: questionJson['question_id'],
         categoryId: questionJson['category'] ?? "",
         imageUrl: questionJson['image'],
         languageId: questionJson['language_id'],
