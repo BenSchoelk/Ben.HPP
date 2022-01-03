@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
@@ -288,6 +289,13 @@ class UiUtils {
         is! GuessTheWordBookmarkFetchSuccess) {
       print("Fetch guess the word bookmark details");
       context.read<GuessTheWordBookmarkCubit>().getBookmark(userId);
+    }
+
+    //fetch audio question bookmark
+    if (context.read<AudioQuestionBookmarkCubit>().state
+        is! AudioQuestionBookmarkFetchSuccess) {
+      print("Fetch audio question bookmark details");
+      context.read<AudioQuestionBookmarkCubit>().getBookmark(userId);
     }
 
     if (context.read<BadgesCubit>().state is! BadgesFetchSuccess) {

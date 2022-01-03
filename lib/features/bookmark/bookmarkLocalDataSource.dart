@@ -13,7 +13,14 @@ class BookmarkLocalDataSource {
     //key will be questionId and value for this key will be submittedAsnwerId
     await openBox(bookmarkBox);
     final box = Hive.box<String>(bookmarkBox);
-    print("Question id is $questionId Bookmark answer id $submittedAnswerId");
+    await box.put(questionId, submittedAnswerId);
+  }
+
+  Future<void> setAnswerForAudioBookmarkedQuestion(
+      String submittedAnswerId, String questionId) async {
+    //key will be questionId and value for this key will be submittedAsnwerId
+    await openBox(audioBookmarkBox);
+    final box = Hive.box<String>(audioBookmarkBox);
     await box.put(questionId, submittedAnswerId);
   }
 
@@ -37,6 +44,18 @@ class BookmarkLocalDataSource {
     return submittedAnswerIds;
   }
 
+  Future<List<String>> getAnswerOfAudioBookmarkedQuestion(
+      List<String?> questionIds) async {
+    List<String> submittedAnswerIds = [];
+    await openBox(audioBookmarkBox);
+    final box = Hive.box<String>(audioBookmarkBox);
+
+    questionIds.forEach((element) {
+      submittedAnswerIds.add(box.get(element, defaultValue: "")!);
+    });
+    return submittedAnswerIds;
+  }
+
   Future<List<String>> getAnswerOfGuessTheWordBookmarkedQuestion(
       List<String> questionIds) async {
     List<String> submittedAnswerIds = [];
@@ -52,6 +71,12 @@ class BookmarkLocalDataSource {
   Future<void> removeBookmarkedAnswer(String? questionId) async {
     await openBox(bookmarkBox);
     final box = Hive.box<String>(bookmarkBox);
+    await box.delete(questionId);
+  }
+
+  Future<void> removeAudioBookmarkedAnswer(String? questionId) async {
+    await openBox(audioBookmarkBox);
+    final box = Hive.box<String>(audioBookmarkBox);
     await box.delete(questionId);
   }
 

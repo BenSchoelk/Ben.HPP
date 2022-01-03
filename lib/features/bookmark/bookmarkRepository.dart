@@ -55,6 +55,13 @@ class BookmarkRepository {
   }
 
   //get submitted answer for given question index which is store in hive box
+  Future<List<String>> getSubmittedAnswerOfAudioBookmarkedQuestions(
+      List<String> questionIds) async {
+    return await _bookmarkLocalDataSource
+        .getAnswerOfAudioBookmarkedQuestion(questionIds);
+  }
+
+  //get submitted answer for given question index which is store in hive box
   Future<List<String>> getSubmittedAnswerOfGuessTheWordBookmarkedQuestions(
       List<String> questionIds) async {
     return _bookmarkLocalDataSource
@@ -66,6 +73,11 @@ class BookmarkRepository {
     _bookmarkLocalDataSource.removeBookmarkedAnswer(questionId);
   }
 
+  //remove bookmark answer from hive box audio
+  Future<void> removeAudioBookmarkedAnswer(String? questionId) async {
+    _bookmarkLocalDataSource.removeAudioBookmarkedAnswer(questionId);
+  }
+
   //remove bookmark answer from hive box
   Future<void> removeGuessTheWordBookmarkedAnswer(String questionId) async {
     _bookmarkLocalDataSource.removeGuessTheWordBookmarkedAnswer(questionId);
@@ -75,6 +87,13 @@ class BookmarkRepository {
   Future<void> setAnswerForBookmarkedQuestion(
       String questionId, String submittedAnswerId) async {
     _bookmarkLocalDataSource.setAnswerForBookmarkedQuestion(
+        submittedAnswerId, questionId);
+  }
+
+  //set submitted answer id for given question index
+  Future<void> setAnswerForAudioBookmarkedQuestion(
+      String questionId, String submittedAnswerId) async {
+    _bookmarkLocalDataSource.setAnswerForAudioBookmarkedQuestion(
         submittedAnswerId, questionId);
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
@@ -327,6 +328,140 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     );
   }
 
+  Widget _buildAudioQuestions() {
+    final bookmarkCubit = context.read<AudioQuestionBookmarkCubit>();
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        child: BlocBuilder<AudioQuestionBookmarkCubit,
+                AudioQuestionBookMarkState>(
+            bloc: bookmarkCubit,
+            builder: (context, state) {
+              if (state is AudioQuestionBookmarkFetchSuccess) {
+                if (state.questions.isEmpty) {
+                  return Center(
+                    child: Text(
+                      AppLocalization.of(context)!
+                          .getTranslatedValues("noBookmarkQueLbl")!,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsetsDirectional.only(
+                      top: 25.0,
+                      start: MediaQuery.of(context).size.width * (0.075),
+                      end: MediaQuery.of(context).size.width * (0.075),
+                      bottom: 100),
+                  itemBuilder: (context, index) {
+                    Question question = state.questions[index];
+
+                    //providing updateBookmarkCubit to every bookmarekd question
+                    return BlocProvider<UpdateBookmarkCubit>(
+                      create: (context) =>
+                          UpdateBookmarkCubit(BookmarkRepository()),
+                      //using builder so we can access the recently provided cubit
+                      child: Builder(
+                        builder: (context) => BlocConsumer<UpdateBookmarkCubit,
+                            UpdateBookmarkState>(
+                          bloc: context.read<UpdateBookmarkCubit>(),
+                          listener: (context, state) {
+                            if (state is UpdateBookmarkSuccess) {
+                              bookmarkCubit.removeBookmarkQuestion(question.id);
+                            }
+                            if (state is UpdateBookmarkFailure) {
+                              UiUtils.setSnackbar(
+                                  AppLocalization.of(context)!
+                                      .getTranslatedValues(
+                                          convertErrorCodeToLanguageKey(
+                                              updateBookmarkFailureCode))!,
+                                  context,
+                                  false);
+                            }
+                          },
+                          builder: (context, state) {
+                            return GestureDetector(
+                              onTap: () {
+                                openBottomSheet(
+                                  question: question.question!,
+                                  yourAnswer: bookmarkCubit
+                                      .getSubmittedAnswerForQuestion(
+                                          question.id),
+                                  correctAnswer: question
+                                      .answerOptions![question.answerOptions!
+                                          .indexWhere((element) =>
+                                              element.id ==
+                                              question.correctAnswerOptionId)]
+                                      .title!,
+                                );
+                              },
+                              child: CustomListTile(
+                                opacity: state is UpdateBookmarkInProgress
+                                    ? 0.5
+                                    : 1.0,
+                                trailingButtonOnTap: state
+                                        is UpdateBookmarkInProgress
+                                    ? () {}
+                                    : () {
+                                        context
+                                            .read<UpdateBookmarkCubit>()
+                                            .updateBookmark(
+                                                context
+                                                    .read<UserDetailsCubit>()
+                                                    .getUserId(),
+                                                question.id!,
+                                                "0",
+                                                "4"); // type is 4 for audio questions
+                                      },
+                                subtitle: AppLocalization.of(context)!
+                                        .getTranslatedValues("yourAnsLbl")! +
+                                    ":" +
+                                    " ${bookmarkCubit.getSubmittedAnswerForQuestion(question.id)}",
+                                title: question.question,
+                                leadingChild: Text(
+                                  "${index + 1}",
+                                  style: TextStyle(
+                                    color: Theme.of(context).backgroundColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: state.questions.length,
+                );
+              }
+              if (state is AudioQuestionBookmarkFetchFailure) {
+                return ErrorContainer(
+                  errorMessage: AppLocalization.of(context)!
+                      .getTranslatedValues(convertErrorCodeToLanguageKey(
+                          state.errorMessageCode)),
+                  showErrorImage: true,
+                  errorMessageColor: Theme.of(context).primaryColor,
+                  onTapRetry: () {
+                    context.read<AudioQuestionBookmarkCubit>().getBookmark(
+                        context.read<UserDetailsCubit>().getUserId());
+                  },
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }),
+        padding:
+            EdgeInsets.only(top: MediaQuery.of(context).size.height * (0.16)),
+      ),
+    );
+  }
+
   Widget _buildGuessTheWordQuestions() {
     final bookmarkCubit = context.read<GuessTheWordBookmarkCubit>();
     return Align(
@@ -468,7 +603,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 ? _buildQuizZoneQuestions()
                 : _currentSelectedTab == 2
                     ? _buildGuessTheWordQuestions()
-                    : Container(),
+                    : _buildAudioQuestions(),
           ),
           Align(
             alignment: Alignment.topCenter,
