@@ -216,14 +216,18 @@ class _RedeemAmountRequestBottomSheetContainerState
               AnimatedOpacity(
                   opacity: _errorMessage.isEmpty ? 0 : 1.0,
                   duration: Duration(milliseconds: 250),
-                  child: Text(
-                    _errorMessage,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      _errorMessage,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary),
+                    ),
                   )),
 
               SizedBox(
-                height: MediaQuery.of(context).size.height * (0.01),
+                height: MediaQuery.of(context).size.height * (0.0125),
               ),
 
               CustomRoundedButton(

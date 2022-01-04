@@ -411,6 +411,7 @@
   "playedBattle" : "Played Battle",
   "reversedByAdmin"  : "Reversed By Admin",
   "usedReferCode" : "Used Refer Code",
+  "welcomeBonus" : "Welcome Bonus",
   "pending" : "Pending",
   "completed" : "Completed",
   "wrongDetails" : "Wrong Details",
@@ -423,7 +424,10 @@
   "makeRequest" : "Make Request",
   "pleaseFillAllData" : "Please fill all data",
   "changePayoutMethod"  : "Change payout method",
-  "noTransactions" : "No Transactions"
+  "noTransactions" : "No Transactions",
+  "accountHasBeenDeactive" : "your account has been deactive! please contact admin",
+  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request"
+  
    
 
   

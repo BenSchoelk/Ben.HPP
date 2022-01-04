@@ -510,7 +510,7 @@ class ProfileScreen extends StatelessWidget {
                             });
                           },
                           title: deleteAccountKey,
-                          leadingIcon: "logout_icon.svg", //theme icon
+                          leadingIcon: "delete.svg", //theme icon
                         ),
                       ],
                     );
@@ -525,7 +525,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//TODO: onlogout clear all bookmark and audio question cubit
     return Scaffold(
       body: Stack(
         children: [

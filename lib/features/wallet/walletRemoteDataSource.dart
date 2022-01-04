@@ -50,7 +50,11 @@ class WalletRemoteDataSource {
 
       if (responseJson['error']) {
         throw WalletException(
-          errorMessageCode: responseJson['message'],
+          errorMessageCode: responseJson['message'].toString() == "126"
+              ? accountHasBeenDeactiveCode
+              : responseJson['message'].toString() == "127"
+                  ? canNotMakeRequestCode
+                  : responseJson['message'].toString(),
         );
       }
 

@@ -451,7 +451,11 @@
   "makeRequest" : "Make Request",
 
   "pleaseFillAllData" : "Please fill all data",
-  "noTransactions" : "No Transactions"
+  "noTransactions" : "No Transactions",
+  "welcomeBonus" : "Welcome Bonus",
+  "accountHasBeenDeactive" : "your account has been deactive! please contact admin",
+  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request"
+
 
 
 }

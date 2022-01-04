@@ -399,6 +399,7 @@
   "totalEarnings" : "Total Earnings",
 
   "redeemRequest" : "Redeem Request",
+  "welcomeBonus" : "Welcome Bonus",
 
 
   "wonQuizZone" : "Won Quiz Zone Quiz",
@@ -440,6 +441,9 @@
   "makeRequest" : "Make Request",
 
   "pleaseFillAllData" : "Please fill all data",
-  "noTransactions" : "No Transactions"
+  "noTransactions" : "No Transactions",
+  "accountHasBeenDeactive" : "your account has been deactive! please contact admin",
+  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request"
+
 
 }
