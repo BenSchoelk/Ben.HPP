@@ -93,15 +93,15 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     }
   }
 
-  int calculateTotalEarnings() {
+  double calculateTotalEarnings() {
     if (state is TransactionsFetchSuccess) {
       final successfulRequests = (state as TransactionsFetchSuccess)
           .paymentRequests
           .where((element) => element.status == "1");
-      int totalEarnings = 0;
+      double totalEarnings = 0;
 
       successfulRequests.forEach((element) {
-        totalEarnings = totalEarnings + int.parse(element.paymentAmount);
+        totalEarnings = totalEarnings + double.parse(element.paymentAmount);
       });
       return totalEarnings;
     }

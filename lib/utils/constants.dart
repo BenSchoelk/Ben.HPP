@@ -292,7 +292,7 @@ final List<PayoutMethod> payoutMethods = [
       //Specify the input parameters label here
       inputDetailsFromUser: [
         "Enter upi id",
-      ], image: "assets/images/paypal.svg", type: "UPI"),
+      ], image: "assets/images/upi.svg", type: "UPI"),
 
   /*
   //Bank Transfer
