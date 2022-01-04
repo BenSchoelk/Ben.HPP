@@ -7,7 +7,9 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/auth/authRepository.dart';
 import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/deleteAccountCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateUserDetailsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/uploadProfileCubit.dart';
@@ -410,6 +412,18 @@ class ProfileScreen extends StatelessWidget {
                                                   .updateState(
                                                       BookmarkInitial());
                                               context
+                                                  .read<
+                                                      GuessTheWordBookmarkCubit>()
+                                                  .updateState(
+                                                      GuessTheWordBookmarkInitial());
+
+                                              context
+                                                  .read<
+                                                      AudioQuestionBookmarkCubit>()
+                                                  .updateState(
+                                                      AudioQuestionBookmarkInitial());
+
+                                              context
                                                   .read<AuthCubit>()
                                                   .signOut();
                                               Navigator.of(context)
@@ -511,6 +525,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+//TODO: onlogout clear all bookmark and audio question cubit
     return Scaffold(
       body: Stack(
         children: [

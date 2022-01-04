@@ -682,7 +682,7 @@ class _MultiUserBattleRoomQuizScreenState
                   MediaQuery.of(context).size.height *
                       RectangleUserProfileContainer
                           .userDetailsHeightPercentage *
-                      (1.25)
+                      (1.9)
               : 0,
         ),
         child: RectangleUserProfileContainer(
@@ -738,7 +738,7 @@ class _MultiUserBattleRoomQuizScreenState
           battleRoomId: context.read<MultiUserBattleRoomCubit>().getRoomId(),
           topPadding: (MediaQuery.of(context).size.height *
                   RectangleUserProfileContainer.userDetailsHeightPercentage *
-                  2.75) +
+                  2.9) +
               MediaQuery.of(context).padding.top,
           closeMessageBox: () {
             messageBoxAnimationController.reverse();
@@ -799,7 +799,7 @@ class _MultiUserBattleRoomQuizScreenState
           ? null
           : (MediaQuery.of(context).size.height *
                   RectangleUserProfileContainer.userDetailsHeightPercentage *
-                  2.6) +
+                  3.35) +
               MediaQuery.of(context).padding.top,
       bottom: opponentUserIndex == 0
           ? MediaQuery.of(context).size.height *
@@ -946,7 +946,7 @@ class _MultiUserBattleRoomQuizScreenState
                               topPadding: MediaQuery.of(context).size.height *
                                   RectangleUserProfileContainer
                                       .userDetailsHeightPercentage *
-                                  2.75,
+                                  3.5,
                               timerAnimationController:
                                   timerAnimationController,
                               quizType: QuizTypes.groupPlay,
