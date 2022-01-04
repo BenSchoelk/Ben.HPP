@@ -435,6 +435,13 @@ class _MultiUserBattleRoomQuizScreenState
                   )
               .messageId
               .isNotEmpty) {
+            //Assign latest message
+            latestMessagesByUsers[i + 1] = context
+                .read<MessageCubit>()
+                .getUserLatestMessage(
+                    context.read<UserDetailsCubit>().getUserId(),
+                    messageId: latestMessagesByUsers[i + 1].messageId);
+
             //if new message by opponent
             if (opponentsMessageDisappearTimeInSeconds[i] > 0 &&
                 opponentsMessageDisappearTimeInSeconds[i] < 4) {
@@ -447,30 +454,6 @@ class _MultiUserBattleRoomQuizScreenState
             }
           }
         }
-
-        /*
-
-
-
-          int opponentUserIndex = opponentUsers
-              .indexWhere((element) => state.messages.last.by == element!.uid);
-
-          //opponent message
-          //
-          //means timer is running
-          if (opponentUserIndex != -1) {
-            if (opponentsMessageDisappearTimeInSeconds[opponentUserIndex] > 0 &&
-                opponentsMessageDisappearTimeInSeconds[opponentUserIndex] < 4) {
-              //
-              opponentsMessageDisappearTimer[opponentUserIndex]?.cancel();
-              setOpponentUserMessageDisappearTimer(opponentUserIndex);
-            } else {
-              opponentMessageAnimationControllers[opponentUserIndex].forward();
-              setOpponentUserMessageDisappearTimer(opponentUserIndex);
-            }
-          }
-
-        */
       }
     }
   }
