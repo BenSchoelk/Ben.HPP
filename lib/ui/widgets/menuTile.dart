@@ -23,7 +23,7 @@ class MenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40.0,
+      height: 38.0,
       child: ListTile(
         onTap: onTap,
         title: Text(

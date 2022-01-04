@@ -270,7 +270,9 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
             showAnswerCorrectness: true,
             lifeLines: {},
             guessTheWordQuestionContainerKeys: questionContainerKeys,
-            topPadding: 30.0,
+            topPadding: MediaQuery.of(context).size.height *
+                UiUtils.getQuestionContainerTopPaddingPercentage(
+                    MediaQuery.of(context).size.height),
             guessTheWordQuestions: state.questions,
             hasSubmittedAnswerForCurrentQuestion: () {},
             questions: [],
@@ -468,7 +470,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
             left: MediaQuery.of(context).size.width *
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
-            top: MediaQuery.of(context).padding.top - 12.5),
+            top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
             CustomBackButton(

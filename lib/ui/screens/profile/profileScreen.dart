@@ -144,7 +144,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildProfileContainer(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * (0.82),
+        height: MediaQuery.of(context).size.height * (0.825),
         width: MediaQuery.of(context).size.width * (0.84),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
@@ -362,9 +362,6 @@ class ProfileScreen extends StatelessWidget {
                               Theme.of(context).primaryColor.withOpacity(0.25),
                           width: constraints.maxWidth * (0.825),
                           height: 1.75,
-                        ),
-                        SizedBox(
-                          height: constraints.maxHeight * (0.01),
                         ),
                         MenuTile(
                           isSvgIcon: true,

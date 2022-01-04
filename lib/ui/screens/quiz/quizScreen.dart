@@ -339,6 +339,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       updateTotalSecondsToCompleteQuiz();
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
+      //TODO : Add mounted check here
       if (currentQuestionIndex !=
           (context.read<QuestionsCubit>().questions().length - 1)) {
         updateSubmittedAnswerForBookmark(
@@ -893,7 +894,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
             left: MediaQuery.of(context).size.width *
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
-            top: MediaQuery.of(context).padding.top - 12.5),
+            top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
             CustomBackButton(
@@ -991,7 +992,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       showAnswerCorrectness: true,
                       lifeLines: getLifeLines(),
                       timerAnimationController: timerAnimationController,
-                      topPadding: 32.5,
+                      topPadding: MediaQuery.of(context).size.height *
+                          UiUtils.getQuestionContainerTopPaddingPercentage(
+                              MediaQuery.of(context).size.height),
                       hasSubmittedAnswerForCurrentQuestion:
                           hasSubmittedAnswerForCurrentQuestion,
                       questions: context.read<QuestionsCubit>().questions(),

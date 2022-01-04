@@ -579,7 +579,7 @@ class _BattleRoomFindOpponentScreenState
       alignment: Alignment.topLeft,
       child: Padding(
         padding: EdgeInsets.only(
-            left: 20.0, top: MediaQuery.of(context).padding.top - 10),
+            left: 20.0, top: MediaQuery.of(context).padding.top),
         child: CustomBackButton(
             onTap: () {
               //

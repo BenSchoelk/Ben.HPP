@@ -292,7 +292,7 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
             left: MediaQuery.of(context).size.width *
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
-            top: MediaQuery.of(context).padding.top - 12.5),
+            top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
             CustomBackButton(
@@ -357,7 +357,9 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
                   showGuessTheWordHint: false,
                   timerAnimationController: timerAnimationController,
                   quizType: widget.quizType,
-                  topPadding: 30.0,
+                  topPadding: MediaQuery.of(context).size.height *
+                      UiUtils.getQuestionContainerTopPaddingPercentage(
+                          MediaQuery.of(context).size.height),
                   showAnswerCorrectness: true,
                   lifeLines: {},
                   hasSubmittedAnswerForCurrentQuestion: () {},
@@ -409,7 +411,9 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
                 audioQuestionContainerKeys: audioQuestionContainerKeys,
                 timerAnimationController: timerAnimationController,
                 quizType: widget.quizType,
-                topPadding: 30.0,
+                topPadding: MediaQuery.of(context).size.height *
+                    UiUtils.getQuestionContainerTopPaddingPercentage(
+                        MediaQuery.of(context).size.height),
                 showAnswerCorrectness: true,
                 lifeLines: {},
                 hasSubmittedAnswerForCurrentQuestion:

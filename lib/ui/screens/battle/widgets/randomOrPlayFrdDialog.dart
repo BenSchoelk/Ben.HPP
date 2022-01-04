@@ -422,7 +422,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           },
         ),
       ),
-      height: MediaQuery.of(context).size.height * (0.575),
+      height: MediaQuery.of(context).size.height * (0.6),
     );
   }
 }

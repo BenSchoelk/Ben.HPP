@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -811,7 +813,9 @@ class _RoomDialogState extends State<RoomDialog> {
           }
         }
       },
-      topPadding: MediaQuery.of(context).size.height * (0.15),
+      topPadding: Platform.isIOS
+          ? MediaQuery.of(context).size.height * (0.065)
+          : MediaQuery.of(context).size.height * (0.1),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(UiUtils.dailogRadius),
         child: LayoutBuilder(

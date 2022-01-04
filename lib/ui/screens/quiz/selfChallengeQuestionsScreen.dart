@@ -387,7 +387,7 @@ class _SelfChallengeQuestionsScreenState
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
             left: MediaQuery.of(context).size.width *
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
-            top: MediaQuery.of(context).padding.top - 12.5),
+            top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
             CustomBackButton(
@@ -565,7 +565,9 @@ class _SelfChallengeQuestionsScreenState
                         quizType: QuizTypes.selfChallenge,
                         showAnswerCorrectness: false,
                         lifeLines: {},
-                        topPadding: 30.0,
+                        topPadding: MediaQuery.of(context).size.height *
+                            UiUtils.getQuestionContainerTopPaddingPercentage(
+                                MediaQuery.of(context).size.height),
                         hasSubmittedAnswerForCurrentQuestion:
                             hasSubmittedAnswerForCurrentQuestion,
                         questions: questions,

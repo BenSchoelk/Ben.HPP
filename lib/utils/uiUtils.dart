@@ -173,6 +173,19 @@ class UiUtils {
     return 0.1275;
   }
 
+  static double getQuestionContainerTopPaddingPercentage(double dheight) {
+    if (dheight >= 800) {
+      return 0.06;
+    }
+    if (dheight >= 700) {
+      return 0.065;
+    }
+    if (dheight >= 600) {
+      return 0.07;
+    }
+    return 0.075;
+  }
+
   static Locale getLocaleFromLanguageCode(String languageCode) {
     List<String> result = languageCode.split("-");
     return result.length == 1

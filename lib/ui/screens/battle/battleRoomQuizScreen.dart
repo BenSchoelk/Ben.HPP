@@ -977,7 +977,10 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
             .drive(Tween<Offset>(begin: Offset(1.5, 0), end: Offset.zero)),
         child: MessageBoxContainer(
           quizType: QuizTypes.battle,
-          topPadding: 32.5 + MediaQuery.of(context).padding.top,
+          topPadding: MediaQuery.of(context).size.height *
+                  UiUtils.getQuestionContainerTopPaddingPercentage(
+                      MediaQuery.of(context).size.height) +
+              MediaQuery.of(context).padding.top,
           battleRoomId: widget.isTournamentBattle
               ? context.read<TournamentBattleCubit>().getRoomId()
               : context.read<BattleRoomCubit>().getRoomId(),
@@ -998,7 +1001,7 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
             left: MediaQuery.of(context).size.width *
                 ((1.0 - UiUtils.quesitonContainerWidthPercentage) * 0.5),
-            top: MediaQuery.of(context).padding.top - 10.5),
+            top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
             CustomBackButton(
@@ -1134,7 +1137,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
               Align(
                 alignment: Alignment.topCenter,
                 child: QuestionsContainer(
-                  topPadding: 32.5,
+                  topPadding: MediaQuery.of(context).size.height *
+                      UiUtils.getQuestionContainerTopPaddingPercentage(
+                          MediaQuery.of(context).size.height),
                   timerAnimationController: timerAnimationController,
                   quizType: QuizTypes.battle,
                   showAnswerCorrectness: true,

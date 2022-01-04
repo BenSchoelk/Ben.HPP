@@ -36,13 +36,15 @@ class UpdateScoreAndCoinsCubit extends Cubit<UpdateScoreAndCoinsState> {
             addCoin: addCoin,
             type: type,
             title: title)
-        .then(
-          (result) => emit(UpdateScoreAndCoinsSuccess(
-              coins: result['coins'], score: result['score'])),
-        )
-        .catchError((e) {
-      print(e.toString());
-      emit(UpdateScoreAndCoinsFailure(e.toString()));
+        .then((result) {
+      if (!isClosed) {
+        emit(UpdateScoreAndCoinsSuccess(
+            coins: result['coins'], score: result['score']));
+      }
+    }).catchError((e) {
+      if (!isClosed) {
+        emit(UpdateScoreAndCoinsFailure(e.toString()));
+      }
     });
   }
 
