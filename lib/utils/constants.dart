@@ -294,6 +294,7 @@ final List<PayoutMethod> payoutMethods = [
         "Enter upi id",
       ], image: "assets/images/paypal.svg", type: "UPI"),
 
+  /*
   //Bank Transfer
   PayoutMethod(
       //Specify the input parameters label here
@@ -301,7 +302,9 @@ final List<PayoutMethod> payoutMethods = [
         "Enter bank name",
         "Enter account number ",
         "Enter bank ifsc code",
-      ], image: "assets/images/paytm.svg", type: "Bank Transfer"), //
+      ], image: "assets/images/paytm.svg", type: "Bank Transfer"),
+      */
+  //
 ];
 
 //
