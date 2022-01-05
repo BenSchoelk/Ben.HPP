@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
@@ -50,6 +51,7 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
   void getComprehension() {
     Future.delayed(Duration.zero, () {
       context.read<ComprehensionCubit>().getComprehension(
+            userId: context.read<UserDetailsCubit>().getUserId(),
             languageId: UiUtils.getCurrentQuestionLanguageId(context),
             type: widget.type,
             typeId: widget.typeId,

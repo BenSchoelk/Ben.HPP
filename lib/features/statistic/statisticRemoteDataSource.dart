@@ -33,7 +33,8 @@ class StatisticRemoteDataSource {
       //body of post request
       final body = {accessValueKey: accessValue, userIdKey: userId};
       print(body);
-      final response = await http.post(Uri.parse(getStatisticUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getStatisticUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print("response of statistic $responseJson");
 
@@ -58,14 +59,28 @@ class StatisticRemoteDataSource {
 	ratio:50 // (In percenatge)
    */
 
-  Future<dynamic> updateStatistic({String? userId, String? answeredQuestion, String? correctAnswers, String? winPercentage, String? categoryId}) async {
+  Future<dynamic> updateStatistic(
+      {String? userId,
+      String? answeredQuestion,
+      String? correctAnswers,
+      String? winPercentage,
+      String? categoryId}) async {
     try {
       //body of post request
-      final body = {accessValueKey: accessValue, userIdKey: userId, "questions_answered": answeredQuestion, correctAnswersKey: correctAnswers, "category_id": categoryId, "ratio": winPercentage};
+      final body = {
+        accessValueKey: accessValue,
+        userIdKey: userId,
+        "questions_answered": answeredQuestion,
+        correctAnswersKey: correctAnswers,
+        "category_id": categoryId,
+        "ratio": winPercentage
+      };
 
       print(body);
-      final response = await http.post(Uri.parse(updateStatisticUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(updateStatisticUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
+      print("Update statistics response");
       print("Response : $responseJson");
       if (responseJson['error']) {
         throw StatisticException(errorMessageCode: responseJson['message']);
@@ -103,7 +118,8 @@ class StatisticRemoteDataSource {
       };
       print(body);
       print("--------------");
-      final response = await http.post(Uri.parse(setBattleStatisticsUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(setBattleStatisticsUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -126,7 +142,8 @@ class StatisticRemoteDataSource {
         accessValueKey: accessValue,
         userIdKey: userId,
       };
-      final response = await http.post(Uri.parse(getBattleStatisticsUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getBattleStatisticsUrl),
+          body: body, headers: ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       return responseJson;

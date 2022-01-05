@@ -25,10 +25,10 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
   final QuizRepository _quizRepository;
   SubCategoryCubit(this._quizRepository) : super(SubCategoryInitial());
 
-  void fetchSubCategory(String category) async {
+  void fetchSubCategory(String category, String userId) async {
     emit(SubCategoryFetchInProgress());
     _quizRepository
-        .getSubCategory(category)
+        .getSubCategory(category, userId)
         .then(
           (val) => emit(SubCategoryFetchSuccess(category, val)),
         )

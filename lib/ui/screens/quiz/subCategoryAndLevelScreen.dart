@@ -49,7 +49,10 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
   @override
   void initState() {
     pageController = PageController(viewportFraction: 0.635);
-    context.read<SubCategoryCubit>().fetchSubCategory(widget.category!);
+    context.read<SubCategoryCubit>().fetchSubCategory(
+          widget.category!,
+          context.read<UserDetailsCubit>().getUserId(),
+        );
     super.initState();
   }
 
@@ -206,9 +209,10 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                                       state.errorMessage)),
                           showErrorImage: true,
                           onTapRetry: () {
-                            context
-                                .read<SubCategoryCubit>()
-                                .fetchSubCategory(widget.category!);
+                            context.read<SubCategoryCubit>().fetchSubCategory(
+                                  widget.category!,
+                                  context.read<UserDetailsCubit>().getUserId(),
+                                );
                           },
                         );
                       }

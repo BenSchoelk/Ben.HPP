@@ -1,9 +1,34 @@
 class Category {
-  final String? id, languageId, categoryName, image, rowOrder, noOf, noOfQqe, maxLevel;
+  final String? id,
+      languageId,
+      categoryName,
+      image,
+      rowOrder,
+      noOf,
+      noOfQqe,
+      maxLevel,
+      isPlayed;
 
-  Category({this.languageId, this.categoryName, this.image, this.rowOrder, this.noOf, this.noOfQqe, this.maxLevel, this.id});
+  Category(
+      {this.languageId,
+      this.categoryName,
+      this.image,
+      this.rowOrder,
+      this.noOf,
+      this.noOfQqe,
+      this.maxLevel,
+      required this.isPlayed,
+      this.id});
   factory Category.fromJson(Map<String, dynamic> jsonData) {
     return Category(
-        id: jsonData["id"], languageId: jsonData["language_id"], categoryName: jsonData["category_name"], image: jsonData["image"], rowOrder: jsonData["row_order"], noOf: jsonData["no_of"], noOfQqe: jsonData["no_of_que"], maxLevel: jsonData["maxlevel"]);
+        isPlayed: jsonData['is_play'] ?? "",
+        id: jsonData["id"],
+        languageId: jsonData["language_id"],
+        categoryName: jsonData["category_name"],
+        image: jsonData["image"],
+        rowOrder: jsonData["row_order"],
+        noOf: jsonData["no_of"],
+        noOfQqe: jsonData["no_of_que"],
+        maxLevel: jsonData["maxlevel"]);
   }
 }

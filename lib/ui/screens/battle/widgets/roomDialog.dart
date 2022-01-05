@@ -51,6 +51,7 @@ class _RoomDialogState extends State<RoomDialog> {
         context.read<QuizCategoryCubit>().getQuizCategory(
               languageId: UiUtils.getCurrentQuestionLanguageId(context),
               type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+              userId: context.read<UserDetailsCubit>().getUserId(),
             );
       }
     });
@@ -503,6 +504,9 @@ class _RoomDialogState extends State<RoomDialog> {
                                         context),
                                 type: UiUtils.getCategoryTypeNumberFromQuizType(
                                     widget.quizType),
+                                userId: context
+                                    .read<UserDetailsCubit>()
+                                    .getUserId(),
                               );
                         }
                       });

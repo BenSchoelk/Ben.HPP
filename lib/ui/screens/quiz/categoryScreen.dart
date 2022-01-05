@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
@@ -43,6 +44,7 @@ class _CategoryScreen extends State<CategoryScreen> {
     context.read<QuizCategoryCubit>().getQuizCategory(
           languageId: UiUtils.getCurrentQuestionLanguageId(context),
           type: UiUtils.getCategoryTypeNumberFromQuizType(widget.quizType),
+          userId: context.read<UserDetailsCubit>().getUserId(),
         );
     super.initState();
   }
@@ -105,6 +107,7 @@ class _CategoryScreen extends State<CategoryScreen> {
                       languageId: UiUtils.getCurrentQuestionLanguageId(context),
                       type: UiUtils.getCategoryTypeNumberFromQuizType(
                           widget.quizType),
+                      userId: context.read<UserDetailsCubit>().getUserId(),
                     );
               },
             );

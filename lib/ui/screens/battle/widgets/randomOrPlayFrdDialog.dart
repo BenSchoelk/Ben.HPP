@@ -41,6 +41,7 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
         context.read<QuizCategoryCubit>().getQuizCategory(
               languageId: UiUtils.getCurrentQuestionLanguageId(context),
               type: UiUtils.getCategoryTypeNumberFromQuizType(QuizTypes.battle),
+              userId: context.read<UserDetailsCubit>().getUserId(),
             );
       }
     });
@@ -161,6 +162,8 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
                                   UiUtils.getCurrentQuestionLanguageId(context),
                               type: UiUtils.getCategoryTypeNumberFromQuizType(
                                   QuizTypes.battle),
+                              userId:
+                                  context.read<UserDetailsCubit>().getUserId(),
                             );
                       }
                     });

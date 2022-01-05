@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
@@ -42,7 +43,10 @@ class SubCategoryScreen extends StatefulWidget {
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   void getSubCategory() {
     Future.delayed(Duration.zero, () {
-      context.read<SubCategoryCubit>().fetchSubCategory(widget.categoryId);
+      context.read<SubCategoryCubit>().fetchSubCategory(
+            widget.categoryId,
+            context.read<UserDetailsCubit>().getUserId(),
+          );
     });
   }
 

@@ -203,8 +203,6 @@ class _ResultScreenState extends State<ResultScreen> {
   void _updateStatistics() {
     if (widget.quizType != QuizTypes.selfChallenge &&
         widget.quizType != QuizTypes.exam) {
-      print("Update statistic");
-      print("correctAnswer : ${correctAnswer()}");
       context.read<UpdateStatisticCubit>().updateStatistic(
             answeredQuestion: attemptedQuestion(),
             categoryId: getCategoryIdOfQuestion(),
@@ -487,7 +485,9 @@ class _ResultScreenState extends State<ResultScreen> {
     if (widget.quizType == QuizTypes.guessTheWord) {
       return widget.guessTheWordQuestions!.first.category;
     }
-    return widget.questions!.first.categoryId!;
+    return widget.questions!.first.categoryId!.isEmpty
+        ? "-"
+        : widget.questions!.first.categoryId!;
   }
 
   int correctAnswer() {

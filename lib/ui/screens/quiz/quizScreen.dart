@@ -17,6 +17,7 @@ import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/screens/quiz/widgets/audioQuestionContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
@@ -753,6 +754,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     });
   }
 
+  bool _answerCorrectness() {
+    if (widget.quizType == QuizTypes.contest) {
+      return true;
+    }
+    return !context.read<SystemConfigCubit>().isPaymentRequestEnable();
+  }
+
   Widget _buildLifeLines() {
     if (widget.quizType == QuizTypes.dailyQuiz ||
         widget.quizType == QuizTypes.quizZone) {
@@ -1002,7 +1010,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     child: QuestionsContainer(
                       audioQuestionContainerKeys: audioQuestionContainerKeys,
                       quizType: widget.quizType,
-                      showAnswerCorrectness: true,
+                      showAnswerCorrectness: _answerCorrectness(),
                       lifeLines: getLifeLines(),
                       timerAnimationController: timerAnimationController,
                       topPadding: MediaQuery.of(context).size.height *
