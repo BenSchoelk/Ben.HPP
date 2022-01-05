@@ -48,11 +48,13 @@ class BookmarkButton extends StatelessWidget {
           if (state.failedStatus == "0") {
             //if unable to remove question from bookmark then add question
             //add again
-            bookmarkCubit.addBookmarkQuestion(question);
+            bookmarkCubit.addBookmarkQuestion(
+                question, context.read<UserDetailsCubit>().getUserId());
           } else {
             //remove again
             //if unable to add question to bookmark then remove question
-            bookmarkCubit.removeBookmarkQuestion(question.id);
+            bookmarkCubit.removeBookmarkQuestion(
+                question.id, context.read<UserDetailsCubit>().getUserId());
           }
           UiUtils.setSnackbar(
               AppLocalization.of(context)!.getTranslatedValues(
@@ -72,7 +74,8 @@ class BookmarkButton extends StatelessWidget {
               onTap: () {
                 if (bookmarkCubit.hasQuestionBookmarked(question.id)) {
                   //remove
-                  bookmarkCubit.removeBookmarkQuestion(question.id);
+                  bookmarkCubit.removeBookmarkQuestion(question.id,
+                      context.read<UserDetailsCubit>().getUserId());
                   updateBookmarkcubit.updateBookmark(
                       context.read<UserDetailsCubit>().getUserId(),
                       question.id!,
@@ -80,7 +83,8 @@ class BookmarkButton extends StatelessWidget {
                       _getBookmarkType());
                 } else {
                   //add
-                  bookmarkCubit.addBookmarkQuestion(question);
+                  bookmarkCubit.addBookmarkQuestion(
+                      question, context.read<UserDetailsCubit>().getUserId());
                   updateBookmarkcubit.updateBookmark(
                       context.read<UserDetailsCubit>().getUserId(),
                       question.id!,

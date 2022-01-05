@@ -11,7 +11,6 @@ import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/battleRoom/models/message.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
-import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
@@ -269,12 +268,6 @@ class _MultiUserBattleRoomQuizScreenState
     }
   }
 
-  void updateSubmittedAnswerForBookmark(Question question) {
-    if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
-      context.read<BookmarkCubit>().updateSubmittedAnswerId(question);
-    }
-  }
-
   //update answer locally and on cloud
   void submitAnswer(String submittedAnswer) async {
     //
@@ -292,8 +285,6 @@ class _MultiUserBattleRoomQuizScreenState
           submittedAnswer,
           questions[currentQuestionIndex].correctAnswerOptionId ==
               submittedAnswer);
-
-      updateSubmittedAnswerForBookmark(questions[currentQuestionIndex]);
 
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));

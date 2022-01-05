@@ -246,12 +246,15 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           .read<AudioQuestionBookmarkCubit>()
           .hasQuestionBookmarked(question.id)) {
         context.read<AudioQuestionBookmarkCubit>().updateSubmittedAnswerId(
-            context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+            context.read<QuestionsCubit>().questions()[currentQuestionIndex],
+            context.read<UserDetailsCubit>().getUserId());
       }
     } else if (widget.quizType == QuizTypes.quizZone) {
       if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
         context.read<BookmarkCubit>().updateSubmittedAnswerId(
-            context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
+              context.read<QuestionsCubit>().questions()[currentQuestionIndex],
+              context.read<UserDetailsCubit>().getUserId(),
+            );
       }
     }
   }
@@ -339,7 +342,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       updateTotalSecondsToCompleteQuiz();
       //change question
       await Future.delayed(Duration(seconds: inBetweenQuestionTimeInSeconds));
-      //TODO : Add mounted check here
+
       if (currentQuestionIndex !=
           (context.read<QuestionsCubit>().questions().length - 1)) {
         updateSubmittedAnswerForBookmark(
@@ -446,12 +449,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     //if unable to remove question from bookmark then add question
                     //add again
                     bookmarkCubit.addBookmarkQuestion(
-                        questionsCubit.questions()[currentQuestionIndex]);
+                        questionsCubit.questions()[currentQuestionIndex],
+                        context.read<UserDetailsCubit>().getUserId());
                   } else {
                     //remove again
                     //if unable to add question to bookmark then remove question
                     bookmarkCubit.removeBookmarkQuestion(
-                        questionsCubit.questions()[currentQuestionIndex].id);
+                        questionsCubit.questions()[currentQuestionIndex].id,
+                        context.read<UserDetailsCubit>().getUserId());
                   }
                   UiUtils.setSnackbar(
                       AppLocalization.of(context)!.getTranslatedValues(
@@ -474,9 +479,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                             .questions()[currentQuestionIndex]
                             .id)) {
                           //remove
-                          bookmarkCubit.removeBookmarkQuestion(questionsCubit
-                              .questions()[currentQuestionIndex]
-                              .id);
+                          bookmarkCubit.removeBookmarkQuestion(
+                              questionsCubit
+                                  .questions()[currentQuestionIndex]
+                                  .id,
+                              context.read<UserDetailsCubit>().getUserId());
                           updateBookmarkcubit.updateBookmark(
                               context.read<UserDetailsCubit>().getUserId(),
                               questionsCubit
@@ -487,7 +494,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         } else {
                           //add
                           bookmarkCubit.addBookmarkQuestion(
-                              questionsCubit.questions()[currentQuestionIndex]);
+                              questionsCubit.questions()[currentQuestionIndex],
+                              context.read<UserDetailsCubit>().getUserId());
                           updateBookmarkcubit.updateBookmark(
                               context.read<UserDetailsCubit>().getUserId(),
                               questionsCubit
@@ -553,12 +561,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     //if unable to remove question from bookmark then add question
                     //add again
                     bookmarkCubit.addBookmarkQuestion(
-                        questionsCubit.questions()[currentQuestionIndex]);
+                        questionsCubit.questions()[currentQuestionIndex],
+                        context.read<UserDetailsCubit>().getUserId());
                   } else {
                     //remove again
                     //if unable to add question to bookmark then remove question
                     bookmarkCubit.removeBookmarkQuestion(
-                        questionsCubit.questions()[currentQuestionIndex].id);
+                        questionsCubit.questions()[currentQuestionIndex].id,
+                        context.read<UserDetailsCubit>().getUserId());
                   }
                   UiUtils.setSnackbar(
                       AppLocalization.of(context)!.getTranslatedValues(
@@ -582,9 +592,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                             .questions()[currentQuestionIndex]
                             .id)) {
                           //remove
-                          bookmarkCubit.removeBookmarkQuestion(questionsCubit
-                              .questions()[currentQuestionIndex]
-                              .id);
+                          bookmarkCubit.removeBookmarkQuestion(
+                              questionsCubit
+                                  .questions()[currentQuestionIndex]
+                                  .id,
+                              context.read<UserDetailsCubit>().getUserId());
                           updateBookmarkcubit.updateBookmark(
                               context.read<UserDetailsCubit>().getUserId(),
                               questionsCubit
@@ -595,7 +607,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         } else {
                           //add
                           bookmarkCubit.addBookmarkQuestion(
-                              questionsCubit.questions()[currentQuestionIndex]);
+                              questionsCubit.questions()[currentQuestionIndex],
+                              context.read<UserDetailsCubit>().getUserId());
                           updateBookmarkcubit.updateBookmark(
                               context.read<UserDetailsCubit>().getUserId(),
                               questionsCubit

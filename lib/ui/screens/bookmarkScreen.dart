@@ -242,7 +242,8 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                       bloc: context.read<UpdateBookmarkCubit>(),
                       listener: (context, state) {
                         if (state is UpdateBookmarkSuccess) {
-                          bookmarkCubit.removeBookmarkQuestion(question.id);
+                          bookmarkCubit.removeBookmarkQuestion(question.id,
+                              context.read<UserDetailsCubit>().getUserId());
                         }
                         if (state is UpdateBookmarkFailure) {
                           UiUtils.setSnackbar(
@@ -374,7 +375,8 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           bloc: context.read<UpdateBookmarkCubit>(),
                           listener: (context, state) {
                             if (state is UpdateBookmarkSuccess) {
-                              bookmarkCubit.removeBookmarkQuestion(question.id);
+                              bookmarkCubit.removeBookmarkQuestion(question.id,
+                                  context.read<UserDetailsCubit>().getUserId());
                             }
                             if (state is UpdateBookmarkFailure) {
                               UiUtils.setSnackbar(
@@ -508,7 +510,8 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           bloc: context.read<UpdateBookmarkCubit>(),
                           listener: (context, state) {
                             if (state is UpdateBookmarkSuccess) {
-                              bookmarkCubit.removeBookmarkQuestion(question.id);
+                              bookmarkCubit.removeBookmarkQuestion(question.id,
+                                  context.read<UserDetailsCubit>().getUserId());
                             }
                             if (state is UpdateBookmarkFailure) {
                               UiUtils.setSnackbar(

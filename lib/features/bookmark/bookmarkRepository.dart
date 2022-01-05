@@ -48,59 +48,76 @@ class BookmarkRepository {
   }
 
   //get submitted answer for given question index which is store in hive box
-  Future<List<String>> getSubmittedAnswerOfBookmarkedQuestions(
-      List<String> questionIds) async {
-    return await _bookmarkLocalDataSource
-        .getAnswerOfBookmarkedQuestion(questionIds);
+  Future<List<Map<String, String>>> getSubmittedAnswerOfBookmarkedQuestions(
+      List<String> questionIds, String userId) async {
+    final List<String> ids = [];
+    //key will be in hive box is "userId-questionId"
+    questionIds.forEach((element) {
+      ids.add("$userId-$element");
+    });
+    //
+    return await _bookmarkLocalDataSource.getAnswerOfBookmarkedQuestion(ids);
   }
 
   //get submitted answer for given question index which is store in hive box
-  Future<List<String>> getSubmittedAnswerOfAudioBookmarkedQuestions(
-      List<String> questionIds) async {
+  Future<List<Map<String, String>>>
+      getSubmittedAnswerOfAudioBookmarkedQuestions(
+          List<String> questionIds, String userId) async {
+    final List<String> ids = [];
+    //key will be in hive box is "userId-questionId"
+    questionIds.forEach((element) {
+      ids.add("$userId-$element");
+    });
     return await _bookmarkLocalDataSource
-        .getAnswerOfAudioBookmarkedQuestion(questionIds);
+        .getAnswerOfAudioBookmarkedQuestion(ids);
   }
 
   //get submitted answer for given question index which is store in hive box
-  Future<List<String>> getSubmittedAnswerOfGuessTheWordBookmarkedQuestions(
-      List<String> questionIds) async {
-    return _bookmarkLocalDataSource
-        .getAnswerOfGuessTheWordBookmarkedQuestion(questionIds);
+  Future<List<Map<String, String>>>
+      getSubmittedAnswerOfGuessTheWordBookmarkedQuestions(
+          List<String> questionIds, String userId) async {
+    final List<String> ids = [];
+    //key will be in hive box is "userId-questionId"
+    questionIds.forEach((element) {
+      ids.add("$userId-$element");
+    });
+    return await _bookmarkLocalDataSource
+        .getAnswerOfGuessTheWordBookmarkedQuestion(ids);
   }
 
   //remove bookmark answer from hive box
-  Future<void> removeBookmarkedAnswer(String? questionId) async {
-    _bookmarkLocalDataSource.removeBookmarkedAnswer(questionId);
+  Future<void> removeBookmarkedAnswer(String id) async {
+    _bookmarkLocalDataSource.removeBookmarkedAnswer(id);
   }
 
   //remove bookmark answer from hive box audio
-  Future<void> removeAudioBookmarkedAnswer(String? questionId) async {
-    _bookmarkLocalDataSource.removeAudioBookmarkedAnswer(questionId);
+  Future<void> removeAudioBookmarkedAnswer(String id) async {
+    _bookmarkLocalDataSource.removeAudioBookmarkedAnswer(id);
   }
 
   //remove bookmark answer from hive box
-  Future<void> removeGuessTheWordBookmarkedAnswer(String questionId) async {
-    _bookmarkLocalDataSource.removeGuessTheWordBookmarkedAnswer(questionId);
+  Future<void> removeGuessTheWordBookmarkedAnswer(String id) async {
+    _bookmarkLocalDataSource.removeGuessTheWordBookmarkedAnswer(id);
   }
 
   //set submitted answer id for given question index
   Future<void> setAnswerForBookmarkedQuestion(
-      String questionId, String submittedAnswerId) async {
+      String questionId, String submittedAnswerId, String userId) async {
     _bookmarkLocalDataSource.setAnswerForBookmarkedQuestion(
-        submittedAnswerId, questionId);
+        submittedAnswerId, questionId, userId);
   }
 
   //set submitted answer id for given question index
   Future<void> setAnswerForAudioBookmarkedQuestion(
-      String questionId, String submittedAnswerId) async {
+      String questionId, String submittedAnswerId, String userId) async {
     _bookmarkLocalDataSource.setAnswerForAudioBookmarkedQuestion(
-        submittedAnswerId, questionId);
+        submittedAnswerId, questionId, userId);
   }
 
   //set submitted answer id for given question index
   Future<void> setAnswerForGuessTheWordBookmarkedQuestion(
-      String questionId, String submittedAnswer) async {
+      String questionId, String submittedAnswer, String userId) async {
     _bookmarkLocalDataSource.setAnswerForGuessTheWordBookmarkedQuestion(
-        submittedAnswer, questionId);
+        submittedAnswer, questionId, userId);
   }
 }

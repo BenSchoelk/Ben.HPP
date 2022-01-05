@@ -13,9 +13,7 @@ class AudioQuestionBookmarkFetchInProgress extends AudioQuestionBookMarkState {}
 class AudioQuestionBookmarkFetchSuccess extends AudioQuestionBookMarkState {
   //bookmarked questions
   final List<Question> questions;
-  //submitted answer id for questions we can get submitted answer id for given quesiton
-  //by comparing index of these two lists
-  final List<String> submittedAnswerIds;
+  final List<Map<String, String>> submittedAnswerIds;
   AudioQuestionBookmarkFetchSuccess(this.questions, this.submittedAnswerIds);
 }
 
@@ -37,9 +35,9 @@ class AudioQuestionBookmarkCubit extends Cubit<AudioQuestionBookMarkState> {
           userId, "4") as List<Question>; //type 4 is for audio questions
 
       //coming from local database (hive)
-      List<String> submittedAnswerIds = await _bookmarkRepository
+      List<Map<String, String>> submittedAnswerIds = await _bookmarkRepository
           .getSubmittedAnswerOfAudioBookmarkedQuestions(
-              questions.map((e) => e.id!).toList());
+              questions.map((e) => e.id!).toList(), userId);
 
       emit(AudioQuestionBookmarkFetchSuccess(questions, submittedAnswerIds));
     } catch (e) {
@@ -55,36 +53,38 @@ class AudioQuestionBookmarkCubit extends Cubit<AudioQuestionBookMarkState> {
     return false;
   }
 
-  void addBookmarkQuestion(Question question) {
+  void addBookmarkQuestion(Question question, String userId) {
     print(
         "Added question id ${question.id} and answer id is ${question.submittedAnswerId}");
     if (state is AudioQuestionBookmarkFetchSuccess) {
       final currentState = (state as AudioQuestionBookmarkFetchSuccess);
       //set submitted answer for given index initially submitted answer will be empty
       _bookmarkRepository.setAnswerForAudioBookmarkedQuestion(
-          question.id!, question.submittedAnswerId);
+          question.id!, question.submittedAnswerId, userId);
       emit(AudioQuestionBookmarkFetchSuccess(
         List.from(currentState.questions)
           ..insert(0, question.updateQuestionWithAnswer(submittedAnswerId: "")),
         List.from(currentState.submittedAnswerIds)
-          ..insert(0, question.submittedAnswerId),
+          ..insert(0, {question.id!: question.submittedAnswerId}),
       ));
     }
   }
 
   //we need to update submitted answer for given queston index
   //this will be call after user has given answer for question and question has been bookmarked
-  void updateSubmittedAnswerId(Question question) {
+  void updateSubmittedAnswerId(Question question, String userId) {
     if (state is AudioQuestionBookmarkFetchSuccess) {
       final currentState = (state as AudioQuestionBookmarkFetchSuccess);
       print("Submitted AnswerId : ${question.submittedAnswerId}");
       _bookmarkRepository.setAnswerForAudioBookmarkedQuestion(
-          question.id!, question.submittedAnswerId);
-      List<String> updatedSubmittedAnswerIds =
+          question.id!, question.submittedAnswerId, userId);
+      List<Map<String, String>> updatedSubmittedAnswerIds =
           List.from(currentState.submittedAnswerIds);
-      updatedSubmittedAnswerIds[currentState.questions
-              .indexWhere((element) => element.id == question.id)] =
-          question.submittedAnswerId;
+      //
+      updatedSubmittedAnswerIds[updatedSubmittedAnswerIds
+          .indexWhere((element) => element.keys.first == question.id)] = {
+        question.id!: question.submittedAnswerId
+      };
       emit(AudioQuestionBookmarkFetchSuccess(
         List.from(currentState.questions),
         updatedSubmittedAnswerIds,
@@ -93,18 +93,17 @@ class AudioQuestionBookmarkCubit extends Cubit<AudioQuestionBookMarkState> {
   }
 
   //remove bookmark question and respective submitted answer
-  void removeBookmarkQuestion(String? questionId) {
+  void removeBookmarkQuestion(String? questionId, String userId) {
     if (state is AudioQuestionBookmarkFetchSuccess) {
       final currentState = (state as AudioQuestionBookmarkFetchSuccess);
       List<Question> updatedQuestions = List.from(currentState.questions);
-      List<String> submittedAnswerIds =
+      List<Map<String, String>> submittedAnswerIds =
           List.from(currentState.submittedAnswerIds);
 
-      int index =
-          updatedQuestions.indexWhere((element) => element.id == questionId);
-      updatedQuestions.removeAt(index);
-      submittedAnswerIds.removeAt(index);
-      _bookmarkRepository.removeAudioBookmarkedAnswer(questionId);
+      updatedQuestions.removeWhere((element) => element.id == questionId);
+      submittedAnswerIds
+          .removeWhere((element) => element.keys.first == questionId);
+      _bookmarkRepository.removeAudioBookmarkedAnswer("$userId-$questionId");
       emit(AudioQuestionBookmarkFetchSuccess(
         updatedQuestions,
         submittedAnswerIds,
@@ -123,19 +122,23 @@ class AudioQuestionBookmarkCubit extends Cubit<AudioQuestionBookMarkState> {
   String getSubmittedAnswerForQuestion(String? questionId) {
     if (state is AudioQuestionBookmarkFetchSuccess) {
       final currentState = (state as AudioQuestionBookmarkFetchSuccess);
-      //current question
-      int index = currentState.questions
-          .indexWhere((element) => element.id == questionId);
-      if (currentState.submittedAnswerIds[index].isEmpty ||
-          currentState.submittedAnswerIds[index] == "-1" ||
-          currentState.submittedAnswerIds[index] == "0") {
+      //submitted answer index based on question id
+      int index = currentState.submittedAnswerIds
+          .indexWhere((element) => element.keys.first == questionId);
+      if (currentState.submittedAnswerIds[index][questionId]!.isEmpty ||
+          currentState.submittedAnswerIds[index][questionId] == "-1" ||
+          currentState.submittedAnswerIds[index][questionId] == "0") {
         return "Un-attempted";
       }
 
-      Question question = currentState.questions[index];
+      Question question = currentState.questions
+          .where((element) => element.id == questionId)
+          .toList()
+          .first;
 
       int submittedAnswerOptionIndex = question.answerOptions!.indexWhere(
-          (element) => element.id == currentState.submittedAnswerIds[index]);
+          (element) =>
+              element.id == currentState.submittedAnswerIds[index][questionId]);
 
       return question.answerOptions![submittedAnswerOptionIndex].title!;
     }

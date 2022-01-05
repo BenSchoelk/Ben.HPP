@@ -236,15 +236,15 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
         .getQuestions()[_currentQuestionIndex]
         .id)) {
       context.read<GuessTheWordBookmarkCubit>().updateSubmittedAnswer(
-            questionId: context
-                .read<GuessTheWordQuizCubit>()
-                .getQuestions()[_currentQuestionIndex]
-                .id,
-            submittedAnswer: UiUtils.buildGuessTheWordQuestionAnswer(
-                questionContainerKeys[_currentQuestionIndex]
-                    .currentState!
-                    .getSubmittedAnswer()),
-          );
+          questionId: context
+              .read<GuessTheWordQuizCubit>()
+              .getQuestions()[_currentQuestionIndex]
+              .id,
+          submittedAnswer: UiUtils.buildGuessTheWordQuestionAnswer(
+              questionContainerKeys[_currentQuestionIndex]
+                  .currentState!
+                  .getSubmittedAnswer()),
+          userId: context.read<UserDetailsCubit>().getUserId());
     } else {
       print("Quesiton not bookmarked");
     }
@@ -367,14 +367,18 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                 if (state.failedStatus == "0") {
                   //if unable to remove question from bookmark then add question
                   //add again
-                  bookmarkCubit.addBookmarkQuestion(guessTheWordQuizCubit
-                      .getQuestions()[_currentQuestionIndex]);
+                  bookmarkCubit.addBookmarkQuestion(
+                      guessTheWordQuizCubit
+                          .getQuestions()[_currentQuestionIndex],
+                      context.read<UserDetailsCubit>().getUserId());
                 } else {
                   //remove again
                   //if unable to add question to bookmark then remove question
-                  bookmarkCubit.removeBookmarkQuestion(guessTheWordQuizCubit
-                      .getQuestions()[_currentQuestionIndex]
-                      .id);
+                  bookmarkCubit.removeBookmarkQuestion(
+                      guessTheWordQuizCubit
+                          .getQuestions()[_currentQuestionIndex]
+                          .id,
+                      context.read<UserDetailsCubit>().getUserId());
                 }
                 UiUtils.setSnackbar(
                     AppLocalization.of(context)!.getTranslatedValues(
@@ -403,7 +407,8 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                         bookmarkCubit.removeBookmarkQuestion(
                             guessTheWordQuizCubit
                                 .getQuestions()[_currentQuestionIndex]
-                                .id);
+                                .id,
+                            context.read<UserDetailsCubit>().getUserId());
                         updateBookmarkcubit.updateBookmark(
                           context.read<UserDetailsCubit>().getUserId(),
                           guessTheWordQuizCubit
@@ -414,8 +419,10 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                         );
                       } else {
                         //add
-                        bookmarkCubit.addBookmarkQuestion(guessTheWordQuizCubit
-                            .getQuestions()[_currentQuestionIndex]);
+                        bookmarkCubit.addBookmarkQuestion(
+                            guessTheWordQuizCubit
+                                .getQuestions()[_currentQuestionIndex],
+                            context.read<UserDetailsCubit>().getUserId());
                         updateBookmarkcubit.updateBookmark(
                             context.read<UserDetailsCubit>().getUserId(),
                             guessTheWordQuizCubit

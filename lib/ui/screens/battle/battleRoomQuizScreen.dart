@@ -281,7 +281,8 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
 
   void updateSubmittedAnswerForBookmark(Question question) {
     if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
-      context.read<BookmarkCubit>().updateSubmittedAnswerId(question);
+      context.read<BookmarkCubit>().updateSubmittedAnswerId(
+          question, context.read<UserDetailsCubit>().getUserId());
     }
   }
 

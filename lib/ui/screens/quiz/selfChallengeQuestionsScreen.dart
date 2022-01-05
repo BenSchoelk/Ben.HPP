@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
-import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/questionsCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
@@ -148,13 +147,6 @@ class _SelfChallengeQuestionsScreenState
     super.dispose();
   }
 
-  void updateSubmittedAnswerForBookmark(Question question) {
-    if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
-      context.read<BookmarkCubit>().updateSubmittedAnswerId(
-          context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
-    }
-  }
-
   void toggleSettingDialog() {
     isSettingDialogOpen = !isSettingDialogOpen;
   }
@@ -194,8 +186,6 @@ class _SelfChallengeQuestionsScreenState
         ques[currentQuestionIndex].id, submittedAnswer);
     //change question
     await Future.delayed(Duration(milliseconds: 500));
-    updateSubmittedAnswerForBookmark(
-        context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
   }
 
   //listener for current user timer

@@ -10,7 +10,6 @@ import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.d
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/guessTheWordQuizCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/questionsCubit.dart';
-import 'package:flutterquiz/features/quiz/models/question.dart';
 
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
@@ -169,13 +168,6 @@ class _BookmarkQuizScreenState extends State<BookmarkQuizScreen>
 
   void toggleSettingDialog() {
     isSettingDialogOpen = !isSettingDialogOpen;
-  }
-
-  void updateSubmittedAnswerForBookmark(Question question) {
-    if (context.read<BookmarkCubit>().hasQuestionBookmarked(question.id)) {
-      context.read<BookmarkCubit>().updateSubmittedAnswerId(
-          context.read<QuestionsCubit>().questions()[currentQuestionIndex]);
-    }
   }
 
   //change to next Question
