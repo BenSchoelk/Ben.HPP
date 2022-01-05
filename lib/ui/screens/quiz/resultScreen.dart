@@ -14,6 +14,7 @@ import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/features/statistic/cubits/updateStatisticCubit.dart';
 import 'package:flutterquiz/features/statistic/statisticRepository.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
@@ -1489,21 +1490,27 @@ class _ResultScreenState extends State<ResultScreen> {
         SizedBox(
           height: betweenButoonSpace,
         ),
-        _buildButton(
-            AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!,
-            () {
-          Navigator.of(context).pushNamed(Routes.reviewAnswers, arguments: {
-            "questions": widget.quizType == QuizTypes.guessTheWord
-                ? List<Question>.from([])
-                : widget.questions,
-            "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord
-                ? widget.guessTheWordQuestions
-                : List<GuessTheWordQuestion>.from([]),
-          });
-        }, context),
-        SizedBox(
-          height: betweenButoonSpace,
-        ),
+        context.read<SystemConfigCubit>().isPaymentRequestEnable()
+            ? SizedBox()
+            : _buildButton(
+                AppLocalization.of(context)!
+                    .getTranslatedValues("reviewAnsBtn")!, () {
+                Navigator.of(context)
+                    .pushNamed(Routes.reviewAnswers, arguments: {
+                  "questions": widget.quizType == QuizTypes.guessTheWord
+                      ? List<Question>.from([])
+                      : widget.questions,
+                  "guessTheWordQuestions":
+                      widget.quizType == QuizTypes.guessTheWord
+                          ? widget.guessTheWordQuestions
+                          : List<GuessTheWordQuestion>.from([]),
+                });
+              }, context),
+        context.read<SystemConfigCubit>().isPaymentRequestEnable()
+            ? SizedBox()
+            : SizedBox(
+                height: betweenButoonSpace,
+              ),
         _buildShareYourScoreButton(),
         SizedBox(
           height: betweenButoonSpace,
