@@ -9,7 +9,6 @@ import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
@@ -355,8 +354,6 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
           showDialog(
             context: context,
             builder: (context) => MultiBlocProvider(providers: [
-              BlocProvider<QuizCategoryCubit>(
-                  create: (_) => QuizCategoryCubit(QuizRepository())),
               BlocProvider<UpdateScoreAndCoinsCubit>(
                   create: (_) =>
                       UpdateScoreAndCoinsCubit(ProfileManagementRepository())),

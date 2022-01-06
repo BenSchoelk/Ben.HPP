@@ -8,8 +8,6 @@ import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
-
 import 'dart:math' as math;
 
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -27,15 +25,7 @@ class SelfChallengeScreen extends StatefulWidget {
   _SelfChallengeScreenState createState() => _SelfChallengeScreenState();
 
   static Route<dynamic> route(RouteSettings routeSettings) {
-    return CupertinoPageRoute(
-        builder: (_) => MultiBlocProvider(providers: [
-              BlocProvider<SubCategoryCubit>(
-                create: (_) => SubCategoryCubit(QuizRepository()),
-              ),
-              BlocProvider<QuizCategoryCubit>(
-                create: (_) => QuizCategoryCubit(QuizRepository()),
-              ),
-            ], child: SelfChallengeScreen()));
+    return CupertinoPageRoute(builder: (_) => SelfChallengeScreen());
   }
 }
 

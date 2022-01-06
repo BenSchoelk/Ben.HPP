@@ -7,8 +7,7 @@ import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
+
 import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
 import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
@@ -422,8 +421,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       showDialog(
         context: context,
         builder: (context) => MultiBlocProvider(providers: [
-          BlocProvider<QuizCategoryCubit>(
-              create: (_) => QuizCategoryCubit(QuizRepository())),
           BlocProvider<UpdateScoreAndCoinsCubit>(
               create: (_) =>
                   UpdateScoreAndCoinsCubit(ProfileManagementRepository())),
@@ -448,8 +445,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       showDialog(
           context: context,
           builder: (context) => MultiBlocProvider(providers: [
-                BlocProvider<QuizCategoryCubit>(
-                    create: (_) => QuizCategoryCubit(QuizRepository())),
                 BlocProvider<UpdateScoreAndCoinsCubit>(
                     create: (_) => UpdateScoreAndCoinsCubit(
                         ProfileManagementRepository())),
