@@ -1582,6 +1582,7 @@ class _ResultScreenState extends State<ResultScreen> {
         ],
       );
     }
+
     //
 
     return Column(
