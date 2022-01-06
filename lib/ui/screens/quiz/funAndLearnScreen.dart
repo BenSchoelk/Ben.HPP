@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
 import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/quiz/models/comprehension.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
@@ -12,9 +13,11 @@ import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
 
 class FunAndLearnScreen extends StatefulWidget {
-  final QuizTypes? quizType;
-  final String? detail, id;
-  const FunAndLearnScreen({Key? key, this.quizType, this.detail, this.id})
+  final QuizTypes quizType;
+  final Comprehension comprehension;
+
+  const FunAndLearnScreen(
+      {Key? key, required this.quizType, required this.comprehension})
       : super(key: key);
   @override
   _FunAndLearnScreen createState() => _FunAndLearnScreen();
@@ -22,9 +25,8 @@ class FunAndLearnScreen extends StatefulWidget {
     Map? arguments = routeSettings.arguments as Map?;
     return CupertinoPageRoute(
         builder: (_) => FunAndLearnScreen(
-              quizType: arguments!['quizType'] as QuizTypes?,
-              detail: arguments['detail'],
-              id: arguments["id"],
+              quizType: arguments!['quizType'] as QuizTypes,
+              comprehension: arguments['comprehension'],
             ));
   }
 }
@@ -57,7 +59,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
     Navigator.of(context).pushReplacementNamed(Routes.quiz, arguments: {
       "numberOfPlayer": 1,
       "quizType": QuizTypes.funAndLearn,
-      "comprehensionId": widget.id,
+      "comprehension": widget.comprehension,
       "quizName": "Fun 'N'Learn",
     });
   }
@@ -102,7 +104,7 @@ class _FunAndLearnScreen extends State<FunAndLearnScreen>
           ),
           child: SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 80),
-            child: Html(data: widget.detail!),
+            child: Html(data: widget.comprehension.detail),
           )),
     );
   }

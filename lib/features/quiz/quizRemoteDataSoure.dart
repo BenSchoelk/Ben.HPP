@@ -569,4 +569,54 @@ class QuizRemoteDataSource {
       throw QuizException(errorMessageCode: defaultErrorMessageCode);
     }
   }
+
+  //This will be in use to mark category, subcategory and fun n learn para. played
+  /*
+  access_key:8525
+        user_id:1
+        type:3      // 2-fun_n_learn, 3-guess_the_word, 4-audio_question
+        category:1
+        subcategory:2   //{optional}
+        type_id:1       // for fun_n_learn_id
+  
+   */
+  Future<void> setQuizCategoryPlayed(
+      {required String type,
+      required String userId,
+      required String categoryId,
+      required String subcategoryId,
+      required String typeId}) async {
+    try {
+      //body of post request
+      final body = {
+        accessValueKey: accessValue,
+        typeKey: type,
+        typeIdKey: typeId,
+        userIdKey: userId,
+        categoryKey: categoryId,
+        subCategoryKey: subcategoryId,
+      };
+      if (subcategoryId.isEmpty) {
+        body.remove(subCategoryKey);
+      }
+      if (typeId.isEmpty) {
+        body.remove(typeIdKey);
+      }
+
+      print("Set quiz category body : $body");
+      final response = await http.post(Uri.parse(setQuizCategoryPlayedUrl),
+          body: body, headers: ApiUtils.getHeaders());
+      final responseJson = jsonDecode(response.body);
+      if (responseJson['error']) {
+        print(responseJson);
+        throw QuizException(errorMessageCode: responseJson['message']);
+      }
+    } on SocketException catch (_) {
+      throw QuizException(errorMessageCode: noInternetCode);
+    } on QuizException catch (e) {
+      throw QuizException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw QuizException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
 }

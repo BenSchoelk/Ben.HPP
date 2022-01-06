@@ -261,4 +261,22 @@ class QuizRepository {
       throw QuizException(errorMessageCode: e.toString());
     }
   }
+
+  Future<void> setQuizCategoryPlayed(
+      {required String type,
+      required String userId,
+      required String categoryId,
+      required String subcategoryId,
+      required String typeId}) async {
+    try {
+      await _quizRemoteDataSource.setQuizCategoryPlayed(
+          type: type,
+          userId: userId,
+          categoryId: categoryId,
+          subcategoryId: subcategoryId,
+          typeId: typeId);
+    } catch (e) {
+      throw QuizException(errorMessageCode: e.toString());
+    }
+  }
 }

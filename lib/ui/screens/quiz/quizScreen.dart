@@ -14,6 +14,7 @@ import 'package:flutterquiz/features/profileManagement/profileManagementReposito
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/questionsCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:flutterquiz/features/quiz/models/comprehension.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
@@ -48,24 +49,24 @@ class QuizScreen extends StatefulWidget {
   final String
       subcategoryMaxLevel; //will be in use for quizZone quizType (to pass in result screen)
   final int unlockedLevel;
+  final bool isPlayed; //Only in use when quiz type is audio questions
   final String contestId;
-  final String
-      comprehensionId; // will be in use for quizZone quizType (to pass in result screen)
-  final String quizName;
+  final Comprehension
+      comprehension; // will be in use for fun n learn quizType (to pass in result screen)
 
-  QuizScreen(
-      {Key? key,
-      required this.numberOfPlayer,
-      required this.subcategoryMaxLevel,
-      required this.quizType,
-      required this.categoryId,
-      required this.level,
-      required this.subcategoryId,
-      required this.unlockedLevel,
-      required this.contestId,
-      required this.comprehensionId,
-      required this.quizName})
-      : super(key: key);
+  QuizScreen({
+    Key? key,
+    required this.isPlayed,
+    required this.numberOfPlayer,
+    required this.subcategoryMaxLevel,
+    required this.quizType,
+    required this.categoryId,
+    required this.level,
+    required this.subcategoryId,
+    required this.unlockedLevel,
+    required this.contestId,
+    required this.comprehension,
+  }) : super(key: key);
 
   @override
   _QuizScreenState createState() => _QuizScreenState();
@@ -79,20 +80,21 @@ class QuizScreen extends StatefulWidget {
 
     return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(
-              providers: [
-                //for quesitons and points
-                BlocProvider<QuestionsCubit>(
-                  create: (_) => QuestionsCubit(QuizRepository()),
-                ),
-                //to update user coins after using lifeline
-                BlocProvider<UpdateScoreAndCoinsCubit>(
-                  create: (_) =>
-                      UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
-                ),
-                BlocProvider<UpdateBookmarkCubit>(
-                    create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
-              ],
-              child: QuizScreen(
+                providers: [
+                  //for quesitons and points
+                  BlocProvider<QuestionsCubit>(
+                    create: (_) => QuestionsCubit(QuizRepository()),
+                  ),
+                  //to update user coins after using lifeline
+                  BlocProvider<UpdateScoreAndCoinsCubit>(
+                    create: (_) =>
+                        UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  ),
+                  BlocProvider<UpdateBookmarkCubit>(
+                      create: (_) => UpdateBookmarkCubit(BookmarkRepository())),
+                ],
+                child: QuizScreen(
+                  isPlayed: arguments['isPlayed'] ?? true,
                   numberOfPlayer: arguments['numberOfPlayer'] as int,
                   quizType: arguments['quizType'] as QuizTypes,
                   categoryId: arguments['categoryId'] ?? "",
@@ -101,9 +103,9 @@ class QuizScreen extends StatefulWidget {
                   subcategoryMaxLevel: arguments['subcategoryMaxLevel'] ?? "",
                   unlockedLevel: arguments['unlockedLevel'] ?? 0,
                   contestId: arguments["contestId"] ?? "",
-                  comprehensionId: arguments["comprehensionId"] ?? "",
-                  quizName: arguments["quizName"] ?? ""),
-            ));
+                  comprehension:
+                      arguments["comprehension"] ?? Comprehension.fromJson({}),
+                )));
   }
 }
 
@@ -155,7 +157,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             languageId: UiUtils.getCurrentQuestionLanguageId(context),
             subcategoryId: widget.subcategoryId,
             contestId: widget.contestId,
-            funAndLearnId: widget.comprehensionId);
+            funAndLearnId: widget.comprehension.id);
       },
     );
   }
@@ -234,7 +236,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       "subcategoryMaxLevel": widget.subcategoryMaxLevel,
       "unlockedLevel": widget.unlockedLevel,
       "contestId": widget.contestId,
-      "comprehensionId": widget.comprehensionId,
+      "comprehension": widget.comprehension,
       "timeTakenToCompleteQuiz": totalSecondsToCompleteQuiz,
       "hasUsedAnyLifeline": checkHasUsedAnyLifeline(),
       "entryFee": 0

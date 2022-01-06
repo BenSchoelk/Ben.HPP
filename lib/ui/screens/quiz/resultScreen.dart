@@ -9,7 +9,10 @@ import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
 import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/exam/models/exam.dart';
+import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/setCategoryPlayedCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/setContestLeaderboardCubit.dart';
+import 'package:flutterquiz/features/quiz/models/comprehension.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 import 'package:flutterquiz/features/statistic/cubits/updateStatisticCubit.dart';
@@ -48,7 +51,7 @@ class ResultScreen extends StatefulWidget {
   final List<Question>? questions; //to see reivew answers
   final BattleRoom? battleRoom; //will be in use for battle
   final String? contestId;
-  final String? comprehensionId; //will be use to set contest leaderboard
+  final Comprehension comprehension; //
   final List<GuessTheWordQuestion>?
       guessTheWordQuestions; //questions when quiz type is guessTheWord
   final int? entryFee;
@@ -91,7 +94,7 @@ class ResultScreen extends StatefulWidget {
       this.quizType,
       this.subcategoryMaxLevel,
       this.contestId,
-      this.comprehensionId,
+      required this.comprehension,
       this.guessTheWordQuestions,
       this.entryFee})
       : super(key: key);
@@ -125,8 +128,14 @@ class ResultScreen extends StatefulWidget {
                 BlocProvider<SetContestLeaderboardCubit>(
                   create: (_) => SetContestLeaderboardCubit(QuizRepository()),
                 ),
+                //set quiz category played
+                BlocProvider<SetCategoryPlayed>(
+                  create: (_) => SetCategoryPlayed(QuizRepository()),
+                ),
               ],
               child: ResultScreen(
+                comprehension:
+                    arguments['comprehension'] ?? Comprehension.fromJson({}),
                 correctExamAnswers: arguments['correctExamAnswers'],
                 incorrectExamAnswers: arguments['incorrectExamAnswers'],
                 exam: arguments['exam'],
@@ -421,50 +430,40 @@ class _ResultScreenState extends State<ResultScreen> {
 
   //
   void _updateScoreAndCoinsDetails() {
-    //we need to update score and coins only when quiz type is not self challenge, battle and contest
-    if (widget.quizType != QuizTypes.selfChallenge &&
-        widget.quizType != QuizTypes.battle &&
-        widget.quizType != QuizTypes.contest &&
-        widget.quizType != QuizTypes.exam) {
-      //if percentage is more than 30 then update socre and coins
-      if (_isWinner) {
-        //
-        //if quizType is quizZone we need to update unlocked level,coins and score
-        //only one time
-        //
-        if (widget.quizType == QuizTypes.quizZone) {
-          //if given level is same as unlocked level then update level
-          if (int.parse(widget.questions!.first.level!) ==
-              widget.unlockedLevel) {
-            int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
-            //update level
-            context.read<UpdateLevelCubit>().updateLevel(
-                context.read<UserDetailsCubit>().getUserId(),
-                widget.questions!.first.categoryId,
-                widget.questions!.first.subcategoryId,
-                updatedLevel.toString());
-            _updateCoinsAndScore();
-          } else {
-            print("Level already unlocked so no coins and score updates");
-          }
-        }
-        //update coins for other quiz Type (except quizZone)
-        else {
+    //if percentage is more than 30 then update socre and coins
+    if (_isWinner) {
+      //
+      //if quizType is quizZone we need to update unlocked level,coins and score
+      //only one time
+      //
+      if (widget.quizType == QuizTypes.quizZone) {
+        //if given level is same as unlocked level then update level
+        if (int.parse(widget.questions!.first.level!) == widget.unlockedLevel) {
+          int updatedLevel = int.parse(widget.questions!.first.level!) + 1;
+          //update level
+          context.read<UpdateLevelCubit>().updateLevel(
+              context.read<UserDetailsCubit>().getUserId(),
+              widget.questions!.first.categoryId,
+              widget.questions!.first.subcategoryId,
+              updatedLevel.toString());
           _updateCoinsAndScore();
+        } else {
+          print("Level already unlocked so no coins and score updates");
+        }
+      } else if (widget.quizType == QuizTypes.funAndLearn) {
+        //
+        if (!widget.comprehension.isPlayed) {
+          _updateCoinsAndScore();
+          context.read<SetCategoryPlayed>().setCategoryPlayed(
+              quizType: QuizTypes.funAndLearn,
+              userId: context.read<UserDetailsCubit>().getUserId(),
+              categoryId: widget.questions!.first.categoryId!,
+              subcategoryId: widget.questions!.first.subcategoryId! == "0"
+                  ? ""
+                  : widget.questions!.first.subcategoryId!,
+              typeId: widget.comprehension.id!);
         }
       }
-      //
-      // else {
-      //   //
-      //   if (widget.quizType != QuizTypes.quizZone) {
-      //     //update only score
-      //     context.read<UpdateScoreAndCoinsCubit>().updateScore(
-      //           context.read<UserDetailsCubit>().getUserId(),
-      //           widget.myPoints,
-      //         );
-      //     context.read<UserDetailsCubit>().updateScore(widget.myPoints);
-      //   }
-      // }
     }
   }
 
@@ -473,6 +472,25 @@ class _ResultScreenState extends State<ResultScreen> {
       double percentage = winPercentage();
       _earnedCoins =
           UiUtils.coinsBasedOnWinPercentage(percentage, widget.quizType!);
+    }
+  }
+
+  //This will execute once user press back button or go back from result screen
+  //so respective data of category,sub category and fun n learn can be updated
+  void onPageBackCalls() {
+    if (widget.quizType == QuizTypes.funAndLearn &&
+        _isWinner &&
+        !widget.comprehension.isPlayed) {
+      context.read<ComprehensionCubit>().getComprehension(
+            languageId: UiUtils.getCurrentQuestionLanguageId(context),
+            type: widget.questions!.first.subcategoryId! == "0"
+                ? "category"
+                : "subcategory",
+            typeId: widget.questions!.first.subcategoryId! == "0"
+                ? widget.questions!.first.categoryId!
+                : widget.questions!.first.subcategoryId!,
+            userId: context.read<UserDetailsCubit>().getUserId(),
+          );
     }
   }
 
@@ -560,7 +578,10 @@ class _ResultScreenState extends State<ResultScreen> {
       return (int.parse(widget.questions!.first.level!) ==
           widget.unlockedLevel);
     }
-
+    if (widget.quizType == QuizTypes.funAndLearn) {
+      //if user completed more than 30% and has not played this paragraph yet
+      return _isWinner && !widget.comprehension.isPlayed;
+    }
     return _isWinner;
   }
 
@@ -591,6 +612,7 @@ class _ResultScreenState extends State<ResultScreen> {
                       ),
                       child: InkWell(
                           onTap: () {
+                            onPageBackCalls();
                             Navigator.pop(context);
                           },
                           child: Container(
@@ -1525,29 +1547,36 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          PageBackgroundGradientContainer(),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 50.0,
-                ),
-                Center(child: _buildResultContainer(context)),
-                SizedBox(
-                  height: 30.0,
-                ),
-                _buildResultButtons(context),
-                SizedBox(
-                  height: 50.0,
-                ),
-              ],
+    return WillPopScope(
+      onWillPop: () {
+        onPageBackCalls();
+
+        return Future.value(true);
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            PageBackgroundGradientContainer(),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50.0,
+                  ),
+                  Center(child: _buildResultContainer(context)),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  _buildResultButtons(context),
+                  SizedBox(
+                    height: 50.0,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

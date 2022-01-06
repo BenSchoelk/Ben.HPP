@@ -24,6 +24,8 @@ import 'package:flutterquiz/features/exam/examRepository.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/settings/settingsLocalDataSource.dart';
@@ -140,6 +142,12 @@ class MyApp extends StatelessWidget {
             create: (_) => TournamentBattleCubit(TournamentRepository())),
         //exam cubit
         BlocProvider<ExamCubit>(create: (_) => ExamCubit(ExamRepository())),
+
+        //Setting this cubit globally so we can fetch again once
+        //set quiz categories success
+        BlocProvider<ComprehensionCubit>(
+          create: (_) => ComprehensionCubit(QuizRepository()),
+        ),
       ],
       child: Builder(
         builder: (context) {

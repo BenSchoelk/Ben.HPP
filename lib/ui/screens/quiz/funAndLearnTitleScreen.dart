@@ -6,7 +6,6 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -27,16 +26,9 @@ class FunAndLearnTitleScreen extends StatefulWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
-        builder: (_) => MultiBlocProvider(
-              providers: [
-                BlocProvider<ComprehensionCubit>(
-                  create: (_) => ComprehensionCubit(QuizRepository()),
-                ),
-              ],
-              child: FunAndLearnTitleScreen(
-                type: arguments['type'],
-                typeId: arguments['typeId'],
-              ),
+        builder: (_) => FunAndLearnTitleScreen(
+              type: arguments['type'],
+              typeId: arguments['typeId'],
             ));
   }
 }
@@ -102,21 +94,21 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                   errorMessageColor: Theme.of(context).primaryColor,
                 );
               }
-              final questions =
+              final comprehensions =
                   (state as ComprehensionSuccess).getComprehension;
               return ListView.builder(
                   shrinkWrap: true,
                   padding: EdgeInsets.only(bottom: 15.0),
-                  itemCount: questions.length,
+                  itemCount: comprehensions.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(Routes.funAndLearn, arguments: {
-                          "detail": questions[index].detail,
-                          "id": questions[index].id,
-                          "quizType": QuizTypes.funAndLearn
-                        });
+                        print("Played : ${comprehensions[index].isPlayed}");
+                        Navigator.of(context).pushNamed(Routes.funAndLearn,
+                            arguments: {
+                              "comprehension": comprehensions[index],
+                              "quizType": QuizTypes.funAndLearn
+                            });
                       },
                       child: Card(
                         margin: EdgeInsets.symmetric(
@@ -131,7 +123,7 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                           children: [
                             Spacer(),
                             Text(
-                              questions[index].title!,
+                              comprehensions[index].title!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -150,7 +142,7 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
                                     borderRadius: BorderRadius.circular(20)),
                                 child: Center(
                                     child: Text(
-                                  "${questions[index].noOfQue}\n" +
+                                  "${comprehensions[index].noOfQue}\n" +
                                       AppLocalization.of(context)!
                                           .getTranslatedValues("questionLbl")!,
                                   textAlign: TextAlign.center,

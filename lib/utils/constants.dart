@@ -148,6 +148,9 @@ final String getCoinHistoryUrl = "${baseUrl}get_tracker_data";
 final String makePaymentRequestUrl = "${baseUrl}set_payment_request";
 final String getTransactionsUrl = "${baseUrl}get_payment_request";
 
+//This will be in use to mark x category or y sub category played , and fun n learn para
+final String setQuizCategoryPlayedUrl = "${baseUrl}set_quiz_categories";
+
 //quesiton or quiz time duration
 final int questionDurationInSeconds = 15;
 final int selfChallengeMaxMinutes = 30;
