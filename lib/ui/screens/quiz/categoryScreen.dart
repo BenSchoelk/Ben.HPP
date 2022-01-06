@@ -164,6 +164,7 @@ class _CategoryScreen extends State<CategoryScreen> {
                         "numberOfPlayer": 1,
                         "quizType": QuizTypes.audioQuestions,
                         "categoryId": categoryList[index].id,
+                        "isPlayed": categoryList[index].isPlayed,
                       });
                     } else {
                       //

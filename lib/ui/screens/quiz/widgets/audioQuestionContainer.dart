@@ -12,11 +12,13 @@ class AudioQuestionContainer extends StatefulWidget {
   final List<Question> questions;
   final Function submitAnswer;
   final Function hasSubmittedAnswerForCurrentQuestion;
+  final bool showAnswerCorrectness;
 
   final AnimationController timerAnimationController;
   AudioQuestionContainer({
     Key? key,
     required this.constraints,
+    required this.showAnswerCorrectness,
     required this.currentQuestionIndex,
     required this.questions,
     required this.submitAnswer,
@@ -274,7 +276,7 @@ class AudioQuestionContainerState extends State<AudioQuestionContainer> {
                 children: question.answerOptions!.map((option) {
                   return OptionContainer(
                     submittedAnswerId: question.submittedAnswerId,
-                    showAnswerCorrectness: true,
+                    showAnswerCorrectness: widget.showAnswerCorrectness,
                     showAudiencePoll: false,
                     hasSubmittedAnswerForCurrentQuestion:
                         widget.hasSubmittedAnswerForCurrentQuestion,

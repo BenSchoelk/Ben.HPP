@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -6,7 +5,6 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -139,9 +137,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                               "numberOfPlayer": 1,
                               "quizType": QuizTypes.audioQuestions,
                               "subcategoryId": subCategoryList[index].id,
+                              "isPlayed": subCategoryList[index].isPlayed,
                             });
                           }
-                          print(subCategoryList[index].id!);
                         },
                         // leading: CachedNetworkImage(
                         //   placeholder: (context, _) => SizedBox(),

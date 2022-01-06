@@ -236,6 +236,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       "subcategoryMaxLevel": widget.subcategoryMaxLevel,
       "unlockedLevel": widget.unlockedLevel,
       "contestId": widget.contestId,
+      "isPlayed": widget.isPlayed,
       "comprehension": widget.comprehension,
       "timeTakenToCompleteQuiz": totalSecondsToCompleteQuiz,
       "hasUsedAnyLifeline": checkHasUsedAnyLifeline(),
@@ -996,6 +997,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   if (state is QuestionsFetchFailure) {
                     return Center(
                       child: ErrorContainer(
+                        errorMessageColor: Theme.of(context).backgroundColor,
                         showBackButton: true,
                         errorMessage: AppLocalization.of(context)!
                             .getTranslatedValues(convertErrorCodeToLanguageKey(

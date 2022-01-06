@@ -26,7 +26,10 @@ class QuestionsFetchSuccess extends QuestionsState {
   final int currentPoints;
   final QuizTypes quizType;
 
-  QuestionsFetchSuccess({required this.questions, required this.currentPoints, required this.quizType});
+  QuestionsFetchSuccess(
+      {required this.questions,
+      required this.currentPoints,
+      required this.quizType});
 }
 
 class QuestionsCubit extends Cubit<QuestionsState> {
@@ -40,24 +43,30 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   getQuestions(QuizTypes quizType,
       {String? userId, //will be in use for dailyQuiz
       String? languageId, //
-      String? categoryId, //will be in use for quizZone and self-challenge (quizType)
-      String? subcategoryId, //will be in use for quizZone and self-challenge (quizType)
+      String?
+          categoryId, //will be in use for quizZone and self-challenge (quizType)
+      String?
+          subcategoryId, //will be in use for quizZone and self-challenge (quizType)
       String? numberOfQuestions, //will be in use forself-challenge (quizType),
       String? level, //will be in use for quizZone (quizType)
       String? contestId,
       String? funAndLearnId}) {
     emit(QuestionsFetchInProgress(quizType));
-    print("Category Id : $categoryId");
-    print("Sub category Id : $subcategoryId");
-    print("Level : $level");
-    _quizRepository.getQuestions(quizType, languageId: languageId, categoryId: categoryId, numberOfQuestions: numberOfQuestions, subcategoryId: subcategoryId, level: level, contestId: contestId, userId: userId, funAndLearnId: funAndLearnId).then(
+
+    _quizRepository
+        .getQuestions(quizType,
+            languageId: languageId,
+            categoryId: categoryId,
+            numberOfQuestions: numberOfQuestions,
+            subcategoryId: subcategoryId,
+            level: level,
+            contestId: contestId,
+            userId: userId,
+            funAndLearnId: funAndLearnId)
+        .then(
       (questions) {
-        for (var question in questions) {
-          print("Category Id : ${question.categoryId} And Sub category Id : ${question.subcategoryId} Level : ${question.level}");
-          print("---------------");
-        }
-        print("Done");
-        emit(QuestionsFetchSuccess(currentPoints: 0, questions: questions, quizType: quizType));
+        emit(QuestionsFetchSuccess(
+            currentPoints: 0, questions: questions, quizType: quizType));
       },
     ).catchError((e) {
       emit(QuestionsFetchFailure(e.toString()));
@@ -65,20 +74,25 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   }
 
   //submitted AnswerId will contain -1, 0 or optionId (a,b,c,d,e)
-  void updateQuestionWithAnswerAndLifeline(String? questionId, String submittedAnswerId) {
+  void updateQuestionWithAnswerAndLifeline(
+      String? questionId, String submittedAnswerId) {
     //fethcing questions that need to update
-    List<Question> updatedQuestions = (state as QuestionsFetchSuccess).questions;
+    List<Question> updatedQuestions =
+        (state as QuestionsFetchSuccess).questions;
     //fetching index of question that need to update with submittedAnswer
-    int questionIndex = updatedQuestions.indexWhere((element) => element.id == questionId);
+    int questionIndex =
+        updatedQuestions.indexWhere((element) => element.id == questionId);
     //update question at given questionIndex with submittedAnswerId
-    updatedQuestions[questionIndex] = updatedQuestions[questionIndex].updateQuestionWithAnswer(submittedAnswerId: submittedAnswerId);
+    updatedQuestions[questionIndex] = updatedQuestions[questionIndex]
+        .updateQuestionWithAnswer(submittedAnswerId: submittedAnswerId);
     //update points
     int updatedPoints = (state as QuestionsFetchSuccess).currentPoints;
 
     //if submittedAnswerId is 0 means user has used skip lifeline so no need to modify points
     if (submittedAnswerId != "0") {
       //if answer is correct then add 4 points
-      if (updatedQuestions[questionIndex].submittedAnswerId == updatedQuestions[questionIndex].correctAnswerOptionId) {
+      if (updatedQuestions[questionIndex].submittedAnswerId ==
+          updatedQuestions[questionIndex].correctAnswerOptionId) {
         updatedPoints = updatedPoints + correctAnswerPoints;
       } else {
         //if answer is wrong then deduct 2 points and if answer is not attempt by user deduct 2 points
@@ -88,14 +102,20 @@ class QuestionsCubit extends Cubit<QuestionsState> {
 
     //update state with updatedQuestions, updatedPoints and lifelines
     emit(
-      QuestionsFetchSuccess(questions: updatedQuestions, currentPoints: updatedPoints, quizType: (state as QuestionsFetchSuccess).quizType),
+      QuestionsFetchSuccess(
+          questions: updatedQuestions,
+          currentPoints: updatedPoints,
+          quizType: (state as QuestionsFetchSuccess).quizType),
     );
   }
 
   void deductPointsForLeavingQuestion() {
     if (state is QuestionsFetchSuccess) {
       QuestionsFetchSuccess currentState = state as QuestionsFetchSuccess;
-      emit(QuestionsFetchSuccess(questions: currentState.questions, currentPoints: currentState.currentPoints - 2, quizType: currentState.quizType));
+      emit(QuestionsFetchSuccess(
+          questions: currentState.questions,
+          currentPoints: currentState.currentPoints - 2,
+          quizType: currentState.quizType));
     }
   }
 

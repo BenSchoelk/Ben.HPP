@@ -458,36 +458,46 @@ class _ResultScreenState extends State<ResultScreen> {
         } else {
           print("Level already unlocked so no coins and score updates");
         }
-      } else if (widget.quizType == QuizTypes.funAndLearn) {
+      }
+      //
+      else if (widget.quizType == QuizTypes.funAndLearn &&
+          !widget.comprehension.isPlayed) {
+        _updateCoinsAndScore();
+        context.read<SetCategoryPlayed>().setCategoryPlayed(
+            quizType: QuizTypes.funAndLearn,
+            userId: context.read<UserDetailsCubit>().getUserId(),
+            categoryId: widget.questions!.first.categoryId!,
+            subcategoryId: widget.questions!.first.subcategoryId! == "0"
+                ? ""
+                : widget.questions!.first.subcategoryId!,
+            typeId: widget.comprehension.id!);
+      }
+      //
+      else if (widget.quizType == QuizTypes.guessTheWord && !widget.isPlayed) {
+        _updateCoinsAndScore();
+        context.read<SetCategoryPlayed>().setCategoryPlayed(
+            quizType: QuizTypes.guessTheWord,
+            userId: context.read<UserDetailsCubit>().getUserId(),
+            categoryId: widget.guessTheWordQuestions!.first.category,
+            subcategoryId:
+                widget.guessTheWordQuestions!.first.subcategory == "0"
+                    ? ""
+                    : widget.guessTheWordQuestions!.first.subcategory,
+            typeId: "");
+      }
+      //
+      else if (widget.quizType == QuizTypes.audioQuestions &&
+          !widget.isPlayed) {
         //
-        if (!widget.comprehension.isPlayed) {
-          _updateCoinsAndScore();
-          context.read<SetCategoryPlayed>().setCategoryPlayed(
-              quizType: QuizTypes.funAndLearn,
-              userId: context.read<UserDetailsCubit>().getUserId(),
-              categoryId: widget.questions!.first.categoryId!,
-              subcategoryId: widget.questions!.first.subcategoryId! == "0"
-                  ? ""
-                  : widget.questions!.first.subcategoryId!,
-              typeId: widget.comprehension.id!);
-        }
-      } else if (widget.quizType == QuizTypes.guessTheWord) {
-        //
-        //
-        if (!widget.isPlayed) {
-          _updateCoinsAndScore();
-          context.read<SetCategoryPlayed>().setCategoryPlayed(
-              quizType: QuizTypes.guessTheWord,
-              userId: context.read<UserDetailsCubit>().getUserId(),
-              categoryId: widget.guessTheWordQuestions!.first.category,
-              subcategoryId:
-                  widget.guessTheWordQuestions!.first.subcategory == "0"
-                      ? ""
-                      : widget.guessTheWordQuestions!.first.subcategory,
-              typeId: "");
-        }
-      } else if (widget.quizType == QuizTypes.audioQuestions) {
-        //
+        _updateCoinsAndScore();
+        context.read<SetCategoryPlayed>().setCategoryPlayed(
+            quizType: QuizTypes.audioQuestions,
+            userId: context.read<UserDetailsCubit>().getUserId(),
+            categoryId: widget.questions!.first.categoryId!,
+            subcategoryId: widget.questions!.first.subcategoryId! == "0"
+                ? ""
+                : widget.questions!.first.subcategoryId!,
+            typeId: "");
       }
     }
   }
@@ -516,6 +526,23 @@ class _ResultScreenState extends State<ResultScreen> {
                 : widget.questions!.first.subcategoryId!,
             userId: context.read<UserDetailsCubit>().getUserId(),
           );
+    } else if (widget.quizType == QuizTypes.audioQuestions &&
+        _isWinner &&
+        !widget.isPlayed) {
+      //
+      if (widget.questions!.first.subcategoryId == "0") {
+        //update category
+        context.read<QuizCategoryCubit>().getQuizCategory(
+            languageId: UiUtils.getCurrentQuestionLanguageId(context),
+            type: UiUtils.getCategoryTypeNumberFromQuizType(
+                QuizTypes.audioQuestions),
+            userId: context.read<UserDetailsCubit>().getUserId());
+      } else {
+        //update subcategory
+        context.read<SubCategoryCubit>().fetchSubCategory(
+            widget.questions!.first.categoryId!,
+            context.read<UserDetailsCubit>().getUserId());
+      }
     }
     //
     else if (widget.quizType == QuizTypes.guessTheWord &&
@@ -626,6 +653,10 @@ class _ResultScreenState extends State<ResultScreen> {
       return _isWinner && !widget.comprehension.isPlayed;
     }
     if (widget.quizType == QuizTypes.guessTheWord) {
+      //if user completed more than 30% and has not played this paragraph yet
+      return _isWinner && !widget.isPlayed;
+    }
+    if (widget.quizType == QuizTypes.audioQuestions) {
       //if user completed more than 30% and has not played this paragraph yet
       return _isWinner && !widget.isPlayed;
     }
