@@ -6,8 +6,8 @@ class Category {
       rowOrder,
       noOf,
       noOfQqe,
-      maxLevel,
-      isPlayed;
+      maxLevel;
+  final bool isPlayed;
 
   Category(
       {this.languageId,
@@ -21,7 +21,8 @@ class Category {
       this.id});
   factory Category.fromJson(Map<String, dynamic> jsonData) {
     return Category(
-        isPlayed: jsonData['is_play'] ?? "",
+        isPlayed:
+            jsonData['is_play'] == null ? true : jsonData['is_play'] == "1",
         id: jsonData["id"],
         languageId: jsonData["language_id"],
         categoryName: jsonData["category_name"],

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterquiz/app/appLocalization.dart';
@@ -27,15 +28,9 @@ class SubCategoryScreen extends StatefulWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
-        builder: (_) => MultiBlocProvider(
-              providers: [
-                BlocProvider<SubCategoryCubit>(
-                    create: (_) => SubCategoryCubit(QuizRepository()))
-              ],
-              child: SubCategoryScreen(
-                categoryId: arguments['categoryId'],
-                quizType: arguments['quizType'],
-              ),
+        builder: (_) => SubCategoryScreen(
+              categoryId: arguments['categoryId'],
+              quizType: arguments['quizType'],
             ));
   }
 }
@@ -122,10 +117,13 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       child: ListTile(
                         onTap: () {
                           if (widget.quizType == QuizTypes.guessTheWord) {
+                            print(
+                                "Played : ${subCategoryList[index].isPlayed}");
                             Navigator.of(context)
                                 .pushNamed(Routes.guessTheWord, arguments: {
                               "type": "subcategory",
                               "typeId": subCategoryList[index].id,
+                              "isPlayed": subCategoryList[index].isPlayed,
                             });
                           } else if (widget.quizType == QuizTypes.funAndLearn) {
                             Navigator.of(context)
@@ -145,6 +143,14 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           }
                           print(subCategoryList[index].id!);
                         },
+                        // leading: CachedNetworkImage(
+                        //   placeholder: (context, _) => SizedBox(),
+                        //   imageUrl: subCategoryList[index].!,
+                        //   errorWidget: (context, imageUrl, _) => Icon(
+                        //     Icons.error,
+                        //     color: Theme.of(context).backgroundColor,
+                        //   ),
+                        // ),
                         trailing: Icon(
                           Icons.navigate_next_outlined,
                           size: 40,

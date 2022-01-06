@@ -7,7 +7,6 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
@@ -28,11 +27,8 @@ class CategoryScreen extends StatefulWidget {
   static Route<dynamic> route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
     return CupertinoPageRoute(
-        builder: (_) => BlocProvider<QuizCategoryCubit>(
-              create: (_) => QuizCategoryCubit(QuizRepository()),
-              child: CategoryScreen(
-                quizType: arguments['quizType'] as QuizTypes,
-              ),
+        builder: (_) => CategoryScreen(
+              quizType: arguments['quizType'] as QuizTypes,
             ));
   }
 }
@@ -180,10 +176,13 @@ class _CategoryScreen extends State<CategoryScreen> {
                   } else if (widget.quizType == QuizTypes.guessTheWord) {
                     //if therse is noo subcategory then get questions by category
                     if (categoryList[index].noOf == "0") {
+                      print(
+                          "Played this category : ${categoryList[index].isPlayed}");
                       Navigator.of(context)
                           .pushNamed(Routes.guessTheWord, arguments: {
                         "type": "category",
                         "typeId": categoryList[index].id,
+                        "isPlayed": categoryList[index].isPlayed,
                       });
                     } else {
                       Navigator.of(context)

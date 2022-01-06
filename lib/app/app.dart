@@ -25,6 +25,8 @@ import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/quizRepository.dart';
 import 'package:flutterquiz/features/settings/settingsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
@@ -148,6 +150,18 @@ class MyApp extends StatelessWidget {
         BlocProvider<ComprehensionCubit>(
           create: (_) => ComprehensionCubit(QuizRepository()),
         ),
+
+        //
+        //Setting this cubit globally so we can fetch again once
+        //set quiz categories success
+        BlocProvider<QuizCategoryCubit>(
+            create: (_) => QuizCategoryCubit(QuizRepository())),
+
+        //
+        //Setting this cubit globally so we can fetch again once
+        //set quiz categories success
+        BlocProvider<SubCategoryCubit>(
+            create: (_) => SubCategoryCubit(QuizRepository()))
       ],
       child: Builder(
         builder: (context) {

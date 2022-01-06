@@ -6,8 +6,8 @@ class Subcategory {
       status,
       rowOrder,
       noOfQue,
-      maxLevel,
-      isPlayed;
+      maxLevel;
+  final bool isPlayed;
 
   Subcategory(
       {this.id,
@@ -21,7 +21,8 @@ class Subcategory {
       this.subcategoryName});
   factory Subcategory.fromJson(Map<String, dynamic> jsonData) {
     return Subcategory(
-        isPlayed: jsonData['is_play'] ?? "",
+        isPlayed:
+            jsonData['is_play'] == null ? true : jsonData['is_play'] == "1",
         id: jsonData["id"],
         status: jsonData["status"],
         languageId: jsonData["language_id"],

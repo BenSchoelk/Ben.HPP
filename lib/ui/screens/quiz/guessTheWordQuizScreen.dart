@@ -34,7 +34,12 @@ import 'package:flutterquiz/utils/uiUtils.dart';
 class GuessTheWordQuizScreen extends StatefulWidget {
   final String type; //category or subcategory
   final String typeId; //id of category or subcategory
-  GuessTheWordQuizScreen({Key? key, required this.type, required this.typeId})
+  final bool isPlayed;
+  GuessTheWordQuizScreen(
+      {Key? key,
+      required this.type,
+      required this.typeId,
+      required this.isPlayed})
       : super(key: key);
 
   @override
@@ -55,6 +60,7 @@ class GuessTheWordQuizScreen extends StatefulWidget {
                     create: (_) => GuessTheWordQuizCubit(QuizRepository()))
               ],
               child: GuessTheWordQuizScreen(
+                isPlayed: arguments['isPlayed'],
                 type: arguments['type'],
                 typeId: arguments['typeId'],
               ),
@@ -171,6 +177,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
     Navigator.of(context).pushReplacementNamed(Routes.result, arguments: {
       "myPoints": context.read<GuessTheWordQuizCubit>().getCurrentPoints(),
       "quizType": QuizTypes.guessTheWord,
+      "isPlayed": widget.isPlayed,
       "numberOfPlayer": 1,
       "timeTakenToCompleteQuiz": timeTakenToCompleteQuiz,
       "guessTheWordQuestions":
@@ -291,6 +298,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
       if (state is GuessTheWordQuizFetchFailure) {
         return Center(
           child: ErrorContainer(
+              errorMessageColor: Theme.of(context).backgroundColor,
               showBackButton: true,
               errorMessage: AppLocalization.of(context)?.getTranslatedValues(
                   convertErrorCodeToLanguageKey(state.errorMessage)),

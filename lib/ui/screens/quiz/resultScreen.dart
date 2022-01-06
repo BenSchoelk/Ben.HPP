@@ -10,8 +10,10 @@ import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
 import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
 import 'package:flutterquiz/features/exam/models/exam.dart';
 import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/setCategoryPlayedCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/setContestLeaderboardCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 import 'package:flutterquiz/features/quiz/models/comprehension.dart';
 import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
@@ -77,8 +79,13 @@ class ResultScreen extends StatefulWidget {
   final int? correctExamAnswers;
   final int? incorrectExamAnswers;
 
+  //This will be in use if quizType is audio questions
+  // and guess the word
+  final bool isPlayed; //
+
   ResultScreen(
       {Key? key,
+      required this.isPlayed,
       this.exam,
       this.correctExamAnswers,
       this.incorrectExamAnswers,
@@ -134,6 +141,7 @@ class ResultScreen extends StatefulWidget {
                 ),
               ],
               child: ResultScreen(
+                isPlayed: arguments['isPlayed'] ?? true,
                 comprehension:
                     arguments['comprehension'] ?? Comprehension.fromJson({}),
                 correctExamAnswers: arguments['correctExamAnswers'],
@@ -463,6 +471,23 @@ class _ResultScreenState extends State<ResultScreen> {
                   : widget.questions!.first.subcategoryId!,
               typeId: widget.comprehension.id!);
         }
+      } else if (widget.quizType == QuizTypes.guessTheWord) {
+        //
+        //
+        if (!widget.isPlayed) {
+          _updateCoinsAndScore();
+          context.read<SetCategoryPlayed>().setCategoryPlayed(
+              quizType: QuizTypes.guessTheWord,
+              userId: context.read<UserDetailsCubit>().getUserId(),
+              categoryId: widget.guessTheWordQuestions!.first.category,
+              subcategoryId:
+                  widget.guessTheWordQuestions!.first.subcategory == "0"
+                      ? ""
+                      : widget.guessTheWordQuestions!.first.subcategory,
+              typeId: "");
+        }
+      } else if (widget.quizType == QuizTypes.audioQuestions) {
+        //
       }
     }
   }
@@ -491,6 +516,24 @@ class _ResultScreenState extends State<ResultScreen> {
                 : widget.questions!.first.subcategoryId!,
             userId: context.read<UserDetailsCubit>().getUserId(),
           );
+    }
+    //
+    else if (widget.quizType == QuizTypes.guessTheWord &&
+        _isWinner &&
+        !widget.isPlayed) {
+      if (widget.guessTheWordQuestions!.first.subcategory == "0") {
+        //update category
+        context.read<QuizCategoryCubit>().getQuizCategory(
+            languageId: UiUtils.getCurrentQuestionLanguageId(context),
+            type: UiUtils.getCategoryTypeNumberFromQuizType(
+                QuizTypes.guessTheWord),
+            userId: context.read<UserDetailsCubit>().getUserId());
+      } else {
+        //update subcategory
+        context.read<SubCategoryCubit>().fetchSubCategory(
+            widget.guessTheWordQuestions!.first.category,
+            context.read<UserDetailsCubit>().getUserId());
+      }
     }
   }
 
@@ -581,6 +624,10 @@ class _ResultScreenState extends State<ResultScreen> {
     if (widget.quizType == QuizTypes.funAndLearn) {
       //if user completed more than 30% and has not played this paragraph yet
       return _isWinner && !widget.comprehension.isPlayed;
+    }
+    if (widget.quizType == QuizTypes.guessTheWord) {
+      //if user completed more than 30% and has not played this paragraph yet
+      return _isWinner && !widget.isPlayed;
     }
     return _isWinner;
   }
