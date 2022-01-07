@@ -242,6 +242,20 @@ class UiUtils {
     return "1";
   }
 
+  //calculate amount per coins based on users coins
+  static double calculateAmountPerCoins(
+      {required int userCoins, required int amount, required int coins}) {
+    return (amount * userCoins) / coins;
+  }
+
+  //calculate coins based on entered amount
+  static int calculateDeductedCoinsForRedeemableAmount(
+      {required double userEnteredAmount,
+      required int amount,
+      required int coins}) {
+    return (coins * userEnteredAmount) ~/ amount;
+  }
+
   static Future<bool> forceUpdate(String updatedVersion) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentVersion = "${packageInfo.version}+${packageInfo.buildNumber}";

@@ -303,16 +303,19 @@ final List<PayoutMethod> payoutMethods = [
       ], image: "assets/images/upi.svg", type: "UPI"),
 
   /*
-  //Bank Transfer
+  //Sample payment method 
+  //Bank Transfer - Payment method name
   PayoutMethod(
       //Specify the input parameters label here
+      //What are the details user need to give for this payment method
+      // 
       inputDetailsFromUser: [
         "Enter bank name",
         "Enter account number ",
         "Enter bank ifsc code",
-      ], image: "assets/images/paytm.svg", type: "Bank Transfer"),
-      */
-  //
+      ], image: "assets/images/paytm.svg",
+      type: "Bank Transfer"),
+  */
 ];
 
 //

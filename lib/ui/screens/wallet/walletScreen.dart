@@ -80,7 +80,7 @@ class _WalletScreenState extends State<WalletScreen> {
       fetchTransactions();
       //
       redeemableAmountTextEditingController = TextEditingController(
-        text: _calculateAmountPerCoins(
+        text: UiUtils.calculateAmountPerCoins(
           userCoins: int.parse(context.read<UserDetailsCubit>().getCoins()!),
           amount: context
               .read<SystemConfigCubit>()
@@ -93,23 +93,9 @@ class _WalletScreenState extends State<WalletScreen> {
     });
   }
 
-  //calculate amount per coins based on users coins
-  double _calculateAmountPerCoins(
-      {required int userCoins, required int amount, required int coins}) {
-    return (amount * userCoins) / coins;
-  }
-
-  //calculate coins based on entered amount
-  int _calculateDeductedCoinsForRedeemableAmount(
-      {required double userEnteredAmount,
-      required int amount,
-      required int coins}) {
-    return (coins * userEnteredAmount) ~/ amount;
-  }
-
   //
   double _minimumReedemableAmount() {
-    return _calculateAmountPerCoins(
+    return UiUtils.calculateAmountPerCoins(
       userCoins: context.read<SystemConfigCubit>().minimumcoinLimit(),
       amount: context.read<SystemConfigCubit>().coinAmount(),
       coins: context.read<SystemConfigCubit>().perCoin(),
@@ -151,12 +137,13 @@ class _WalletScreenState extends State<WalletScreen> {
         }).then((value) {
       if (value != null && value) {
         fetchTransactions();
-        redeemableAmountTextEditingController?.text = _calculateAmountPerCoins(
-                userCoins:
-                    int.parse(context.read<UserDetailsCubit>().getCoins()!),
-                amount: context.read<SystemConfigCubit>().coinAmount(),
-                coins: context.read<SystemConfigCubit>().perCoin())
-            .toString();
+        redeemableAmountTextEditingController?.text =
+            UiUtils.calculateAmountPerCoins(
+                    userCoins:
+                        int.parse(context.read<UserDetailsCubit>().getCoins()!),
+                    amount: context.read<SystemConfigCubit>().coinAmount(),
+                    coins: context.read<SystemConfigCubit>().perCoin())
+                .toString();
 
         setState(() {
           _currentSelectedTab = 2;
@@ -393,7 +380,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     false);
                 return;
               }
-              double maxRedeemableAmount = _calculateAmountPerCoins(
+              double maxRedeemableAmount = UiUtils.calculateAmountPerCoins(
                 userCoins:
                     int.parse(context.read<UserDetailsCubit>().getCoins()!),
                 amount: context
@@ -416,7 +403,8 @@ class _WalletScreenState extends State<WalletScreen> {
               }
 
               showRedeemRequestAmountBottomSheet(
-                deductedCoins: _calculateDeductedCoinsForRedeemableAmount(
+                deductedCoins:
+                    UiUtils.calculateDeductedCoinsForRedeemableAmount(
                   amount: context
                       .read<SystemConfigCubit>()
                       .coinAmount(), //per x coin y amount
