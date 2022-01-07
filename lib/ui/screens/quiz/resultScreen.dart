@@ -1598,7 +1598,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                     });
                               },
                               child: Text(
-                                "Continue",
+                                AppLocalization.of(context)!
+                                    .getTranslatedValues(continueLbl)!,
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor),
                               )),
@@ -1607,13 +1608,14 @@ class _ResultScreenState extends State<ResultScreen> {
                                 Navigator.of(context).pop();
                               },
                               child: Text(
-                                "Cancel",
+                                AppLocalization.of(context)!
+                                    .getTranslatedValues(cancelButtonKey)!,
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor),
                               )),
                         ],
                         content: Text(
-                          "10 coins will deduct to see review answer.",
+                          "$reviewAnswersDeductCoins ${AppLocalization.of(context)!.getTranslatedValues(coinsWillBeDeductedKey)!}",
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary),
                         ),

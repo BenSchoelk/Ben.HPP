@@ -413,3 +413,4 @@ String completedKey = "completed";
 String wrongDetailsKey = "wrongDetails";
 String pleaseFillAllDataKey = "pleaseFillAllData";
 String changePayoutMethodKey = "changePayoutMethod";
+//String coinsWillDeductToReviewAnswerKey = "coinsWillDeductToReviewAnswer";
