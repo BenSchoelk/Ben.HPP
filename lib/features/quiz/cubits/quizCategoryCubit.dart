@@ -39,6 +39,10 @@ class QuizCategoryCubit extends Cubit<QuizCategoryState> {
     });
   }
 
+  void updateState(QuizCategoryState updatedState) {
+    emit(updatedState);
+  }
+
   getCat() {
     if (state is QuizCategorySuccess) {
       return (state as QuizCategorySuccess).categories;

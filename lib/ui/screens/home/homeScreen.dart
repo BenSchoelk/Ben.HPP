@@ -7,6 +7,7 @@ import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 
 import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
@@ -59,7 +60,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final double quizTypeWidthPercentage = 0.4;
-  final double quizTypeTopMargin = 0.425;
+  late double quizTypeTopMargin = 0.0;
   final double quizTypeHorizontalMarginPercentage = 0.08;
   final List<int> maxHeightQuizTypeIndexes = [0, 3, 4, 7, 8];
 
@@ -101,10 +102,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    setQuizMenu();
     _initLocalNotification();
     checkForUpdates();
     setupInteractedMessage();
-    setQuizMenu();
+
     createAds();
     super.initState();
   }
@@ -148,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void setQuizMenu() {
     Future.delayed(Duration.zero, () {
       final systemCubit = context.read<SystemConfigCubit>();
+      quizTypeTopMargin = systemCubit.isSelfChallengeEnable() ? 0.425 : 0.29;
       if (systemCubit.getIsContestAvailable() == "0") {
         _quizTypes.removeWhere(
             (element) => element.quizTypeEnum == QuizTypes.contest);
@@ -347,7 +350,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _navigateToQuizZone(int containerNumber) {
-    //container number will be [1,2,3,4]
+    //container number will be [1,2,3,4] if self chellenge is enable
+    //container number will be [1,2,3,4,5,6] if self chellenge is not enable
+
     if (currentMenu == 1) {
       if (containerNumber == 1) {
         _onQuizTypeContainerTap(0);
@@ -356,12 +361,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       } else if (containerNumber == 3) {
         _onQuizTypeContainerTap(2);
       } else {
-        _onQuizTypeContainerTap(3);
+        if (context.read<SystemConfigCubit>().isSelfChallengeEnable()) {
+          if (_quizTypes.length >= 4) {
+            _onQuizTypeContainerTap(3);
+          }
+          return;
+        }
+
+        if (containerNumber == 4) {
+          if (_quizTypes.length >= 4) {
+            _onQuizTypeContainerTap(3);
+          }
+        } else if (containerNumber == 5) {
+          if (_quizTypes.length >= 5) {
+            _onQuizTypeContainerTap(4);
+          }
+        } else if (containerNumber == 6) {
+          if (_quizTypes.length >= 6) {
+            _onQuizTypeContainerTap(5);
+          }
+        }
       }
     } else if (currentMenu == 2) {
       //determine
       if (containerNumber == 1) {
-        _onQuizTypeContainerTap(4);
+        if (_quizTypes.length >= 4) {
+          _onQuizTypeContainerTap(3);
+        }
       } else if (containerNumber == 2) {
         if (_quizTypes.length >= 6) {
           _onQuizTypeContainerTap(5);
@@ -371,11 +397,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _onQuizTypeContainerTap(6);
         }
       } else {
-        if (_quizTypes.length >= 8) {
-          _onQuizTypeContainerTap(7);
+        //if self challenge is enable
+        if (context.read<SystemConfigCubit>().isSelfChallengeEnable()) {
+          if (_quizTypes.length >= 8) {
+            _onQuizTypeContainerTap(7);
+            return;
+          }
+          return;
+        }
+
+        if (containerNumber == 4) {
+          if (_quizTypes.length >= 8) {
+            _onQuizTypeContainerTap(7);
+          }
+        } else if (containerNumber == 5) {
+          if (_quizTypes.length >= 9) {
+            _onQuizTypeContainerTap(8);
+          }
+        } else if (containerNumber == 6) {
+          if (_quizTypes.length >= 10) {
+            _onQuizTypeContainerTap(9);
+          }
         }
       }
     } else {
+      //for menu 3
       if (containerNumber == 1) {
         if (_quizTypes.length >= 9) {
           _onQuizTypeContainerTap(8);
@@ -387,6 +433,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       } else if (containerNumber == 3) {
         if (_quizTypes.length >= 11) {
           _onQuizTypeContainerTap(10);
+        }
+      } else {
+        if (_quizTypes.length == 12) {
+          _onQuizTypeContainerTap(11);
         }
       }
     }
@@ -417,6 +467,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     else if (_quizTypes[quizTypeIndex].quizTypeEnum == QuizTypes.battle) {
       //
       context.read<BattleRoomCubit>().updateState(BattleRoomInitial());
+      context.read<QuizCategoryCubit>().updateState(QuizCategoryInitial());
 
       showDialog(
         context: context,
@@ -441,6 +492,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       context
           .read<MultiUserBattleRoomCubit>()
           .updateState(MultiUserBattleRoomInitial());
+
+      context.read<QuizCategoryCubit>().updateState(QuizCategoryInitial());
       //
       showDialog(
           context: context,
@@ -921,6 +974,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       UiUtils.quizTypeMinHeightPercentage) +
               statusBarPadding;
 
+          double fifthTapStartDy = thirdTapStartDy +
+              MediaQuery.of(context).size.height *
+                  (quizTypeBetweenVerticalSpacing +
+                      UiUtils.quizTypeMinHeightPercentage);
+
+          double sixTapStartDy = fourthTapStartDy +
+              MediaQuery.of(context).size.height *
+                  (quizTypeBetweenVerticalSpacing +
+                      UiUtils.quizTypeMaxHeightPercentage);
+
           if (tapDownDetails.globalPosition.dx >= firstTapStartDx &&
               tapDownDetails.globalPosition.dx <=
                   (firstTapStartDx +
@@ -939,6 +1002,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         (MediaQuery.of(context).size.height *
                             UiUtils.quizTypeMinHeightPercentage))) {
               _navigateToQuizZone(3);
+            } else {
+              if (!context.read<SystemConfigCubit>().isSelfChallengeEnable()) {
+                if (tapDownDetails.globalPosition.dy >= fifthTapStartDy &&
+                    tapDownDetails.globalPosition.dy <=
+                        (fifthTapStartDy +
+                            (MediaQuery.of(context).size.height *
+                                UiUtils.quizTypeMaxHeightPercentage))) {
+                  _navigateToQuizZone(5);
+                }
+              }
             }
           } else if (tapDownDetails.globalPosition.dx >= secondTapStartDx &&
               tapDownDetails.globalPosition.dx <=
@@ -957,11 +1030,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         (MediaQuery.of(context).size.height *
                             UiUtils.quizTypeMaxHeightPercentage))) {
               _navigateToQuizZone(4);
+            } else {
+              if (!context.read<SystemConfigCubit>().isSelfChallengeEnable()) {
+                if (tapDownDetails.globalPosition.dy >= sixTapStartDy &&
+                    tapDownDetails.globalPosition.dy <=
+                        (sixTapStartDy +
+                            (MediaQuery.of(context).size.height *
+                                UiUtils.quizTypeMinHeightPercentage))) {
+                  _navigateToQuizZone(6);
+                }
+              }
             }
           }
         },
         dragStartBehavior: DragStartBehavior.start,
         onVerticalDragUpdate: (dragUpdateDetails) {
+          //
+          if (_quizTypes.length <= 4) {
+            return;
+          }
+
           if (currentMenu == 1) {
             //when firstMenu is selected
             double dragged = dragUpdateDetails.primaryDelta! /
@@ -1125,7 +1213,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           return _buildHomeScreen([
             _buildTopMenu(statusBarPadding),
             _buildProfileContainer(statusBarPadding),
-            _buildSelfChallenge(statusBarPadding),
+            context.read<SystemConfigCubit>().isSelfChallengeEnable()
+                ? _buildSelfChallenge(statusBarPadding)
+                : SizedBox(),
             ..._buildQuizTypes(statusBarPadding),
             _buildTopMenuContainer(statusBarPadding),
             showUpdateContainer ? UpdateAppContainer() : Container(),

@@ -309,6 +309,26 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     return false;
   }
 
+  bool isSelfChallengeEnable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess)
+              .systemConfigModel
+              .selfChallengeMode ==
+          "1";
+    }
+    return false;
+  }
+
+  bool isInAppPurchaseEnable() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess)
+              .systemConfigModel
+              .inAppPurchaseMode ==
+          "1";
+    }
+    return false;
+  }
+
   int perCoin() {
     if (state is SystemConfigFetchSuccess) {
       return int.parse(

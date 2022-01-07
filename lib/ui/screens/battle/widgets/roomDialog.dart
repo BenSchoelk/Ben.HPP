@@ -44,9 +44,6 @@ class _RoomDialogState extends State<RoomDialog> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      context.read<RewardedAdCubit>().createRewardedAd(context,
-          onFbRewardAdCompleted: _addCoinsAfterRewardAd);
-      //to get categories
       if (isCategoryEnabled()) {
         context.read<QuizCategoryCubit>().getQuizCategory(
               languageId: UiUtils.getCurrentQuestionLanguageId(context),
@@ -54,6 +51,9 @@ class _RoomDialogState extends State<RoomDialog> {
               userId: context.read<UserDetailsCubit>().getUserId(),
             );
       }
+      context.read<RewardedAdCubit>().createRewardedAd(context,
+          onFbRewardAdCompleted: _addCoinsAfterRewardAd);
+      //to get categories
     });
   }
 
