@@ -6,6 +6,7 @@ import 'package:flutterquiz/app/routes.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 
 import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 import 'package:flutterquiz/ui/widgets/customBackButton.dart';
@@ -173,7 +174,8 @@ class _FunAndLearnTitleScreen extends State<FunAndLearnTitleScreen> {
         children: [
           PageBackgroundGradientContainer(),
           _buildBackButton(),
-          _buildTitle()
+          _buildTitle(),
+          Align(alignment: Alignment.bottomCenter, child: BannerAdContainer()),
         ],
       ),
     ));

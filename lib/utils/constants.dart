@@ -198,7 +198,7 @@ final int minCoinsForGroupBattleCreation = 5;
 final int maxCoinsForGroupBattleCreation = 50;
 
 //Coins to deduct for seeing Review answers
-final int reviewAnswersCoins = 10;
+final int reviewAnswersDeductCoins = 10;
 
 //other constants
 final String defaultQuestionLanguageId = "";

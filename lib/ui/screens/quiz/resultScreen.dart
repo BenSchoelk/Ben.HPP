@@ -1532,6 +1532,124 @@ class _ResultScreenState extends State<ResultScreen> {
     }, context);
   }
 
+  Widget _buildReviewAnswersButton() {
+    if (context.read<SystemConfigCubit>().isPaymentRequestEnable()) {
+      if (widget.quizType == QuizTypes.quizZone ||
+          widget.quizType == QuizTypes.audioQuestions ||
+          widget.quizType == QuizTypes.guessTheWord ||
+          widget.quizType == QuizTypes.funAndLearn) {
+        return Column(
+          children: [
+            _buildButton(
+                AppLocalization.of(context)!
+                    .getTranslatedValues("reviewAnsBtn")!, () {
+              //
+              final updateCoinsCubit = context.read<UpdateScoreAndCoinsCubit>();
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                //check if user has enough coins
+                                if (int.parse(context
+                                        .read<UserDetailsCubit>()
+                                        .getCoins()!) <
+                                    reviewAnswersDeductCoins) {
+                                  UiUtils.errorMessageDialog(
+                                      context,
+                                      AppLocalization.of(context)!
+                                          .getTranslatedValues(
+                                              notEnoughCoinsKey));
+                                  return;
+                                }
+
+                                //update coins
+
+                                updateCoinsCubit.updateCoins(
+                                    context
+                                        .read<UserDetailsCubit>()
+                                        .getUserId(),
+                                    reviewAnswersDeductCoins,
+                                    false,
+                                    reviewAnswerLbl);
+
+                                context.read<UserDetailsCubit>().updateCoins(
+                                      addCoin: false,
+                                      coins: reviewAnswersDeductCoins,
+                                    );
+                                //close the dialog
+
+                                Navigator.of(context).pop();
+                                //navigate to review answer
+
+                                Navigator.of(context).pushNamed(
+                                    Routes.reviewAnswers,
+                                    arguments: {
+                                      "questions": widget.quizType ==
+                                              QuizTypes.guessTheWord
+                                          ? List<Question>.from([])
+                                          : widget.questions,
+                                      "guessTheWordQuestions": widget
+                                                  .quizType ==
+                                              QuizTypes.guessTheWord
+                                          ? widget.guessTheWordQuestions
+                                          : List<GuessTheWordQuestion>.from([]),
+                                    });
+                              },
+                              child: Text(
+                                "Continue",
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              )),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              )),
+                        ],
+                        content: Text(
+                          "10 coins will deduct to see review answer.",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary),
+                        ),
+                      ));
+            }, context),
+            SizedBox(
+              height: 15.0,
+            )
+          ],
+        );
+      }
+      //
+    }
+
+    return Column(
+      children: [
+        _buildButton(
+            AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!,
+            () {
+          //
+          Navigator.of(context).pushNamed(Routes.reviewAnswers, arguments: {
+            "questions": widget.quizType == QuizTypes.guessTheWord
+                ? List<Question>.from([])
+                : widget.questions,
+            "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord
+                ? widget.guessTheWordQuestions
+                : List<GuessTheWordQuestion>.from([]),
+          });
+        }, context),
+        SizedBox(
+          height: 15.0,
+        )
+      ],
+    );
+  }
+
   Widget _buildResultButtons(BuildContext context) {
     double betweenButoonSpace = 15.0;
     if (widget.quizType == QuizTypes.battle) {
@@ -1540,18 +1658,7 @@ class _ResultScreenState extends State<ResultScreen> {
           SizedBox(
             height: betweenButoonSpace,
           ),
-          _buildButton(
-              AppLocalization.of(context)!.getTranslatedValues("reviewAnsBtn")!,
-              () {
-            Navigator.of(context).pushNamed(Routes.reviewAnswers, arguments: {
-              "questions": widget.quizType == QuizTypes.guessTheWord
-                  ? List<Question>.from([])
-                  : widget.questions,
-              "guessTheWordQuestions": widget.quizType == QuizTypes.guessTheWord
-                  ? widget.guessTheWordQuestions
-                  : List<GuessTheWordQuestion>.from([]),
-            });
-          }, context),
+          _buildReviewAnswersButton(),
           SizedBox(
             height: betweenButoonSpace,
           ),
@@ -1591,27 +1698,7 @@ class _ResultScreenState extends State<ResultScreen> {
         SizedBox(
           height: betweenButoonSpace,
         ),
-        context.read<SystemConfigCubit>().isPaymentRequestEnable()
-            ? SizedBox()
-            : _buildButton(
-                AppLocalization.of(context)!
-                    .getTranslatedValues("reviewAnsBtn")!, () {
-                Navigator.of(context)
-                    .pushNamed(Routes.reviewAnswers, arguments: {
-                  "questions": widget.quizType == QuizTypes.guessTheWord
-                      ? List<Question>.from([])
-                      : widget.questions,
-                  "guessTheWordQuestions":
-                      widget.quizType == QuizTypes.guessTheWord
-                          ? widget.guessTheWordQuestions
-                          : List<GuessTheWordQuestion>.from([]),
-                });
-              }, context),
-        context.read<SystemConfigCubit>().isPaymentRequestEnable()
-            ? SizedBox()
-            : SizedBox(
-                height: betweenButoonSpace,
-              ),
+        _buildReviewAnswersButton(),
         _buildShareYourScoreButton(),
         SizedBox(
           height: betweenButoonSpace,
