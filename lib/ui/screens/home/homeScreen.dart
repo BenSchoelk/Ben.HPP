@@ -385,8 +385,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (currentMenu == 2) {
       //determine
       if (containerNumber == 1) {
-        if (_quizTypes.length >= 4) {
-          _onQuizTypeContainerTap(3);
+        if (_quizTypes.length >= 5) {
+          _onQuizTypeContainerTap(4);
         }
       } else if (containerNumber == 2) {
         if (_quizTypes.length >= 6) {
