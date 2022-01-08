@@ -385,6 +385,62 @@ class ProfileScreen extends StatelessWidget {
                         MenuTile(
                           isSvgIcon: true,
                           onTap: () {
+                            showDialog<bool>(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      content: Text(
+                                        AppLocalization.of(context)!
+                                            .getTranslatedValues(
+                                                deleteAccountConfirmationKey)!,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(true);
+                                            },
+                                            child: Text(
+                                              AppLocalization.of(context)!
+                                                  .getTranslatedValues(
+                                                      "yesBtn")!,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                            )),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                            child: Text(
+                                              AppLocalization.of(context)!
+                                                  .getTranslatedValues(
+                                                      "noBtn")!,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                            )),
+                                      ],
+                                    )).then((value) {
+                              if (value != null && value) {
+                                context
+                                    .read<DeleteAccountCubit>()
+                                    .deleteUserAccount(
+                                        userId: context
+                                            .read<UserDetailsCubit>()
+                                            .getUserId());
+                              }
+                            });
+                          },
+                          title: deleteAccountKey,
+                          leadingIcon: "delete.svg", //theme icon
+                        ),
+                        MenuTile(
+                          isSvgIcon: true,
+                          onTap: () {
                             showDialog(
                                 context: context,
                                 builder: (_) => AlertDialog(
@@ -455,62 +511,6 @@ class ProfileScreen extends StatelessWidget {
                           },
                           title: "logoutLbl",
                           leadingIcon: "logout_icon.svg", //theme icon
-                        ),
-                        MenuTile(
-                          isSvgIcon: true,
-                          onTap: () {
-                            showDialog<bool>(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                      content: Text(
-                                        AppLocalization.of(context)!
-                                            .getTranslatedValues(
-                                                deleteAccountConfirmationKey)!,
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(true);
-                                            },
-                                            child: Text(
-                                              AppLocalization.of(context)!
-                                                  .getTranslatedValues(
-                                                      "yesBtn")!,
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            )),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(false);
-                                            },
-                                            child: Text(
-                                              AppLocalization.of(context)!
-                                                  .getTranslatedValues(
-                                                      "noBtn")!,
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            )),
-                                      ],
-                                    )).then((value) {
-                              if (value != null && value) {
-                                context
-                                    .read<DeleteAccountCubit>()
-                                    .deleteUserAccount(
-                                        userId: context
-                                            .read<UserDetailsCubit>()
-                                            .getUserId());
-                              }
-                            });
-                          },
-                          title: deleteAccountKey,
-                          leadingIcon: "delete.svg", //theme icon
                         ),
                       ],
                     );
