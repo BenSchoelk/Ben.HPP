@@ -40,6 +40,9 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       //
       final result = await _waletRepository.getTransactions(
           userId: userId, limit: limit.toString(), offset: "0");
+      if (isClosed) {
+        return;
+      }
       emit(TransactionsFetchSuccess(
         paymentRequests: result['transactions'],
         totalTransactionsCount: int.parse(result['total']),
@@ -48,6 +51,9 @@ class TransactionsCubit extends Cubit<TransactionsState> {
             int.parse(result['total']),
       ));
     } catch (e) {
+      if (isClosed) {
+        return;
+      }
       emit(TransactionsFetchFailure(e.toString()));
     }
   }

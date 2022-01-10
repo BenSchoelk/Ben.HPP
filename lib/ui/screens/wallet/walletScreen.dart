@@ -81,7 +81,8 @@ class _WalletScreenState extends State<WalletScreen> {
       //
       redeemableAmountTextEditingController = TextEditingController(
         text: UiUtils.calculateAmountPerCoins(
-          userCoins: int.parse(context.read<UserDetailsCubit>().getCoins()!),
+          userCoins: double.parse(context.read<UserDetailsCubit>().getCoins()!)
+              .toInt(),
           amount: context
               .read<SystemConfigCubit>()
               .coinAmount(), //per x coin y amount

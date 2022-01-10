@@ -6,6 +6,7 @@ import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
 import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
 
@@ -58,7 +59,8 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   final double quizTypeWidthPercentage = 0.4;
   late double quizTypeTopMargin = 0.0;
   final double quizTypeHorizontalMarginPercentage = 0.08;
@@ -108,6 +110,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     setupInteractedMessage();
 
     createAds();
+
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
 
@@ -200,17 +204,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Future<void> setupInteractedMessage() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-    // handle background notification
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    // handle background notification
     FirebaseMessaging.onBackgroundMessage(UiUtils.onBackgroundMessage);
     //handle foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Notification arrvied");
+      print("Notification arrived");
+      print(message.data);
       var data = message.data;
 
       var title = data['title'].toString();
@@ -227,6 +227,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           context.read<BadgesCubit>().unlockBadge(badgeType);
         });
       }
+
+      if (type == "payment_request") {
+        Future.delayed(Duration.zero, () {
+          context.read<UserDetailsCubit>().updateCoins(
+                addCoin: true,
+                coins: int.parse(data['coins'].toString()),
+              );
+        });
+      }
+
       //payload is some data you want to pass in local notification
       image != null
           ? generateImageNotification(title, body, image, type, type)
@@ -245,6 +255,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         //if user open app by tapping
         UiUtils.updateBadgesLocally(context);
         Navigator.of(context).pushNamed(Routes.badges);
+      } else if (message.data['type'] == "payment_request") {
+        //UiUtils.needToUpdateCoinsLocally(context);
+        Navigator.of(context).pushNamed(Routes.wallet);
       }
     } catch (e) {
       print(e);
@@ -260,6 +273,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).pushNamed(
         Routes.category,
       );
+    } else if (type == "payment_request") {
+      Navigator.of(context).pushNamed(Routes.wallet);
     }
   }
 
@@ -300,6 +315,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> generateSimpleNotification(
       String title, String body, String payloads) async {
     print("Trigger local notification");
+    print("Payload is $payloads");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'com.wrteam.flutterquiz', //channel id
         'flutterquiz', //channel name
@@ -319,10 +335,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    ProfileManagementLocalDataSource.updateReversedCoins(0);
     profileAnimationController.dispose();
     selfChallengeAnimationController.dispose();
 
+    WidgetsBinding.instance!.removeObserver(this);
+
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    //show you left the game
+    if (state == AppLifecycleState.resumed) {
+      UiUtils.needToUpdateCoinsLocally(context);
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      ProfileManagementLocalDataSource.updateReversedCoins(0);
+    }
   }
 
   double _getTopMarginForQuizTypeContainer(int quizTypeIndex) {

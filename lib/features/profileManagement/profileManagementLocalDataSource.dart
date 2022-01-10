@@ -1,5 +1,6 @@
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileManagementLocalDataSource {
   String getName() {
@@ -97,5 +98,21 @@ class ProfileManagementLocalDataSource {
 
   Future<void> setFCMToken(String fcmToken) async {
     Hive.box(userdetailsBox).put(fcmTokenBoxKey, fcmToken);
+  }
+
+  static Future<void> updateReversedCoins(int coins) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setInt("reversedCoins", coins);
+  }
+
+  static Future<int> getUpdateReversedCoins() async {
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      await sharedPreferences.reload();
+      return sharedPreferences.getInt("reversedCoins") ?? 0;
+    } catch (e) {
+      return 0;
+    }
   }
 }

@@ -22,26 +22,16 @@ class UserDetailsFetchFailure extends UserDetailsState {
 
 class UserDetailsCubit extends Cubit<UserDetailsState> {
   final ProfileManagementRepository _profileManagementRepository;
-  UserDetailsCubit(this._profileManagementRepository) : super(UserDetailsInitial());
+  UserDetailsCubit(this._profileManagementRepository)
+      : super(UserDetailsInitial());
 
   //to fetch user details form remote
   void fetchUserDetails(String firebaseId) async {
     emit(UserDetailsFetchInProgress());
 
     try {
-      UserProfile userProfile = await _profileManagementRepository.getUserDetailsById(firebaseId);
-      await _profileManagementRepository.setUserDetailsLocally(userProfile);
-      emit(UserDetailsFetchSuccess(userProfile));
-    } catch (e) {
-      emit(UserDetailsFetchFailure(e.toString()));
-    }
-  }
-
-  //load userdetials from hive box
-  Future<void> loadUserDetailsLocally() async {
-    try {
-      UserProfile userProfile = await _profileManagementRepository.getUserDetails();
-
+      UserProfile userProfile =
+          await _profileManagementRepository.getUserDetailsById(firebaseId);
       emit(UserDetailsFetchSuccess(userProfile));
     } catch (e) {
       emit(UserDetailsFetchFailure(e.toString()));
@@ -79,13 +69,21 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
   void updateUserProfileUrl(String profileUrl) {
     if (state is UserDetailsFetchSuccess) {
       final oldUserDetails = (state as UserDetailsFetchSuccess).userProfile;
-      _profileManagementRepository.profileManagementLocalDataSource.serProfilrUrl(profileUrl);
 
-      emit((UserDetailsFetchSuccess(oldUserDetails.copyWith(profileUrl: profileUrl))));
+      emit((UserDetailsFetchSuccess(
+          oldUserDetails.copyWith(profileUrl: profileUrl))));
     }
   }
 
-  void updateUserProfile({String? profileUrl, String? name, String? allTimeRank, String? allTimeScore, String? coins, String? status, String? mobile, String? email}) {
+  void updateUserProfile(
+      {String? profileUrl,
+      String? name,
+      String? allTimeRank,
+      String? allTimeScore,
+      String? coins,
+      String? status,
+      String? mobile,
+      String? email}) {
     //
     if (state is UserDetailsFetchSuccess) {
       final oldUserDetails = (state as UserDetailsFetchSuccess).userProfile;
@@ -99,7 +97,6 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
         profileUrl: profileUrl,
         status: status,
       );
-      _profileManagementRepository.setUserDetailsLocally(userDetails);
 
       emit((UserDetailsFetchSuccess(userDetails)));
     }
@@ -113,12 +110,12 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
 
       final currentCoins = int.parse(oldUserDetails.coins!);
       print("Coins : $currentCoins");
-      final updatedCoins = addCoin! ? (currentCoins + coins!) : (currentCoins - coins!);
+      final updatedCoins =
+          addCoin! ? (currentCoins + coins!) : (currentCoins - coins!);
       print("Coins update ......" + updatedCoins.toString());
       final userDetails = oldUserDetails.copyWith(
         coins: updatedCoins.toString(),
       );
-      _profileManagementRepository.profileManagementLocalDataSource.setCoins(userDetails.coins!);
       emit((UserDetailsFetchSuccess(userDetails)));
     }
   }
@@ -132,7 +129,6 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
       final userDetails = oldUserDetails.copyWith(
         allTimeScore: (currentScore + score!).toString(),
       );
-      _profileManagementRepository.profileManagementLocalDataSource.setScore(userDetails.allTimeScore!);
       emit((UserDetailsFetchSuccess(userDetails)));
     }
   }

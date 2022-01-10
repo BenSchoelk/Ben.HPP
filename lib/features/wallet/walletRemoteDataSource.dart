@@ -43,7 +43,7 @@ class WalletRemoteDataSource {
         detailsKey: details,
       };
 
-      //print("Parameters : $body");
+      print("Parameters : $body");
 
       final response = await http.post(Uri.parse(makePaymentRequestUrl),
           body: body, headers: ApiUtils.getHeaders());

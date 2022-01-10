@@ -265,11 +265,9 @@ class _RedeemAmountRequestBottomSheetContainerState
                       userId: context.read<UserDetailsCubit>().getUserId(),
                       paymentType:
                           payoutMethods[_selectedPaymentMethodIndex].type,
-                      paymentAddress: _inputDetailsControllers.length == 1
-                          ? _inputDetailsControllers.first.text.trim()
-                          : jsonEncode(_inputDetailsControllers
-                              .map((e) => e.text.trim())
-                              .toList()),
+                      paymentAddress: jsonEncode(_inputDetailsControllers
+                          .map((e) => e.text.trim())
+                          .toList()),
                       paymentAmount: widget.redeemableAmount.toString(),
                       coinUsed: widget.deductedCoins.toString(),
                       details: "Redeem Request");

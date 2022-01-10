@@ -10,6 +10,8 @@ import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
 import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
 import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
 import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
@@ -18,6 +20,7 @@ import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
 import 'package:flutterquiz/ui/widgets/errorMessageDialog.dart';
 import 'package:flutterquiz/utils/constants.dart';
 import 'package:flutterquiz/utils/stringLabels.dart';
+
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -71,10 +74,14 @@ class UiUtils {
   }
 
   static Future<void> onBackgroundMessage(RemoteMessage message) async {
+    // print(message.notification);
     if (message.data['type'].toString() == "badges") {
       needToUpdateBadgesLocally.add(message.data['badge_type'].toString());
+    } else if (message.data['type'].toString() == "payment_request") {
+      //
+      ProfileManagementLocalDataSource.updateReversedCoins(
+          double.parse(message.data['coins'].toString()).toInt());
     }
-    print(message.data);
   }
 
   static void updateBadgesLocally(BuildContext context) {
@@ -82,6 +89,16 @@ class UiUtils {
       context.read<BadgesCubit>().unlockBadge(badgeType);
     });
     needToUpdateBadgesLocally.clear();
+  }
+
+  static void needToUpdateCoinsLocally(BuildContext context) async {
+    //
+
+    int coins = await ProfileManagementLocalDataSource.getUpdateReversedCoins();
+    print("Need to upddate coins by $coins");
+    if (coins != 0) {
+      context.read<UserDetailsCubit>().updateCoins(addCoin: true, coins: coins);
+    }
   }
 
   static void setSnackbar(String msg, BuildContext context, bool showAction,

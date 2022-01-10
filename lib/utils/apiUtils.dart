@@ -12,6 +12,7 @@ class ApiUtils {
         subject: 'Quiz Authentication',
         maxAge: const Duration(minutes: 5),
         issuedAt: DateTime.now().toUtc());
+
     String token = issueJwtHS256(claimSet, jwtKey);
 
     return token;
