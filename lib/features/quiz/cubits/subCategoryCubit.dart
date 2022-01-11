@@ -36,4 +36,8 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
       emit(SubCategoryFetchFailure(e.toString()));
     });
   }
+
+  void updateState(SubCategoryState updatedState) {
+    emit(updatedState);
+  }
 }

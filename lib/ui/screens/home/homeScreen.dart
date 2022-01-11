@@ -9,6 +9,7 @@ import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoin
 import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
 import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 
 import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
@@ -675,6 +676,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildSelfChallenge(double statusBarPadding) {
     return GestureDetector(
       onTap: () {
+        context.read<QuizCategoryCubit>().updateState(QuizCategoryInitial());
+        context.read<SubCategoryCubit>().updateState(SubCategoryInitial());
         Navigator.of(context).pushNamed(Routes.selfChallenge);
       },
       child: Align(
