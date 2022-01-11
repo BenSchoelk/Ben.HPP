@@ -757,13 +757,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     });
   }
 
-  bool _answerCorrectness() {
-    if (widget.quizType == QuizTypes.contest) {
-      return true;
-    }
-    return !context.read<SystemConfigCubit>().isPaymentRequestEnable();
-  }
-
   Widget _buildLifeLines() {
     if (widget.quizType == QuizTypes.dailyQuiz ||
         widget.quizType == QuizTypes.quizZone) {
@@ -1014,7 +1007,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     child: QuestionsContainer(
                       audioQuestionContainerKeys: audioQuestionContainerKeys,
                       quizType: widget.quizType,
-                      showAnswerCorrectness: _answerCorrectness(),
+                      showAnswerCorrectness: context
+                          .read<SystemConfigCubit>()
+                          .getShowCorrectAnswerMode(),
                       lifeLines: getLifeLines(),
                       timerAnimationController: timerAnimationController,
                       topPadding: MediaQuery.of(context).size.height *

@@ -113,11 +113,12 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     return "0";
   }
 
-  String? getShowCorrectAnswerMode() {
+  bool getShowCorrectAnswerMode() {
     if (state is SystemConfigFetchSuccess) {
-      return (state as SystemConfigFetchSuccess).systemConfigModel.answerMode;
+      return (state as SystemConfigFetchSuccess).systemConfigModel.answerMode ==
+          "1";
     }
-    return "0";
+    return true;
   }
 
   String? getIsDailyQuizAvailable() {

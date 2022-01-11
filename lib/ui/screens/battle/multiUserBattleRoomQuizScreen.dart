@@ -19,6 +19,7 @@ import 'package:flutterquiz/features/profileManagement/profileManagementReposito
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
 import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
@@ -941,7 +942,9 @@ class _MultiUserBattleRoomQuizScreenState
                               timerAnimationController:
                                   timerAnimationController,
                               quizType: QuizTypes.groupPlay,
-                              showAnswerCorrectness: true,
+                              showAnswerCorrectness: context
+                                  .read<SystemConfigCubit>()
+                                  .getShowCorrectAnswerMode(),
                               lifeLines: {},
                               guessTheWordQuestionContainerKeys: [],
                               key: Key("questions"),

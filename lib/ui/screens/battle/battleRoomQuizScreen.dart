@@ -17,6 +17,7 @@ import 'package:flutterquiz/features/profileManagement/profileManagementReposito
 import 'package:flutterquiz/features/quiz/models/question.dart';
 import 'package:flutterquiz/features/quiz/models/quizType.dart';
 import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
 import 'package:flutterquiz/features/tournament/cubits/tournamentCubit.dart';
 import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
@@ -1143,7 +1144,9 @@ class _BattleRoomQuizScreenState extends State<BattleRoomQuizScreen>
                           MediaQuery.of(context).size.height),
                   timerAnimationController: timerAnimationController,
                   quizType: QuizTypes.battle,
-                  showAnswerCorrectness: true,
+                  showAnswerCorrectness: context
+                      .read<SystemConfigCubit>()
+                      .getShowCorrectAnswerMode(),
                   lifeLines: {},
                   guessTheWordQuestionContainerKeys: [],
                   guessTheWordQuestions: [],

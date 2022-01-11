@@ -48,8 +48,10 @@ class SystemConfigModel {
   late String coinLimit;
   late String selfChallengeMode;
   late String inAppPurchaseMode;
+  late String showAnswerCorrectness;
 
   SystemConfigModel({
+    required this.showAnswerCorrectness,
     required this.selfChallengeMode,
     required this.inAppPurchaseMode,
     required this.coinLimit,
@@ -151,5 +153,6 @@ class SystemConfigModel {
     coinLimit = json['coin_limit'] ?? "0";
     inAppPurchaseMode = json['in_app_purchase_mode'] ?? "0";
     selfChallengeMode = json['self_challenge_mode'] ?? "0";
+    showAnswerCorrectness = json['answer_mode'] ?? "1";
   }
 }
