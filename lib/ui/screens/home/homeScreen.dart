@@ -351,9 +351,7 @@ class _HomeScreenState extends State<HomeScreen>
     //show you left the game
     if (state == AppLifecycleState.resumed) {
       UiUtils.needToUpdateCoinsLocally(context);
-    } else if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.detached) {
+    } else {
       ProfileManagementLocalDataSource.updateReversedCoins(0);
     }
   }
