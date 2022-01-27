@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/systemConfig/systemConfigRepository.dart';
+import 'package:hpp/features/systemConfig/systemConfigRepository.dart';
 
 abstract class AppSettingsState {}
 

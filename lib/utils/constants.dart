@@ -1,7 +1,7 @@
-import 'package:flutterquiz/features/wallet/models/payoutMethod.dart';
+import 'package:hpp/features/wallet/models/payoutMethod.dart';
 
 final String appName = "Elite Quiz";
-final String packageName = "com.wrteam.flutterquiz";
+final String packageName = "com.ben.hpp";
 
 //supporated language codes
 //Add language code in this list
@@ -63,12 +63,12 @@ final String settingsThemeKey = "theme";
 //Add your database url
 //make sure do not add '/' at the end of url
 
-final String databaseUrl = "https://elitequiz.wrteam.in";
+final String databaseUrl = "http://hpp-adminpanel.online";
 
 //
 final String baseUrl = databaseUrl + '/Api/';
 //
-final String jwtKey = 'set_your_strong_jwt_secret_key';
+final String jwtKey = 'Liebevoll3';
 final String accessValue = "8525";
 
 //lifelines

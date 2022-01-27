@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/settings/settingsCubit.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/features/settings/settingsCubit.dart';
+import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
 
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class Slide {
   final String title;

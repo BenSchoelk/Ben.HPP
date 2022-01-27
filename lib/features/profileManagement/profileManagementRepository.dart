@@ -1,7 +1,7 @@
-import 'package:flutterquiz/features/profileManagement/profileManagementException.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementRemoteDataSource.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:hpp/features/profileManagement/profileManagementException.dart';
+import 'package:hpp/features/profileManagement/profileManagementLocalDataSource.dart';
+import 'package:hpp/features/profileManagement/profileManagementRemoteDataSource.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
 import 'dart:io';
 
 import 'models/userProfile.dart';

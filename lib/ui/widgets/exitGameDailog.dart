@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/ui/styles/colors.dart';
 
 class ExitGameDailog extends StatelessWidget {
   final Function? onTapYes;

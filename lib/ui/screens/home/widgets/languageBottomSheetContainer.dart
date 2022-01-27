@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:hpp/features/localization/appLocalizationCubit.dart';
+import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class LanguageDailogContainer extends StatelessWidget {
   LanguageDailogContainer({Key? key}) : super(key: key);

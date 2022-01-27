@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/badges/badge.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/features/badges/badge.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class UnlockedRewardContent extends StatelessWidget {
   final Badge reward;

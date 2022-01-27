@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutterquiz/features/quiz/models/question.dart';
-import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
+import 'package:hpp/features/quiz/models/question.dart';
+import 'package:hpp/features/tournament/model/tournamentPlayerDetails.dart';
 
 enum TournamentBattleType { quaterFinal, semiFinal, finalBattle }
 

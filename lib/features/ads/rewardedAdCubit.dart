@@ -1,7 +1,7 @@
 import 'package:facebook_audience_network/ad/ad_rewarded.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 abstract class RewardedAdState {}

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/badges/badge.dart';
-import 'package:flutterquiz/features/badges/badgesRepository.dart';
+import 'package:hpp/features/badges/badge.dart';
+import 'package:hpp/features/badges/badgesRepository.dart';
 
 abstract class BadgesState {}
 

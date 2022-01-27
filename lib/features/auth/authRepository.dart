@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutterquiz/features/auth/auhtException.dart';
-import 'package:flutterquiz/features/auth/authLocalDataSource.dart';
-import 'package:flutterquiz/features/auth/authRemoteDataSource.dart';
-import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:hpp/features/auth/auhtException.dart';
+import 'package:hpp/features/auth/authLocalDataSource.dart';
+import 'package:hpp/features/auth/authRemoteDataSource.dart';
+import 'package:hpp/features/auth/cubits/authCubit.dart';
 
 class AuthRepository {
   static final AuthRepository _authRepository = AuthRepository._internal();

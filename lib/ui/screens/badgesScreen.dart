@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/badges/badge.dart';
-import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/features/badges/badge.dart';
+import 'package:hpp/features/badges/cubits/badgesCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/statistic/cubits/statisticsCubit.dart';
 
-import 'package:flutterquiz/ui/styles/colors.dart';
-import 'package:flutterquiz/ui/widgets/badgesIconContainer.dart';
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
-import 'package:flutterquiz/ui/widgets/errorContainer.dart';
-import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/ui/styles/colors.dart';
+import 'package:hpp/ui/widgets/badgesIconContainer.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/ui/widgets/errorContainer.dart';
+import 'package:hpp/ui/widgets/roundedAppbar.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class BadgesScreen extends StatefulWidget {
   const BadgesScreen({Key? key}) : super(key: key);

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/badges/badge.dart';
-import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/ui/screens/rewards/widgets/unlockedRewardContent.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/features/badges/badge.dart';
+import 'package:hpp/features/badges/cubits/badgesCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/ui/screens/rewards/widgets/unlockedRewardContent.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 import 'package:scratcher/widgets.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

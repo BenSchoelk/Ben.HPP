@@ -4,14 +4,14 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
-import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
-import 'package:flutterquiz/features/quiz/models/question.dart';
-import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/battleRoom/battleRoomRepository.dart';
+import 'package:hpp/features/battleRoom/models/battleRoom.dart';
+import 'package:hpp/features/quiz/models/question.dart';
+import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:hpp/utils/constants.dart';
 
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
 
 @immutable
 class BattleRoomState {}

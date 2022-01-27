@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class CustomDialog extends StatelessWidget {
   final double? height; //in multiplication of device height

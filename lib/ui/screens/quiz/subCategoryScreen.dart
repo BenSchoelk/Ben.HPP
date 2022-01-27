@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
-import 'package:flutterquiz/ui/widgets/customBackButton.dart';
-import 'package:flutterquiz/ui/widgets/errorContainer.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:hpp/ui/widgets/bannerAdContainer.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/ui/widgets/customBackButton.dart';
+import 'package:hpp/ui/widgets/errorContainer.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   final String categoryId;

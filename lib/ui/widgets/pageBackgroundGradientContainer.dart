@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class PageBackgroundGradientContainer extends StatelessWidget {
   const PageBackgroundGradientContainer({Key? key}) : super(key: key);

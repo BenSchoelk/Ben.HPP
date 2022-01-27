@@ -1,4 +1,4 @@
-import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:hpp/utils/apiBodyParameterLabels.dart';
 
 class NotificationModel {
   final String? id, title, message, users, type, typeId, image, dateSent;

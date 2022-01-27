@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/tournament/cubits/tournamentDetailsCubit.dart';
-import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
-import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/tournament/cubits/tournamentDetailsCubit.dart';
+import 'package:hpp/features/tournament/model/tournamentDetails.dart';
+import 'package:hpp/features/tournament/tournamentRepository.dart';
 
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
 
 class TournamentDetailsScreen extends StatefulWidget {
   TournamentDetailsScreen({Key? key}) : super(key: key);

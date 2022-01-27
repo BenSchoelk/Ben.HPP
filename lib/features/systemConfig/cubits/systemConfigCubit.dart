@@ -2,10 +2,10 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/systemConfig/model/supportedQuestionLanguage.dart';
-import 'package:flutterquiz/features/systemConfig/model/systemConfigModel.dart';
-import 'package:flutterquiz/features/systemConfig/systemConfigRepository.dart';
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:hpp/features/systemConfig/model/supportedQuestionLanguage.dart';
+import 'package:hpp/features/systemConfig/model/systemConfigModel.dart';
+import 'package:hpp/features/systemConfig/systemConfigRepository.dart';
+import 'package:hpp/utils/constants.dart';
 
 abstract class SystemConfigState {}
 

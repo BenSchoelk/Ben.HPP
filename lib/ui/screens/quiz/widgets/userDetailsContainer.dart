@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/ui/screens/quiz/widgets/userCrownContainer.dart';
+import 'package:hpp/ui/screens/quiz/widgets/userCrownContainer.dart';
 
 class UserDetailsContainer extends StatelessWidget {
   final String? userName;

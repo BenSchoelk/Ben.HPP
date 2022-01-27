@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/wallet/walletRepository.dart';
+import 'package:hpp/features/wallet/walletRepository.dart';
 
 abstract class PaymentRequestState {}
 

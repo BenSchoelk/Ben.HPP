@@ -1,8 +1,8 @@
 import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
 
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/uiUtils.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

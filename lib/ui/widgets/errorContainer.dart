@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/ui/widgets/customRoundedButton.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class ErrorContainer extends StatelessWidget {
   final String? errorMessage;

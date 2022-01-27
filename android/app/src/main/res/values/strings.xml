@@ -4,6 +4,6 @@
 
     <string name="facebook_app_id">858040135030262</string>
     <string name="fb_login_protocol_scheme">fb858040135030262</string>
-    <string name="default_notification_channel_id">com.wrteam.flutterquiz</string>
+    <string name="default_notification_channel_id">com.ben.hpp</string>
 
 </resources>

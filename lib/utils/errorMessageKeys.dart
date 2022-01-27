@@ -4,7 +4,7 @@
 //
 //if you make any changes here in keys make sure to update in all languages files
 //
-import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:hpp/utils/stringLabels.dart';
 
 final String defaultErrorMessageKey =
     "defaultErrorMessage"; //something went wrong

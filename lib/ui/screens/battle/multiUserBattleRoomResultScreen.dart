@@ -2,19 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
-import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/features/ads/interstitialAdCubit.dart';
+import 'package:hpp/features/badges/cubits/badgesCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
 
-import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
 
-import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/ui/widgets/customRoundedButton.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
 
-import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:hpp/utils/stringLabels.dart';
 
 class MultiUserBattleRoomResultScreen extends StatefulWidget {
   final List<UserBattleRoomDetails?> users;

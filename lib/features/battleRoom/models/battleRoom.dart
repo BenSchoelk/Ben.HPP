@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
 
 class BattleRoom {
   final String? roomId;

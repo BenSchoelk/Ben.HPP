@@ -1,4 +1,4 @@
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:hpp/utils/constants.dart';
 import 'package:hive/hive.dart';
 
 //AuthLocalDataSource will communicate with local database (hive)

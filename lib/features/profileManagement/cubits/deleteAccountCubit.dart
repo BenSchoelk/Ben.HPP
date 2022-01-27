@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
 
 abstract class DeleteAccountState {}
 

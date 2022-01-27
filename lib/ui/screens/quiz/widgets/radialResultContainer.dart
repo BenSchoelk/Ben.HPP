@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/utils/normalizeNumber.dart';
+import 'package:hpp/utils/normalizeNumber.dart';
 
 class RadialPercentageResultContainer extends StatefulWidget {
   final Size size;

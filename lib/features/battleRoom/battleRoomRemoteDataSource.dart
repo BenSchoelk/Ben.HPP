@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutterquiz/features/battleRoom/battleRoomExecption.dart';
-import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:hpp/features/battleRoom/battleRoomExecption.dart';
+import 'package:hpp/utils/apiBodyParameterLabels.dart';
 
-import 'package:flutterquiz/utils/apiUtils.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/internetConnectivity.dart';
+import 'package:hpp/utils/apiUtils.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/internetConnectivity.dart';
 
 import 'package:http/http.dart' as http;
 

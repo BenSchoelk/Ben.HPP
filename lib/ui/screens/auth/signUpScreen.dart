@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/auth/authRepository.dart';
-import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
-import 'package:flutterquiz/features/auth/cubits/signUpCubit.dart';
-import 'package:flutterquiz/ui/screens/auth/widgets/termsAndCondition.dart';
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
-import 'package:flutterquiz/utils/validators.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/auth/authRepository.dart';
+import 'package:hpp/features/auth/cubits/authCubit.dart';
+import 'package:hpp/features/auth/cubits/signUpCubit.dart';
+import 'package:hpp/ui/screens/auth/widgets/termsAndCondition.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/uiUtils.dart';
+import 'package:hpp/utils/validators.dart';
 import 'package:lottie/lottie.dart';
 
 class SignUpScreen extends StatefulWidget {

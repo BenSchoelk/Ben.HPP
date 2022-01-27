@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
-import 'package:flutterquiz/features/battleRoom/models/message.dart';
+import 'package:hpp/features/battleRoom/cubits/messageCubit.dart';
+import 'package:hpp/features/battleRoom/models/message.dart';
 
 class PlayGroundScreen extends StatefulWidget {
   PlayGroundScreen({Key? key}) : super(key: key);

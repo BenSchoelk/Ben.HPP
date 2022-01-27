@@ -1,7 +1,7 @@
-import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
-import 'package:flutterquiz/features/quiz/models/leaderBoardMonthly.dart';
-import 'package:flutterquiz/features/quiz/quizException.dart';
-import 'package:flutterquiz/features/quiz/quizRemoteDataSoure.dart';
+import 'package:hpp/features/quiz/models/guessTheWordQuestion.dart';
+import 'package:hpp/features/quiz/models/leaderBoardMonthly.dart';
+import 'package:hpp/features/quiz/quizException.dart';
+import 'package:hpp/features/quiz/quizRemoteDataSoure.dart';
 
 import 'models/category.dart';
 import 'models/comprehension.dart';

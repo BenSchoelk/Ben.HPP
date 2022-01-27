@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wrteam.flutterquiz">
+    package="com.ben.hpp">
    
    <uses-permission android:name="android.permission.VIBRATE"/>
    <uses-permission android:name="android.permission.INTERNET"/>
@@ -95,7 +95,7 @@
        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
            <intent-filter>
                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-               <action android:name="android.intent.action.com.wrteam.flutterquiz"/>
+               <action android:name="android.intent.action.com.ben.hpp"/>
            </intent-filter>
        </receiver>
     </application>

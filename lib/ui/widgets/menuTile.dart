@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_fake.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class MenuTile extends StatelessWidget {
   final String title;

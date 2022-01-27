@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/settings/settingsLocalDataSource.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/features/settings/settingsLocalDataSource.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class AppLocalizationState {
   final Locale language;

@@ -2,20 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/badges/badge.dart';
-import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/ui/screens/rewards/scratchRewardScreen.dart';
-import 'package:flutterquiz/ui/screens/rewards/widgets/unlockedRewardContent.dart';
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
-import 'package:flutterquiz/ui/widgets/errorContainer.dart';
-import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/features/badges/badge.dart';
+import 'package:hpp/features/badges/cubits/badgesCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:hpp/ui/screens/rewards/scratchRewardScreen.dart';
+import 'package:hpp/ui/screens/rewards/widgets/unlockedRewardContent.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/ui/widgets/errorContainer.dart';
+import 'package:hpp/ui/widgets/roundedAppbar.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class RewardsScreen extends StatefulWidget {
   RewardsScreen({

@@ -1,4 +1,4 @@
-import 'package:flutterquiz/features/settings/settingsLocalDataSource.dart';
+import 'package:hpp/features/settings/settingsLocalDataSource.dart';
 
 class SettingsRepository {
   static final SettingsRepository _settingsRepository = SettingsRepository._internal();

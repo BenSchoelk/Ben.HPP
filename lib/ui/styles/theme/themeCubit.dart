@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/settings/settingsLocalDataSource.dart';
-import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/features/settings/settingsLocalDataSource.dart';
+import 'package:hpp/ui/styles/theme/appTheme.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class ThemeState {
   final AppTheme appTheme;

@@ -3,33 +3,33 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
-import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
-import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/features/quiz/cubits/guessTheWordQuizCubit.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/bookmark/bookmarkRepository.dart';
+import 'package:hpp/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
+import 'package:hpp/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:hpp/features/quiz/cubits/guessTheWordQuizCubit.dart';
 
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
-import 'package:flutterquiz/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:hpp/features/quiz/quizRepository.dart';
+import 'package:hpp/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
 
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
-import 'package:flutterquiz/ui/widgets/customBackButton.dart';
-import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
-import 'package:flutterquiz/ui/widgets/errorContainer.dart';
-import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
-import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
-import 'package:flutterquiz/ui/widgets/settingButton.dart';
-import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/ui/widgets/customBackButton.dart';
+import 'package:hpp/ui/widgets/customRoundedButton.dart';
+import 'package:hpp/ui/widgets/errorContainer.dart';
+import 'package:hpp/ui/widgets/exitGameDailog.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/ui/widgets/questionsContainer.dart';
+import 'package:hpp/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:hpp/ui/widgets/settingButton.dart';
+import 'package:hpp/ui/widgets/settingsDialogContainer.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class GuessTheWordQuizScreen extends StatefulWidget {
   final String type; //category or subcategory

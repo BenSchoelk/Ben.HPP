@@ -4,25 +4,25 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/battleRoom/cubits/battleRoomCubit.dart';
 
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
-import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/profileManagement/models/userProfile.dart';
+import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
 
-import 'package:flutterquiz/ui/screens/battle/widgets/findingOpponentLetterAnimation.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/userFoundMapContainer.dart';
-import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
-import 'package:flutterquiz/ui/widgets/customBackButton.dart';
-import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
-import 'package:flutterquiz/ui/widgets/errorContainer.dart';
-import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/ui/screens/battle/widgets/findingOpponentLetterAnimation.dart';
+import 'package:hpp/ui/screens/battle/widgets/userFoundMapContainer.dart';
+import 'package:hpp/ui/widgets/circularImageContainer.dart';
+import 'package:hpp/ui/widgets/customBackButton.dart';
+import 'package:hpp/ui/widgets/customRoundedButton.dart';
+import 'package:hpp/ui/widgets/errorContainer.dart';
+import 'package:hpp/ui/widgets/exitGameDailog.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class BattleRoomFindOpponentScreen extends StatefulWidget {
   final String categoryId;

@@ -1,5 +1,5 @@
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/stringLabels.dart';
 import 'package:hive/hive.dart';
 
 class SettingsLocalDataSource {

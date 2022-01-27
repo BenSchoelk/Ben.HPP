@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 //
 

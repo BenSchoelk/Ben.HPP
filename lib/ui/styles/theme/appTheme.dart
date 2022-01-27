@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:hpp/ui/styles/colors.dart';
 
 enum AppTheme { Light, Dark }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
+import 'package:hpp/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
 
 class RectangleTimerProgressContainer extends StatefulWidget {
   final AnimationController animationController;

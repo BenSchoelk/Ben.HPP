@@ -1,4 +1,4 @@
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:hpp/utils/constants.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 
 class ApiUtils {

@@ -1,23 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/auth/cubits/authCubit.dart';
 
-import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
-import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
-import 'package:flutterquiz/features/statistic/models/statisticModel.dart';
-import 'package:flutterquiz/features/statistic/statisticRepository.dart';
-import 'package:flutterquiz/ui/widgets/badgesIconContainer.dart';
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/features/badges/cubits/badgesCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/profileManagement/models/userProfile.dart';
+import 'package:hpp/features/statistic/cubits/statisticsCubit.dart';
+import 'package:hpp/features/statistic/models/statisticModel.dart';
+import 'package:hpp/features/statistic/statisticRepository.dart';
+import 'package:hpp/ui/widgets/badgesIconContainer.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
 
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/ui/widgets/roundedAppbar.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StatisticsScreen extends StatefulWidget {

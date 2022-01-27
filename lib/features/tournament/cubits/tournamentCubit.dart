@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/tournament/model/tournament.dart';
-import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
-import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:hpp/features/tournament/model/tournament.dart';
+import 'package:hpp/features/tournament/model/tournamentPlayerDetails.dart';
+import 'package:hpp/features/tournament/tournamentRepository.dart';
+import 'package:hpp/utils/constants.dart';
 
 abstract class TournamentState {}
 

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:hpp/utils/apiBodyParameterLabels.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutterquiz/features/quiz/quizException.dart';
-import 'package:flutterquiz/utils/apiUtils.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:hpp/features/quiz/quizException.dart';
+import 'package:hpp/utils/apiUtils.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
 
 class QuizRemoteDataSource {
   static late String profile, score, rank;

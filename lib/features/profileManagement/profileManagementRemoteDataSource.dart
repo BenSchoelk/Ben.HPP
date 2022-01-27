@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementException.dart';
-import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
-import 'package:flutterquiz/utils/apiUtils.dart';
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:hpp/features/profileManagement/profileManagementException.dart';
+import 'package:hpp/utils/apiBodyParameterLabels.dart';
+import 'package:hpp/utils/apiUtils.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileManagementRemoteDataSource {
@@ -45,7 +45,7 @@ class ProfileManagementRemoteDataSource {
     }
   }
 
-  /*response ********{"error":false,"message":"Profile uploaded successfully!","data":{profileKey:"http:\/\/flutterquiz.thewrteam.in\/images\/profile\/1623326274.jpg"}}*/
+  /*response ********{"error":false,"message":"Profile uploaded successfully!","data":{profileKey:"http:\/\/hpp.thewrteam.in\/images\/profile\/1623326274.jpg"}}*/
   Future addProfileImage(File? images, String? userId) async {
     try {
       Map<String, String?> body = {

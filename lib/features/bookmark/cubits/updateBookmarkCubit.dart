@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:hpp/features/bookmark/bookmarkRepository.dart';
 
 @immutable
 abstract class UpdateBookmarkState {}

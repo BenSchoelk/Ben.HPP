@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
-import 'package:flutterquiz/ui/widgets/circularTimerContainer.dart';
+import 'package:hpp/ui/widgets/circularImageContainer.dart';
+import 'package:hpp/ui/widgets/circularTimerContainer.dart';
 
 final timerHeightAndWidthPercentage = 0.14;
 

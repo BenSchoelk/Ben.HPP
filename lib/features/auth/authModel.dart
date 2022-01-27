@@ -1,4 +1,4 @@
-import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:hpp/features/auth/cubits/authCubit.dart';
 
 class AuthModel {
   final AuthProvider authProvider;

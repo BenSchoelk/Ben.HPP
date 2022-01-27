@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
-import 'package:flutterquiz/features/battleRoom/models/message.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/tournament/cubits/tournamentBattleCubit.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:hpp/features/battleRoom/cubits/messageCubit.dart';
+import 'package:hpp/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:hpp/features/battleRoom/models/message.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:hpp/features/tournament/cubits/tournamentBattleCubit.dart';
+import 'package:hpp/utils/uiUtils.dart';
 import 'dart:ui' as ui;
 
 class MessageContainer extends StatelessWidget {

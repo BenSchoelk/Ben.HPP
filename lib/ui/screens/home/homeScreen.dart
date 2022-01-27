@@ -1,19 +1,19 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
-import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
-import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
-import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
-import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:hpp/features/ads/interstitialAdCubit.dart';
+import 'package:hpp/features/badges/cubits/badgesCubit.dart';
+import 'package:hpp/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:hpp/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:hpp/features/exam/cubits/examCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:hpp/features/profileManagement/profileManagementLocalDataSource.dart';
+import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:hpp/features/quiz/cubits/subCategoryCubit.dart';
 
-import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
-import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
+import 'package:hpp/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
+import 'package:hpp/ui/screens/battle/widgets/roomDialog.dart';
+import 'package:hpp/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -23,25 +23,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/auth/authRepository.dart';
-import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
-import 'package:flutterquiz/features/auth/cubits/referAndEarnCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
-import 'package:flutterquiz/ui/screens/home/widgets/updateAppContainer.dart';
-import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
-import 'package:flutterquiz/ui/widgets/errorContainer.dart';
-import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:flutterquiz/ui/widgets/userAchievementScreen.dart';
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/quizTypes.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/auth/authRepository.dart';
+import 'package:hpp/features/auth/cubits/authCubit.dart';
+import 'package:hpp/features/auth/cubits/referAndEarnCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/profileManagement/models/userProfile.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:hpp/ui/screens/home/widgets/quizTypeContainer.dart';
+import 'package:hpp/ui/screens/home/widgets/updateAppContainer.dart';
+import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:hpp/ui/widgets/errorContainer.dart';
+import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:hpp/ui/widgets/userAchievementScreen.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/quizTypes.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -291,9 +291,9 @@ class _HomeScreenState extends State<HomeScreen>
         summaryText: msg,
         htmlFormatSummaryText: true);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'com.wrteam.flutterquiz', //channel id
-        'flutterquiz', //channel name
-        channelDescription: 'flutterquiz',
+        'com.ben.hpp', //channel id
+        'hpp', //channel name
+        channelDescription: 'hpp',
         largeIcon: FilePathAndroidBitmap(largeIconPath),
         styleInformation: bigPictureStyleInformation,
         icon: "app_icon");
@@ -318,9 +318,9 @@ class _HomeScreenState extends State<HomeScreen>
     print("Trigger local notification");
     print("Payload is $payloads");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'com.wrteam.flutterquiz', //channel id
-        'flutterquiz', //channel name
-        channelDescription: 'flutterquiz',
+        'com.ben.hpp', //channel id
+        'hpp', //channel name
+        channelDescription: 'hpp',
         importance: Importance.max,
         priority: Priority.high,
         ticker: 'ticker',

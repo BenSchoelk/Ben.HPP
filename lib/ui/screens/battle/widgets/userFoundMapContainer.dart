@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class UserFoundMapContainer extends StatefulWidget {
   UserFoundMapContainer({Key? key}) : super(key: key);

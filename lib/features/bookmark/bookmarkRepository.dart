@@ -1,8 +1,8 @@
-import 'package:flutterquiz/features/bookmark/bookmarkException.dart';
-import 'package:flutterquiz/features/bookmark/bookmarkLocalDataSource.dart';
-import 'package:flutterquiz/features/bookmark/bookmarkRemoteDataSource.dart';
-import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
-import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:hpp/features/bookmark/bookmarkException.dart';
+import 'package:hpp/features/bookmark/bookmarkLocalDataSource.dart';
+import 'package:hpp/features/bookmark/bookmarkRemoteDataSource.dart';
+import 'package:hpp/features/quiz/models/guessTheWordQuestion.dart';
+import 'package:hpp/features/quiz/models/question.dart';
 
 class BookmarkRepository {
   static final BookmarkRepository _bookmarkRepository =

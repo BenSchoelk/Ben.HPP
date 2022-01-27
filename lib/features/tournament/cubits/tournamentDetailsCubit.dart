@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
-import 'package:flutterquiz/features/tournament/tournamentRepository.dart';
+import 'package:hpp/features/tournament/model/tournamentDetails.dart';
+import 'package:hpp/features/tournament/tournamentRepository.dart';
 
 abstract class TournamentDetailsState {}
 

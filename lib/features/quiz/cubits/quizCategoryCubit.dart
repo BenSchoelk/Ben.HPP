@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/quiz/models/category.dart';
+import 'package:hpp/features/quiz/models/category.dart';
 import '../quizRepository.dart';
 
 @immutable

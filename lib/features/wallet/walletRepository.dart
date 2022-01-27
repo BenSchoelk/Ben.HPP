@@ -1,6 +1,6 @@
-import 'package:flutterquiz/features/wallet/models/paymentRequest.dart';
-import 'package:flutterquiz/features/wallet/walletException.dart';
-import 'package:flutterquiz/features/wallet/walletRemoteDataSource.dart';
+import 'package:hpp/features/wallet/models/paymentRequest.dart';
+import 'package:hpp/features/wallet/walletException.dart';
+import 'package:hpp/features/wallet/walletRemoteDataSource.dart';
 
 class WalletRepository {
   static final WalletRepository _walletRepository =

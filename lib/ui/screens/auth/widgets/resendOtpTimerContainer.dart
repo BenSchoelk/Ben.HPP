@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/ui/screens/auth/otpScreen.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/ui/screens/auth/otpScreen.dart';
 
 class ResendOtpTimerContainer extends StatefulWidget {
   final Function enableResendOtpButton;

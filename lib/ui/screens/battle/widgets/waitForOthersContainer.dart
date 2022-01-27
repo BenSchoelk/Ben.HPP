@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
-import 'package:flutterquiz/ui/widgets/questionBackgroundCard.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
+import 'package:hpp/ui/widgets/questionBackgroundCard.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class WaitForOthersContainer extends StatelessWidget {
   const WaitForOthersContainer({Key? key}) : super(key: key);

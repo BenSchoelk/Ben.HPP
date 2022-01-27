@@ -1,11 +1,11 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterquiz/features/quiz/models/answerOption.dart';
+import 'package:hpp/features/quiz/models/answerOption.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/settings/settingsCubit.dart';
+import 'package:hpp/features/settings/settingsCubit.dart';
 // Import package
-import 'package:flutterquiz/utils/constants.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/constants.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class OptionContainer extends StatefulWidget {
   final Function hasSubmittedAnswerForCurrentQuestion;

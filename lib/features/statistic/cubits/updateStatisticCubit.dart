@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/statistic/statisticRepository.dart';
+import 'package:hpp/features/statistic/statisticRepository.dart';
 
 @immutable
 abstract class UpdateStatisticState {}

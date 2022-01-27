@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/app/routes.dart';
-import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
-import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
-import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
-import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
-import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
-import 'package:flutterquiz/utils/constants.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/app/routes.dart';
+import 'package:hpp/features/ads/rewardedAdCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:hpp/features/profileManagement/models/userProfile.dart';
+import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:hpp/features/quiz/quizRepository.dart';
+import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:hpp/ui/screens/battle/widgets/customDialog.dart';
+import 'package:hpp/ui/screens/battle/widgets/roomDialog.dart';
+import 'package:hpp/ui/widgets/watchRewardAdDialog.dart';
+import 'package:hpp/utils/constants.dart';
 
-import 'package:flutterquiz/utils/errorMessageKeys.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 
 class RandomOrPlayFrdDialog extends StatefulWidget {
   RandomOrPlayFrdDialog({Key? key}) : super(key: key);

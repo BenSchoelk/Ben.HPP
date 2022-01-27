@@ -1,5 +1,5 @@
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:hpp/utils/stringLabels.dart';
 
 final List<QuizType> quizTypes = [
   //title will be the key of localization for quizType title

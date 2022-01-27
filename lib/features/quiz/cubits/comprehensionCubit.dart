@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/quiz/models/comprehension.dart';
-import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:hpp/features/quiz/models/comprehension.dart';
+import 'package:hpp/features/quiz/quizRepository.dart';
 
 abstract class ComprehensionState {}
 

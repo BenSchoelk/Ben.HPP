@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/auth/authRepository.dart';
-import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
-import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:hpp/features/auth/authRepository.dart';
+import 'package:hpp/features/auth/cubits/authCubit.dart';
+import 'package:hpp/features/profileManagement/models/userProfile.dart';
 
 //State
 @immutable

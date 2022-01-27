@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutterquiz/app/appLocalization.dart';
-import 'package:flutterquiz/features/settings/settingsCubit.dart';
-import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
-import 'package:flutterquiz/utils/stringLabels.dart';
-import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:hpp/app/appLocalization.dart';
+import 'package:hpp/features/settings/settingsCubit.dart';
+import 'package:hpp/ui/screens/battle/widgets/customDialog.dart';
+import 'package:hpp/utils/stringLabels.dart';
+import 'package:hpp/utils/uiUtils.dart';
 import 'fontSizeDialog.dart';
 
 class SettingsDialogContainer extends StatelessWidget {

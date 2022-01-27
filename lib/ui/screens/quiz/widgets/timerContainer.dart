@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterquiz/features/quiz/cubits/questionsCubit.dart';
-import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:hpp/features/quiz/cubits/questionsCubit.dart';
+import 'package:hpp/features/quiz/models/quizType.dart';
 
 class TimerContainer extends StatefulWidget {
   final Function setTimer; //to set timer of quizScreen
