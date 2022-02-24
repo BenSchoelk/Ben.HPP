@@ -1,4 +1,4 @@
-import 'package:hpp/utils/constants.dart';
+import 'package:flutterquiz/utils/constants.dart';
 import 'package:hive/hive.dart';
 
 class BookmarkLocalDataSource {

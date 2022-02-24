@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/bookmark/cubits/bookmarkCubit.dart';
-import 'package:hpp/features/bookmark/cubits/updateBookmarkCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BookmarkButton extends StatelessWidget {
   final Question question;

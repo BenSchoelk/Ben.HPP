@@ -3,23 +3,25 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/battleRoom/battleRoomRepository.dart';
-import 'package:hpp/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
-import 'package:hpp/features/bookmark/cubits/bookmarkCubit.dart';
-import 'package:hpp/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
-import 'package:hpp/features/exam/cubits/examCubit.dart';
-import 'package:hpp/features/localization/appLocalizationCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementLocalDataSource.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/styles/theme/appTheme.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
+import 'package:flutterquiz/features/localization/appLocalizationCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
+import 'package:flutterquiz/ui/widgets/alreadyLoggedInDialog.dart';
 
-import 'package:hpp/ui/widgets/errorMessageDialog.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/ui/widgets/errorMessageDialog.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -170,8 +172,10 @@ class UiUtils {
           context.read<SystemConfigCubit>().getSupportedLanguages();
       final supporatedLanguageIndex = supporatedLanguage.indexWhere((element) =>
           getLocaleFromLanguageCode(element.languageCode) == currentLanguage);
-      print(supporatedLanguageIndex);
-      return supporatedLanguage[supporatedLanguageIndex].id;
+
+      return supporatedLanguageIndex == -1
+          ? defaultLanguageCode
+          : supporatedLanguage[supporatedLanguageIndex].id;
     }
 
     return defaultQuestionLanguageId;
@@ -282,6 +286,12 @@ class UiUtils {
 
     bool updateBasedOnVersion = _shouldUpdateBasedOnVersion(
         currentVersion.split("+").first, updatedVersion.split("+").first);
+
+    if (updatedVersion.split("+").length == 1 ||
+        currentVersion.split("+").length == 1) {
+      return updateBasedOnVersion;
+    }
+
     bool updateBasedOnBuildNumber = _shouldUpdateBasedOnBuildNumber(
         currentVersion.split("+").last, updatedVersion.split("+").last);
 
@@ -394,6 +404,21 @@ class UiUtils {
       return AppTheme.Dark;
     }
     return AppTheme.Light;
+  }
+
+  static void showAlreadyLoggedInDialog(
+      {required BuildContext context, Function? onLoggedInCallback}) {
+    context.read<AuthCubit>().signOut();
+    showDialog(
+        context: context,
+        builder: (_) => WillPopScope(
+              onWillPop: () {
+                return Future.value(false);
+              },
+              child: AlreadyLoggedInDialog(
+                onAlreadyLoggedInCallBack: onLoggedInCallback,
+              ),
+            ));
   }
 
   //will be in use while playing screen

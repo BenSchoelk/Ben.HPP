@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
 
 @immutable
 abstract class SetCategoryPlayedState {}

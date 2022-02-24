@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/auth/authRepository.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
-import 'package:hpp/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/auth/authRepository.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
 
 //State
 @immutable
@@ -27,13 +27,24 @@ class ReferAndEarnCubit extends Cubit<ReferAndEarnState> {
   final AuthRepository _authRepository;
   ReferAndEarnCubit(this._authRepository) : super(ReferAndEarnInitial());
 
-  void getReward({required UserProfile userProfile, required String name, required String friendReferralCode, required AuthProvider authType}) {
+  void getReward(
+      {required UserProfile userProfile,
+      required String name,
+      required String friendReferralCode,
+      required AuthProvider authType}) {
     //emitting signInProgress state
     emit(ReferAndEarnProgress());
 
     //signIn user with given provider and also add user detials in api
     _authRepository
-        .addUserData(email: userProfile.email, firebaseId: userProfile.firebaseId, friendCode: friendReferralCode, mobile: userProfile.mobileNumber, name: name, type: _authRepository.getAuthTypeString(authType), profile: userProfile.profileUrl)
+        .addUserData(
+            email: userProfile.email,
+            firebaseId: userProfile.firebaseId,
+            friendCode: friendReferralCode,
+            mobile: userProfile.mobileNumber,
+            name: name,
+            type: _authRepository.getAuthTypeString(authType),
+            profile: userProfile.profileUrl)
         .then((result) {
       emit(ReferAndEarnSuccess(userProfile: UserProfile.fromJson(result)));
     }).catchError((e) {

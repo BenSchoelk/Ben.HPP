@@ -3,6 +3,7 @@
   "termOfService": "سروس کی شرائط",
   "andLbl": "اور",
   "privacyPolicy": "رازداری کی پالیسی",
+ 
 
   "otpVerificationLbl": "او ٹی پی کی تصدیق",
   "otpSendLbl": "OTP آپ کو بھیجا گیا ہے your n آپ کے موبائل نمبر پر۔",
@@ -193,7 +194,7 @@
   "allTimeLbl": " تمام وقت",
 
   "referAndEarn": " رجوع کریں اور کمائیں",
-  "referFrdLbl": "ایک دوست سے رجوع کریں ، اور جب بھی آپ کا ریفرل کوڈ استعمال کیا جائے گا آپ کو 100 سکے ملیں گے اور آپ کے دوست کو آپ کے کوڈ کی نشاندہی کرکے 50 سکے ملیں گے۔",
+  "referFrdLbl": "اپنے دوستوں کو شامل ہونے کی دعوت دیں اور جیسے ہی آپ کا دوست اکاؤنٹ بناتا ہے انعام حاصل کریں۔",
   "yourRefCOdeLbl": "آپ کا ریفرل کوڈ۔",
   "referCodeCopyMsg": "ریفرل کوڈ کاپی ہو گیا۔",
   "shareNowLbl": "ابھی شیئر کریں۔",
@@ -443,7 +444,12 @@
   "pleaseFillAllData" : "Please fill all data",
   "noTransactions" : "No Transactions",
   "accountHasBeenDeactive" : "your account has been deactive! please contact admin",
-  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request"
+  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request",
+  "appUnderMaintenance" : "We apologize for the inconvenience, but we are performing some maintenance. We will back soon",
+  "youWillGet" : "You will get",
+  "theyWillGet" : "They will get"
+   
+
 
 
 }

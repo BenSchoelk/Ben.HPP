@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/exam/examRepository.dart';
-import 'package:hpp/features/exam/models/examResult.dart';
+import 'package:flutterquiz/features/exam/examRepository.dart';
+import 'package:flutterquiz/features/exam/models/examResult.dart';
 
 abstract class CompletedExamsState {}
 

@@ -1,20 +1,19 @@
-import 'package:hpp/utils/constants.dart';
-import 'package:jaguar_jwt/jaguar_jwt.dart';
+import 'package:flutterquiz/features/auth/authLocalDataSource.dart';
+import 'package:flutterquiz/features/auth/authRemoteDataSource.dart';
 
 class ApiUtils {
-  static Map<String, String> getHeaders() => {
-        "Authorization": 'Bearer ' + _getJwtToken(),
-      };
+  static Future<Map<String, String>> getHeaders() async {
+    String jwtToken = AuthLocalDataSource.getJwtToken();
 
-  static String _getJwtToken() {
-    final claimSet = new JwtClaim(
-        issuer: 'Quiz',
-        subject: 'Quiz Authentication',
-        maxAge: const Duration(minutes: 5),
-        issuedAt: DateTime.now().toUtc());
+    if (jwtToken.isEmpty) {
+      try {
+        jwtToken = await AuthRemoteDataSource().getJWTTokenOfUser(
+            firebaseId: AuthLocalDataSource.getUserFirebaseId(),
+            type: AuthLocalDataSource.getAuthType());
+        await AuthLocalDataSource.setJwtToken(jwtToken);
+      } catch (e) {}
+    }
 
-    String token = issueJwtHS256(claimSet, jwtKey);
-
-    return token;
+    return {"Authorization": 'Bearer $jwtToken'};
   }
 }

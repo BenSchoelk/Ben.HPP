@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class HorizontalTimerContainer extends StatelessWidget {
   final AnimationController timerAnimationController;

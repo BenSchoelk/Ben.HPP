@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/ui/widgets/menuTile.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/roundedAppbar.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/ui/widgets/menuTile.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class AboutAppScreen extends StatelessWidget {
   const AboutAppScreen({Key? key}) : super(key: key);

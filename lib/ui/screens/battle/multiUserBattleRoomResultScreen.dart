@@ -2,19 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/ads/interstitialAdCubit.dart';
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
 
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class MultiUserBattleRoomResultScreen extends StatefulWidget {
   final List<UserBattleRoomDetails?> users;
@@ -252,117 +254,126 @@ class _MultiUserBattleRoomResultScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          PageBackgroundGradientContainer(),
+    return BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+      listener: (context, state) {
+        if (state is UpdateScoreAndCoinsFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+          }
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            PageBackgroundGradientContainer(),
 
-          _buildResultLabel(),
+            _buildResultLabel(),
 
-          //user 1
-          _buildUserDetailsContainer(
-            usersWithRank.first['user'] as UserBattleRoomDetails,
-            usersWithRank.first['rank'],
-            Size(MediaQuery.of(context).size.width * (0.475),
-                MediaQuery.of(context).size.height * (0.35)),
-            true,
-            AlignmentDirectional.centerStart,
-            EdgeInsetsDirectional.only(
-              start: 10.0,
-              top: MediaQuery.of(context).size.height * (0.125),
-            ),
-            Colors.green,
-          ),
-          //user 2
-
-          usersWithRank.length == 2
-              ? _buildUserDetailsContainer(
-                  usersWithRank[1]['user'] as UserBattleRoomDetails,
-                  usersWithRank[1]['rank'],
-                  Size(MediaQuery.of(context).size.width * (0.36),
-                      MediaQuery.of(context).size.height * (0.25)),
-                  false,
-                  AlignmentDirectional.centerEnd,
-                  EdgeInsetsDirectional.only(
-                    end: 10.0,
-                    top: MediaQuery.of(context).size.height * (0.1),
-                  ),
-                  Colors.redAccent,
-                )
-              : _buildUserDetailsContainer(
-                  usersWithRank[1]['user'] as UserBattleRoomDetails,
-                  usersWithRank[1]['rank'],
-                  Size(MediaQuery.of(context).size.width * (0.38),
-                      MediaQuery.of(context).size.height * (0.28)),
-                  false,
-                  AlignmentDirectional.center,
-                  EdgeInsetsDirectional.only(
-                    start: MediaQuery.of(context).size.width * (0.3),
-                    bottom: MediaQuery.of(context).size.height * (0.42),
-                  ),
-                  Colors.redAccent,
-                ),
-
-          //user 3
-          usersWithRank.length > 2
-              ? _buildUserDetailsContainer(
-                  usersWithRank[2]['user'] as UserBattleRoomDetails,
-                  usersWithRank[2]['rank'],
-                  Size(MediaQuery.of(context).size.width * (0.36),
-                      MediaQuery.of(context).size.height * (0.25)),
-                  false,
-                  AlignmentDirectional.centerEnd,
-                  EdgeInsetsDirectional.only(
-                    end: 10.0,
-                    top: MediaQuery.of(context).size.height * (0.1),
-                  ),
-                  Colors.redAccent,
-                )
-              : Container(),
-
-          //user 4
-          usersWithRank.length == 4
-              ? _buildUserDetailsContainer(
-                  usersWithRank.last['user'] as UserBattleRoomDetails,
-                  usersWithRank.last['rank'],
-                  Size(MediaQuery.of(context).size.width * (0.35),
-                      MediaQuery.of(context).size.height * (0.25)),
-                  false,
-                  AlignmentDirectional.center,
-                  EdgeInsetsDirectional.only(
-                    start: MediaQuery.of(context).size.width * (0.3),
-                    top: MediaQuery.of(context).size.height * (0.575),
-                  ),
-                  Colors.redAccent,
-                )
-              : Container(),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  bottom: usersWithRank.length == 4
-                      ? 20
-                      : 50.0), //if total 4 user than padding will be 20 else 50
-              child: CustomRoundedButton(
-                widthPercentage: 0.85,
-                backgroundColor: Theme.of(context).primaryColor,
-                buttonTitle: AppLocalization.of(context)!
-                    .getTranslatedValues("homeBtn")!,
-                radius: 5.0,
-                showBorder: false,
-                fontWeight: FontWeight.bold,
-                height: 40.0,
-                elevation: 5.0,
-                titleColor: Theme.of(context).backgroundColor,
-                onTap: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                textSize: 17.0,
+            //user 1
+            _buildUserDetailsContainer(
+              usersWithRank.first['user'] as UserBattleRoomDetails,
+              usersWithRank.first['rank'],
+              Size(MediaQuery.of(context).size.width * (0.475),
+                  MediaQuery.of(context).size.height * (0.35)),
+              true,
+              AlignmentDirectional.centerStart,
+              EdgeInsetsDirectional.only(
+                start: 10.0,
+                top: MediaQuery.of(context).size.height * (0.125),
               ),
+              Colors.green,
             ),
-          )
-        ],
+            //user 2
+
+            usersWithRank.length == 2
+                ? _buildUserDetailsContainer(
+                    usersWithRank[1]['user'] as UserBattleRoomDetails,
+                    usersWithRank[1]['rank'],
+                    Size(MediaQuery.of(context).size.width * (0.36),
+                        MediaQuery.of(context).size.height * (0.25)),
+                    false,
+                    AlignmentDirectional.centerEnd,
+                    EdgeInsetsDirectional.only(
+                      end: 10.0,
+                      top: MediaQuery.of(context).size.height * (0.1),
+                    ),
+                    Colors.redAccent,
+                  )
+                : _buildUserDetailsContainer(
+                    usersWithRank[1]['user'] as UserBattleRoomDetails,
+                    usersWithRank[1]['rank'],
+                    Size(MediaQuery.of(context).size.width * (0.38),
+                        MediaQuery.of(context).size.height * (0.28)),
+                    false,
+                    AlignmentDirectional.center,
+                    EdgeInsetsDirectional.only(
+                      start: MediaQuery.of(context).size.width * (0.3),
+                      bottom: MediaQuery.of(context).size.height * (0.42),
+                    ),
+                    Colors.redAccent,
+                  ),
+
+            //user 3
+            usersWithRank.length > 2
+                ? _buildUserDetailsContainer(
+                    usersWithRank[2]['user'] as UserBattleRoomDetails,
+                    usersWithRank[2]['rank'],
+                    Size(MediaQuery.of(context).size.width * (0.36),
+                        MediaQuery.of(context).size.height * (0.25)),
+                    false,
+                    AlignmentDirectional.centerEnd,
+                    EdgeInsetsDirectional.only(
+                      end: 10.0,
+                      top: MediaQuery.of(context).size.height * (0.1),
+                    ),
+                    Colors.redAccent,
+                  )
+                : Container(),
+
+            //user 4
+            usersWithRank.length == 4
+                ? _buildUserDetailsContainer(
+                    usersWithRank.last['user'] as UserBattleRoomDetails,
+                    usersWithRank.last['rank'],
+                    Size(MediaQuery.of(context).size.width * (0.35),
+                        MediaQuery.of(context).size.height * (0.25)),
+                    false,
+                    AlignmentDirectional.center,
+                    EdgeInsetsDirectional.only(
+                      start: MediaQuery.of(context).size.width * (0.3),
+                      top: MediaQuery.of(context).size.height * (0.575),
+                    ),
+                    Colors.redAccent,
+                  )
+                : Container(),
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: usersWithRank.length == 4
+                        ? 20
+                        : 50.0), //if total 4 user than padding will be 20 else 50
+                child: CustomRoundedButton(
+                  widthPercentage: 0.85,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  buttonTitle: AppLocalization.of(context)!
+                      .getTranslatedValues("homeBtn")!,
+                  radius: 5.0,
+                  showBorder: false,
+                  fontWeight: FontWeight.bold,
+                  height: 40.0,
+                  elevation: 5.0,
+                  titleColor: Theme.of(context).backgroundColor,
+                  onTap: () {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  textSize: 17.0,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

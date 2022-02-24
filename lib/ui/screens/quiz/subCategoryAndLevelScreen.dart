@@ -1,24 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/quiz/cubits/unlockedLevelCubit.dart';
-import 'package:hpp/features/quiz/cubits/subCategoryCubit.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/models/subcategory.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/ui/widgets/bannerAdContainer.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/unlockedLevelCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/models/subcategory.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class SubCategoryAndLevelScreen extends StatefulWidget {
   final String? category;
@@ -189,6 +189,13 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                               widget.category,
                               state.subcategoryList.first.id);
                         }
+                      } else if (state is SubCategoryFetchFailure) {
+                        if (state.errorMessage == unauthorizedAccessCode) {
+                          //
+                          UiUtils.showAlreadyLoggedInDialog(
+                            context: context,
+                          );
+                        }
                       }
                     },
                     builder: (context, state) {
@@ -256,7 +263,17 @@ class _SubCategoryAndLevelScreen extends State<SubCategoryAndLevelScreen> {
                             borderRadius: BorderRadius.circular(25.0),
                             child: BlocConsumer<UnlockedLevelCubit,
                                 UnlockedLevelState>(
-                              listener: (context, state) {},
+                              listener: (context, state) {
+                                if (state is UnlockedLevelFetchFailure) {
+                                  if (state.errorMessage ==
+                                      unauthorizedAccessCode) {
+                                    //
+                                    UiUtils.showAlreadyLoggedInDialog(
+                                      context: context,
+                                    );
+                                  }
+                                }
+                              },
                               builder: (context, state) {
                                 return AnimatedSwitcher(
                                   duration: Duration(milliseconds: 500),
@@ -340,7 +357,7 @@ class _SubcategoryContainerState extends State<SubcategoryContainer>
           scale: scaleAnimation.value,
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.primaries[widget.index].shade100,
+                color: Colors.primaries.first.withOpacity(widget.index * 0.5),
                 borderRadius: BorderRadius.circular(20.0)),
             alignment: Alignment.center,
             child: Column(

@@ -1,23 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/models/userProfile.dart';
-import 'package:hpp/features/statistic/cubits/statisticsCubit.dart';
-import 'package:hpp/features/statistic/models/statisticModel.dart';
-import 'package:hpp/features/statistic/statisticRepository.dart';
-import 'package:hpp/ui/widgets/badgesIconContainer.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
+import 'package:flutterquiz/features/statistic/models/statisticModel.dart';
+import 'package:flutterquiz/features/statistic/statisticRepository.dart';
+import 'package:flutterquiz/ui/widgets/badgesIconContainer.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/roundedAppbar.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StatisticsScreen extends StatefulWidget {
@@ -27,7 +28,10 @@ class StatisticsScreen extends StatefulWidget {
   _StatisticsScreenState createState() => _StatisticsScreenState();
 
   static Route<StatisticsScreen> route(RouteSettings routeSettings) {
-    return CupertinoPageRoute(builder: (_) => BlocProvider<StatisticCubit>(child: StatisticsScreen(), create: (_) => StatisticCubit(StatisticRepository())));
+    return CupertinoPageRoute(
+        builder: (_) => BlocProvider<StatisticCubit>(
+            child: StatisticsScreen(),
+            create: (_) => StatisticCubit(StatisticRepository())));
   }
 }
 
@@ -41,7 +45,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      context.read<StatisticCubit>().getStatisticWithBattle(context.read<UserDetailsCubit>().getUserId());
+      context
+          .read<StatisticCubit>()
+          .getStatisticWithBattle(context.read<UserDetailsCubit>().getUserId());
     });
   }
 
@@ -60,17 +66,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             width: 5.0,
                           ),
                           Text(
-                            AppLocalization.of(context)!.getTranslatedValues(collectedBadgesKey)!,
-                            style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: statisticsDetailsTitleFontsize),
+                            AppLocalization.of(context)!
+                                .getTranslatedValues(collectedBadgesKey)!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                                fontSize: statisticsDetailsTitleFontsize),
                           ),
                           Spacer(),
-                          context.read<BadgesCubit>().getUnlockedBadges().length > showTotalBadgesCounter
+                          context
+                                      .read<BadgesCubit>()
+                                      .getUnlockedBadges()
+                                      .length >
+                                  showTotalBadgesCounter
                               ? GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(Routes.badges);
+                                    Navigator.of(context)
+                                        .pushNamed(Routes.badges);
                                   },
                                   child: Text(
-                                    AppLocalization.of(context)!.getTranslatedValues(viewAllKey)!,
+                                    AppLocalization.of(context)!
+                                        .getTranslatedValues(viewAllKey)!,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                     ),
@@ -88,35 +104,64 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: (context.read<BadgesCubit>().getUnlockedBadges().length < showTotalBadgesCounter ? context.read<BadgesCubit>().getUnlockedBadges() : context.read<BadgesCubit>().getUnlockedBadges().sublist(0, showTotalBadgesCounter))
+                          children: (context
+                                          .read<BadgesCubit>()
+                                          .getUnlockedBadges()
+                                          .length <
+                                      showTotalBadgesCounter
+                                  ? context
+                                      .read<BadgesCubit>()
+                                      .getUnlockedBadges()
+                                  : context
+                                      .read<BadgesCubit>()
+                                      .getUnlockedBadges()
+                                      .sublist(0, showTotalBadgesCounter))
                               .map(
                                 (badge) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
                                   child: BadgesIconContainer(
                                     addTopPadding: false,
                                     badge: badge,
-                                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * statisticsDetailsContainerHeightPercentage, maxWidth: MediaQuery.of(context).size.width * (0.2)),
+                                    constraints: BoxConstraints(
+                                        maxHeight: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            statisticsDetailsContainerHeightPercentage,
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                (0.2)),
                                   ),
                                 ),
                               )
                               .toList(),
                         ),
-                        height: MediaQuery.of(context).size.height * (statisticsDetailsContainerHeightPercentage),
-                        decoration: BoxDecoration(boxShadow: [
-                          UiUtils.buildBoxShadow(blurRadius: 3.0, color: Colors.black.withOpacity(0.2), offset: Offset(2.5, 2.5)),
-                        ], color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(statisticsDetailsContainerBorderRadius)),
+                        height: MediaQuery.of(context).size.height *
+                            (statisticsDetailsContainerHeightPercentage),
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              UiUtils.buildBoxShadow(
+                                  blurRadius: 3.0,
+                                  color: Colors.black.withOpacity(0.2),
+                                  offset: Offset(2.5, 2.5)),
+                            ],
+                            color: Theme.of(context).backgroundColor,
+                            borderRadius: BorderRadius.circular(
+                                statisticsDetailsContainerBorderRadius)),
                       ),
                     ],
                   )
             : Container();
 
-        return AnimatedSwitcher(child: child, duration: Duration(milliseconds: 500));
+        return AnimatedSwitcher(
+            child: child, duration: Duration(milliseconds: 500));
       },
     );
   }
 
   //Details in column form data and label of the data
-  Widget _buildStatisticsDetailsContainer({required String data, required String dataLabel}) {
+  Widget _buildStatisticsDetailsContainer(
+      {required String data, required String dataLabel}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -152,7 +197,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             ),
             Text(
               AppLocalization.of(context)!.getTranslatedValues(quizDetailsKey)!,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: statisticsDetailsTitleFontsize),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                  fontSize: statisticsDetailsTitleFontsize),
             ),
           ],
         ),
@@ -167,7 +215,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 Container(
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: UiUtils.formatNumber(int.parse(userProfile.allTimeRank!)), dataLabel: AppLocalization.of(context)!.getTranslatedValues(rankLbl)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: UiUtils.formatNumber(
+                          int.parse(userProfile.allTimeRank!)),
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(rankLbl)!),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -181,27 +233,43 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   )),
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: UiUtils.formatNumber(int.parse(userProfile.coins!)), dataLabel: AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: UiUtils.formatNumber(int.parse(userProfile.coins!)),
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(coinsLbl)!),
                 ),
                 Container(
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: UiUtils.formatNumber(int.parse(userProfile.allTimeScore!)), dataLabel: AppLocalization.of(context)!.getTranslatedValues(scoreLbl)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: UiUtils.formatNumber(
+                          int.parse(userProfile.allTimeScore!)),
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(scoreLbl)!),
                 ),
               ],
             );
           }),
-          height: MediaQuery.of(context).size.height * (statisticsDetailsContainerHeightPercentage),
-          decoration: BoxDecoration(boxShadow: [
-            UiUtils.buildBoxShadow(blurRadius: 3.0, color: Colors.black.withOpacity(0.2), offset: Offset(2.5, 2.5)),
-          ], color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(statisticsDetailsContainerBorderRadius)),
+          height: MediaQuery.of(context).size.height *
+              (statisticsDetailsContainerHeightPercentage),
+          decoration: BoxDecoration(
+              boxShadow: [
+                UiUtils.buildBoxShadow(
+                    blurRadius: 3.0,
+                    color: Colors.black.withOpacity(0.2),
+                    offset: Offset(2.5, 2.5)),
+              ],
+              color: Theme.of(context).backgroundColor,
+              borderRadius: BorderRadius.circular(
+                  statisticsDetailsContainerBorderRadius)),
         ),
       ],
     );
   }
 
   Widget _buildQuestionDetailsContainer() {
-    StatisticModel statisticModel = context.read<StatisticCubit>().getStatisticsDetails();
+    StatisticModel statisticModel =
+        context.read<StatisticCubit>().getStatisticsDetails();
     return Column(
       children: [
         Row(
@@ -210,8 +278,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               width: 5.0,
             ),
             Text(
-              AppLocalization.of(context)!.getTranslatedValues(questionDetailsKey)!,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: statisticsDetailsTitleFontsize),
+              AppLocalization.of(context)!
+                  .getTranslatedValues(questionDetailsKey)!,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                  fontSize: statisticsDetailsTitleFontsize),
             ),
           ],
         ),
@@ -226,7 +298,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 Container(
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: statisticModel.answeredQuestions, dataLabel: AppLocalization.of(context)!.getTranslatedValues(attemptedLbl)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: statisticModel.answeredQuestions,
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(attemptedLbl)!),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -240,27 +315,44 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   )),
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: statisticModel.correctAnswers, dataLabel: AppLocalization.of(context)!.getTranslatedValues(correctKey)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: statisticModel.correctAnswers,
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(correctKey)!),
                 ),
                 Container(
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: (int.parse(statisticModel.answeredQuestions) - int.parse(statisticModel.correctAnswers)).toString(), dataLabel: AppLocalization.of(context)!.getTranslatedValues(incorrectKey)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: (int.parse(statisticModel.answeredQuestions) -
+                              int.parse(statisticModel.correctAnswers))
+                          .toString(),
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(incorrectKey)!),
                 ),
               ],
             );
           }),
-          height: MediaQuery.of(context).size.height * (statisticsDetailsContainerHeightPercentage),
-          decoration: BoxDecoration(boxShadow: [
-            UiUtils.buildBoxShadow(blurRadius: 3.0, color: Colors.black.withOpacity(0.2), offset: Offset(2.5, 2.5)),
-          ], color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(statisticsDetailsContainerBorderRadius)),
+          height: MediaQuery.of(context).size.height *
+              (statisticsDetailsContainerHeightPercentage),
+          decoration: BoxDecoration(
+              boxShadow: [
+                UiUtils.buildBoxShadow(
+                    blurRadius: 3.0,
+                    color: Colors.black.withOpacity(0.2),
+                    offset: Offset(2.5, 2.5)),
+              ],
+              color: Theme.of(context).backgroundColor,
+              borderRadius: BorderRadius.circular(
+                  statisticsDetailsContainerBorderRadius)),
         ),
       ],
     );
   }
 
   Widget _buildBattleStatisticsContainer() {
-    StatisticModel statisticModel = context.read<StatisticCubit>().getStatisticsDetails();
+    StatisticModel statisticModel =
+        context.read<StatisticCubit>().getStatisticsDetails();
     return Column(
       children: [
         Row(
@@ -269,8 +361,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               width: 5.0,
             ),
             Text(
-              AppLocalization.of(context)!.getTranslatedValues(battleStatisticsKey)!,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: statisticsDetailsTitleFontsize),
+              AppLocalization.of(context)!
+                  .getTranslatedValues(battleStatisticsKey)!,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                  fontSize: statisticsDetailsTitleFontsize),
             ),
           ],
         ),
@@ -285,7 +381,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 Container(
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: statisticModel.calculatePlayedBattles().toString(), dataLabel: AppLocalization.of(context)!.getTranslatedValues(playedKey)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: statisticModel.calculatePlayedBattles().toString(),
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(playedKey)!),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -299,30 +398,49 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   )),
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: statisticModel.battleVictories, dataLabel: AppLocalization.of(context)!.getTranslatedValues(wonKey)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: statisticModel.battleVictories,
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(wonKey)!),
                 ),
                 Container(
                   height: constraints.maxHeight * (0.65),
                   width: constraints.maxWidth * (0.3),
-                  child: _buildStatisticsDetailsContainer(data: statisticModel.battleLoose, dataLabel: AppLocalization.of(context)!.getTranslatedValues(lostKey)!),
+                  child: _buildStatisticsDetailsContainer(
+                      data: statisticModel.battleLoose,
+                      dataLabel: AppLocalization.of(context)!
+                          .getTranslatedValues(lostKey)!),
                 ),
               ],
             );
           }),
-          height: MediaQuery.of(context).size.height * (statisticsDetailsContainerHeightPercentage),
-          decoration: BoxDecoration(boxShadow: [
-            UiUtils.buildBoxShadow(blurRadius: 3.0, color: Colors.black.withOpacity(0.2), offset: Offset(2.5, 2.5)),
-          ], color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(statisticsDetailsContainerBorderRadius)),
+          height: MediaQuery.of(context).size.height *
+              (statisticsDetailsContainerHeightPercentage),
+          decoration: BoxDecoration(
+              boxShadow: [
+                UiUtils.buildBoxShadow(
+                    blurRadius: 3.0,
+                    color: Colors.black.withOpacity(0.2),
+                    offset: Offset(2.5, 2.5)),
+              ],
+              color: Theme.of(context).backgroundColor,
+              borderRadius: BorderRadius.circular(
+                  statisticsDetailsContainerBorderRadius)),
         ),
       ],
     );
   }
 
-  Widget _buildStatisticsContainer({required bool showQuestionAndBattleStatistics}) {
+  Widget _buildStatisticsContainer(
+      {required bool showQuestionAndBattleStatistics}) {
     UserProfile userProfile = context.read<UserDetailsCubit>().getUserProfile();
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * (0.05), left: MediaQuery.of(context).size.width * (0.05), top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage)),
+      padding: EdgeInsets.only(
+          right: MediaQuery.of(context).size.width * (0.05),
+          left: MediaQuery.of(context).size.width * (0.05),
+          top: MediaQuery.of(context).size.height *
+              (UiUtils.appBarHeightPercentage)),
       child: Column(
         children: [
           SizedBox(
@@ -330,14 +448,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * (0.18)),
+              borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.width * (0.18)),
               border: Border.all(
                 color: Theme.of(context).primaryColor,
               ),
             ),
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(userProfile.profileUrl!)), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image:
+                          CachedNetworkImageProvider(userProfile.profileUrl!)),
+                  shape: BoxShape.circle),
             ),
             height: MediaQuery.of(context).size.width * (0.36),
             width: MediaQuery.of(context).size.width * (0.36),
@@ -362,7 +485,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           Container(
             alignment: Alignment.center,
             child: Text(
-              context.read<AuthCubit>().getAuthProvider() == AuthProvider.mobile ? userProfile.mobileNumber! : userProfile.email!,
+              context.read<AuthCubit>().getAuthProvider() == AuthProvider.mobile
+                  ? userProfile.mobileNumber!
+                  : userProfile.email!,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
               ),
@@ -411,7 +536,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       body: Stack(
         children: [
           PageBackgroundGradientContainer(),
-          BlocBuilder<StatisticCubit, StatisticState>(builder: (context, state) {
+          BlocConsumer<StatisticCubit, StatisticState>(
+              listener: (context, state) {
+            if (state is StatisticFetchFailure) {
+              if (state.errorMessageCode == unauthorizedAccessCode) {
+                UiUtils.showAlreadyLoggedInDialog(context: context);
+              }
+            }
+          }, builder: (context, state) {
             if (state is StatisticFetchSuccess) {
               return Align(
                 alignment: Alignment.topCenter,
@@ -437,7 +569,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           }),
           Align(
             alignment: Alignment.topCenter,
-            child: RoundedAppbar(title: AppLocalization.of(context)!.getTranslatedValues(statisticsLabelKey)!),
+            child: RoundedAppbar(
+                title: AppLocalization.of(context)!
+                    .getTranslatedValues(statisticsLabelKey)!),
           ),
         ],
       ),

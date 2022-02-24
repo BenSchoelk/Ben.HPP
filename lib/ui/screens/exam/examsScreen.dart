@@ -1,27 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/exam/cubits/completedExamsCubit.dart';
-import 'package:hpp/features/exam/cubits/examsCubit.dart';
-import 'package:hpp/features/exam/examRepository.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/exam/cubits/completedExamsCubit.dart';
+import 'package:flutterquiz/features/exam/cubits/examsCubit.dart';
+import 'package:flutterquiz/features/exam/examRepository.dart';
 
-import 'package:hpp/features/exam/models/exam.dart';
-import 'package:hpp/features/exam/models/examResult.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/exam/models/exam.dart';
+import 'package:flutterquiz/features/exam/models/examResult.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
 
-import 'package:hpp/ui/screens/exam/widgets/examKeyBottomSheetContainer.dart';
-import 'package:hpp/ui/screens/exam/widgets/examResultBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/exam/widgets/examKeyBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/exam/widgets/examResultBottomSheetContainer.dart';
 
-import 'package:hpp/ui/widgets/bannerAdContainer.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ExamsScreen extends StatefulWidget {
   ExamsScreen({Key? key}) : super(key: key);
@@ -223,7 +223,14 @@ class _ExamsScreenState extends State<ExamsScreen> {
   }
 
   Widget _buildExamResults() {
-    return BlocBuilder<CompletedExamsCubit, CompletedExamsState>(
+    return BlocConsumer<CompletedExamsCubit, CompletedExamsState>(
+      listener: (context, state) {
+        if (state is CompletedExamsFetchFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+          }
+        }
+      },
       bloc: context.read<CompletedExamsCubit>(),
       builder: (context, state) {
         if (state is CompletedExamsFetchInProgress ||
@@ -273,7 +280,14 @@ class _ExamsScreenState extends State<ExamsScreen> {
   }
 
   Widget _buildTodayExams() {
-    return BlocBuilder<ExamsCubit, ExamsState>(
+    return BlocConsumer<ExamsCubit, ExamsState>(
+      listener: (contexe, state) {
+        if (state is ExamsFetchFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+          }
+        }
+      },
       bloc: context.read<ExamsCubit>(),
       builder: (context, state) {
         if (state is ExamsFetchInProgress || state is ExamsInitial) {

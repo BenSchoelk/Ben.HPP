@@ -3,13 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -63,8 +65,7 @@ class ReferAndEarnScreen extends StatelessWidget {
                       Center(
                         child: Container(
                           child: Text(
-                            AppLocalization.of(context)!
-                                .getTranslatedValues("referFrdLbl")!,
+                            "${AppLocalization.of(context)!.getTranslatedValues("referFrdLbl")!} ${AppLocalization.of(context)!.getTranslatedValues(youWillGetKey)!} ${context.read<SystemConfigCubit>().getEarnCoin()} ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!.toLowerCase()}. ${AppLocalization.of(context)!.getTranslatedValues(theyWillGetKey)!} ${context.read<SystemConfigCubit>().getReferCoin()} ${AppLocalization.of(context)!.getTranslatedValues(coinsLbl)!.toLowerCase()}.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,

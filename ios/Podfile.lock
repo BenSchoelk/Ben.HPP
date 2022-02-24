@@ -364,6 +364,8 @@ PODS:
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
+  - device_info_plus (0.0.1):
+    - Flutter
   - facebook_audience_network (0.0.1):
     - FBAudienceNetwork (~> 6.3)
     - Flutter
@@ -582,6 +584,7 @@ DEPENDENCIES:
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - facebook_audience_network (from `.symlinks/plugins/facebook_audience_network/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -654,6 +657,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   facebook_audience_network:
     :path: ".symlinks/plugins/facebook_audience_network/ios"
   firebase_auth:
@@ -715,6 +720,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   cloud_firestore: 338122a6149c14ca376ad363626b5bf3037a5056
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
+  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
   facebook_audience_network: bb22bdda913d419d8c3247c9570bda4563302417
   FBAEMKit: 4cea610d0bc1680572f2aad7b25db7a2f2690d82
   FBAudienceNetwork: 83096d73433759c10f9cf9b3bad5e5cff58694cb

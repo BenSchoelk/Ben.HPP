@@ -1,21 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:hpp/features/systemConfig/systemCongifException.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/systemConfig/systemCongifException.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 class SystemConfigRemoteDataSource {
   Future<dynamic> getSystemConfing() async {
     try {
       final body = {accessValueKey: accessValue};
-      final response = await http.post(Uri.parse(getSystemConfigUrl), body: body, headers: ApiUtils.getHeaders());
+      final response =
+          await http.post(Uri.parse(getSystemConfigUrl), body: body);
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        print(responseJson);
+        print("Error message $responseJson");
         throw SystemConfigException(errorMessageCode: responseJson['message']);
       }
       return responseJson['data'];
@@ -32,7 +33,8 @@ class SystemConfigRemoteDataSource {
     try {
       final body = {accessValueKey: accessValue};
 
-      final response = await http.post(Uri.parse(getSupportedQuestionLanguageUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http
+          .post(Uri.parse(getSupportedQuestionLanguageUrl), body: body);
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -51,7 +53,8 @@ class SystemConfigRemoteDataSource {
   Future<String> getAppSettings(String type) async {
     try {
       final body = {accessValueKey: accessValue, typeKey: type};
-      final response = await http.post(Uri.parse(getAppSettingsUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getAppSettingsUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         throw SystemConfigException(errorMessageCode: responseJson['message']);

@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:hpp/features/quiz/cubits/subCategoryCubit.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
 
 import 'dart:math' as math;
 
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/roundedAppbar.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class SelfChallengeScreen extends StatefulWidget {
   SelfChallengeScreen({Key? key}) : super(key: key);
@@ -251,6 +251,14 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
                                 );
                           }
                           if (state is QuizCategoryFailure) {
+                            if (state.errorMessage == unauthorizedAccessCode) {
+                              //
+                              UiUtils.showAlreadyLoggedInDialog(
+                                context: context,
+                              );
+                              return;
+                            }
+
                             UiUtils.setSnackbar(
                                 AppLocalization.of(context)!
                                     .getTranslatedValues(
@@ -320,6 +328,13 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
                                   state.subcategoryList.first.id;
                             });
                           } else if (state is SubCategoryFetchFailure) {
+                            if (state.errorMessage == unauthorizedAccessCode) {
+                              //
+                              UiUtils.showAlreadyLoggedInDialog(
+                                context: context,
+                              );
+                              return;
+                            }
                             UiUtils.setSnackbar(
                                 AppLocalization.of(context)!
                                     .getTranslatedValues(

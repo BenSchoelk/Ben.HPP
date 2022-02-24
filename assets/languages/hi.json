@@ -3,6 +3,7 @@
   "termOfService": "सेवा की शर्तें",
   "andLbl": "तथा",
   "privacyPolicy": "गोपनीयता नीति",
+  
 
   "otpVerificationLbl": "ओटीपी\n सत्यापन",
   "otpSendLbl": "आपको ओटीपी भेज दिया गया है",
@@ -192,7 +193,7 @@
   "allTimeLbl": "सार्वत्रिक",
 
   "referAndEarn": "संदर्भ लें और कमाएं",
-  "referFrdLbl": "किसी मित्र को रेफ़र करें, और आपके रेफरल कोड का उपयोग करने पर आपको हर बार 100 सिक्के मिलेंगे और आपके मित्र को आपके कोड का उपयोग करने पर 50 सिक्के मिलेंगे।",
+  "referFrdLbl": "जैसे ही आपका मित्र खाता बनाता है, अपने मित्रों को शामिल होने के लिए आमंत्रित करें और पुरस्कार प्राप्त करें",
   "yourRefCOdeLbl": "आपका रेफरल कोड",
   "referCodeCopyMsg": "रेफ़रल कोड कॉपी किया गया",
   "shareNowLbl": "अब साझा करें",
@@ -306,7 +307,7 @@
   "language": "भाषा",
   "account": "लेखा",
 
-  "aboutQuizApp": "Elite Quiz के बारे में",
+  "aboutQuizApp": "के बारे में",
   "chat": "चैट",
   "messages": "संदेशों",
   "emojis": "इमोजी",
@@ -454,8 +455,9 @@
   "noTransactions" : "No Transactions",
   "welcomeBonus" : "Welcome Bonus",
   "accountHasBeenDeactive" : "your account has been deactive! please contact admin",
-  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request"
-
-
-
+  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request",
+  "appUnderMaintenance" : "We apologize for the inconvenience, but we are performing some maintenance. We will back soon",
+  "youWillGet" : "You will get",
+  "theyWillGet" : "They will get"
+   
 }

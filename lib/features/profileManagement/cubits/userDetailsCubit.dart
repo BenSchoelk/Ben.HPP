@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/profileManagement/models/userProfile.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 
 @immutable
 abstract class UserDetailsState {}

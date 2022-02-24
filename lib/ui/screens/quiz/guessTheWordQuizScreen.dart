@@ -3,33 +3,33 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/bookmark/bookmarkRepository.dart';
-import 'package:hpp/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
-import 'package:hpp/features/bookmark/cubits/updateBookmarkCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/features/quiz/cubits/guessTheWordQuizCubit.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/guessTheWordBookmarkCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/quiz/cubits/guessTheWordQuizCubit.dart';
 
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/guessTheWordQuestionContainer.dart';
 
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/exitGameDailog.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/questionsContainer.dart';
-import 'package:hpp/ui/widgets/quizPlayAreaBackgroundContainer.dart';
-import 'package:hpp/ui/widgets/settingButton.dart';
-import 'package:hpp/ui/widgets/settingsDialogContainer.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
+import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class GuessTheWordQuizScreen extends StatefulWidget {
   final String type; //category or subcategory
@@ -326,8 +326,7 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
                 widthPercentage: 0.5,
                 backgroundColor: Theme.of(context).primaryColor,
                 buttonTitle: AppLocalization.of(context)!
-                    .getTranslatedValues("submitBtn")!
-                    .toUpperCase(),
+                    .getTranslatedValues("submitBtn")!,
                 elevation: 5.0,
                 shadowColor: Colors.black45,
                 titleColor: Theme.of(context).backgroundColor,
@@ -371,6 +370,12 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
             listener: (context, state) {
               //if failed to update bookmark status
               if (state is UpdateBookmarkFailure) {
+                if (state.errorMessageCode == unauthorizedAccessCode) {
+                  timerAnimationController.stop();
+                  UiUtils.showAlreadyLoggedInDialog(context: context);
+                  return;
+                }
+
                 //remove bookmark question
                 if (state.failedStatus == "0") {
                   //if unable to remove question from bookmark then add question
@@ -519,22 +524,40 @@ class _GuessTheWordQuizScreenState extends State<GuessTheWordQuizScreen>
         onTapBackButton();
         return Future.value(false);
       },
-      child: BlocListener<GuessTheWordQuizCubit, GuessTheWordQuizState>(
-        bloc: guessTheWordQuizCubit,
-        listener: (context, state) {
-          if (state is GuessTheWordQuizFetchSuccess) {
-            if (_currentQuestionIndex == 0 &&
-                !state.questions[_currentQuestionIndex].hasAnswered) {
-              state.questions.forEach((element) {
-                questionContainerKeys
-                    .add(GlobalKey<GuessTheWordQuestionContainerState>());
-              });
-              //start timer
-              timerAnimationController.forward();
-              questionContentAnimationController.forward();
-            }
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<GuessTheWordQuizCubit, GuessTheWordQuizState>(
+            bloc: guessTheWordQuizCubit,
+            listener: (context, state) {
+              if (state is GuessTheWordQuizFetchSuccess) {
+                if (_currentQuestionIndex == 0 &&
+                    !state.questions[_currentQuestionIndex].hasAnswered) {
+                  state.questions.forEach((element) {
+                    questionContainerKeys
+                        .add(GlobalKey<GuessTheWordQuestionContainerState>());
+                  });
+                  //start timer
+                  timerAnimationController.forward();
+                  questionContentAnimationController.forward();
+                }
+              } else if (state is GuessTheWordQuizFetchFailure) {
+                if (state.errorMessage == unauthorizedAccessCode) {
+                  UiUtils.showAlreadyLoggedInDialog(context: context);
+                }
+              }
+            },
+          ),
+          BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+            listener: (context, state) {
+              if (state is UpdateScoreAndCoinsFailure) {
+                if (state.errorMessage == unauthorizedAccessCode) {
+                  timerAnimationController.stop();
+                  UiUtils.showAlreadyLoggedInDialog(context: context);
+                }
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           body: Stack(
             children: [

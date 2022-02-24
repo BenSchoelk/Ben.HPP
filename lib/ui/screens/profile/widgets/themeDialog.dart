@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/ui/styles/theme/appTheme.dart';
-import 'package:hpp/ui/styles/theme/themeCubit.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/ui/styles/theme/appTheme.dart';
+import 'package:flutterquiz/ui/styles/theme/themeCubit.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ThemeDialog extends StatelessWidget {
   const ThemeDialog({Key? key}) : super(key: key);

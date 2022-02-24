@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
-import 'package:hpp/ui/screens/quiz/widgets/userCrownContainer.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/userCrownContainer.dart';
 
 class MultipleUserDetailsContainer extends StatelessWidget {
   final List<UserBattleRoomDetails?> usersDetails;

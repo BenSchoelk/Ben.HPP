@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hpp/features/tournament/model/tournament.dart';
-import 'package:hpp/features/tournament/model/tournamentBattle.dart';
-import 'package:hpp/features/tournament/model/tournamentDetails.dart';
-import 'package:hpp/features/tournament/model/tournamentPlayerDetails.dart';
-import 'package:hpp/features/tournament/tournamentException.dart';
-import 'package:hpp/features/tournament/tournamentRemoteDataSource.dart';
+import 'package:flutterquiz/features/tournament/model/tournament.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentDetails.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
+import 'package:flutterquiz/features/tournament/tournamentException.dart';
+import 'package:flutterquiz/features/tournament/tournamentRemoteDataSource.dart';
 
 class TournamentRepository {
   static final TournamentRepository _tournamentRepository = TournamentRepository._internal();

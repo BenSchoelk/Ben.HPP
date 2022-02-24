@@ -4,6 +4,8 @@
   "andLbl": "and",
   "privacyPolicy": "Privacy Policy",
 
+ 
+
   "otpVerificationLbl": "OTP\n Verification",
   "otpSendLbl": "OTP has been sent to",
   "submitBtn": "Submit",
@@ -192,7 +194,7 @@
   "allTimeLbl": "All time",
 
   "referAndEarn": "REFER AND EARN",
-  "referFrdLbl": "Refer a friend, and you will get 100 coins each time your referral code is used and your friend will get 50 coins by using your code.",
+  "referFrdLbl": "Invite your friends to join and earn coins as reward.",
   "yourRefCOdeLbl": "YOUR REFERRAL CODE",
   "referCodeCopyMsg": "Referral code copied",
   "shareNowLbl": "Share Now",
@@ -304,7 +306,7 @@
   "selectSubCategory": "Select Subcategory",
   "language": "Language",
   "account": "Account",
-  "aboutQuizApp": "About Elite Quiz",
+  "aboutQuizApp": "About",
   "chat": "Chat",
   "messages": "Messages",
   "emojis": "Emojis",
@@ -360,6 +362,7 @@
   "iAgreeWithExamRules" : "I agree with exam rules",
   "pleaseAcceptExamRules" : "Please accept exam rules",
   "examRules" : "Exam Rules",
+
   "viewAllRules" : "View All Rules",
   "statisticsLabel" : "Statistics",
   "hello" : "Hello",
@@ -426,10 +429,12 @@
   "changePayoutMethod"  : "Change payout method",
   "noTransactions" : "No Transactions",
   "accountHasBeenDeactive" : "your account has been deactive! please contact admin",
-  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request"
+  "canNotMakeRequest" : "You have already made a payment request. Please wait for 48 hours after you made the previous request",
+  "appUnderMaintenance" : "We apologize for the inconvenience, but we are performing some maintenance. We will back soon",
+  "youWillGet" : "You will get",
+  "theyWillGet" : "They will get"
    
 
-  
 
   
   

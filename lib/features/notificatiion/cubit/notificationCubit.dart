@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 import '../notificationException.dart';
 
@@ -46,7 +46,8 @@ class NotificationCubit extends Cubit<NotificationState> {
       if (offset == null) {
         body.remove(offset);
       }
-      final response = await http.post(Uri.parse(getNotificationUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getNotificationUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print(responseJson);
 
@@ -59,7 +60,8 @@ class NotificationCubit extends Cubit<NotificationState> {
     } on NotificationException catch (e) {
       throw NotificationException(errorMessageCode: e.toString());
     } catch (e) {
-      throw NotificationException(errorMessageKey: e.toString(), errorMessageCode: '');
+      throw NotificationException(
+          errorMessageKey: e.toString(), errorMessageCode: '');
     }
   }
 
@@ -87,13 +89,20 @@ class NotificationCubit extends Cubit<NotificationState> {
   }
 
   void fetchMoreNotificationData(String limit) {
-    _fetchData(limit: limit, offset: (state as NotificationSuccess).notificationList.length.toString()).then((value) {
+    _fetchData(
+            limit: limit,
+            offset: (state as NotificationSuccess)
+                .notificationList
+                .length
+                .toString())
+        .then((value) {
       //
       final oldState = (state as NotificationSuccess);
       final usersDetails = value['data'] as List;
       final updatedUserDetails = List.from(oldState.notificationList);
       updatedUserDetails.addAll(usersDetails);
-      emit(NotificationSuccess(updatedUserDetails, oldState.totalData, oldState.totalData > updatedUserDetails.length));
+      emit(NotificationSuccess(updatedUserDetails, oldState.totalData,
+          oldState.totalData > updatedUserDetails.length));
     }).catchError((e) {
       emit(NotificationFailure(defaultErrorMessageCode));
     });
@@ -106,7 +115,8 @@ class NotificationCubit extends Cubit<NotificationState> {
       return false;
     }
   }
-   notificationList() {
+
+  notificationList() {
     if (state is NotificationSuccess) {
       return (state as NotificationSuccess).notificationList;
     }

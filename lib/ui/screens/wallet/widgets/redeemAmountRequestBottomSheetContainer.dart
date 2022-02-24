@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/wallet/cubits/paymentRequestCubit.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/wallet/cubits/paymentRequestCubit.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:lottie/lottie.dart';
 
 class RedeemAmountRequestBottomSheetContainer extends StatefulWidget {
@@ -119,6 +119,10 @@ class _RedeemAmountRequestBottomSheetContainerState
       child: BlocConsumer<PaymentRequestCubit, PaymentRequestState>(
         listener: (context, state) {
           if (state is PaymentRequestFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+              return;
+            }
             setState(() {
               _errorMessage = AppLocalization.of(context)!.getTranslatedValues(
                   convertErrorCodeToLanguageKey(state.errorMessage))!;

@@ -1,19 +1,20 @@
 import 'dart:io';
 import 'package:flutter/gestures.dart';
-import 'package:hpp/features/ads/interstitialAdCubit.dart';
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/battleRoom/cubits/battleRoomCubit.dart';
-import 'package:hpp/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
-import 'package:hpp/features/exam/cubits/examCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementLocalDataSource.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:hpp/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:flutterquiz/features/exam/cubits/examCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementLocalDataSource.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
 
-import 'package:hpp/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
-import 'package:hpp/ui/screens/battle/widgets/roomDialog.dart';
-import 'package:hpp/ui/screens/home/widgets/menuBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/randomOrPlayFrdDialog.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/appUnderMaintenanceDialog.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/menuBottomSheetContainer.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -23,25 +24,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/auth/authRepository.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
-import 'package:hpp/features/auth/cubits/referAndEarnCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/models/userProfile.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/screens/home/widgets/quizTypeContainer.dart';
-import 'package:hpp/ui/screens/home/widgets/updateAppContainer.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/userAchievementScreen.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/quizTypes.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/auth/authRepository.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/auth/cubits/referAndEarnCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/quizTypeContainer.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/updateAppContainer.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/userAchievementScreen.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/quizTypes.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -71,31 +72,17 @@ class _HomeScreenState extends State<HomeScreen>
 
   late List<QuizType> _quizTypes = quizTypes;
 
-  late AnimationController profileAnimationController =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 85));
-  late AnimationController selfChallengeAnimationController =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 85));
+  late AnimationController profileAnimationController;
+  late AnimationController selfChallengeAnimationController;
 
-  late Animation<Offset> profileSlideAnimation =
-      Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(
-          CurvedAnimation(
-              parent: profileAnimationController, curve: Curves.easeIn));
+  late Animation<Offset> profileSlideAnimation;
 
-  late Animation<Offset> selfChallengeSlideAnimation =
-      Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(
-          CurvedAnimation(
-              parent: selfChallengeAnimationController, curve: Curves.easeIn));
+  late Animation<Offset> selfChallengeSlideAnimation;
 
-  late AnimationController firstAnimationController =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-  late Animation<double> firstAnimation = Tween<double>(begin: 0.0, end: 1.0)
-      .animate(CurvedAnimation(
-          parent: firstAnimationController, curve: Curves.easeInOut));
-  late AnimationController secondAnimationController =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-  late Animation<double> secondAnimation = Tween<double>(begin: 0.0, end: 1.0)
-      .animate(CurvedAnimation(
-          parent: secondAnimationController, curve: Curves.easeInOut));
+  late AnimationController firstAnimationController;
+  late Animation<double> firstAnimation;
+  late AnimationController secondAnimationController;
+  late Animation<double> secondAnimation;
 
   bool? dragUP;
   int currentMenu = 1;
@@ -105,15 +92,45 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    initAnimations();
+    showAppUnderMaintenanceDialog();
     setQuizMenu();
     _initLocalNotification();
     checkForUpdates();
     setupInteractedMessage();
-
     createAds();
-
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
+  }
+
+  void initAnimations() {
+    //
+    profileAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 85));
+    selfChallengeAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 85));
+
+    profileSlideAnimation =
+        Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(
+            CurvedAnimation(
+                parent: profileAnimationController, curve: Curves.easeIn));
+
+    selfChallengeSlideAnimation =
+        Tween<Offset>(begin: Offset.zero, end: Offset(0.0, -0.0415)).animate(
+            CurvedAnimation(
+                parent: selfChallengeAnimationController,
+                curve: Curves.easeIn));
+
+    firstAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    firstAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: firstAnimationController, curve: Curves.easeInOut));
+    secondAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    secondAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: secondAnimationController, curve: Curves.easeInOut));
   }
 
   void createAds() {
@@ -124,9 +141,18 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
+  void showAppUnderMaintenanceDialog() {
+    Future.delayed(Duration.zero, () {
+      if (context.read<SystemConfigCubit>().appUnderMaintenance()) {
+        showDialog(
+            context: context, builder: (_) => AppUnderMaintenanceDialog());
+      }
+    });
+  }
+
   void _initLocalNotification() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification:
             (int id, String? title, String? body, String? payLoad) {
@@ -205,13 +231,18 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> setupInteractedMessage() async {
+    //
+    if (Platform.isIOS) {
+      await FirebaseMessaging.instance
+          .requestPermission(announcement: true, provisional: true);
+    }
+
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
     // handle background notification
     FirebaseMessaging.onBackgroundMessage(UiUtils.onBackgroundMessage);
     //handle foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Notification arrived");
-      print(message.data);
+      print("Notification arrives : $message");
       var data = message.data;
 
       var title = data['title'].toString();
@@ -222,7 +253,6 @@ class _HomeScreenState extends State<HomeScreen>
 
       //if notification type is badges then update badges in cubit list
       if (type == "badges") {
-        print("Notificaiton for unlocking new badge");
         String badgeType = data['badge_type'];
         Future.delayed(Duration.zero, () {
           context.read<BadgesCubit>().unlockBadge(badgeType);
@@ -247,7 +277,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   // notification type is category then move to category screen
   Future<void> _handleMessage(RemoteMessage message) async {
-    print("User has opened the app by tapping on notification");
     try {
       if (message.data['type'] == 'category') {
         Navigator.of(context).pushNamed(Routes.category,
@@ -291,12 +320,12 @@ class _HomeScreenState extends State<HomeScreen>
         summaryText: msg,
         htmlFormatSummaryText: true);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'com.ben.hpp', //channel id
-        'hpp', //channel name
-        channelDescription: 'hpp',
-        largeIcon: FilePathAndroidBitmap(largeIconPath),
-        styleInformation: bigPictureStyleInformation,
-        icon: "app_icon");
+      'com.wrteam.flutterquiz', //channel id
+      'flutterquiz', //channel name
+      channelDescription: 'flutterquiz',
+      largeIcon: FilePathAndroidBitmap(largeIconPath),
+      styleInformation: bigPictureStyleInformation,
+    );
     var platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin
@@ -318,13 +347,12 @@ class _HomeScreenState extends State<HomeScreen>
     print("Trigger local notification");
     print("Payload is $payloads");
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'com.ben.hpp', //channel id
-        'hpp', //channel name
-        channelDescription: 'hpp',
+        'com.wrteam.flutterquiz', //channel id
+        'flutterquiz', //channel name
+        channelDescription: 'flutterquiz',
         importance: Importance.max,
         priority: Priority.high,
-        ticker: 'ticker',
-        icon: "app_icon");
+        ticker: 'ticker');
     const IOSNotificationDetails iosNotificationDetails =
         IOSNotificationDetails();
 
@@ -337,8 +365,11 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     ProfileManagementLocalDataSource.updateReversedCoins(0);
+
     profileAnimationController.dispose();
     selfChallengeAnimationController.dispose();
+    firstAnimationController.dispose();
+    secondAnimationController.dispose();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -1196,6 +1227,10 @@ class _HomeScreenState extends State<HomeScreen>
           if (state is UserDetailsFetchSuccess) {
             UiUtils.fetchBookmarkAndBadges(
                 context: context, userId: state.userProfile.userId!);
+          } else if (state is UserDetailsFetchFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+            }
           }
         },
         bloc: context.read<UserDetailsCubit>(),

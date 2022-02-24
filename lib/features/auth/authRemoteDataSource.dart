@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart' as fcm;
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
-import 'package:hpp/features/auth/auhtException.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/auth/auhtException.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:apple_sign_in_safety/apple_sign_in.dart';
@@ -27,20 +27,37 @@ class AuthRemoteDataSource {
   */
 
   //to addUser
-  Future<dynamic> addUser({String? firebaseId, String? type, String? name, String? profile, String? mobile, String? email, String? referCode, String? friendCode}) async {
+  Future<Map<String, dynamic>> addUser(
+      {String? firebaseId,
+      String? type,
+      String? name,
+      String? profile,
+      String? mobile,
+      String? email,
+      String? referCode,
+      String? friendCode}) async {
     try {
       String fcmToken = await getFCMToken();
       //body of post request
-      final body = {accessValueKey: accessValue, firebaseIdKey: firebaseId, typeKey: type, nameKey: name, emailKey: email ?? "", profileKey: profile ?? "", mobileKey: mobile ?? "", fcmIdKey: fcmToken, friendCodeKey: friendCode ?? ""};
+      final body = {
+        accessValueKey: accessValue,
+        firebaseIdKey: firebaseId,
+        typeKey: type,
+        nameKey: name,
+        emailKey: email ?? "",
+        profileKey: profile ?? "",
+        mobileKey: mobile ?? "",
+        fcmIdKey: fcmToken,
+        friendCodeKey: friendCode ?? ""
+      };
 
-      final response = await http.post(Uri.parse(addUserUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(addUserUrl), body: body);
       final responseJson = jsonDecode(response.body);
-      print(responseJson);
 
       if (responseJson['error']) {
         throw AuthException(errorMessageCode: responseJson['message']);
       }
-      return responseJson['data'];
+      return Map<String, dynamic>.from(responseJson['data']);
     } on SocketException catch (_) {
       throw AuthException(errorMessageCode: noInternetCode);
     } on AuthException catch (e) {
@@ -51,24 +68,50 @@ class AuthRemoteDataSource {
     }
   }
 
+  //to addUser
+  Future<String> getJWTTokenOfUser({
+    required String firebaseId,
+    required String type,
+  }) async {
+    try {
+      //body of post request
+      final body = {
+        accessValueKey: accessValue,
+        firebaseIdKey: firebaseId,
+        typeKey: type,
+      };
+
+      final response = await http.post(Uri.parse(addUserUrl), body: body);
+      final responseJson = jsonDecode(response.body);
+
+      if (responseJson['error']) {
+        throw AuthException(errorMessageCode: responseJson['message']);
+      }
+      return (responseJson['data']['api_token']).toString();
+    } on SocketException catch (_) {
+      throw AuthException(errorMessageCode: noInternetCode);
+    } on AuthException catch (e) {
+      throw AuthException(errorMessageCode: e.toString());
+    } catch (e) {
+      throw AuthException(errorMessageCode: defaultErrorMessageCode);
+    }
+  }
+
   Future<bool> isUserExist(String firebaseId) async {
     try {
       final body = {
         accessValueKey: accessValue,
         firebaseIdKey: firebaseId,
       };
-      final response = await http.post(Uri.parse(getUserDetailsByIdUrl), body: body, headers: ApiUtils.getHeaders());
+      final response =
+          await http.post(Uri.parse(checkUserExistUrl), body: body);
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        //if user does not exist means
-        if (responseJson['message'] == "102") {
-          return false;
-        }
         throw AuthException(errorMessageCode: responseJson['message']);
       }
 
-      return true;
+      return responseJson['message'].toString() == "130";
     } on SocketException catch (_) {
       throw AuthException(errorMessageCode: noInternetCode);
     } on AuthException catch (e) {
@@ -78,31 +121,37 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<void> updateFcmId({required String firebaseId, required bool userLoggingOut}) async {
+  Future<void> updateFcmId(
+      {required String firebaseId, required bool userLoggingOut}) async {
     try {
-      final String fcmId = userLoggingOut ? "empty" : await fcm.FirebaseMessaging.instance.getToken() ?? "empty";
-      final body = {accessValueKey: accessValue, fcmIdKey: fcmId, firebaseIdKey: firebaseId.isNotEmpty ? firebaseId : "firebaseId"};
-      print(body);
-      final response = await http.post(Uri.parse(updateFcmIdUrl), body: body, headers: ApiUtils.getHeaders());
+      final String fcmId = userLoggingOut
+          ? "empty"
+          : await fcm.FirebaseMessaging.instance.getToken() ?? "empty";
+      final body = {
+        accessValueKey: accessValue,
+        fcmIdKey: fcmId,
+        firebaseIdKey: firebaseId.isNotEmpty ? firebaseId : "firebaseId"
+      };
+      final response = await http.post(Uri.parse(updateFcmIdUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        throw AuthException(errorMessageCode: responseJson['message']);
+        //throw AuthException(errorMessageCode: responseJson['message']);
       }
-    } on SocketException catch (_) {
-      throw AuthException(errorMessageCode: noInternetCode);
-    } on AuthException catch (e) {
-      throw AuthException(errorMessageCode: e.toString());
     } catch (e) {
-      throw AuthException(errorMessageCode: defaultErrorMessageCode);
+      //throw AuthException(errorMessageCode: defaultErrorMessageCode);
     }
   }
 
 //signIn using phone number
-  Future<UserCredential> signInWithPhoneNumber({required String verificationId, required String smsCode}) async {
-    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+  Future<UserCredential> signInWithPhoneNumber(
+      {required String verificationId, required String smsCode}) async {
+    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: smsCode);
 
-    final UserCredential userCredential = await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+    final UserCredential userCredential =
+        await _firebaseAuth.signInWithCredential(phoneAuthCredential);
     return userCredential;
   }
 
@@ -124,7 +173,8 @@ class AuthRemoteDataSource {
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
       } else if (authProvider == AuthProvider.mobile) {
-        UserCredential userCredential = await signInWithPhoneNumber(verificationId: verificationId!, smsCode: smsCode!);
+        UserCredential userCredential = await signInWithPhoneNumber(
+            verificationId: verificationId!, smsCode: smsCode!);
 
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
@@ -132,12 +182,14 @@ class AuthRemoteDataSource {
         final faceBookAuthResult = await signInWithFacebook();
         if (faceBookAuthResult != null) {
           result['user'] = faceBookAuthResult.user!;
-          result['isNewUser'] = faceBookAuthResult.additionalUserInfo!.isNewUser;
+          result['isNewUser'] =
+              faceBookAuthResult.additionalUserInfo!.isNewUser;
         } else {
           throw AuthException(errorMessageCode: defaultErrorMessageCode);
         }
       } else if (authProvider == AuthProvider.email) {
-        UserCredential userCredential = await signInWithEmailAndPassword(email!, password!);
+        UserCredential userCredential =
+            await signInWithEmailAndPassword(email!, password!);
 
         result['user'] = userCredential.user!;
         result['isNewUser'] = userCredential.additionalUserInfo!.isNewUser;
@@ -152,13 +204,10 @@ class AuthRemoteDataSource {
     }
     //firebase auht errors
     on FirebaseAuthException catch (e) {
-      print(e.toString());
       throw AuthException(errorMessageCode: firebaseErrorCodeToNumber(e.code));
     } on AuthException catch (e) {
-      print(e.toString());
       throw AuthException(errorMessageCode: e.toString());
     } catch (e) {
-      print(e.toString());
       throw AuthException(errorMessageCode: defaultErrorMessageCode);
     }
   }
@@ -169,13 +218,15 @@ class AuthRemoteDataSource {
     if (googleUser == null) {
       throw AuthException(errorMessageCode: defaultErrorMessageCode);
     }
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+    final UserCredential userCredential =
+        await _firebaseAuth.signInWithCredential(credential);
     return userCredential;
   }
 
@@ -191,24 +242,25 @@ class AuthRemoteDataSource {
 
         // Send access token to server for validation and auth
         final FacebookAccessToken? accessToken = res.accessToken;
-        AuthCredential authCredential = FacebookAuthProvider.credential(accessToken!.token);
-        final UserCredential userCredential = await _firebaseAuth.signInWithCredential(authCredential);
+        AuthCredential authCredential =
+            FacebookAuthProvider.credential(accessToken!.token);
+        final UserCredential userCredential =
+            await _firebaseAuth.signInWithCredential(authCredential);
         return userCredential;
       case FacebookLoginStatus.cancel:
-        // User cancel log in
-        break;
+        return null;
 
       case FacebookLoginStatus.error:
-        // Log in failed
-        print(res.error);
-
-        break;
+        return null;
+      default:
+        return null;
     }
   }
 
   Future<UserCredential> signInWithApple() async {
     try {
-      final AuthorizationResult appleResult = await AppleSignIn.performRequests([
+      final AuthorizationResult appleResult =
+          await AppleSignIn.performRequests([
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
 
@@ -217,14 +269,17 @@ class AuthRemoteDataSource {
         final oAuthProvider = OAuthProvider('apple.com');
         final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken!),
-          accessToken: String.fromCharCodes(appleIdCredential.authorizationCode!),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode!),
         );
-        final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        final UserCredential userCredential =
+            await _firebaseAuth.signInWithCredential(credential);
         if (userCredential.additionalUserInfo!.isNewUser) {
           final user = userCredential.user!;
           final String givenName = appleIdCredential.fullName!.givenName ?? "";
 
-          final String familyName = appleIdCredential.fullName!.familyName ?? "";
+          final String familyName =
+              appleIdCredential.fullName!.familyName ?? "";
           await user.updateDisplayName("$givenName $familyName");
           await user.reload();
         }
@@ -240,9 +295,11 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<UserCredential> signInWithEmailAndPassword(String email, String password) async {
+  Future<UserCredential> signInWithEmailAndPassword(
+      String email, String password) async {
     //sign in using email
-    UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    UserCredential userCredential = await _firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password);
     if (userCredential.user!.emailVerified) {
       return userCredential;
     } else {
@@ -265,7 +322,8 @@ class AuthRemoteDataSource {
   //create user account
   Future<void> signUpUser(String email, String password) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
       //verify email address
       await userCredential.user!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {

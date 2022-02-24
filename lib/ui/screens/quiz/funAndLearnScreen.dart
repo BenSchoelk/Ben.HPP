@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/quiz/models/comprehension.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/horizontalTimerContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/quiz/models/comprehension.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
 class FunAndLearnScreen extends StatefulWidget {
   final QuizTypes quizType;

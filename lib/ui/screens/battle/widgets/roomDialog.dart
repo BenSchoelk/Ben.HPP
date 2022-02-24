@@ -2,24 +2,24 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/ads/rewardedAdCubit.dart';
-import 'package:hpp/features/battleRoom/cubits/battleRoomCubit.dart';
-import 'package:hpp/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/models/userProfile.dart';
-import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/screens/battle/widgets/customDialog.dart';
-import 'package:hpp/ui/screens/battle/widgets/waitingForPlayersDialog.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/watchRewardAdDialog.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/battleRoomCubit.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/waitingForPlayersDialog.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RoomDialog extends StatefulWidget {
@@ -344,6 +344,12 @@ class _RoomDialogState extends State<RoomDialog> {
                         builder: (context) =>
                             WaitingForPlayesDialog(quizType: QuizTypes.battle));
                   } else if (state is BattleRoomFailure) {
+                    if (state.errorMessageCode == unauthorizedAccessCode) {
+                      UiUtils.showAlreadyLoggedInDialog(
+                        context: context,
+                      );
+                      return;
+                    }
                     UiUtils.errorMessageDialog(
                         context,
                         AppLocalization.of(context)!.getTranslatedValues(
@@ -400,6 +406,12 @@ class _RoomDialogState extends State<RoomDialog> {
                               quizType: QuizTypes.groupPlay,
                             ));
                   } else if (state is MultiUserBattleRoomFailure) {
+                    if (state.errorMessageCode == unauthorizedAccessCode) {
+                      UiUtils.showAlreadyLoggedInDialog(
+                        context: context,
+                      );
+                      return;
+                    }
                     UiUtils.errorMessageDialog(
                         context,
                         AppLocalization.of(context)!.getTranslatedValues(
@@ -474,6 +486,12 @@ class _RoomDialogState extends State<RoomDialog> {
                       });
                     }
                     if (state is QuizCategoryFailure) {
+                      if (state.errorMessage == unauthorizedAccessCode) {
+                        UiUtils.showAlreadyLoggedInDialog(
+                          context: context,
+                        );
+                        return;
+                      }
                       showDialog<bool>(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -604,6 +622,12 @@ class _RoomDialogState extends State<RoomDialog> {
                         builder: (context) => WaitingForPlayesDialog(
                             quizType: QuizTypes.battle, battleLbl: "playFrd"));
                   } else if (state is BattleRoomFailure) {
+                    if (state.errorMessageCode == unauthorizedAccessCode) {
+                      UiUtils.showAlreadyLoggedInDialog(
+                        context: context,
+                      );
+                      return;
+                    }
                     UiUtils.errorMessageDialog(
                         context,
                         AppLocalization.of(context)!.getTranslatedValues(
@@ -685,6 +709,12 @@ class _RoomDialogState extends State<RoomDialog> {
                               battleLbl: "",
                             ));
                   } else if (state is MultiUserBattleRoomFailure) {
+                    if (state.errorMessageCode == unauthorizedAccessCode) {
+                      UiUtils.showAlreadyLoggedInDialog(
+                        context: context,
+                      );
+                      return;
+                    }
                     UiUtils.errorMessageDialog(
                         context,
                         AppLocalization.of(context)!.getTranslatedValues(
@@ -820,43 +850,52 @@ class _RoomDialogState extends State<RoomDialog> {
       topPadding: Platform.isIOS
           ? MediaQuery.of(context).size.height * (0.065)
           : MediaQuery.of(context).size.height * (0.1),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(UiUtils.dailogRadius),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Container(
-              color: Theme.of(context).backgroundColor,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      _buildTabContainer(
-                          1,
-                          AppLocalization.of(context)!
-                              .getTranslatedValues("creatingLbl")!,
-                          constraints),
-                      _buildTabContainer(
-                          2,
-                          AppLocalization.of(context)!
-                              .getTranslatedValues("joinLbl")!,
-                          constraints),
-                    ],
-                  ),
-                  // Container(
-                  //   color: Theme.of(context).primaryColorDark,
-                  //   height: 5.0,
-                  // ),
-                  SizedBox(
-                    height: constraints.maxHeight * (0.05),
-                  ),
-                  currentSelectedTab == 1
-                      ? _buildCreateRoomTab(constraints)
-                      : _buildJoinRoomTab(constraints)
-                  //
-                ],
-              ),
-            );
-          },
+      child: BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+        listener: (context, state) {
+          if (state is UpdateScoreAndCoinsFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+            }
+          }
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(UiUtils.dailogRadius),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                color: Theme.of(context).backgroundColor,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        _buildTabContainer(
+                            1,
+                            AppLocalization.of(context)!
+                                .getTranslatedValues("creatingLbl")!,
+                            constraints),
+                        _buildTabContainer(
+                            2,
+                            AppLocalization.of(context)!
+                                .getTranslatedValues("joinLbl")!,
+                            constraints),
+                      ],
+                    ),
+                    // Container(
+                    //   color: Theme.of(context).primaryColorDark,
+                    //   height: 5.0,
+                    // ),
+                    SizedBox(
+                      height: constraints.maxHeight * (0.05),
+                    ),
+                    currentSelectedTab == 1
+                        ? _buildCreateRoomTab(constraints)
+                        : _buildJoinRoomTab(constraints)
+                    //
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
       height: MediaQuery.of(context).size.height * (0.5),

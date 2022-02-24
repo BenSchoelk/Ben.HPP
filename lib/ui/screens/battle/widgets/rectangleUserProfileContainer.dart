@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
-import 'package:hpp/ui/screens/battle/widgets/rectangleTimerProgressContainer.dart';
+import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/rectangleTimerProgressContainer.dart';
 
 class RectangleUserProfileContainer extends StatelessWidget {
   final UserBattleRoomDetails userBattleRoomDetails;

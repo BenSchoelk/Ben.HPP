@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/auth/authRepository.dart';
+import 'package:flutterquiz/features/auth/authRepository.dart';
 
 import 'authCubit.dart';
 
@@ -21,7 +21,10 @@ class SignInSuccess extends SignInState {
   final AuthProvider authProvider;
   final bool isNewUser;
 
-  SignInSuccess({required this.authProvider, required this.user, required this.isNewUser});
+  SignInSuccess(
+      {required this.authProvider,
+      required this.user,
+      required this.isNewUser});
 }
 
 class SignInFailure extends SignInState {
@@ -55,7 +58,10 @@ class SignInCubit extends Cubit<SignInState> {
     )
         .then((result) {
       //success
-      emit(SignInSuccess(user: result['user'], authProvider: authProvider, isNewUser: result['isNewUser']));
+      emit(SignInSuccess(
+          user: result['user'],
+          authProvider: authProvider,
+          isNewUser: result['isNewUser']));
     }).catchError((e) {
       //failure
       emit(SignInFailure(e.toString(), authProvider));

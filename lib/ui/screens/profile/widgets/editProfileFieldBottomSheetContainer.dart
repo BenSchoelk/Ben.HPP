@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/updateUserDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/uiUtils.dart';
-import 'package:hpp/utils/validators.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateUserDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:flutterquiz/utils/validators.dart';
 
 class EditProfileFieldBottomSheetContainer extends StatefulWidget {
-  final String fieldTitle; //value of fieldTitle will be from :  Email,Mobile Number,Name
+  final String
+      fieldTitle; //value of fieldTitle will be from :  Email,Mobile Number,Name
   final String fieldValue; //
   final bool numericKeyboardEnable;
   final UpdateUserDetailCubit updateUserDetailCubit;
-  EditProfileFieldBottomSheetContainer({Key? key, required this.fieldTitle, required this.fieldValue, required this.numericKeyboardEnable, required this.updateUserDetailCubit}) : super(key: key);
+  EditProfileFieldBottomSheetContainer(
+      {Key? key,
+      required this.fieldTitle,
+      required this.fieldValue,
+      required this.numericKeyboardEnable,
+      required this.updateUserDetailCubit})
+      : super(key: key);
 
   @override
-  _EditProfileFieldBottomSheetContainerState createState() => _EditProfileFieldBottomSheetContainerState();
+  _EditProfileFieldBottomSheetContainerState createState() =>
+      _EditProfileFieldBottomSheetContainerState();
 }
 
-class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldBottomSheetContainer> {
-  late TextEditingController textEditingController = TextEditingController(text: widget.fieldValue);
+class _EditProfileFieldBottomSheetContainerState
+    extends State<EditProfileFieldBottomSheetContainer> {
+  late TextEditingController textEditingController =
+      TextEditingController(text: widget.fieldValue);
 
   late String errorMessage = "";
 
@@ -41,20 +51,32 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
       listener: (context, state) {
         if (state is UpdateUserDetailSuccess) {
           context.read<UserDetailsCubit>().updateUserProfile(
-                email: widget.fieldTitle == "Email" ? textEditingController.text.trim() : null,
-                mobile: widget.fieldTitle == "Mobile Number" ? textEditingController.text.trim() : null,
-                name: widget.fieldTitle == "Name" ? textEditingController.text.trim() : null,
+                email: widget.fieldTitle == "Email"
+                    ? textEditingController.text.trim()
+                    : null,
+                mobile: widget.fieldTitle == "Mobile Number"
+                    ? textEditingController.text.trim()
+                    : null,
+                name: widget.fieldTitle == "Name"
+                    ? textEditingController.text.trim()
+                    : null,
               );
           Navigator.of(context).pop();
         } else if (state is UpdateUserDetailFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+            return;
+          }
           setState(() {
-            errorMessage = AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!;
+            errorMessage = AppLocalization.of(context)!.getTranslatedValues(
+                convertErrorCodeToLanguageKey(state.errorMessage))!;
           });
         }
       },
       child: WillPopScope(
         onWillPop: () {
-          if (widget.updateUserDetailCubit.state is UpdateUserDetailInProgress) {
+          if (widget.updateUserDetailCubit.state
+              is UpdateUserDetailInProgress) {
             return Future.value(false);
           }
           return Future.value(true);
@@ -65,7 +87,10 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
                 topLeft: Radius.circular(20.0),
                 topRight: Radius.circular(20.0),
               ),
-              gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+              gradient: UiUtils.buildLinerGradient([
+                Theme.of(context).scaffoldBackgroundColor,
+                Theme.of(context).canvasColor
+              ], Alignment.topCenter, Alignment.bottomCenter)),
           child: Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Column(
@@ -79,7 +104,8 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
                       alignment: Alignment.centerRight,
                       child: IconButton(
                           onPressed: () {
-                            if (widget.updateUserDetailCubit.state is! UpdateUserDetailInProgress) {
+                            if (widget.updateUserDetailCubit.state
+                                is! UpdateUserDetailInProgress) {
                               Navigator.of(context).pop();
                             }
                           },
@@ -95,7 +121,10 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
                   alignment: Alignment.center,
                   child: Text(
                     "${widget.fieldTitle}",
-                    style: TextStyle(fontSize: 20.0, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
@@ -115,7 +144,9 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
                   ),
                   child: TextField(
                     controller: textEditingController,
-                    keyboardType: widget.numericKeyboardEnable ? TextInputType.number : TextInputType.text,
+                    keyboardType: widget.numericKeyboardEnable
+                        ? TextInputType.number
+                        : TextInputType.text,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                     ),
@@ -167,22 +198,31 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
                                     errorMessage = "";
                                   });
                                 }
-                                final userProfile = context.read<UserDetailsCubit>().getUserProfile();
+                                final userProfile = context
+                                    .read<UserDetailsCubit>()
+                                    .getUserProfile();
                                 //means it is not
                                 if (widget.fieldTitle == "Mobile Number") {
                                   //Email,Mobile Number,Name
-                                  if (!Validators.isCorrectMobileNumber(textEditingController.text.trim())) {
+                                  if (!Validators.isCorrectMobileNumber(
+                                      textEditingController.text.trim())) {
                                     setState(() {
-                                      errorMessage = AppLocalization.of(context)!.getTranslatedValues("validMobMsg")!;
+                                      errorMessage = AppLocalization.of(
+                                              context)!
+                                          .getTranslatedValues("validMobMsg")!;
                                     });
                                     //showDialog(context: context, builder: (_) => ErrorMessageDialog(errorMessage: "Please enter valid number"));
                                     return;
                                   }
                                 } else if (widget.fieldTitle == "Email") {
-                                  if (!Validators.isValidEmail(textEditingController.text.trim())) {
+                                  if (!Validators.isValidEmail(
+                                      textEditingController.text.trim())) {
                                     //showDialog(context: context, builder: (_) => ErrorMessageDialog(errorMessage: "Please enter valid email"));
                                     setState(() {
-                                      errorMessage = AppLocalization.of(context)!.getTranslatedValues("enterValidEmailMsg")!;
+                                      errorMessage =
+                                          AppLocalization.of(context)!
+                                              .getTranslatedValues(
+                                                  "enterValidEmailMsg")!;
                                     });
                                     return;
                                   }
@@ -197,10 +237,18 @@ class _EditProfileFieldBottomSheetContainerState extends State<EditProfileFieldB
                                 */
 
                                 widget.updateUserDetailCubit.updateProfile(
-                                  userId: context.read<UserDetailsCubit>().getUserId(),
-                                  email: widget.fieldTitle == "Email" ? textEditingController.text.trim() : userProfile.email ?? "",
-                                  mobile: widget.fieldTitle == "Mobile Number" ? textEditingController.text.trim() : userProfile.mobileNumber ?? "",
-                                  name: widget.fieldTitle == "Name" ? textEditingController.text.trim() : userProfile.name ?? "",
+                                  userId: context
+                                      .read<UserDetailsCubit>()
+                                      .getUserId(),
+                                  email: widget.fieldTitle == "Email"
+                                      ? textEditingController.text.trim()
+                                      : userProfile.email ?? "",
+                                  mobile: widget.fieldTitle == "Mobile Number"
+                                      ? textEditingController.text.trim()
+                                      : userProfile.mobileNumber ?? "",
+                                  name: widget.fieldTitle == "Name"
+                                      ? textEditingController.text.trim()
+                                      : userProfile.name ?? "",
                                 );
                               },
                         fontWeight: FontWeight.bold,

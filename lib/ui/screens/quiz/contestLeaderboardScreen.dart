@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/quiz/cubits/getContestLeaderboardCubit.dart';
-import 'package:hpp/features/quiz/quizRemoteDataSoure.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/getContestLeaderboardCubit.dart';
+import 'package:flutterquiz/features/quiz/quizRemoteDataSoure.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class ContestLeaderBoardScreen extends StatefulWidget {
   final String? contestId;

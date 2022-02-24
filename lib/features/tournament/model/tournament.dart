@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hpp/features/tournament/model/tournamentPlayerDetails.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
 
 enum TournamentStatus { notStarted, started, completed }
 

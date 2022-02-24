@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:hpp/features/statistic/statisticException.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/statistic/statisticException.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -34,7 +34,7 @@ class StatisticRemoteDataSource {
       final body = {accessValueKey: accessValue, userIdKey: userId};
       print(body);
       final response = await http.post(Uri.parse(getStatisticUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print("response of statistic $responseJson");
 
@@ -78,7 +78,7 @@ class StatisticRemoteDataSource {
 
       print(body);
       final response = await http.post(Uri.parse(updateStatisticUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print("Update statistics response");
       print("Response : $responseJson");
@@ -119,7 +119,7 @@ class StatisticRemoteDataSource {
       print(body);
       print("--------------");
       final response = await http.post(Uri.parse(setBattleStatisticsUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -143,7 +143,7 @@ class StatisticRemoteDataSource {
         userIdKey: userId,
       };
       final response = await http.post(Uri.parse(getBattleStatisticsUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       return responseJson;

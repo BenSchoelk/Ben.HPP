@@ -49,6 +49,7 @@ class SystemConfigModel {
   late String selfChallengeMode;
   late String inAppPurchaseMode;
   late String showAnswerCorrectness;
+  late String appMaintenance;
 
   SystemConfigModel({
     required this.showAnswerCorrectness,
@@ -101,6 +102,7 @@ class SystemConfigModel {
     required this.iosFbBannerId,
     required this.iosFbInterstitialId,
     required this.iosFbRewardedId,
+    required this.appMaintenance,
   });
 
   SystemConfigModel.fromJson(Map<String, dynamic> json) {
@@ -154,5 +156,6 @@ class SystemConfigModel {
     inAppPurchaseMode = json['in_app_purchase_mode'] ?? "0";
     selfChallengeMode = json['self_challenge_mode'] ?? "0";
     showAnswerCorrectness = json['answer_mode'] ?? "1";
+    appMaintenance = json['app_maintenance'] ?? "0";
   }
 }

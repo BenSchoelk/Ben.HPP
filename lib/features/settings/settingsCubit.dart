@@ -1,7 +1,7 @@
 //State
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/settings/settingsModel.dart';
-import 'package:hpp/features/settings/settingsRepository.dart';
+import 'package:flutterquiz/features/settings/settingsModel.dart';
+import 'package:flutterquiz/features/settings/settingsRepository.dart';
 
 class SettingsState {
   final SettingsModel? settingsModel;

@@ -1,10 +1,10 @@
 //errorMessagesKey for localization
-//error message code starts from 101 to 151
+//error message code starts from 101 to 159
 
 //
 //if you make any changes here in keys make sure to update in all languages files
 //
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
 final String defaultErrorMessageKey =
     "defaultErrorMessage"; //something went wrong
@@ -83,6 +83,8 @@ final String requireRecentLoginCode = "155";
 final String noTransactionsCode = "156";
 final String accountHasBeenDeactiveCode = "157";
 final String canNotMakeRequestCode = "158";
+final String userNotFoundCode = "159";
+final String unauthorizedAccessCode = "129";
 
 //
 //firebase auth exceptions code
@@ -94,7 +96,7 @@ String firebaseErrorCodeToNumber(String firebaseErrorCode) {
     case "user-disabled":
       return "128";
     case "user-not-found":
-      return "129";
+      return userNotFoundCode;
     case "wrong-password":
       return "130";
     case "account-exists-with-different-credential":
@@ -182,7 +184,7 @@ String convertErrorCodeToLanguageKey(String code) {
     case "128":
       return userDisabledKey;
     case "129":
-      return userNotFoundKey;
+      return unauthorizedAccessKey;
     case "130":
       return wrongPasswordKey;
     case "131":
@@ -261,6 +263,9 @@ String convertErrorCodeToLanguageKey(String code) {
       return accountHasBeenDeactiveKey;
     case "158":
       return canNotMakeRequestKey;
+
+    case "159":
+      return userNotFoundKey;
 
     default:
       {

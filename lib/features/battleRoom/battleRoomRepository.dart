@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:hpp/features/battleRoom/battleRoomExecption.dart';
-import 'package:hpp/features/battleRoom/battleRoomRemoteDataSource.dart';
-import 'package:hpp/features/battleRoom/models/battleRoom.dart';
-import 'package:hpp/features/battleRoom/models/message.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomExecption.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRemoteDataSource.dart';
+import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
+import 'package:flutterquiz/features/battleRoom/models/message.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 class BattleRoomRepository {
   static final BattleRoomRepository _battleRoomRepository =

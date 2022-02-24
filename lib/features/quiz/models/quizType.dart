@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 
 enum QuizTypes {
   dailyQuiz,

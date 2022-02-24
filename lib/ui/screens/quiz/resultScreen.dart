@@ -4,42 +4,42 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/ads/interstitialAdCubit.dart';
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/battleRoom/models/battleRoom.dart';
-import 'package:hpp/features/exam/models/exam.dart';
-import 'package:hpp/features/quiz/cubits/comprehensionCubit.dart';
-import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:hpp/features/quiz/cubits/setCategoryPlayedCubit.dart';
-import 'package:hpp/features/quiz/cubits/setContestLeaderboardCubit.dart';
-import 'package:hpp/features/quiz/cubits/subCategoryCubit.dart';
-import 'package:hpp/features/quiz/models/comprehension.dart';
-import 'package:hpp/features/quiz/models/guessTheWordQuestion.dart';
-import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
-import 'package:hpp/features/statistic/cubits/updateStatisticCubit.dart';
-import 'package:hpp/features/statistic/statisticRepository.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/widgets/circularImageContainer.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/interstitialAdCubit.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
+import 'package:flutterquiz/features/exam/models/exam.dart';
+import 'package:flutterquiz/features/quiz/cubits/comprehensionCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/setCategoryPlayedCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/setContestLeaderboardCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/subCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/comprehension.dart';
+import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
+import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/features/statistic/cubits/updateStatisticCubit.dart';
+import 'package:flutterquiz/features/statistic/statisticRepository.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/widgets/circularImageContainer.dart';
 
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/features/quiz/cubits/updateLevelCubit.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/ui/screens/quiz/widgets/radialResultContainer.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/quiz/cubits/updateLevelCubit.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/radialResultContainer.dart';
 
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -175,6 +175,8 @@ class _ResultScreenState extends State<ResultScreen> {
   late bool _isWinner;
   int _earnedCoins = 0;
   String? _winnerId;
+
+  bool _displayedAlreadyLoggedInDailog = false;
 
   @override
   void initState() {
@@ -1721,29 +1723,78 @@ class _ResultScreenState extends State<ResultScreen> {
 
         return Future.value(true);
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            PageBackgroundGradientContainer(),
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  Center(child: _buildResultContainer(context)),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  _buildResultButtons(context),
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+            listener: (context, state) {
+              if (state is UpdateScoreAndCoinsFailure) {
+                //
+                if (state.errorMessage == unauthorizedAccessCode) {
+                  //already showed already logged in from other api error
+                  if (!_displayedAlreadyLoggedInDailog) {
+                    _displayedAlreadyLoggedInDailog = true;
+                    UiUtils.showAlreadyLoggedInDialog(context: context);
+                    return;
+                  }
+                }
+              }
+            },
+          ),
+          BlocListener<UpdateStatisticCubit, UpdateStatisticState>(
+            listener: (context, state) {
+              if (state is UpdateStatisticFailure) {
+                //
+                if (state.errorMessageCode == unauthorizedAccessCode) {
+                  //already showed already logged in from other api error
+                  if (!_displayedAlreadyLoggedInDailog) {
+                    _displayedAlreadyLoggedInDailog = true;
+                    UiUtils.showAlreadyLoggedInDialog(context: context);
+                    return;
+                  }
+                }
+              }
+            },
+          ),
+          BlocListener<SetContestLeaderboardCubit, SetContestLeaderboardState>(
+            listener: (context, state) {
+              if (state is SetContestLeaderboardFailure) {
+                //
+                if (state.errorMessage == unauthorizedAccessCode) {
+                  //already showed already logged in from other api error
+                  if (!_displayedAlreadyLoggedInDailog) {
+                    _displayedAlreadyLoggedInDailog = true;
+                    UiUtils.showAlreadyLoggedInDialog(context: context);
+                    return;
+                  }
+                }
+              }
+            },
+          ),
+        ],
+        child: Scaffold(
+          body: Stack(
+            children: [
+              PageBackgroundGradientContainer(),
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 50.0,
+                    ),
+                    Center(child: _buildResultContainer(context)),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    _buildResultButtons(context),
+                    SizedBox(
+                      height: 50.0,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

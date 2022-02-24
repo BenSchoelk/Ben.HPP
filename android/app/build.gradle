@@ -31,12 +31,12 @@ def keystoreProperties = new Properties()
    }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.ben.hpp"
+        applicationId "com.wrteam.flutterquiz"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         ndkVersion "22.1.7171670"
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -55,8 +55,10 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
-            //signingConfig signingConfigs.release
+            //signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
+            minifyEnabled true // Add these lines
+            shrinkResources true // Add these lines
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
         }

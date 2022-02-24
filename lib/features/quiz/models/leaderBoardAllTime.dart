@@ -1,4 +1,4 @@
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
 
 class LeaderBoardAllTime {
   final String? userId, score, userRank, email, name, profile;

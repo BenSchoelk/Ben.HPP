@@ -38,7 +38,10 @@ class GuessTheWordQuestion {
   GuessTheWordQuestion.fromJson(Map<String, dynamic> json) {
     List<String> submittedAns = [];
     List<String> initialOptions = [];
-    String correctAnswer = json['answer'].toString().split(" ").join();
+
+    //String correctAnswer = json['answer'].toString().split(" ").join();
+
+    String correctAnswer = json['answer'].toString();
     correctAnswer = correctAnswer.toUpperCase();
     for (int i = 0; i < correctAnswer.length; i++) {
       submittedAns.add("");

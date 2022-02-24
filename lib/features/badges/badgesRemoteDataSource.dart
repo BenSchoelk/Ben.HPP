@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:hpp/features/badges/badgesExecption.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/badges/badgesExecption.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 class BadgesRemoteDataSource {
@@ -28,7 +28,7 @@ class BadgesRemoteDataSource {
       final body = {accessValueKey: accessValue, userIdKey: userId};
       print(getUserBadgesUrl);
       final response = await http.post(Uri.parse(getUserBadgesUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -54,7 +54,7 @@ class BadgesRemoteDataSource {
       };
 
       final response = await http.post(Uri.parse(setUserBadgesUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {

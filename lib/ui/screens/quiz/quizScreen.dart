@@ -3,40 +3,40 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/ads/rewardedAdCubit.dart';
-import 'package:hpp/features/bookmark/bookmarkRepository.dart';
-import 'package:hpp/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/features/bookmark/cubits/bookmarkCubit.dart';
-import 'package:hpp/features/quiz/cubits/questionsCubit.dart';
-import 'package:hpp/features/bookmark/cubits/updateBookmarkCubit.dart';
-import 'package:hpp/features/quiz/models/comprehension.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/screens/quiz/widgets/audioQuestionContainer.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
+import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/audioQuestionBookmarkCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/bookmarkCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/questionsCubit.dart';
+import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:flutterquiz/features/quiz/models/comprehension.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/quiz/widgets/audioQuestionContainer.dart';
 
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/exitGameDailog.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/questionsContainer.dart';
-import 'package:hpp/ui/widgets/quizPlayAreaBackgroundContainer.dart';
-import 'package:hpp/ui/widgets/settingButton.dart';
-import 'package:hpp/ui/widgets/settingsDialogContainer.dart';
-import 'package:hpp/ui/widgets/watchRewardAdDialog.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
+import 'package:flutterquiz/ui/widgets/quizPlayAreaBackgroundContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
 
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 enum LifelineStatus { unused, using, used }
 
@@ -448,6 +448,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               listener: (context, state) {
                 //if failed to update bookmark status
                 if (state is UpdateBookmarkFailure) {
+                  if (state.errorMessageCode == unauthorizedAccessCode) {
+                    timerAnimationController.stop();
+                    UiUtils.showAlreadyLoggedInDialog(context: context);
+                    return;
+                  }
                   //remove bookmark question
                   if (state.failedStatus == "0") {
                     //if unable to remove question from bookmark then add question
@@ -560,6 +565,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               listener: (context, state) {
                 //if failed to update bookmark status
                 if (state is UpdateBookmarkFailure) {
+                  if (state.errorMessageCode == unauthorizedAccessCode) {
+                    timerAnimationController.stop();
+                    UiUtils.showAlreadyLoggedInDialog(context: context);
+                    return;
+                  }
                   //remove bookmark question
                   if (state.failedStatus == "0") {
                     //if unable to remove question from bookmark then add question
@@ -944,115 +954,131 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         onTapBackButton();
         return Future.value(false);
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            PageBackgroundGradientContainer(),
-            Align(
-              alignment: Alignment.topCenter,
-              child: QuizPlayAreaBackgroundContainer(
-                heightPercentage: 0.885,
+      child: BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+        listener: (context, state) {
+          if (state is UpdateScoreAndCoinsFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              timerAnimationController.stop();
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+            }
+          }
+        },
+        child: Scaffold(
+          body: Stack(
+            children: [
+              PageBackgroundGradientContainer(),
+              Align(
+                alignment: Alignment.topCenter,
+                child: QuizPlayAreaBackgroundContainer(
+                  heightPercentage: 0.885,
+                ),
               ),
-            ),
-            BlocConsumer<QuestionsCubit, QuestionsState>(
-                bloc: quesCubit,
-                listener: (context, state) {
-                  if (state is QuestionsFetchSuccess) {
-                    if (currentQuestionIndex == 0 &&
-                        !state.questions[currentQuestionIndex].attempted) {
-                      if (widget.quizType == QuizTypes.audioQuestions) {
-                        state.questions.forEach((element) {
-                          audioQuestionContainerKeys
-                              .add(GlobalKey<AudioQuestionContainerState>());
-                        });
+              BlocConsumer<QuestionsCubit, QuestionsState>(
+                  bloc: quesCubit,
+                  listener: (context, state) {
+                    if (state is QuestionsFetchSuccess) {
+                      if (currentQuestionIndex == 0 &&
+                          !state.questions[currentQuestionIndex].attempted) {
+                        if (widget.quizType == QuizTypes.audioQuestions) {
+                          state.questions.forEach((element) {
+                            audioQuestionContainerKeys
+                                .add(GlobalKey<AudioQuestionContainerState>());
+                          });
 
-                        //
-                        showOptionAnimationController.forward();
-                        questionContentAnimationController.forward();
-                        //add audio question container keys
+                          //
+                          showOptionAnimationController.forward();
+                          questionContentAnimationController.forward();
+                          //add audio question container keys
 
-                      } else {
-                        timerAnimationController.forward();
-                        questionContentAnimationController.forward();
+                        } else {
+                          timerAnimationController.forward();
+                          questionContentAnimationController.forward();
+                        }
+                      }
+                    } else if (state is QuestionsFetchFailure) {
+                      if (state.errorMessage == unauthorizedAccessCode) {
+                        UiUtils.showAlreadyLoggedInDialog(context: context);
                       }
                     }
-                  }
-                },
+                  },
+                  builder: (context, state) {
+                    if (state is QuestionsFetchInProgress ||
+                        state is QuestionsIntial) {
+                      return Center(
+                        child: CircularProgressContainer(
+                          useWhiteLoader: true,
+                        ),
+                      );
+                    }
+                    if (state is QuestionsFetchFailure) {
+                      return Center(
+                        child: ErrorContainer(
+                          errorMessageColor: Theme.of(context).backgroundColor,
+                          showBackButton: true,
+                          errorMessage: AppLocalization.of(context)!
+                              .getTranslatedValues(
+                                  convertErrorCodeToLanguageKey(
+                                      state.errorMessage)),
+                          onTapRetry: () {
+                            _getQuestions();
+                          },
+                          showErrorImage: true,
+                        ),
+                      );
+                    }
+                    return Align(
+                      alignment: Alignment.topCenter,
+                      child: QuestionsContainer(
+                        audioQuestionContainerKeys: audioQuestionContainerKeys,
+                        quizType: widget.quizType,
+                        showAnswerCorrectness: context
+                            .read<SystemConfigCubit>()
+                            .getShowCorrectAnswerMode(),
+                        lifeLines: getLifeLines(),
+                        timerAnimationController: timerAnimationController,
+                        topPadding: MediaQuery.of(context).size.height *
+                            UiUtils.getQuestionContainerTopPaddingPercentage(
+                                MediaQuery.of(context).size.height),
+                        hasSubmittedAnswerForCurrentQuestion:
+                            hasSubmittedAnswerForCurrentQuestion,
+                        questions: context.read<QuestionsCubit>().questions(),
+                        submitAnswer: submitAnswer,
+                        questionContentAnimation: questionContentAnimation,
+                        questionScaleDownAnimation: questionScaleDownAnimation,
+                        questionScaleUpAnimation: questionScaleUpAnimation,
+                        questionSlideAnimation: questionSlideAnimation,
+                        currentQuestionIndex: currentQuestionIndex,
+                        questionAnimationController:
+                            questionAnimationController,
+                        questionContentAnimationController:
+                            questionContentAnimationController,
+                        guessTheWordQuestions: [],
+                        guessTheWordQuestionContainerKeys: [],
+                        level: widget.level,
+                      ),
+                    );
+                  }),
+              BlocBuilder<QuestionsCubit, QuestionsState>(
+                bloc: quesCubit,
                 builder: (context, state) {
-                  if (state is QuestionsFetchInProgress ||
-                      state is QuestionsIntial) {
-                    return Center(
-                      child: CircularProgressContainer(
-                        useWhiteLoader: true,
-                      ),
-                    );
+                  if (state is QuestionsFetchSuccess) {
+                    return _buildLifeLines();
                   }
-                  if (state is QuestionsFetchFailure) {
-                    return Center(
-                      child: ErrorContainer(
-                        errorMessageColor: Theme.of(context).backgroundColor,
-                        showBackButton: true,
-                        errorMessage: AppLocalization.of(context)!
-                            .getTranslatedValues(convertErrorCodeToLanguageKey(
-                                state.errorMessage)),
-                        onTapRetry: () {
-                          _getQuestions();
-                        },
-                        showErrorImage: true,
-                      ),
-                    );
+                  return SizedBox();
+                },
+              ),
+              BlocBuilder<QuestionsCubit, QuestionsState>(
+                bloc: quesCubit,
+                builder: (context, state) {
+                  if (state is QuestionsFetchSuccess) {
+                    return _buildShowOptionButton();
                   }
-                  return Align(
-                    alignment: Alignment.topCenter,
-                    child: QuestionsContainer(
-                      audioQuestionContainerKeys: audioQuestionContainerKeys,
-                      quizType: widget.quizType,
-                      showAnswerCorrectness: context
-                          .read<SystemConfigCubit>()
-                          .getShowCorrectAnswerMode(),
-                      lifeLines: getLifeLines(),
-                      timerAnimationController: timerAnimationController,
-                      topPadding: MediaQuery.of(context).size.height *
-                          UiUtils.getQuestionContainerTopPaddingPercentage(
-                              MediaQuery.of(context).size.height),
-                      hasSubmittedAnswerForCurrentQuestion:
-                          hasSubmittedAnswerForCurrentQuestion,
-                      questions: context.read<QuestionsCubit>().questions(),
-                      submitAnswer: submitAnswer,
-                      questionContentAnimation: questionContentAnimation,
-                      questionScaleDownAnimation: questionScaleDownAnimation,
-                      questionScaleUpAnimation: questionScaleUpAnimation,
-                      questionSlideAnimation: questionSlideAnimation,
-                      currentQuestionIndex: currentQuestionIndex,
-                      questionAnimationController: questionAnimationController,
-                      questionContentAnimationController:
-                          questionContentAnimationController,
-                      guessTheWordQuestions: [],
-                      guessTheWordQuestionContainerKeys: [],
-                      level: widget.level,
-                    ),
-                  );
-                }),
-            BlocBuilder<QuestionsCubit, QuestionsState>(
-              bloc: quesCubit,
-              builder: (context, state) {
-                if (state is QuestionsFetchSuccess) {
-                  return _buildLifeLines();
-                }
-                return SizedBox();
-              },
-            ),
-            BlocBuilder<QuestionsCubit, QuestionsState>(
-              bloc: quesCubit,
-              builder: (context, state) {
-                if (state is QuestionsFetchSuccess) {
-                  return _buildShowOptionButton();
-                }
-                return SizedBox();
-              },
-            ),
-            _buildTopMenu(),
-          ],
+                  return SizedBox();
+                },
+              ),
+              _buildTopMenu(),
+            ],
+          ),
         ),
       ),
     );

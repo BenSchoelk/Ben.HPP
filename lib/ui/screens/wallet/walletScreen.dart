@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/features/wallet/cubits/paymentRequestCubit.dart';
-import 'package:hpp/features/wallet/cubits/transactionsCubit.dart';
-import 'package:hpp/features/wallet/models/paymentRequest.dart';
-import 'package:hpp/features/wallet/walletRepository.dart';
-import 'package:hpp/ui/screens/wallet/widgets/redeemAmountRequestBottomSheetContainer.dart';
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/features/wallet/cubits/paymentRequestCubit.dart';
+import 'package:flutterquiz/features/wallet/cubits/transactionsCubit.dart';
+import 'package:flutterquiz/features/wallet/models/paymentRequest.dart';
+import 'package:flutterquiz/features/wallet/walletRepository.dart';
+import 'package:flutterquiz/ui/screens/wallet/widgets/redeemAmountRequestBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -627,7 +627,14 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Widget _buildTransactionListContainer() {
-    return BlocBuilder<TransactionsCubit, TransactionsState>(
+    return BlocConsumer<TransactionsCubit, TransactionsState>(
+      listener: (context, state) {
+        if (state is TransactionsFetchFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+          }
+        }
+      },
       builder: (context, state) {
         if (state is TransactionsFetchInProgress ||
             state is TransactionsFetchInitial) {

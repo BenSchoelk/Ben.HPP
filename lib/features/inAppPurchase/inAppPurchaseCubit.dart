@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 abstract class InAppPurchaseState {}

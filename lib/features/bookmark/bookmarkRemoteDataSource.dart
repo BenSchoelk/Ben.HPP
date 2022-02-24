@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:hpp/features/bookmark/bookmarkException.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/bookmark/bookmarkException.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -21,7 +21,7 @@ class BookmarkRemoteDataSource {
       };
 
       final response = await http.post(Uri.parse(getBookmarkUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print("Response of bookmark : $responseJson");
       if (responseJson['error']) {
@@ -49,7 +49,7 @@ class BookmarkRemoteDataSource {
         typeKey: type, //1 - Quiz zone 3 - Guess the word 4 - Audio quesitons
       };
       final response = await http.post(Uri.parse(updateBookmarkUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {

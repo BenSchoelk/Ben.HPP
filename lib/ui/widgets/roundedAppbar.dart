@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class RoundedAppbar extends StatelessWidget {
   final String title;

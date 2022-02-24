@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:hpp/features/tournament/model/tournament.dart';
-import 'package:hpp/features/tournament/model/tournamentBattle.dart';
-import 'package:hpp/features/tournament/model/tournamentPlayerDetails.dart';
-import 'package:hpp/features/tournament/tournamentException.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/internetConnectivity.dart';
+import 'package:flutterquiz/features/tournament/model/tournament.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentBattle.dart';
+import 'package:flutterquiz/features/tournament/model/tournamentPlayerDetails.dart';
+import 'package:flutterquiz/features/tournament/tournamentException.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/internetConnectivity.dart';
 
 class TournamentRemoteDataSource {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;

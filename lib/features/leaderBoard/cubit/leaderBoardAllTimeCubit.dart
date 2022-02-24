@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 import '../leaderboardException.dart';
@@ -52,18 +52,21 @@ class LeaderBoardAllTimeCubit extends Cubit<LeaderBoardAllTimeState> {
       if (offset == null) {
         body.remove(offset);
       }
-      final response = await http.post(Uri.parse(getAllTimeLeaderboardUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getAllTimeLeaderboardUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       nameA = responseJson["data"][0]["my_rank"]["name"].toString();
       rankA = responseJson["data"][0]["my_rank"]["user_rank"].toString();
       profileA = responseJson["data"][0]["my_rank"][profileKey].toString();
       scoreA = responseJson["data"][0]["my_rank"]["score"].toString();
       if (responseJson['error']) {
-        throw LeaderBoardException(errorMessageKey: dataNotFoundKey, errorMessageCode: '');
+        throw LeaderBoardException(
+            errorMessageKey: dataNotFoundKey, errorMessageCode: '');
       }
       return Map.from(responseJson);
     } catch (e) {
-      throw LeaderBoardException(errorMessageKey: dataNotFoundKey, errorMessageCode: '');
+      throw LeaderBoardException(
+          errorMessageKey: dataNotFoundKey, errorMessageCode: '');
     }
   }
 
@@ -84,13 +87,21 @@ class LeaderBoardAllTimeCubit extends Cubit<LeaderBoardAllTimeState> {
   }
 
   void fetchMoreLeaderBoardData(String limit, String userId) {
-    _fetchData(limit: limit, userId: userId, offset: (state as LeaderBoardAllTimeSuccess).leaderBoardDetails.length.toString()).then((value) {
+    _fetchData(
+            limit: limit,
+            userId: userId,
+            offset: (state as LeaderBoardAllTimeSuccess)
+                .leaderBoardDetails
+                .length
+                .toString())
+        .then((value) {
       //
       final oldState = (state as LeaderBoardAllTimeSuccess);
       final usersDetails = value['data'] as List;
       final updatedUserDetails = List.from(oldState.leaderBoardDetails);
       updatedUserDetails.addAll(usersDetails);
-      emit(LeaderBoardAllTimeSuccess(updatedUserDetails, oldState.totalData, oldState.totalData > updatedUserDetails.length));
+      emit(LeaderBoardAllTimeSuccess(updatedUserDetails, oldState.totalData,
+          oldState.totalData > updatedUserDetails.length));
     }).catchError((e) {
       emit(LeaderBoardAllTimeFailure(defaultErrorMessageCode));
     });

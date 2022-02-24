@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/screens/home/widgets/languageBottomSheetContainer.dart';
-import 'package:hpp/ui/screens/profile/widgets/themeDialog.dart';
-import 'package:hpp/ui/widgets/menuTile.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/home/widgets/languageBottomSheetContainer.dart';
+import 'package:flutterquiz/ui/screens/profile/widgets/themeDialog.dart';
+import 'package:flutterquiz/ui/widgets/menuTile.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:share_plus/share_plus.dart';

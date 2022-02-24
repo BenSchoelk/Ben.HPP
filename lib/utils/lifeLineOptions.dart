@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:hpp/features/quiz/models/answerOption.dart';
+import 'package:flutterquiz/features/quiz/models/answerOption.dart';
 
 class LifeLineOptions {
   static int getRandomAnswerIndex(int length, int correctAnswerIndex) {

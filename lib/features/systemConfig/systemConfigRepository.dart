@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:hpp/features/systemConfig/model/supportedQuestionLanguage.dart';
-import 'package:hpp/features/systemConfig/model/systemConfigModel.dart';
-import 'package:hpp/features/systemConfig/systemConfigRemoteDataSource.dart';
-import 'package:hpp/features/systemConfig/systemCongifException.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/systemConfig/model/supportedQuestionLanguage.dart';
+import 'package:flutterquiz/features/systemConfig/model/systemConfigModel.dart';
+import 'package:flutterquiz/features/systemConfig/systemConfigRemoteDataSource.dart';
+import 'package:flutterquiz/features/systemConfig/systemCongifException.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 class SystemConfigRepository {
   static final SystemConfigRepository _systemConfigRepository = SystemConfigRepository._internal();

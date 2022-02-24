@@ -2,20 +2,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/ui/widgets/bannerAdContainer.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/ui/widgets/bannerAdContainer.dart';
 
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
 
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class CategoryScreen extends StatefulWidget {
   final QuizTypes quizType;
@@ -81,7 +81,14 @@ class _CategoryScreen extends State<CategoryScreen> {
   Widget showCategory() {
     return BlocConsumer<QuizCategoryCubit, QuizCategoryState>(
         bloc: context.read<QuizCategoryCubit>(),
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is QuizCategoryFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              //
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+            }
+          }
+        },
         builder: (context, state) {
           if (state is QuizCategoryProgress || state is QuizCategoryInitial) {
             return Center(

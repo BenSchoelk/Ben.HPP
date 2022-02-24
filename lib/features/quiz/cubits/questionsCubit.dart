@@ -1,10 +1,10 @@
 //State
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/utils/constants.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/utils/constants.dart';
 
 @immutable
 abstract class QuestionsState {}

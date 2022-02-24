@@ -2,10 +2,10 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/systemConfig/model/supportedQuestionLanguage.dart';
-import 'package:hpp/features/systemConfig/model/systemConfigModel.dart';
-import 'package:hpp/features/systemConfig/systemConfigRepository.dart';
-import 'package:hpp/utils/constants.dart';
+import 'package:flutterquiz/features/systemConfig/model/supportedQuestionLanguage.dart';
+import 'package:flutterquiz/features/systemConfig/model/systemConfigModel.dart';
+import 'package:flutterquiz/features/systemConfig/systemConfigRepository.dart';
+import 'package:flutterquiz/utils/constants.dart';
 
 abstract class SystemConfigState {}
 
@@ -48,8 +48,6 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
           .getImagesFromFile("assets/files/introSliderImages.json");
       final defaultProfileImages = await _systemConfigRepository
           .getImagesFromFile("assets/files/defaultProfileImages.json");
-      final emojis = await _systemConfigRepository
-          .getImagesFromFile("assets/files/emojis.json");
 
       if (systemConfig.languageMode == "1") {
         supporatedLanguages =
@@ -60,9 +58,10 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
         defaultProfileImages: defaultProfileImages,
         introSliderImages: introSliderImages,
         supportedLanguages: supporatedLanguages,
-        emojis: emojis,
+        emojis: [],
       ));
     } catch (e) {
+      print(e.toString());
       emit(SystemConfigFetchFailure(e.toString()));
     }
   }
@@ -290,6 +289,30 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
           "1";
     }
     return false;
+  }
+
+  bool appUnderMaintenance() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess)
+              .systemConfigModel
+              .appMaintenance ==
+          "1";
+    }
+    return false;
+  }
+
+  String getEarnCoin() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.earnCoin;
+    }
+    return "0";
+  }
+
+  String getReferCoin() {
+    if (state is SystemConfigFetchSuccess) {
+      return (state as SystemConfigFetchSuccess).systemConfigModel.referCoin;
+    }
+    return "0";
   }
 
   bool isAdsEnable() {

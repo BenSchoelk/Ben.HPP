@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/coinHistory/coinHistoryCubit.dart';
-import 'package:hpp/features/coinHistory/coinHistoryRepository.dart';
-import 'package:hpp/features/coinHistory/models/coinHistory.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/ui/widgets/roundedAppbar.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/coinHistory/coinHistoryCubit.dart';
+import 'package:flutterquiz/features/coinHistory/coinHistoryRepository.dart';
+import 'package:flutterquiz/features/coinHistory/models/coinHistory.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CoinHistoryScreen extends StatefulWidget {
@@ -177,7 +177,14 @@ class _CoinHistoryScreenState extends State<CoinHistoryScreen> {
   }
 
   Widget _buildCoinHistory() {
-    return BlocBuilder<CoinHistoryCubit, CoinHistoryState>(
+    return BlocConsumer<CoinHistoryCubit, CoinHistoryState>(
+      listener: (context, state) {
+        if (state is CoinHistoryFetchFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+          }
+        }
+      },
       bloc: context.read<CoinHistoryCubit>(),
       builder: (context, state) {
         if (state is CoinHistoryFetchInProgress ||

@@ -1,16 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:hpp/features/exam/examException.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/exam/examException.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 import 'package:http/http.dart' as http;
 
 class ExamRemoteDataSource {
-  Future<dynamic> getExams({required String userId, required String languageId, required String type, required String limit, required String offset}) async {
+  Future<dynamic> getExams(
+      {required String userId,
+      required String languageId,
+      required String type,
+      required String limit,
+      required String offset}) async {
     try {
       //body of post request
       final body = {
@@ -33,7 +38,8 @@ class ExamRemoteDataSource {
         body.remove(offsetKey);
       }
 
-      final response = await http.post(Uri.parse(getExamModuleUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getExamModuleUrl),
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
@@ -57,7 +63,8 @@ class ExamRemoteDataSource {
     }
   }
 
-  Future<List<dynamic>> getQuestionForExam({required String examModuleId}) async {
+  Future<List<dynamic>> getQuestionForExam(
+      {required String examModuleId}) async {
     try {
       //body of post request
       final body = {
@@ -65,7 +72,8 @@ class ExamRemoteDataSource {
         examModuleIdKey: examModuleId,
       };
 
-      final response = await http.post(Uri.parse(getExamModuleQuestionsUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getExamModuleQuestionsUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -93,12 +101,16 @@ class ExamRemoteDataSource {
         userIdKey: userId,
       };
 
-      final response = await http.post(Uri.parse(setExamModuleResultUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(setExamModuleResultUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
         print(responseJson);
-        throw ExamException(errorMessageCode: responseJson['message'].toString() == "103" ? alreadyInExamCode : responseJson['message']);
+        throw ExamException(
+            errorMessageCode: responseJson['message'].toString() == "103"
+                ? alreadyInExamCode
+                : responseJson['message']);
       }
       return responseJson['data'];
     } on SocketException catch (_) {
@@ -134,7 +146,8 @@ class ExamRemoteDataSource {
 
       print(body);
 
-      final response = await http.post(Uri.parse(setExamModuleResultUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(setExamModuleResultUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {

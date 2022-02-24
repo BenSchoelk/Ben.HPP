@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 import '../leaderboardException.dart';
@@ -21,7 +21,8 @@ class LeaderBoardMonthlySuccess extends LeaderBoardMonthlyState {
   final List leaderBoardDetails;
   final int totalData;
   final bool hasMore;
-  LeaderBoardMonthlySuccess(this.leaderBoardDetails, this.totalData, this.hasMore);
+  LeaderBoardMonthlySuccess(
+      this.leaderBoardDetails, this.totalData, this.hasMore);
 }
 
 class LeaderBoardMonthlyFailure extends LeaderBoardMonthlyState {
@@ -53,18 +54,21 @@ class LeaderBoardMonthlyCubit extends Cubit<LeaderBoardMonthlyState> {
       if (offset == null) {
         body.remove(offset);
       }
-      final response = await http.post(Uri.parse(getMonthlyLeaderboardUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getMonthlyLeaderboardUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       nameM = responseJson["data"][0]["my_rank"]["name"].toString();
       rankM = responseJson["data"][0]["my_rank"]["user_rank"].toString();
       profileM = responseJson["data"][0]["my_rank"][profileKey].toString();
       scoreM = responseJson["data"][0]["my_rank"]["score"].toString();
       if (responseJson['error']) {
-        throw LeaderBoardException(errorMessageKey: dataNotFoundKey, errorMessageCode: '');
+        throw LeaderBoardException(
+            errorMessageKey: dataNotFoundKey, errorMessageCode: '');
       }
       return Map.from(responseJson);
     } catch (e) {
-      throw LeaderBoardException(errorMessageKey: dataNotFoundKey, errorMessageCode: '');
+      throw LeaderBoardException(
+          errorMessageKey: dataNotFoundKey, errorMessageCode: '');
     }
   }
 
@@ -86,13 +90,21 @@ class LeaderBoardMonthlyCubit extends Cubit<LeaderBoardMonthlyState> {
   }
 
   void fetchMoreLeaderBoardData(String limit, String userId) {
-    _fetchData(limit: limit, userId: userId, offset: (state as LeaderBoardMonthlySuccess).leaderBoardDetails.length.toString()).then((value) {
+    _fetchData(
+            limit: limit,
+            userId: userId,
+            offset: (state as LeaderBoardMonthlySuccess)
+                .leaderBoardDetails
+                .length
+                .toString())
+        .then((value) {
       //
       final oldState = (state as LeaderBoardMonthlySuccess);
       final usersDetails = value['data'] as List;
       final updatedUserDetails = List.from(oldState.leaderBoardDetails);
       updatedUserDetails.addAll(usersDetails);
-      emit(LeaderBoardMonthlySuccess(updatedUserDetails, oldState.totalData, oldState.totalData > updatedUserDetails.length));
+      emit(LeaderBoardMonthlySuccess(updatedUserDetails, oldState.totalData,
+          oldState.totalData > updatedUserDetails.length));
     }).catchError((e) {
       emit(LeaderBoardMonthlyFailure(defaultErrorMessageCode));
     });

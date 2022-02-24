@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hpp/features/profileManagement/profileManagementException.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementException.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileManagementRemoteDataSource {
@@ -24,16 +24,16 @@ class ProfileManagementRemoteDataSource {
         accessValueKey: accessValue,
         firebaseIdKey: firebaseId,
       };
+      print(await ApiUtils.getHeaders());
       final response = await http.post(Uri.parse(getUserDetailsByIdUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
+
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
-        print(responseJson);
         throw ProfileManagementException(
             errorMessageCode: responseJson['message']);
       }
-      print(responseJson);
       return responseJson['data'];
     } on SocketException catch (_) {
       throw ProfileManagementException(errorMessageCode: noInternetCode);
@@ -45,7 +45,7 @@ class ProfileManagementRemoteDataSource {
     }
   }
 
-  /*response ********{"error":false,"message":"Profile uploaded successfully!","data":{profileKey:"http:\/\/hpp.thewrteam.in\/images\/profile\/1623326274.jpg"}}*/
+  /*response ********{"error":false,"message":"Profile uploaded successfully!","data":{profileKey:"http:\/\/flutterquiz.thewrteam.in\/images\/profile\/1623326274.jpg"}}*/
   Future addProfileImage(File? images, String? userId) async {
     try {
       Map<String, String?> body = {
@@ -76,7 +76,7 @@ class ProfileManagementRemoteDataSource {
       Map<String, String?> body, String? userId) async {
     try {
       var request = http.MultipartRequest('POST', url);
-      request.headers.addAll(ApiUtils.getHeaders());
+      request.headers.addAll(await ApiUtils.getHeaders());
 
       body.forEach((key, value) {
         request.fields[key] = value!;
@@ -135,7 +135,7 @@ class ProfileManagementRemoteDataSource {
         body.remove(typeKey);
       }
       final response = await http.post(Uri.parse(updateUserCoinsAndScoreUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -180,7 +180,7 @@ class ProfileManagementRemoteDataSource {
       }
 
       final response = await http.post(Uri.parse(updateUserCoinsAndScoreUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -221,7 +221,7 @@ class ProfileManagementRemoteDataSource {
         body.remove(typeKey);
       }
       final response = await http.post(Uri.parse(updateUserCoinsAndScoreUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -255,7 +255,7 @@ class ProfileManagementRemoteDataSource {
       };
 
       final response = await http.post(Uri.parse(updateProfileUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
@@ -283,7 +283,7 @@ class ProfileManagementRemoteDataSource {
       };
 
       await http.post(Uri.parse(deleteUserAccountUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
     } on SocketException catch (_) {
       throw ProfileManagementException(errorMessageCode: noInternetCode);
     } on FirebaseAuthException catch (e) {

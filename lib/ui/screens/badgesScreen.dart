@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/badges/badge.dart';
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/statistic/cubits/statisticsCubit.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/statistic/cubits/statisticsCubit.dart';
 
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/ui/widgets/badgesIconContainer.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/roundedAppbar.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/badgesIconContainer.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class BadgesScreen extends StatefulWidget {
   const BadgesScreen({Key? key}) : super(key: key);
@@ -35,7 +35,9 @@ class _BadgesScreenState extends State<BadgesScreen> {
     Future.delayed(Duration.zero, () {
       UiUtils.updateBadgesLocally(context);
       //
-      context.read<StatisticCubit>().getStatistic(context.read<UserDetailsCubit>().getUserId());
+      context
+          .read<StatisticCubit>()
+          .getStatistic(context.read<UserDetailsCubit>().getUserId());
     });
 
     super.initState();
@@ -68,14 +70,17 @@ class _BadgesScreenState extends State<BadgesScreen> {
                       );
                     })),
                 Transform.translate(
-                  offset: Offset(0, MediaQuery.of(context).size.height * (-0.05)),
+                  offset:
+                      Offset(0, MediaQuery.of(context).size.height * (-0.05)),
                   child: Column(
                     children: [
                       Text(
                         "${badge.badgeLabel}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: badge.status == "0" ? badgeLockedColor : Theme.of(context).primaryColor,
+                          color: badge.status == "0"
+                              ? badgeLockedColor
+                              : Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 22.5,
                         ),
@@ -99,7 +104,8 @@ class _BadgesScreenState extends State<BadgesScreen> {
                           ? BlocBuilder<StatisticCubit, StatisticState>(
                               bloc: context.read<StatisticCubit>(),
                               builder: (context, state) {
-                                if (state is StatisticInitial || state is StatisticFetchInProgress) {
+                                if (state is StatisticInitial ||
+                                    state is StatisticFetchInProgress) {
                                   return Center(
                                     child: Container(
                                       height: 15.0,
@@ -114,15 +120,21 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                 if (state is StatisticFetchFailure) {
                                   return Container();
                                 }
-                                final statisticDetails = (state as StatisticFetchSuccess).statisticModel;
-                                final answerToGo = int.parse(badge.badgeCounter) - int.parse(statisticDetails.correctAnswers);
+                                final statisticDetails =
+                                    (state as StatisticFetchSuccess)
+                                        .statisticModel;
+                                final answerToGo = int.parse(
+                                        badge.badgeCounter) -
+                                    int.parse(statisticDetails.correctAnswers);
                                 return Column(
                                   children: [
                                     Text(
                                       "${AppLocalization.of(context)!.getTranslatedValues(needMoreKey)!} $answerToGo ${AppLocalization.of(context)!.getTranslatedValues(correctAnswerToUnlockKey)!}",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Theme.of(context).colorScheme.secondary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                         fontSize: 16.0,
                                       ),
                                     ),
@@ -153,20 +165,33 @@ class _BadgesScreenState extends State<BadgesScreen> {
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
                 ),
-                gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter)),
+                gradient: UiUtils.buildLinerGradient([
+                  Theme.of(context).scaffoldBackgroundColor,
+                  Theme.of(context).canvasColor
+                ], Alignment.topCenter, Alignment.bottomCenter)),
           );
         });
   }
 
   List<Badge> _organizedBadges(List<Badge> badges) {
-    List<Badge> lockedBadges = badges.where((element) => element.status == "0").toList();
-    List<Badge> unlockedBadges = badges.where((element) => element.status == "1" || element.status == "2").toList();
+    List<Badge> lockedBadges =
+        badges.where((element) => element.status == "0").toList();
+    List<Badge> unlockedBadges = badges
+        .where((element) => element.status == "1" || element.status == "2")
+        .toList();
     unlockedBadges.addAll(lockedBadges);
     return unlockedBadges;
   }
 
   Widget _buildBadges(BuildContext context) {
-    return BlocBuilder<BadgesCubit, BadgesState>(
+    return BlocConsumer<BadgesCubit, BadgesState>(
+      listener: (context, state) {
+        if (state is BadgesFetchFailure) {
+          if (state.errorMessage == unauthorizedAccessCode) {
+            UiUtils.showAlreadyLoggedInDialog(context: context);
+          }
+        }
+      },
       bloc: context.read<BadgesCubit>(),
       builder: (context, state) {
         if (state is BadgesFetchInProgress || state is BadgesInitial) {
@@ -179,24 +204,33 @@ class _BadgesScreenState extends State<BadgesScreen> {
         if (state is BadgesFetchFailure) {
           return Center(
             child: ErrorContainer(
-              errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage)),
+              errorMessage: AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage)),
               onTapRetry: () {
-                context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId(), refreshBadges: true);
+                context.read<BadgesCubit>().getBadges(
+                    userId: context.read<UserDetailsCubit>().getUserId(),
+                    refreshBadges: true);
               },
               showErrorImage: true,
             ),
           );
         }
-        final List<Badge> badges = _organizedBadges((state as BadgesFetchSuccess).badges);
+        final List<Badge> badges =
+            _organizedBadges((state as BadgesFetchSuccess).badges);
         return RefreshIndicator(
           color: Theme.of(context).primaryColor,
-          displacement: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025) + 20,
+          displacement: MediaQuery.of(context).size.height *
+                  (UiUtils.appBarHeightPercentage + 0.025) +
+              20,
           onRefresh: () async {
-            context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId(), refreshBadges: true);
+            context.read<BadgesCubit>().getBadges(
+                userId: context.read<UserDetailsCubit>().getUserId(),
+                refreshBadges: true);
           },
           child: GridView.builder(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * (UiUtils.appBarHeightPercentage + 0.025),
+                top: MediaQuery.of(context).size.height *
+                    (UiUtils.appBarHeightPercentage + 0.025),
                 left: 15.0,
                 right: 15.0,
                 bottom: 20.0,
@@ -231,13 +265,17 @@ class _BadgesScreenState extends State<BadgesScreen> {
                                       height: constraints.maxHeight * (0.4),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
                                       child: Text(
                                         badges[index].badgeLabel,
                                         textAlign: TextAlign.center,
                                         maxLines: 2,
                                         style: TextStyle(
-                                          color: badges[index].status == "0" ? badgeLockedColor : Theme.of(context).primaryColor, //
+                                          color: badges[index].status == "0"
+                                              ? badgeLockedColor
+                                              : Theme.of(context)
+                                                  .primaryColor, //
                                           fontSize: 14,
                                           height: 1.175,
                                           fontWeight: FontWeight.bold,
@@ -282,7 +320,8 @@ class _BadgesScreenState extends State<BadgesScreen> {
           Align(
             alignment: Alignment.topCenter,
             child: RoundedAppbar(
-              title: AppLocalization.of(context)!.getTranslatedValues(badgesKey)!,
+              title:
+                  AppLocalization.of(context)!.getTranslatedValues(badgesKey)!,
             ),
           ),
         ],

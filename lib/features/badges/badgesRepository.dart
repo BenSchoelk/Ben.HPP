@@ -1,7 +1,7 @@
-import 'package:hpp/features/badges/badge.dart';
-import 'package:hpp/features/badges/badgesExecption.dart';
-import 'package:hpp/features/badges/badgesRemoteDataSource.dart';
-import 'package:hpp/utils/constants.dart';
+import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/features/badges/badgesExecption.dart';
+import 'package:flutterquiz/features/badges/badgesRemoteDataSource.dart';
+import 'package:flutterquiz/utils/constants.dart';
 
 class BadgesRepository {
   static final BadgesRepository _badgesRepository = BadgesRepository._internal();

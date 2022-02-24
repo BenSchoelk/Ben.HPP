@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/leaderBoard/cubit/leaderBoardAllTimeCubit.dart';
-import 'package:hpp/features/leaderBoard/cubit/leaderBoardDailyCubit.dart';
-import 'package:hpp/features/leaderBoard/cubit/leaderBoardMonthlyCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customBackButton.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/leaderBoard/cubit/leaderBoardAllTimeCubit.dart';
+import 'package:flutterquiz/features/leaderBoard/cubit/leaderBoardDailyCubit.dart';
+import 'package:flutterquiz/features/leaderBoard/cubit/leaderBoardMonthlyCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class LeaderBoardScreen extends StatefulWidget {
   @override
@@ -172,7 +172,17 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
   Widget dailyShow() {
     return BlocConsumer<LeaderBoardDailyCubit, LeaderBoardDailyState>(
         bloc: context.read<LeaderBoardDailyCubit>(),
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LeaderBoardDailyFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              //
+              UiUtils.showAlreadyLoggedInDialog(
+                context: context,
+              );
+              return;
+            }
+          }
+        },
         builder: (context, state) {
           if (state is LeaderBoardDailyProgress ||
               state is LeaderBoardDailyInitial) {
@@ -218,7 +228,15 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
     return BlocConsumer<LeaderBoardMonthlyCubit, LeaderBoardMonthlyState>(
         bloc: context.read<LeaderBoardMonthlyCubit>(),
         listener: (context, state) {
-          //offset=offset+perPage;
+          if (state is LeaderBoardMonthlyFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              //
+              UiUtils.showAlreadyLoggedInDialog(
+                context: context,
+              );
+              return;
+            }
+          }
         },
         builder: (context, state) {
           if (state is LeaderBoardMonthlyProgress ||
@@ -265,7 +283,17 @@ class _LeaderBoardScreen extends State<LeaderBoardScreen> {
   Widget allTimeShow() {
     return BlocConsumer<LeaderBoardAllTimeCubit, LeaderBoardAllTimeState>(
         bloc: context.read<LeaderBoardAllTimeCubit>(),
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LeaderBoardAllTimeFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              //
+              UiUtils.showAlreadyLoggedInDialog(
+                context: context,
+              );
+              return;
+            }
+          }
+        },
         builder: (context, state) {
           if (state is LeaderBoardAllTimeProgress ||
               state is LeaderBoardAllTimeInitial) {

@@ -1,6 +1,6 @@
-import 'package:hpp/features/statistic/statisticException.dart';
-import 'package:hpp/features/statistic/models/statisticModel.dart';
-import 'package:hpp/features/statistic/statisticRemoteDataSource.dart';
+import 'package:flutterquiz/features/statistic/statisticException.dart';
+import 'package:flutterquiz/features/statistic/models/statisticModel.dart';
+import 'package:flutterquiz/features/statistic/statisticRemoteDataSource.dart';
 
 class StatisticRepository {
   static final StatisticRepository _statisticRepository = StatisticRepository._internal();

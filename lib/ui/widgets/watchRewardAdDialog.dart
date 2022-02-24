@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
 
 class WatchRewardAdDialog extends StatelessWidget {
   final Function onTapYesButton;

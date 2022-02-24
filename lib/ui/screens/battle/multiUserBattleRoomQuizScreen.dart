@@ -3,38 +3,39 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/battleRoom/battleRoomRepository.dart';
-import 'package:hpp/features/battleRoom/cubits/messageCubit.dart';
-import 'package:hpp/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
-import 'package:hpp/features/battleRoom/models/battleRoom.dart';
-import 'package:hpp/features/battleRoom/models/message.dart';
-import 'package:hpp/features/bookmark/bookmarkRepository.dart';
-import 'package:hpp/features/bookmark/cubits/updateBookmarkCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomRepository.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/messageCubit.dart';
+import 'package:flutterquiz/features/battleRoom/cubits/multiUserBattleRoomCubit.dart';
+import 'package:flutterquiz/features/battleRoom/models/battleRoom.dart';
+import 'package:flutterquiz/features/battleRoom/models/message.dart';
+import 'package:flutterquiz/features/bookmark/bookmarkRepository.dart';
+import 'package:flutterquiz/features/bookmark/cubits/updateBookmarkCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
 
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/models/userBattleRoomDetails.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/screens/battle/widgets/messageBoxContainer.dart';
-import 'package:hpp/ui/screens/battle/widgets/messageContainer.dart';
-import 'package:hpp/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
-import 'package:hpp/ui/screens/battle/widgets/waitForOthersContainer.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/models/userBattleRoomDetails.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/messageBoxContainer.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/messageContainer.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/rectangleUserProfileContainer.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/waitForOthersContainer.dart';
 
-import 'package:hpp/ui/widgets/customBackButton.dart';
+import 'package:flutterquiz/ui/widgets/customBackButton.dart';
 
-import 'package:hpp/ui/widgets/exitGameDailog.dart';
-import 'package:hpp/ui/widgets/questionsContainer.dart';
-import 'package:hpp/ui/widgets/settingButton.dart';
-import 'package:hpp/ui/widgets/settingsDialogContainer.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/normalizeNumber.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/ui/widgets/exitGameDailog.dart';
+import 'package:flutterquiz/ui/widgets/questionsContainer.dart';
+import 'package:flutterquiz/ui/widgets/settingButton.dart';
+import 'package:flutterquiz/ui/widgets/settingsDialogContainer.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/normalizeNumber.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class MultiUserBattleRoomQuizScreen extends StatefulWidget {
   MultiUserBattleRoomQuizScreen({Key? key}) : super(key: key);
@@ -920,6 +921,16 @@ class _MultiUserBattleRoomQuizScreenState
               listener: (context, state) {
                 //this listener will be call everytime when new message will add
                 messagesListener(state);
+              },
+            ),
+            BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+              listener: (context, state) {
+                if (state is UpdateScoreAndCoinsFailure) {
+                  if (state.errorMessage == unauthorizedAccessCode) {
+                    timerAnimationController.stop();
+                    UiUtils.showAlreadyLoggedInDialog(context: context);
+                  }
+                }
               },
             ),
           ],

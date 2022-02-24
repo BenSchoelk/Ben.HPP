@@ -1,17 +1,17 @@
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/settings/settingsCubit.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/settings/settingsCubit.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 
@@ -22,8 +22,11 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
-  late AnimationController animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 4010))..addStatusListener(animationStatusListener);
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late AnimationController animationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 4010))
+        ..addStatusListener(animationStatusListener);
   late AnimationController titleFadeAnimationController;
 
   late AnimationController clockAnimationController;
@@ -58,15 +61,30 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void initAnimations() {
-    clockAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 700));
-    clockScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: clockAnimationController, curve: Interval(0.0, 0.4, curve: Curves.easeInOut)));
-    clockScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.9).animate(CurvedAnimation(parent: clockAnimationController, curve: Interval(0.4, 1.0, curve: Curves.easeInOut)));
+    clockAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 700));
+    clockScaleUpAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+        CurvedAnimation(
+            parent: clockAnimationController,
+            curve: Interval(0.0, 0.4, curve: Curves.easeInOut)));
+    clockScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.9).animate(
+        CurvedAnimation(
+            parent: clockAnimationController,
+            curve: Interval(0.4, 1.0, curve: Curves.easeInOut)));
 
-    logoAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 700));
-    logoScaleUpAnimation = Tween<double>(begin: 0.0, end: 1.1).animate(CurvedAnimation(parent: logoAnimationController, curve: Interval(0.0, 0.4, curve: Curves.easeInOut)));
-    logoScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(CurvedAnimation(parent: logoAnimationController, curve: Interval(0.4, 1.0, curve: Curves.easeInOut)));
+    logoAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 700));
+    logoScaleUpAnimation = Tween<double>(begin: 0.0, end: 1.1).animate(
+        CurvedAnimation(
+            parent: logoAnimationController,
+            curve: Interval(0.0, 0.4, curve: Curves.easeInOut)));
+    logoScaleDownAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+        CurvedAnimation(
+            parent: logoAnimationController,
+            curve: Interval(0.4, 1.0, curve: Curves.easeInOut)));
 
-    titleFadeAnimationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    titleFadeAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
   }
 
   @override
@@ -81,7 +99,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void navigateToNextScreen() async {
-    print("Navigate to next screen");
     if (loadedSystemConfigDetails) {
       //Reading from settingsCubit means we are just reading current value of settingsCubit
       //if settingsCubit will change in future it will not rebuild it's child
@@ -93,8 +110,11 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         Navigator.of(context).pushReplacementNamed(Routes.introSlider);
       } else {
         if (currentAuthState is Authenticated) {
-          context.read<UserDetailsCubit>().fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
-          Navigator.of(context).pushReplacementNamed(Routes.home, arguments: false);
+          context
+              .read<UserDetailsCubit>()
+              .fetchUserDetails(context.read<AuthCubit>().getUserFirebaseId());
+          Navigator.of(context)
+              .pushReplacementNamed(Routes.home, arguments: false);
         } else {
           Navigator.of(context).pushReplacementNamed(Routes.login);
         }
@@ -116,13 +136,16 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         AnimatedBuilder(
           animation: clockAnimationController,
           builder: (context, child) {
-            double scale = 0.8 + clockScaleUpAnimation.value - clockScaleDownAnimation.value;
+            double scale = 0.8 +
+                clockScaleUpAnimation.value -
+                clockScaleDownAnimation.value;
             return Transform.scale(
               scale: scale,
               child: child,
             );
           },
-          child: Lottie.asset("assets/animations/splashClock.json", controller: animationController, onLoaded: (composition) {
+          child: Lottie.asset("assets/animations/splashClock.json",
+              controller: animationController, onLoaded: (composition) {
             animationController..duration = composition.duration;
             startAnimation();
           }),
@@ -130,13 +153,16 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         AnimatedBuilder(
             animation: logoAnimationController,
             builder: (context, child) {
-              double scale = 0.0 + logoScaleUpAnimation.value - logoScaleDownAnimation.value;
+              double scale = 0.0 +
+                  logoScaleUpAnimation.value -
+                  logoScaleDownAnimation.value;
               return Transform.scale(
                 scale: scale,
                 child: child,
               );
             },
-            child: Center(child: Image.asset(UiUtils.getImagePath("splash_logo.png")))),
+            child: Center(
+                child: Image.asset(UiUtils.getImagePath("splash_logo.png")))),
       ],
     );
   }
@@ -176,7 +202,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                   child: ErrorContainer(
                     showBackButton: true,
                     errorMessageColor: Theme.of(context).primaryColor,
-                    errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorCode)),
+                    errorMessage: AppLocalization.of(context)!
+                        .getTranslatedValues(
+                            convertErrorCodeToLanguageKey(state.errorCode)),
                     onTapRetry: () {
                       setState(() {
                         initAnimations();
@@ -215,7 +243,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                       AnimatedBuilder(
                           animation: logoAnimationController,
                           builder: (context, child) {
-                            if (logoAnimationController.value == 1.0 && !loadedSystemConfigDetails) {
+                            if (logoAnimationController.value == 1.0 &&
+                                !loadedSystemConfigDetails) {
                               return CircularProgressContainer(
                                 heightAndWidth: 60,
                                 useWhiteLoader: false,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/settings/settingsCubit.dart';
-import 'package:hpp/ui/styles/colors.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/settings/settingsCubit.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
 
 class FontSizeDialog extends StatefulWidget {
   final SettingsCubit bloc;

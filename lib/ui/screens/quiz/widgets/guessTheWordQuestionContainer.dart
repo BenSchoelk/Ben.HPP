@@ -3,19 +3,20 @@ import 'dart:math';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/ads/rewardedAdCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/quiz/models/guessTheWordQuestion.dart';
-import 'package:hpp/features/settings/settingsCubit.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/horizontalTimerContainer.dart';
-import 'package:hpp/ui/widgets/watchRewardAdDialog.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
+import 'package:flutterquiz/features/settings/settingsCubit.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/horizontalTimerContainer.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GuessTheWordQuestionContainer extends StatefulWidget {
@@ -286,11 +287,14 @@ class GuessTheWordQuestionContainerState
                   Text(
                     //submitted answer contains the index of option
                     //length of answerbox is same as submittedAnswer
-
                     submittedAnswer[answerBoxIndex] == -1
                         ? ""
                         : widget.questions[widget.currentQuestionIndex]
-                            .options[submittedAnswer[answerBoxIndex]],
+                                    .options[submittedAnswer[answerBoxIndex]] ==
+                                " "
+                            ? "-"
+                            : widget.questions[widget.currentQuestionIndex]
+                                .options[submittedAnswer[answerBoxIndex]], //
                     //
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -298,7 +302,7 @@ class GuessTheWordQuestionContainerState
                         color: currentSelectedIndex == answerBoxIndex
                             ? Theme.of(context).primaryColor
                             : Theme.of(context).colorScheme.secondary),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -372,18 +376,27 @@ class GuessTheWordQuestionContainerState
               color: Theme.of(context).primaryColor),
           height: optionBoxContainerHeight,
           width: optionBoxContainerHeight,
+          padding: EdgeInsets.symmetric(
+            horizontal:
+                letter == " " ? optionBoxContainerHeight * (0.225) : 0.0,
+          ),
           child: letter == "!"
               ? Icon(
                   Icons.arrow_back,
                   color: Theme.of(context).backgroundColor,
                 )
-              : Text(
-                  letter,
-                  style: TextStyle(
-                    color: Theme.of(context).backgroundColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              : letter == " "
+                  ? SvgPicture.asset(
+                      UiUtils.getImagePath("space.svg"),
+                      color: Theme.of(context).backgroundColor,
+                    )
+                  : Text(
+                      letter == " " ? "Space" : letter,
+                      style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
         ),
       ),
     );

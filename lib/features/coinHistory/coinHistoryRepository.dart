@@ -1,5 +1,5 @@
-import 'package:hpp/features/coinHistory/coinHistoryRemoteDataSource.dart';
-import 'package:hpp/features/coinHistory/models/coinHistory.dart';
+import 'package:flutterquiz/features/coinHistory/coinHistoryRemoteDataSource.dart';
+import 'package:flutterquiz/features/coinHistory/models/coinHistory.dart';
 
 class CoinHistoryRepository {
   static final CoinHistoryRepository _coinHistoryRepository =

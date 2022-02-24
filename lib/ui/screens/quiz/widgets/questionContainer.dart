@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/features/quiz/models/question.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
 
 class QuestionContainer extends StatelessWidget {
   final Question? question;

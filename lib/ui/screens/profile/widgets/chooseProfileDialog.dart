@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/uploadProfileCubit.dart';
-import 'package:hpp/ui/screens/battle/widgets/customDialog.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/uploadProfileCubit.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ChooseProfileDialog extends StatefulWidget {

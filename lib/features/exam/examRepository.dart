@@ -1,9 +1,9 @@
-import 'package:hpp/features/exam/examException.dart';
-import 'package:hpp/features/exam/examLocalDataSource.dart';
-import 'package:hpp/features/exam/examRemoteDataSource.dart';
-import 'package:hpp/features/exam/models/exam.dart';
-import 'package:hpp/features/exam/models/examResult.dart';
-import 'package:hpp/features/quiz/models/question.dart';
+import 'package:flutterquiz/features/exam/examException.dart';
+import 'package:flutterquiz/features/exam/examLocalDataSource.dart';
+import 'package:flutterquiz/features/exam/examRemoteDataSource.dart';
+import 'package:flutterquiz/features/exam/models/exam.dart';
+import 'package:flutterquiz/features/exam/models/examResult.dart';
+import 'package:flutterquiz/features/quiz/models/question.dart';
 
 class ExamRepository {
   static final ExamRepository _examRepository = ExamRepository._internal();

@@ -4,21 +4,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/auth/authRemoteDataSource.dart';
-import 'package:hpp/features/auth/authRepository.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
-import 'package:hpp/features/auth/cubits/signInCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/ui/screens/auth/widgets/termsAndCondition.dart';
-import 'package:hpp/ui/styles/colors.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/customRoundedButton.dart';
-import 'package:hpp/ui/widgets/pageBackgroundGradientContainer.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/uiUtils.dart';
-import 'package:hpp/utils/validators.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/auth/authRemoteDataSource.dart';
+import 'package:flutterquiz/features/auth/authRepository.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/auth/cubits/signInCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/screens/auth/widgets/termsAndCondition.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/customRoundedButton.dart';
+import 'package:flutterquiz/ui/widgets/pageBackgroundGradientContainer.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
+import 'package:flutterquiz/utils/validators.dart';
 import 'package:lottie/lottie.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -57,7 +57,9 @@ class SignInScreenState extends State<SignInScreen> {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .08, end: MediaQuery.of(context).size.width * .08),
+        padding: EdgeInsetsDirectional.only(
+            start: MediaQuery.of(context).size.width * .08,
+            end: MediaQuery.of(context).size.width * .08),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -93,7 +95,10 @@ class SignInScreenState extends State<SignInScreen> {
   Widget signUpText() {
     return Text(
       AppLocalization.of(context)!.getTranslatedValues("userLoginLbl")!,
-      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.bold),
+      style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontSize: 22,
+          fontWeight: FontWeight.bold),
     );
   }
 
@@ -101,7 +106,9 @@ class SignInScreenState extends State<SignInScreen> {
     return Container(
       // transform: Matrix4.identity()..scale(0.6),
       transformAlignment: Alignment.topCenter,
-      child: Lottie.asset("assets/animations/login.json", height: MediaQuery.of(context).size.height * .25, width: MediaQuery.of(context).size.width * 3),
+      child: Lottie.asset("assets/animations/login.json",
+          height: MediaQuery.of(context).size.height * .25,
+          width: MediaQuery.of(context).size.width * 3),
     );
   }
 
@@ -109,13 +116,17 @@ class SignInScreenState extends State<SignInScreen> {
     return TextFormField(
       controller: edtEmail,
       keyboardType: TextInputType.emailAddress,
-      validator: (val) => Validators.validateEmail(val!, AppLocalization.of(context)!.getTranslatedValues('emailRequiredMsg')!, AppLocalization.of(context)!.getTranslatedValues('VALID_EMAIL')),
+      validator: (val) => Validators.validateEmail(
+          val!,
+          AppLocalization.of(context)!.getTranslatedValues('emailRequiredMsg')!,
+          AppLocalization.of(context)!.getTranslatedValues('VALID_EMAIL')),
       style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       decoration: InputDecoration(
         fillColor: Theme.of(context).backgroundColor,
         filled: true,
         border: InputBorder.none,
-        hintText: AppLocalization.of(context)!.getTranslatedValues('emailLbl')! + "*",
+        hintText:
+            AppLocalization.of(context)!.getTranslatedValues('emailLbl')! + "*",
         contentPadding: EdgeInsets.all(15),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -139,13 +150,16 @@ class SignInScreenState extends State<SignInScreen> {
       style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       obscureText: _obscureText,
       obscuringCharacter: "*",
-      validator: (val) => val!.isEmpty ? '${AppLocalization.of(context)!.getTranslatedValues('pwdLengthMsg')}' : null,
+      validator: (val) => val!.isEmpty
+          ? '${AppLocalization.of(context)!.getTranslatedValues('pwdLengthMsg')}'
+          : null,
       decoration: InputDecoration(
         fillColor: Theme.of(context).backgroundColor,
         filled: true,
         border: InputBorder.none,
         contentPadding: EdgeInsets.all(10),
-        hintText: AppLocalization.of(context)!.getTranslatedValues('pwdLbl')! + "*",
+        hintText:
+            AppLocalization.of(context)!.getTranslatedValues('pwdLbl')! + "*",
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: new BorderSide(
@@ -180,33 +194,47 @@ class SignInScreenState extends State<SignInScreen> {
         bloc: context.read<SignInCubit>(),
         listener: (context, state) async {
           //Exceuting only if authProvider is email
-          if (state is SignInSuccess && state.authProvider == AuthProvider.email) {
+          if (state is SignInSuccess &&
+              state.authProvider == AuthProvider.email) {
             //to update authdetails after successfull sign in
-            context.read<AuthCubit>().updateAuthDetails(authProvider: state.authProvider, firebaseId: state.user.uid, authStatus: true, isNewUser: state.isNewUser);
+            context.read<AuthCubit>().updateAuthDetails(
+                authProvider: state.authProvider,
+                firebaseId: state.user.uid,
+                authStatus: true,
+                isNewUser: state.isNewUser);
             if (state.isNewUser) {
               context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
               //navigate to select profile screen
 
-              Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
+              Navigator.of(context)
+                  .pushReplacementNamed(Routes.selectProfile, arguments: true);
             } else {
               //get user detials of signed in user
               context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
-              Navigator.of(context).pushReplacementNamed(Routes.home, arguments: false);
+              Navigator.of(context)
+                  .pushReplacementNamed(Routes.home, arguments: false);
             }
-          } else if (state is SignInFailure && state.authProvider == AuthProvider.email) {
-            UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, false);
+          } else if (state is SignInFailure &&
+              state.authProvider == AuthProvider.email) {
+            UiUtils.setSnackbar(
+                AppLocalization.of(context)!.getTranslatedValues(
+                    convertErrorCodeToLanguageKey(state.errorMessage))!,
+                context,
+                false);
           }
         },
         builder: (context, state) {
           return CupertinoButton(
-            child: state is SignInProgress && state.authProvider == AuthProvider.email
+            child: state is SignInProgress &&
+                    state.authProvider == AuthProvider.email
                 ? Center(
                     child: CircularProgressContainer(
                     heightAndWidth: 40,
                     useWhiteLoader: true,
                   ))
                 : Text(
-                    AppLocalization.of(context)!.getTranslatedValues('loginLbl')!,
+                    AppLocalization.of(context)!
+                        .getTranslatedValues('loginLbl')!,
                     style: TextStyle(color: Theme.of(context).backgroundColor),
                   ),
             color: Theme.of(context).primaryColor,
@@ -215,7 +243,10 @@ class SignInScreenState extends State<SignInScreen> {
                 : () async {
                     if (_formKey.currentState!.validate()) {
                       {
-                        context.read<SignInCubit>().signInUser(AuthProvider.email, email: edtEmail.text.trim(), password: edtPwd.text.trim());
+                        context.read<SignInCubit>().signInUser(
+                            AuthProvider.email,
+                            email: edtEmail.text.trim(),
+                            password: edtPwd.text.trim());
                       }
                     }
                   },
@@ -229,15 +260,21 @@ class SignInScreenState extends State<SignInScreen> {
     return TextFormField(
         controller: edtEmailReset,
         keyboardType: TextInputType.emailAddress,
-        validator: (val) => Validators.validateEmail(val!, AppLocalization.of(context)!.getTranslatedValues('emailRequiredMsg')!, AppLocalization.of(context)!.getTranslatedValues('validEmail')),
+        validator: (val) => Validators.validateEmail(
+            val!,
+            AppLocalization.of(context)!
+                .getTranslatedValues('emailRequiredMsg')!,
+            AppLocalization.of(context)!.getTranslatedValues('validEmail')),
         onSaved: (value) => edtEmailReset.text = value!.trim(),
         style: TextStyle(color: Theme.of(context).colorScheme.secondary),
         decoration: InputDecoration(
           fillColor: Theme.of(context).backgroundColor,
           filled: true,
           border: InputBorder.none,
-          hintText: AppLocalization.of(context)!.getTranslatedValues('enterEmailLbl')!,
-          hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
+          hintText: AppLocalization.of(context)!
+              .getTranslatedValues('enterEmailLbl')!,
+          hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
           contentPadding: EdgeInsets.all(15),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -257,45 +294,77 @@ class SignInScreenState extends State<SignInScreen> {
         alignment: Alignment.bottomRight,
         child: InkWell(
             splashColor: Colors.white,
-            child: Text(AppLocalization.of(context)!.getTranslatedValues('forgotPwdLbl')!, style: TextStyle(fontSize: 11, color: Theme.of(context).primaryColor)),
+            child: Text(
+                AppLocalization.of(context)!
+                    .getTranslatedValues('forgotPwdLbl')!,
+                style: TextStyle(
+                    fontSize: 11, color: Theme.of(context).primaryColor)),
             onTap: () async {
               showModalBottomSheet(
                   isScrollControlled: true,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0)),
                   ),
                   context: context,
                   builder: (context) => Padding(
                       padding: MediaQuery.of(context).viewInsets,
                       child: Container(
                         decoration: BoxDecoration(
-                            gradient: UiUtils.buildLinerGradient([Theme.of(context).scaffoldBackgroundColor, Theme.of(context).canvasColor], Alignment.topCenter, Alignment.bottomCenter),
+                            gradient: UiUtils.buildLinerGradient([
+                              Theme.of(context).scaffoldBackgroundColor,
+                              Theme.of(context).canvasColor
+                            ], Alignment.topCenter, Alignment.bottomCenter),
                             color: Theme.of(context).backgroundColor,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * (0.4)),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.of(context).size.height * (0.4)),
                         child: Form(
                           key: _formKeyDialog,
                           child: Column(
                             children: [
                               Text(
-                                AppLocalization.of(context)!.getTranslatedValues('resetPwdLbl')!,
-                                style: TextStyle(fontSize: 24, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                                AppLocalization.of(context)!
+                                    .getTranslatedValues('resetPwdLbl')!,
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold),
                               ),
                               Padding(
-                                  padding: EdgeInsetsDirectional.only(start: 20, end: 20, top: 20),
+                                  padding: EdgeInsetsDirectional.only(
+                                      start: 20, end: 20, top: 20),
                                   child: Text(
-                                    AppLocalization.of(context)!.getTranslatedValues('resetEnterEmailLbl')!,
+                                    AppLocalization.of(context)!
+                                        .getTranslatedValues(
+                                            'resetEnterEmailLbl')!,
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.w600),
                                   )),
-                              Padding(padding: EdgeInsetsDirectional.only(start: MediaQuery.of(context).size.width * .08, end: MediaQuery.of(context).size.width * .08, top: 20), child: showEmailForForgotPwd()),
+                              Padding(
+                                  padding: EdgeInsetsDirectional.only(
+                                      start: MediaQuery.of(context).size.width *
+                                          .08,
+                                      end: MediaQuery.of(context).size.width *
+                                          .08,
+                                      top: 20),
+                                  child: showEmailForForgotPwd()),
                               SizedBox(
                                 height: 20,
                               ),
                               CustomRoundedButton(
                                   widthPercentage: 0.85,
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  buttonTitle: AppLocalization.of(context)!.getTranslatedValues('submitBtn')!,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  buttonTitle: AppLocalization.of(context)!
+                                      .getTranslatedValues('submitBtn')!,
                                   radius: 10,
                                   showBorder: false,
                                   height: 50,
@@ -303,9 +372,16 @@ class SignInScreenState extends State<SignInScreen> {
                                     final form = _formKeyDialog.currentState;
                                     if (form!.validate()) {
                                       form.save();
-                                      UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues('pwdResetLinkLbl')!, context, false);
-                                      AuthRemoteDataSource().resetPassword(edtEmailReset.text.trim());
-                                      Future.delayed(const Duration(seconds: 1), () {
+                                      UiUtils.setSnackbar(
+                                          AppLocalization.of(context)!
+                                              .getTranslatedValues(
+                                                  'pwdResetLinkLbl')!,
+                                          context,
+                                          false);
+                                      AuthRemoteDataSource().resetPassword(
+                                          edtEmailReset.text.trim());
+                                      Future.delayed(const Duration(seconds: 1),
+                                          () {
                                         Navigator.pop(context, 'Cancel');
                                       });
                                     }
@@ -331,10 +407,16 @@ class SignInScreenState extends State<SignInScreen> {
       ),
       Container(
         padding: const EdgeInsets.all(7.5),
-        decoration: BoxDecoration(color: canvasColor, border: Border.all(color: canvasColor), shape: BoxShape.circle),
+        decoration: BoxDecoration(
+            color: canvasColor,
+            border: Border.all(color: canvasColor),
+            shape: BoxShape.circle),
         child: Text(
           AppLocalization.of(context)!.getTranslatedValues('orLbl')!,
-          style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).primaryColor),
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1!
+              .copyWith(color: Theme.of(context).primaryColor),
         ),
       ),
     ]));
@@ -345,7 +427,10 @@ class SignInScreenState extends State<SignInScreen> {
         child: Text(
       AppLocalization.of(context)!.getTranslatedValues('loginSocialMediaLbl')!,
       textAlign: TextAlign.center,
-      style: TextStyle(fontWeight: FontWeight.w300, color: Theme.of(context).primaryColor, fontSize: 14),
+      style: TextStyle(
+          fontWeight: FontWeight.w300,
+          color: Theme.of(context).primaryColor,
+          fontSize: 14),
     ));
   }
 
@@ -353,25 +438,38 @@ class SignInScreenState extends State<SignInScreen> {
     return BlocConsumer<SignInCubit, SignInState>(
       listener: (context, state) {
         //Exceuting only if authProvider is not email
-        if (state is SignInSuccess && state.authProvider != AuthProvider.email) {
-          context.read<AuthCubit>().updateAuthDetails(authProvider: state.authProvider, firebaseId: state.user.uid, authStatus: true, isNewUser: state.isNewUser);
+        if (state is SignInSuccess &&
+            state.authProvider != AuthProvider.email) {
+          context.read<AuthCubit>().updateAuthDetails(
+              authProvider: state.authProvider,
+              firebaseId: state.user.uid,
+              authStatus: true,
+              isNewUser: state.isNewUser);
           if (state.isNewUser) {
             context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
             //navigate to select profile screen
-            Navigator.of(context).pushReplacementNamed(Routes.selectProfile, arguments: true);
+            Navigator.of(context)
+                .pushReplacementNamed(Routes.selectProfile, arguments: true);
           } else {
             //get user detials of signed in user
             context.read<UserDetailsCubit>().fetchUserDetails(state.user.uid);
             //updateFcm id
             print(state.user.uid);
-            Navigator.of(context).pushReplacementNamed(Routes.home, arguments: false);
+            Navigator.of(context)
+                .pushReplacementNamed(Routes.home, arguments: false);
           }
-        } else if (state is SignInFailure && state.authProvider != AuthProvider.email) {
-          UiUtils.setSnackbar(AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!, context, false);
+        } else if (state is SignInFailure &&
+            state.authProvider != AuthProvider.email) {
+          UiUtils.setSnackbar(
+              AppLocalization.of(context)!.getTranslatedValues(
+                  convertErrorCodeToLanguageKey(state.errorMessage))!,
+              context,
+              false);
         }
       },
       builder: (context, state) {
-        if (state is SignInProgress && state.authProvider != AuthProvider.email) {
+        if (state is SignInProgress &&
+            state.authProvider != AuthProvider.email) {
           return Center(
               child: CircularProgressContainer(
             useWhiteLoader: false,
@@ -392,18 +490,22 @@ class SignInScreenState extends State<SignInScreen> {
                         width: MediaQuery.of(context).size.width * .1,
                       ),
                       onTap: () async {
-                        context.read<SignInCubit>().signInUser(AuthProvider.gmail);
+                        context
+                            .read<SignInCubit>()
+                            .signInUser(AuthProvider.gmail);
                         // context.read<SignInCubit>().signInUser(AuthProvider.fb);
                       },
                     )
                   : InkWell(
                       child: SvgPicture.asset(
-                        'assets/images/Icon ionic-logo-apple.svg',
+                        'assets/images/appleicon.svg',
                         height: MediaQuery.of(context).size.height * .07,
                         width: MediaQuery.of(context).size.width * .1,
                       ),
                       onTap: () async {
-                        context.read<SignInCubit>().signInUser(AuthProvider.apple);
+                        context
+                            .read<SignInCubit>()
+                            .signInUser(AuthProvider.apple);
                         // context.read<SignInCubit>().signInUser(AuthProvider.fb);
                       },
                     ),
@@ -457,7 +559,8 @@ class SignInScreenState extends State<SignInScreen> {
             padding: EdgeInsets.all(0),
             child: Text(
               AppLocalization.of(context)!.getTranslatedValues('signUpLbl')!,
-              style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(0.5)),
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor.withOpacity(0.5)),
             ),
           ),
         ],

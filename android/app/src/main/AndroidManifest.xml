@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ben.hpp">
+    package="com.wrteam.flutterquiz">
    
    <uses-permission android:name="android.permission.VIBRATE"/>
    <uses-permission android:name="android.permission.INTERNET"/>
@@ -18,15 +18,10 @@
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
            android:value="ca-app-pub-3940256099942544~3347511713"/>
-           
-       <meta-data
-           android:name="com.google.firebase.messaging.default_notification_channel_id"
-           android:value="@string/default_notification_channel_id"/>
 
         <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/app_icon"/>
-       
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />   
 
        <activity
            android:name=".MainActivity"
@@ -36,6 +31,7 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             android:resizeableActivity="false"
+            android:exported="true"
            >
             <!-- android:showWhenLocked="true"
             android:turnScreenOn="true"
@@ -92,12 +88,7 @@
                <data android:scheme="@string/fb_login_protocol_scheme" />
            </intent-filter>
        </activity>
-       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
-           <intent-filter>
-               <action android:name="android.intent.action.BOOT_COMPLETED"/>
-               <action android:name="android.intent.action.com.ben.hpp"/>
-           </intent-filter>
-       </receiver>
+       
     </application>
 
     <queries>

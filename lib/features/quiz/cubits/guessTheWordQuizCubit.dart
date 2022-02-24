@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/features/quiz/models/guessTheWordQuestion.dart';
+import 'package:flutterquiz/features/quiz/models/guessTheWordQuestion.dart';
 
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 abstract class GuessTheWordQuizState {}
 

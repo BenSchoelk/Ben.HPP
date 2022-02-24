@@ -1,5 +1,5 @@
-import 'package:hpp/features/reportQuestion/reportQuestionException.dart';
-import 'package:hpp/features/reportQuestion/reportQuestionRemoteDataSource.dart';
+import 'package:flutterquiz/features/reportQuestion/reportQuestionException.dart';
+import 'package:flutterquiz/features/reportQuestion/reportQuestionRemoteDataSource.dart';
 
 class ReportQuestionRepository {
   static final ReportQuestionRepository _reportQuestionRepository = ReportQuestionRepository._internal();

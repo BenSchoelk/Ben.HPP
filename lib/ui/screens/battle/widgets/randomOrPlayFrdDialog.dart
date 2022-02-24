@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/app/routes.dart';
-import 'package:hpp/features/ads/rewardedAdCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/models/userProfile.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/features/quiz/cubits/quizCategoryCubit.dart';
-import 'package:hpp/features/quiz/models/quizType.dart';
-import 'package:hpp/features/quiz/quizRepository.dart';
-import 'package:hpp/features/systemConfig/cubits/systemConfigCubit.dart';
-import 'package:hpp/ui/screens/battle/widgets/customDialog.dart';
-import 'package:hpp/ui/screens/battle/widgets/roomDialog.dart';
-import 'package:hpp/ui/widgets/watchRewardAdDialog.dart';
-import 'package:hpp/utils/constants.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/app/routes.dart';
+import 'package:flutterquiz/features/ads/rewardedAdCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/models/userProfile.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/features/quiz/cubits/quizCategoryCubit.dart';
+import 'package:flutterquiz/features/quiz/models/quizType.dart';
+import 'package:flutterquiz/features/quiz/quizRepository.dart';
+import 'package:flutterquiz/features/systemConfig/cubits/systemConfigCubit.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/customDialog.dart';
+import 'package:flutterquiz/ui/screens/battle/widgets/roomDialog.dart';
+import 'package:flutterquiz/ui/widgets/watchRewardAdDialog.dart';
+import 'package:flutterquiz/utils/constants.dart';
 
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class RandomOrPlayFrdDialog extends StatefulWidget {
   RandomOrPlayFrdDialog({Key? key}) : super(key: key);
@@ -133,6 +133,13 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
                   }
 
                   if (state is QuizCategoryFailure) {
+                    if (state.errorMessage == unauthorizedAccessCode) {
+                      //
+                      UiUtils.showAlreadyLoggedInDialog(
+                        context: context,
+                      );
+                      return;
+                    }
                     showDialog<bool>(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -376,54 +383,63 @@ class _RandomOrPlayFrdDialogState extends State<RandomOrPlayFrdDialog> {
   Widget build(BuildContext context) {
     return CustomDialog(
       topPadding: MediaQuery.of(context).size.height * (0.15),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(UiUtils.dailogRadius),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Container(
-              color: Theme.of(context).primaryColor,
-              child: Column(
-                children: [
-                  CustomPaint(
-                    child: Container(
-                      width: constraints.maxWidth,
-                      height: constraints.maxHeight * (0.74),
-                      child: LayoutBuilder(builder: (context, constraints) {
-                        return Column(
-                          children: [
-                            topLabelDesign(constraints),
-                            SizedBox(
-                              height: constraints.maxHeight * (0.075),
-                            ),
-                            _buildDropDownContainer(constraints),
-                            SizedBox(
-                              height: constraints.maxHeight * (0.075),
-                            ),
-                            entryFee(),
-                            SizedBox(
-                              height: constraints.maxHeight * (0.075),
-                            ),
-                            currentCoin(constraints),
-                            SizedBox(
-                              height: constraints.maxHeight * (0.075),
-                            ),
-                            letsGoButton(constraints),
-                          ],
-                        );
-                      }),
+      child: BlocListener<UpdateScoreAndCoinsCubit, UpdateScoreAndCoinsState>(
+        listener: (context, state) {
+          if (state is UpdateScoreAndCoinsFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+            }
+          }
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(UiUtils.dailogRadius),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                color: Theme.of(context).primaryColor,
+                child: Column(
+                  children: [
+                    CustomPaint(
+                      child: Container(
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight * (0.74),
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          return Column(
+                            children: [
+                              topLabelDesign(constraints),
+                              SizedBox(
+                                height: constraints.maxHeight * (0.075),
+                              ),
+                              _buildDropDownContainer(constraints),
+                              SizedBox(
+                                height: constraints.maxHeight * (0.075),
+                              ),
+                              entryFee(),
+                              SizedBox(
+                                height: constraints.maxHeight * (0.075),
+                              ),
+                              currentCoin(constraints),
+                              SizedBox(
+                                height: constraints.maxHeight * (0.075),
+                              ),
+                              letsGoButton(constraints),
+                            ],
+                          );
+                        }),
+                      ),
+                      painter: CurvePainter(
+                          color: Theme.of(context).backgroundColor),
                     ),
-                    painter:
-                        CurvePainter(color: Theme.of(context).backgroundColor),
-                  ),
-                  Spacer(),
-                  playWithFrdBtn(constraints),
-                  SizedBox(
-                    height: constraints.maxHeight * (0.025),
-                  ),
-                ],
-              ),
-            );
-          },
+                    Spacer(),
+                    playWithFrdBtn(constraints),
+                    SizedBox(
+                      height: constraints.maxHeight * (0.025),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
       height: MediaQuery.of(context).size.height * (0.6),

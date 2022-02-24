@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/profileManagement/cubits/updateUserDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/ui/widgets/errorMessageDialog.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/validators.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateUserDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/ui/widgets/errorMessageDialog.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/validators.dart';
 
 class EditProfileFieldDialog extends StatefulWidget {
   final String fieldTitle; //value of fieldTitle will be from :  Email,Mobile Number,Name

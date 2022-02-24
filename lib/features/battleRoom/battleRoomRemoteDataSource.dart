@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/services.dart';
-import 'package:hpp/features/battleRoom/battleRoomExecption.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/features/battleRoom/battleRoomExecption.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
 
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/internetConnectivity.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/internetConnectivity.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -54,7 +54,7 @@ class BattleRoomRemoteDataSource {
       }
 
       final response = await http.post(Uri.parse(getQuestionForOneToOneBattle),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -79,7 +79,7 @@ class BattleRoomRemoteDataSource {
       };
 
       final response = await http.post(Uri.parse(getQuestionForMultiUserBattle),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         throw BattleRoomException(
@@ -177,7 +177,7 @@ class BattleRoomRemoteDataSource {
             .doc(documentId)
             .delete();
         await http.post(Uri.parse(deleteMultiUserBattleRoom),
-            body: body, headers: ApiUtils.getHeaders());
+            body: body, headers: await ApiUtils.getHeaders());
         print("Room deleted successfully");
       } else {
         await _firebaseFirestore
@@ -294,7 +294,7 @@ class BattleRoomRemoteDataSource {
         body.remove(languageIdKey);
       }
       final response = await http.post(Uri.parse(createMultiUserBattleRoom),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hpp/features/auth/auhtException.dart';
-import 'package:hpp/features/auth/authLocalDataSource.dart';
-import 'package:hpp/features/auth/authRemoteDataSource.dart';
-import 'package:hpp/features/auth/cubits/authCubit.dart';
+import 'package:flutterquiz/features/auth/auhtException.dart';
+import 'package:flutterquiz/features/auth/authLocalDataSource.dart';
+import 'package:flutterquiz/features/auth/authRemoteDataSource.dart';
+import 'package:flutterquiz/features/auth/cubits/authCubit.dart';
 
 class AuthRepository {
   static final AuthRepository _authRepository = AuthRepository._internal();
@@ -18,22 +18,26 @@ class AuthRepository {
   AuthRepository._internal();
 
   //to get auth detials stored in hive box
-  getLocalAuthDetails() {
+  Map<String, dynamic> getLocalAuthDetails() {
     return {
-      "isLogin": _authLocalDataSource.checkIsAuth(),
-      "jwtToken": _authLocalDataSource.getJwt(),
-      "firebaseId": _authLocalDataSource.getUserFirebaseId(),
-      "isNewUser": _authLocalDataSource.getIsNewUser(),
-      "authProvider": getAuthProviderFromString(_authLocalDataSource.getAuthType()),
+      "isLogin": AuthLocalDataSource.checkIsAuth(),
+      "jwtToken": AuthLocalDataSource.getJwtToken(),
+      "firebaseId": AuthLocalDataSource.getUserFirebaseId(),
+      "authProvider":
+          getAuthProviderFromString(AuthLocalDataSource.getAuthType()),
     };
   }
 
-  void setLocalAuthDetails({String? jwtToken, String? firebaseId, String? authType, bool? authStatus, bool? isNewUser}) {
+  void setLocalAuthDetails(
+      {String? jwtToken,
+      String? firebaseId,
+      String? authType,
+      bool? authStatus,
+      bool? isNewUser}) {
     _authLocalDataSource.changeAuthStatus(authStatus);
-    _authLocalDataSource.setJwt(jwtToken);
+
     _authLocalDataSource.setUserFirebaseId(firebaseId);
     _authLocalDataSource.setAuthType(authType);
-    _authLocalDataSource.setIsNewUser(isNewUser);
   }
 
   //First we signin user with given provider then add user details
@@ -61,7 +65,7 @@ class AuthRepository {
         //if user does not exist add in database
         if (!isUserExist) {
           isNewUser = true;
-          await _authRemoteDataSource.addUser(
+          final registeredUser = await _authRemoteDataSource.addUser(
             email: user.email ?? "",
             firebaseId: user.uid,
             mobile: user.phoneNumber ?? "",
@@ -69,13 +73,26 @@ class AuthRepository {
             type: getAuthTypeString(authProvider),
             profile: user.photoURL ?? "",
           );
+          print("JWT TOKEN is : ${registeredUser['api_token']}");
+
+          //store jwt token
+          await AuthLocalDataSource.setJwtToken(
+              registeredUser['api_token'].toString());
         } else {
-          print("Update fcm id");
-          await _authRemoteDataSource.updateFcmId(firebaseId: user.uid, userLoggingOut: false);
+          //get jwt token of user
+          final jwtToken = await _authRemoteDataSource.getJWTTokenOfUser(
+              firebaseId: user.uid, type: getAuthTypeString(authProvider));
+
+          //store jwt token
+          await AuthLocalDataSource.setJwtToken(jwtToken);
+
+          await _authRemoteDataSource.updateFcmId(
+              firebaseId: user.uid, userLoggingOut: false);
         }
       } else {
         if (isNewUser) {
-          await _authRemoteDataSource.addUser(
+          //
+          final registeredUser = await _authRemoteDataSource.addUser(
             email: user.email ?? "",
             firebaseId: user.uid,
             mobile: user.phoneNumber ?? "",
@@ -83,13 +100,23 @@ class AuthRepository {
             type: getAuthTypeString(authProvider),
             profile: user.photoURL ?? "",
           );
+
+          //store jwt token
+          print("JWT TOKEN is : ${registeredUser['api_token']}");
+          await AuthLocalDataSource.setJwtToken(registeredUser['api_token']);
         } else {
-          print("Update fcm id");
-          await _authRemoteDataSource.updateFcmId(firebaseId: user.uid, userLoggingOut: false);
+          //get jwt token of user
+          final jwtToken = await _authRemoteDataSource.getJWTTokenOfUser(
+              firebaseId: user.uid, type: getAuthTypeString(authProvider));
+
+          print("Jwt token $jwtToken");
+          //store jwt token
+          await AuthLocalDataSource.setJwtToken(jwtToken);
+          //
+          await _authRemoteDataSource.updateFcmId(
+              firebaseId: user.uid, userLoggingOut: false);
         }
       }
-      //getFcm id update token
-      print(user.uid);
       return {
         "user": user,
         "isNewUser": isNewUser,
@@ -113,9 +140,16 @@ class AuthRepository {
   Future<void> signOut(AuthProvider? authProvider) async {
     //remove fcm token when user logout
     try {
-      _authRemoteDataSource.updateFcmId(firebaseId: _authLocalDataSource.getUserFirebaseId()!, userLoggingOut: true);
+      _authRemoteDataSource.updateFcmId(
+          firebaseId: AuthLocalDataSource.getUserFirebaseId(),
+          userLoggingOut: true);
       _authRemoteDataSource.signOut(authProvider);
-      setLocalAuthDetails(authStatus: false, authType: "", jwtToken: "", firebaseId: "", isNewUser: false);
+      setLocalAuthDetails(
+          authStatus: false,
+          authType: "",
+          jwtToken: "",
+          firebaseId: "",
+          isNewUser: false);
     } catch (e) {}
   }
 
@@ -136,9 +170,28 @@ class AuthRepository {
   }
 
   //to add user's data to database. This will be in use when authenticating using phoneNumber
-  Future<Map<String, dynamic>> addUserData({String? firebaseId, String? type, String? name, String? profile, String? mobile, String? email, String? referCode, String? friendCode}) async {
+  Future<Map<String, dynamic>> addUserData(
+      {String? firebaseId,
+      String? type,
+      String? name,
+      String? profile,
+      String? mobile,
+      String? email,
+      String? referCode,
+      String? friendCode}) async {
     try {
-      final result = await _authRemoteDataSource.addUser(email: email, firebaseId: firebaseId, friendCode: friendCode, mobile: mobile, name: name, profile: profile, referCode: referCode, type: type);
+      final result = await _authRemoteDataSource.addUser(
+          email: email,
+          firebaseId: firebaseId,
+          friendCode: friendCode,
+          mobile: mobile,
+          name: name,
+          profile: profile,
+          referCode: referCode,
+          type: type);
+
+      //Update jwt token
+      await AuthLocalDataSource.setJwtToken(result['api_token'].toString());
 
       return Map.from(result); //
     } catch (e) {

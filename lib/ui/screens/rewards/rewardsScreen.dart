@@ -2,20 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hpp/app/appLocalization.dart';
-import 'package:hpp/features/badges/badge.dart';
-import 'package:hpp/features/badges/cubits/badgesCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
-import 'package:hpp/features/profileManagement/cubits/userDetailsCubit.dart';
-import 'package:hpp/features/profileManagement/profileManagementRepository.dart';
-import 'package:hpp/ui/screens/rewards/scratchRewardScreen.dart';
-import 'package:hpp/ui/screens/rewards/widgets/unlockedRewardContent.dart';
-import 'package:hpp/ui/widgets/circularProgressContainner.dart';
-import 'package:hpp/ui/widgets/errorContainer.dart';
-import 'package:hpp/ui/widgets/roundedAppbar.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
-import 'package:hpp/utils/stringLabels.dart';
-import 'package:hpp/utils/uiUtils.dart';
+import 'package:flutterquiz/app/appLocalization.dart';
+import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/features/badges/cubits/badgesCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/updateScoreAndCoinsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/cubits/userDetailsCubit.dart';
+import 'package:flutterquiz/features/profileManagement/profileManagementRepository.dart';
+import 'package:flutterquiz/ui/screens/rewards/scratchRewardScreen.dart';
+import 'package:flutterquiz/ui/screens/rewards/widgets/unlockedRewardContent.dart';
+import 'package:flutterquiz/ui/widgets/circularProgressContainner.dart';
+import 'package:flutterquiz/ui/widgets/errorContainer.dart';
+import 'package:flutterquiz/ui/widgets/roundedAppbar.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/stringLabels.dart';
+import 'package:flutterquiz/utils/uiUtils.dart';
 
 class RewardsScreen extends StatefulWidget {
   RewardsScreen({
@@ -26,7 +26,8 @@ class RewardsScreen extends StatefulWidget {
     return CupertinoPageRoute(
         builder: (_) => BlocProvider<UpdateScoreAndCoinsCubit>(
               child: RewardsScreen(),
-              create: (_) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+              create: (_) =>
+                  UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
             ));
   }
 
@@ -46,7 +47,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
               return FadeTransition(
                 opacity: firstAnimation,
                 child: BlocProvider<UpdateScoreAndCoinsCubit>(
-                  create: (context) => UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
+                  create: (context) =>
+                      UpdateScoreAndCoinsCubit(ProfileManagementRepository()),
                   child: ScratchRewardScreen(
                     reward: reward,
                   ),
@@ -58,7 +60,9 @@ class _RewardsScreenState extends State<RewardsScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: reward.status == "2" ? Theme.of(context).colorScheme.secondary : Theme.of(context).primaryColor,
+          color: reward.status == "2"
+              ? Theme.of(context).colorScheme.secondary
+              : Theme.of(context).primaryColor,
         ),
         child: reward.status == "2"
             ? UnlockedRewardContent(
@@ -82,7 +86,9 @@ class _RewardsScreenState extends State<RewardsScreen> {
       slivers: [
         SliverToBoxAdapter(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * UiUtils.appBarHeightPercentage + 25.0,
+            height: MediaQuery.of(context).size.height *
+                    UiUtils.appBarHeightPercentage +
+                25.0,
           ),
         ),
         SliverToBoxAdapter(
@@ -106,7 +112,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
                     },
                   ),
                   Text(
-                    AppLocalization.of(context)!.getTranslatedValues(totalRewardsEarnedKey)!,
+                    AppLocalization.of(context)!
+                        .getTranslatedValues(totalRewardsEarnedKey)!,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
@@ -124,7 +131,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
         ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             child: Divider(
               color: Theme.of(context).primaryColor,
               height: 5,
@@ -138,9 +146,14 @@ class _RewardsScreenState extends State<RewardsScreen> {
               return SliverToBoxAdapter(
                 child: Center(
                   child: ErrorContainer(
-                      errorMessage: AppLocalization.of(context)!.getTranslatedValues(convertErrorCodeToLanguageKey(state.errorMessage))!,
+                      errorMessage: AppLocalization.of(context)!
+                          .getTranslatedValues(convertErrorCodeToLanguageKey(
+                              state.errorMessage))!,
                       onTapRetry: () {
-                        context.read<BadgesCubit>().getBadges(userId: context.read<UserDetailsCubit>().getUserId(), refreshBadges: true);
+                        context.read<BadgesCubit>().getBadges(
+                            userId:
+                                context.read<UserDetailsCubit>().getUserId(),
+                            refreshBadges: true);
                       },
                       showErrorImage: true),
                 ),
@@ -152,7 +165,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
               //ifthere is no rewards
               if (rewards.isEmpty) {
                 return SliverToBoxAdapter(
-                  child: Text(AppLocalization.of(context)!.getTranslatedValues(noRewardsKey)!),
+                  child: Text(AppLocalization.of(context)!
+                      .getTranslatedValues(noRewardsKey)!),
                 );
               }
 
@@ -192,17 +206,24 @@ class _RewardsScreenState extends State<RewardsScreen> {
       body: BlocListener<BadgesCubit, BadgesState>(
         listener: (context, state) {
           //
+          if (state is BadgesFetchFailure) {
+            if (state.errorMessage == unauthorizedAccessCode) {
+              UiUtils.showAlreadyLoggedInDialog(context: context);
+            }
+          }
         },
         child: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * (0.075)),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * (0.075)),
               child: _buildRewards(),
             ),
             Align(
               alignment: Alignment.topCenter,
               child: RoundedAppbar(
-                title: AppLocalization.of(context)!.getTranslatedValues(rewardsLbl)!,
+                title: AppLocalization.of(context)!
+                    .getTranslatedValues(rewardsLbl)!,
               ),
             ),
           ],

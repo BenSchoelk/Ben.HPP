@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 import 'package:http/http.dart' as http;
 
 import '../leaderboardException.dart';
@@ -20,7 +20,8 @@ class LeaderBoardDailySuccess extends LeaderBoardDailyState {
   final List leaderBoardDetails;
   final int totalData;
   final bool hasMore;
-  LeaderBoardDailySuccess(this.leaderBoardDetails, this.totalData, this.hasMore);
+  LeaderBoardDailySuccess(
+      this.leaderBoardDetails, this.totalData, this.hasMore);
 }
 
 class LeaderBoardDailyFailure extends LeaderBoardDailyState {
@@ -47,7 +48,8 @@ class LeaderBoardDailyCubit extends Cubit<LeaderBoardDailyState> {
       if (offset == null) {
         body.remove(offset);
       }
-      final response = await http.post(Uri.parse(getDailyLeaderboardUrl), body: body, headers: ApiUtils.getHeaders());
+      final response = await http.post(Uri.parse(getDailyLeaderboardUrl),
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       nameD = responseJson["data"][0]["my_rank"]["name"].toString();
       rankD = responseJson["data"][0]["my_rank"]["user_rank"].toString();
@@ -55,11 +57,13 @@ class LeaderBoardDailyCubit extends Cubit<LeaderBoardDailyState> {
       scoreD = responseJson["data"][0]["my_rank"]["score"].toString();
       print(responseJson);
       if (responseJson['error']) {
-        throw LeaderBoardException(errorMessageKey: dataNotFoundKey, errorMessageCode: '');
+        throw LeaderBoardException(
+            errorMessageKey: dataNotFoundKey, errorMessageCode: '');
       }
       return Map.from(responseJson);
     } catch (e) {
-      throw LeaderBoardException(errorMessageKey: dataNotFoundKey, errorMessageCode: '');
+      throw LeaderBoardException(
+          errorMessageKey: dataNotFoundKey, errorMessageCode: '');
     }
   }
 
@@ -81,13 +85,21 @@ class LeaderBoardDailyCubit extends Cubit<LeaderBoardDailyState> {
   }
 
   void fetchMoreLeaderBoardData(String limit, String userId) {
-    _fetchData(limit: limit, userId: userId, offset: (state as LeaderBoardDailySuccess).leaderBoardDetails.length.toString()).then((value) {
+    _fetchData(
+            limit: limit,
+            userId: userId,
+            offset: (state as LeaderBoardDailySuccess)
+                .leaderBoardDetails
+                .length
+                .toString())
+        .then((value) {
       //
       final oldState = (state as LeaderBoardDailySuccess);
       final usersDetails = value['data'] as List;
       final updatedUserDetails = List.from(oldState.leaderBoardDetails);
       updatedUserDetails.addAll(usersDetails);
-      emit(LeaderBoardDailySuccess(updatedUserDetails, oldState.totalData, oldState.totalData > updatedUserDetails.length));
+      emit(LeaderBoardDailySuccess(updatedUserDetails, oldState.totalData,
+          oldState.totalData > updatedUserDetails.length));
     }).catchError((e) {
       emit(LeaderBoardDailyFailure(defaultErrorMessageCode));
     });

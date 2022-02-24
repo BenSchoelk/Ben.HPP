@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hpp/features/badges/badge.dart';
-import 'package:hpp/ui/styles/colors.dart';
+import 'package:flutterquiz/features/badges/badge.dart';
+import 'package:flutterquiz/ui/styles/colors.dart';
 
 class BadgesIconContainer extends StatelessWidget {
   final Badge badge;

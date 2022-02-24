@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:hpp/utils/apiBodyParameterLabels.dart';
+import 'package:flutterquiz/utils/apiBodyParameterLabels.dart';
 import 'package:http/http.dart' as http;
-import 'package:hpp/features/quiz/quizException.dart';
-import 'package:hpp/utils/apiUtils.dart';
-import 'package:hpp/utils/constants.dart';
-import 'package:hpp/utils/errorMessageKeys.dart';
+import 'package:flutterquiz/features/quiz/quizException.dart';
+import 'package:flutterquiz/utils/apiUtils.dart';
+import 'package:flutterquiz/utils/constants.dart';
+import 'package:flutterquiz/utils/errorMessageKeys.dart';
 
 class QuizRemoteDataSource {
   static late String profile, score, rank;
@@ -48,7 +48,7 @@ class QuizRemoteDataSource {
       }
 
       final response = await http.post(Uri.parse(getQuestionForDailyQuizUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
@@ -79,7 +79,7 @@ class QuizRemoteDataSource {
       }
 
       final response = await http.post(Uri.parse(getQuestionByTypeUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
@@ -103,7 +103,7 @@ class QuizRemoteDataSource {
       };
 
       final response = await http.post(Uri.parse(getQuestionContestUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
@@ -137,7 +137,7 @@ class QuizRemoteDataSource {
       }
 
       final response = await http.post(Uri.parse(getGuessTheWordQuestionUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
@@ -187,7 +187,7 @@ class QuizRemoteDataSource {
       print(body);
 
       final response = await http.post(Uri.parse(getQuestionsByLevelUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
@@ -218,7 +218,7 @@ class QuizRemoteDataSource {
       final response = await http.post(
           Uri.parse(getQuestionsByCategoryOrSubcategory),
           body: body,
-          headers: ApiUtils.getHeaders());
+          headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
@@ -245,7 +245,7 @@ class QuizRemoteDataSource {
       };
 
       final response = await http.post(Uri.parse(getAudioQuestionUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
@@ -278,7 +278,7 @@ class QuizRemoteDataSource {
         body.remove(languageIdKey);
       }
       final response = await http.post(Uri.parse(getCategoryUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
 
       if (responseJson['error']) {
@@ -323,7 +323,7 @@ class QuizRemoteDataSource {
       final response = await http.post(
           Uri.parse(getQuestionForSelfChallengeUrl),
           body: body,
-          headers: ApiUtils.getHeaders());
+          headers: await ApiUtils.getHeaders());
 
       final responseJson = jsonDecode(response.body);
 
@@ -349,7 +349,7 @@ class QuizRemoteDataSource {
         userIdKey: userId,
       };
       final response = await http.post(Uri.parse(getSubCategoryUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         throw QuizException(errorMessageCode: responseJson['message']);
@@ -375,7 +375,7 @@ class QuizRemoteDataSource {
         subCategoryKey: subCategory
       };
       final response = await http.post(Uri.parse(getLevelUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print(responseJson);
       if (responseJson['error']) {
@@ -414,7 +414,7 @@ class QuizRemoteDataSource {
         levelKey: level
       };
       final response = await http.post(Uri.parse(updateLevelUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print(responseJson);
       if (responseJson['error']) {
@@ -439,7 +439,7 @@ class QuizRemoteDataSource {
         userIdKey: userId
       };
       final response = await http.post(Uri.parse(getContestUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       print(responseJson);
       return (responseJson);
@@ -472,7 +472,7 @@ class QuizRemoteDataSource {
         scoreKey: score.toString()
       };
       final response = await http.post(Uri.parse(setContestLeaderboardUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         throw QuizException(errorMessageCode: responseJson['message']);
@@ -497,7 +497,7 @@ class QuizRemoteDataSource {
         contestIdKey: contestId,
       };
       final response = await http.post(Uri.parse(getContestLeaderboardUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       rank = responseJson["data"][0]["user_rank"].toString();
       profile = responseJson["data"][0][profileKey].toString();
@@ -533,7 +533,7 @@ class QuizRemoteDataSource {
         body.remove(languageIdKey);
       }
       final response = await http.post(Uri.parse(getFunAndLearnUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         throw QuizException(errorMessageCode: responseJson['message']);
@@ -554,7 +554,7 @@ class QuizRemoteDataSource {
       //body of post request
       final body = {accessValueKey: accessValue, funAndLearnKey: funAndLearnId};
       final response = await http.post(Uri.parse(getFunAndLearnQuestionsUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         throw QuizException(errorMessageCode: responseJson['message']);
@@ -605,7 +605,7 @@ class QuizRemoteDataSource {
 
       print("Set quiz category body : $body");
       final response = await http.post(Uri.parse(setQuizCategoryPlayedUrl),
-          body: body, headers: ApiUtils.getHeaders());
+          body: body, headers: await ApiUtils.getHeaders());
       final responseJson = jsonDecode(response.body);
       if (responseJson['error']) {
         print(responseJson);
